@@ -1,0 +1,61 @@
+#!/bin/bash
+
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
+
+BASE=$(pwd)
+touch bashrc-extra
+for rc in *rc; do
+  mkdir -pv bak
+  [ -e ~/."$rc" ] && mv -v ~/."$rc" bak/."$rc"
+  ln -sfv "$BASE/$rc" ~/."$rc"
+done
+
+# git-prompt
+if [ ! -e ~/.git-prompt.sh ]; then
+  curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
+fi
+
+# scripts
+mkdir -p ~/bin
+for bin in $BASE/bin/*; do
+  ln -svf "$bin" ~/bin
+done
+
+if [ "$(uname -s)" = 'Darwin' ]; then
+  # Homebrew
+  [ -z "$(which brew)" ] &&
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+  echo "Updating homebrew"
+  brew install --cask iterm2 keepingyouawake \
+    qlcolorcode qlimagesize qlmarkdown qlstephen qlvideo quicklook-json quicklookase \
+    telegram bob firefox
+
+  brew tap homebrew/cask-fonts
+  brew install --cask font-hack-nerd-font
+
+  brew install \
+    fd ripgrep cmake git imagemagick gnupg fzf \
+    ranger tree vim wget zsh jq ruby python go highlight bat \
+    rbenv node yarn \
+    mysql postgresql redis \
+    pinentry-mac bash-completion tmux \
+    translate-shell
+
+  brew tap universal-ctags/universal-ctags
+  brew install --HEAD universal-ctags
+fi
+
+git config --global user.email "jiz4oh@gmail.com"
+git config --global user.name "jiz4oh"
+
+mkdir -p ~/.rbenv/plugins
+if [ ! -e ~/.rbenv/plugins/rbenv-default-gems ]; then
+  git clone https://github.com/rbenv/rbenv-default-gems.git ~/.rbenv/plugins/rbenv-default-gems
+fi
+if [ ! -e ~/.rbenv/plugins/rbenv-ctags ]; then
+  git clone https://github.com/tpope/rbenv-ctags.git ~/.rbenv/plugins/rbenv-ctags
+fi
+
+ln -sfv "$BASE/rbenv/default-gems" ~/.rbenv/default-gems
+

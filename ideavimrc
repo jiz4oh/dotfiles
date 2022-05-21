@@ -1,0 +1,11 @@
+if filereadable(expand("~/.vimrc"))
+  source ~/.vimrc
+endif
+
+set ideajoin
+sethandler <C-D> n:vim
+sethandler <C-U> n:vim
+sethandler <C-A> n:vim
+sethandler <C-E> n:vim
+sethandler <C-V> n:vim
+sethandler <C-R> n:vim
