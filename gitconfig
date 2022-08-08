@@ -1,0 +1,23 @@
+[user]
+	name = jiz4oh
+	email = jiz4oh@gmail.com
+	signingkey = 78FB89DFD72A3154
+[credential]
+	helper = osxkeychain
+[core]
+	editor = ${EDITOR:-vim}
+	excludesfile = ~/.gitignore
+  autocrlf = input
+[init]
+	templatedir = ~/.git_template
+[alias]
+	ctags = !.git/hooks/ctags
+[pull]
+	rebase = true
+[push]
+	default = upstream
+  autoSetupRemote = true
+[rebase]
+	autosquash = true
+[include]
+	path = .gitconfig.local

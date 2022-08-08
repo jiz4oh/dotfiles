@@ -4,7 +4,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
 
 BASE=$(pwd)
 touch bashrc-extra
-for rc in *rc tmux.conf; do
+for rc in *rc tmux.conf gitconfig; do
   mkdir -pv bak
   [ -e ~/."$rc" ] && mv -v ~/."$rc" bak/."$rc"
   ln -sfv "$BASE/$rc" ~/."$rc"
@@ -50,11 +50,6 @@ if [ "$(uname -s)" = 'Darwin' ]; then
   brew tap universal-ctags/universal-ctags
   brew install --HEAD universal-ctags
 fi
-
-git config --global user.email "jiz4oh@gmail.com"
-git config --global user.name "jiz4oh"
-git config --global init.templatedir "$BASE/git_template"
-git config --global alias.ctags '!.git/hooks/ctags'
 
 mkdir -p ~/.rbenv/plugins
 if [ ! -e ~/.rbenv/plugins/rbenv-default-gems ]; then
