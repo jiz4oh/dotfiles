@@ -104,6 +104,7 @@ PROMPT="$(arch) $PROMPT"
 
 # ============================custom settings============================
 setopt no_nomatch
+setopt AUTO_CD
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -119,7 +120,7 @@ elif [[ "$_ARCH" == "arm64" ]]; then
  export PATH="/opt/homebrew/opt:$PATH"
 fi
 
-export EDITOR=nvim
+export EDITOR=vim
 
 export GPG_TTY=$(tty)
 # export PATH="$(brew --prefix helm@2)/bin:$PATH"
@@ -158,7 +159,6 @@ alias k=kubectl
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 eval "$(rbenv init -)"
-
 
 pods() {
   FZF_DEFAULT_COMMAND='
@@ -200,4 +200,8 @@ RG() {
           --preview-window '~3:+{2}+3/2'
   )
   [ -n "$selected" ] && $EDITOR "$selected"
+}
+
+new_wechat() {
+  nohup /Applications/WeChat.app/Contents/MacOS/WeChat > /dev/null 2>&1 &
 }
