@@ -4,7 +4,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
 
 BASE=$(pwd)
 touch bashrc-extra
-for rc in *rc; do
+for rc in *rc tmux.conf; do
   mkdir -pv bak
   [ -e ~/."$rc" ] && mv -v ~/."$rc" bak/."$rc"
   ln -sfv "$BASE/$rc" ~/."$rc"
@@ -34,7 +34,7 @@ if [ "$(uname -s)" = 'Darwin' ]; then
   echo "Updating homebrew"
   brew install --cask iterm2 keepingyouawake \
     qlcolorcode qlimagesize qlmarkdown qlstephen qlvideo quicklook-json quicklookase \
-    telegram bob firefox
+    telegram firefox
 
   brew tap homebrew/cask-fonts
   brew install --cask font-hack-nerd-font
