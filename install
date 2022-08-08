@@ -53,7 +53,7 @@ fi
 
 git config --global user.email "jiz4oh@gmail.com"
 git config --global user.name "jiz4oh"
-git config --global init.templatedir "~/.git_template"
+git config --global init.templatedir "$BASE/git_template"
 git config --global alias.ctags '!.git/hooks/ctags'
 
 mkdir -p ~/.rbenv/plugins
