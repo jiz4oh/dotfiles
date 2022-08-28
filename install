@@ -49,6 +49,9 @@ if [ "$(uname -s)" = 'Darwin' ]; then
 
   brew tap universal-ctags/universal-ctags
   brew install --HEAD universal-ctags
+
+  # install fzf
+  $(brew --prefix)/opt/fzf/install
 fi
 
 mkdir -p ~/.rbenv/plugins
