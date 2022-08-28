@@ -150,7 +150,9 @@ alias ll='ls -l'
 
 # software
 alias vi=$EDITOR
-alias vimdiff='nvim -d'
+if [ "$EDITOR" = "nvim" ];then
+  alias vimdiff='nvim -d'
+fi
 alias k=kubectl
 
 [ -f $HOME/.zprofile ] && source $HOME/.zprofile
