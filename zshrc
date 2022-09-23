@@ -1,6 +1,15 @@
+# What are the differences between a login shell and interactive shell?
+# https://stackoverflow.com/a/18187389/12644334
+# What should/shouldn't go in .zshenv, .zshrc, .zlogin, .zprofile, .zlogout?
+# https://unix.stackexchange.com/a/71258
+#
+#
+#
 # If you come from bash you might have to change your $PATH.
 #export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+[ -f $HOME/.zpath ] && source $HOME/.zpath
+typeset -U PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -106,27 +115,6 @@ PROMPT="$(arch) $PROMPT"
 setopt no_nomatch
 setopt AUTO_CD
 
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-export HOMEBREW_NO_AUTO_UPDATE=true
-
-_ARCH=$(arch)
-if [[ "$_ARCH" == "i386" ]]; then
- export PATH="/usr/local/bin:$PATH"
- export PATH="/usr/local/opt:$PATH"
-elif [[ "$_ARCH" == "arm64" ]]; then
- # export GEM_HOME=$HOME/.gems
- export PATH="/opt/homebrew/bin:$PATH"
- export PATH="/opt/homebrew/opt:$PATH"
-fi
-
-export EDITOR=vim
-
-export GPG_TTY=$(tty)
-# export PATH="$(brew --prefix helm@2)/bin:$PATH"
-export PATH="$HOME/.rbenv/bin:$PATH"
-export RUBY_BUILD_MIRROR_URL=https://cache.ruby-china.com
-
 # ============================Example aliases============================
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
@@ -155,12 +143,9 @@ if [ "$EDITOR" = "nvim" ];then
 fi
 alias k=kubectl
 
-[ -f $HOME/.zprofile ] && source $HOME/.zprofile
 [ -f $HOME/.zlocal ] && source $HOME/.zlocal
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-eval "$(rbenv init -)"
 
 pods() {
   FZF_DEFAULT_COMMAND='

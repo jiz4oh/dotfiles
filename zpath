@@ -1,0 +1,17 @@
+# https://0xmachos.com/2021-05-13-zsh-path-macos/
+# path_helper will reorder $PATH, so we can not set PATH in ~/.zshenv
+_ARCH=$(arch)
+
+if [[ "$_ARCH" == "i386" ]]; then
+ export PATH="/usr/local/bin:$PATH"
+ export PATH="/usr/local/opt:$PATH"
+elif [[ "$_ARCH" == "arm64" ]]; then
+ # export GEM_HOME=$HOME/.gems
+ export PATH="/opt/homebrew/bin:$PATH"
+ export PATH="/opt/homebrew/opt:$PATH"
+fi
+
+if [ $(command -v rbenv) ]; then
+  eval "$(rbenv init -)"
+fi
+
