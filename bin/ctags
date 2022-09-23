@@ -1,0 +1,15 @@
+#!/bin/sh
+# https://github.com/tpope/gem-ctags/issues/10#issuecomment-304421664
+
+if [ --languages=Ruby = "$1" ]; then
+  shift
+  unset RUBYOPT # needed to run inside bundler
+  exec ripper-tags "$@"
+fi
+
+# avoid recursive execute current script {{{
+cur_dir=$(dirname $0)
+PATH=$(echo $PATH | tr ":" "\n" | grep -F -v $cur_dir | tr "\n" ":" | rev | cut -c2- | rev)
+#}}}
+
+exec ctags "$@"

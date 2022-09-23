@@ -11,6 +11,7 @@ elif [[ "$_ARCH" == "arm64" ]]; then
  export PATH="/opt/homebrew/opt:$PATH"
 fi
 
+export PATH=~/bin:$PATH
 if [ $(command -v rbenv) ]; then
   eval "$(rbenv init -)"
 fi
