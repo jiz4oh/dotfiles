@@ -4,8 +4,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
 
 BASE=$(pwd)
 touch bashrc-extra
-for rc in *rc tmux.conf gitconfig zprofile zshenv zpath; do
-  mkdir -pv bak
+mkdir -pv bak
+
+for rc in *rc tmux.conf gitconfig zprofile zshenv zpath ctags.d; do
   [ -e ~/."$rc" ] && mv -v ~/."$rc" bak/."$rc"
   ln -sfv "$BASE/$rc" ~/."$rc"
 done
