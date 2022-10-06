@@ -6,9 +6,18 @@ BASE=$(pwd)
 touch bashrc-extra
 mkdir -pv bak
 
-for rc in *rc tmux.conf gitconfig zprofile zshenv zpath ctags.d; do
+# dotfiles
+for rc in *rc tmux.conf gitconfig zprofile zshenv zpath; do
   [ -e ~/."$rc" ] && mv -v ~/."$rc" bak/."$rc"
   ln -sfv "$BASE/$rc" ~/."$rc"
+done
+
+# dotdirs
+for bin in git_templete/* snipaste/config.ini ctags.d/* rbenv/default-gems; do
+  dirname=$(cut -d'/' -f1 <<< "$bin")
+  mkdir -pv ~/.$dirname
+  
+  ln -svf "$BASE/$bin" ~/.$dirname
 done
 
 # git-prompt
@@ -20,11 +29,6 @@ fi
 mkdir -p ~/bin
 for bin in $BASE/bin/*; do
   ln -svf "$bin" ~/bin
-done
-
-mkdir -p ~/.git_templete
-for bin in $BASE/git_templete/*; do
-  ln -svf "$bin" ~/.git_templete
 done
 
 if [ "$(uname -s)" = 'Darwin' ]; then
@@ -62,6 +66,3 @@ fi
 if [ ! -e ~/.rbenv/plugins/rbenv-ctags ]; then
   git clone https://github.com/tpope/rbenv-ctags.git ~/.rbenv/plugins/rbenv-ctags
 fi
-
-ln -sfv "$BASE/rbenv/default-gems" ~/.rbenv/default-gems
-
