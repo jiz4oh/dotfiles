@@ -9,7 +9,6 @@
 #export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 [ -f $HOME/.zpath ] && source $HOME/.zpath
-typeset -U PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -187,8 +186,4 @@ RG() {
           --preview-window '~3:+{2}+3/2'
   )
   [ -n "$selected" ] && $EDITOR "$selected"
-}
-
-new_wechat() {
-  nohup /Applications/WeChat.app/Contents/MacOS/WeChat > /dev/null 2>&1 &
 }

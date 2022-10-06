@@ -59,6 +59,8 @@ if [ "$(uname -s)" = 'Darwin' ]; then
   $(brew --prefix)/opt/fzf/install
 fi
 
+[ $(command -v zsh) ] && $BASE/install_zsh
+
 mkdir -p ~/.rbenv/plugins
 if [ ! -e ~/.rbenv/plugins/rbenv-default-gems ]; then
   git clone https://github.com/rbenv/rbenv-default-gems.git ~/.rbenv/plugins/rbenv-default-gems
