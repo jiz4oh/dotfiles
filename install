@@ -13,7 +13,7 @@ for rc in *rc tmux.conf gitconfig zprofile zshenv zpath; do
 done
 
 # dotdirs
-for bin in git_templete/* snipaste/config.ini ctags.d/* rbenv/default-gems; do
+for bin in git_template/* snipaste/config.ini ctags.d/* rbenv/default-gems; do
   dirname=$(cut -d'/' -f1 <<< "$bin")
   mkdir -pv ~/.$dirname
   
