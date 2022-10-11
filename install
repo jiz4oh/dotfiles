@@ -46,7 +46,7 @@ if [ "$(uname -s)" = 'Darwin' ]; then
 
   brew install \
     fd ripgrep cmake git imagemagick gnupg fzf \
-    ranger tree vim wget zsh jq go highlight bat \
+    ranger tree macvim wget zsh jq go highlight bat \
     rbenv node yarn \
     mysql postgresql redis \
     pinentry-mac bash-completion tmux \
