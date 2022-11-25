@@ -6,6 +6,8 @@ BASE=$(pwd)
 touch bashrc-extra
 mkdir -pv bak
 
+[ $(command -v zsh) ] && $BASE/install_zsh
+
 # dotfiles
 for rc in *rc tmux.conf gitconfig zprofile zshenv zpath; do
   [ -e ~/."$rc" ] && mv -v ~/."$rc" bak/."$rc"
@@ -58,8 +60,6 @@ if [ "$(uname -s)" = 'Darwin' ]; then
   # install fzf
   $(brew --prefix)/opt/fzf/install
 fi
-
-[ $(command -v zsh) ] && $BASE/install_zsh
 
 mkdir -p ~/.rbenv/plugins
 if [ ! -e ~/.rbenv/plugins/rbenv-default-gems ]; then
