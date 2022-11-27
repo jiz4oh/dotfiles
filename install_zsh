@@ -10,11 +10,11 @@ echo "installed oh-my-zsh"
 
 read -r -d '' plugins <<EOF
 source ~/.zshrc
-dir=\$ZSH_CUSTOM/plugins/zsh-autosuggestions
-[ ! -e \$dir ] && git clone git://github.com/zsh-users/zsh-autosuggestions \$dir
+dir=\${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+[ ! -e \$dir ] && git clone https://github.com/zsh-users/zsh-autosuggestions \$dir
 
-dir=\$ZSH_CUSTOM/plugins/zsh-autosuggestions
-[ ! -e \$dir ] && git clone git://github.com/zsh-users/zsh-syntax-highlighting \$dir
+dir=\${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+[ ! -e \$dir ] && git clone https://github.com/zsh-users/zsh-syntax-highlighting \$dir
 return 0
 EOF
 
