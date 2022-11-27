@@ -78,14 +78,18 @@ ZSH_THEME="agnoster"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
 git
+gitignore
+git-auto-fetch
+kubectl
 zsh-autosuggestions
 zsh-syntax-highlighting
+copybuffer
+command-not-found
 extract
 safe-paste
 )
 
 source $ZSH/oh-my-zsh.sh
-source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # ============================User configuration========================
 
@@ -140,7 +144,6 @@ alias vi=$EDITOR
 if [ "$EDITOR" = "nvim" ];then
   alias vimdiff='nvim -d'
 fi
-alias k=kubectl
 
 [ -f $HOME/.zlocal ] && source $HOME/.zlocal
 
