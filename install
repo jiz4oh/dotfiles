@@ -9,7 +9,7 @@ mkdir -pv bak
 [ $(command -v zsh) ] && $BASE/install_zsh
 
 # dotfiles
-for rc in *rc tmux.conf gitconfig zprofile zshenv zpath; do
+for rc in *rc tmux.conf gitconfig zprofile zshenv zpath p10k.zsh; do
   [ -e ~/."$rc" ] && mv -v ~/."$rc" bak/."$rc"
   ln -sfv "$BASE/$rc" ~/."$rc"
 done
