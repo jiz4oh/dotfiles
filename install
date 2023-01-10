@@ -9,17 +9,19 @@ mkdir -pv bak
 [ $(command -v zsh) ] && $BASE/install_zsh
 
 # dotfiles
-for rc in *rc tmux.conf gitconfig zprofile zshenv zpath p10k.zsh; do
-  [ -e ~/."$rc" ] && mv -v ~/."$rc" bak/."$rc"
+for rc in *rc tmux.conf gitconfig zprofile zshenv zpath p10k.zsh rbenv/default-gems snipaste/config.ini; do
+  dir=$(dirname $rc)
+  [ $dir != '.' ] && mkdir -pv bak/."$dir"
+  mv -v ~/."$rc" bak/."$rc" >/dev/null 2>&1
   ln -sfv "$BASE/$rc" ~/."$rc"
 done
 
 # dotdirs
-for bin in git_template/* snipaste/config.ini ctags.d/* rbenv/default-gems; do
-  dirname=$(cut -d'/' -f1 <<< "$bin")
-  mkdir -pv ~/.$dirname
+for dir in git_template ctags.d; do
+  rm -rf bak/$dir
+  mv -v ~/.$dir bak/$dir >/dev/null 2>&1
   
-  ln -svf "$BASE/$bin" ~/.$dirname
+  ln -svf "$BASE/$dir"/ ~/.$dir
 done
 
 # git-prompt
