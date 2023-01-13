@@ -152,6 +152,10 @@ if [ "$EDITOR" = "nvim" ];then
   alias vimdiff='nvim -d'
 fi
 
+if [ $(command -v mvim) ]; then
+  alias vm='mvim -v'
+fi
+
 [ -f $HOME/.zlocal ] && source $HOME/.zlocal
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
