@@ -4,7 +4,7 @@ set -u -o pipefail
 
 echo "installing oh-my-zsh..."
 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" >/dev/null 2>&1
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended >/dev/null 2>&1
 
 echo "installed oh-my-zsh"
 
