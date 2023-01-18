@@ -1,3 +1,5 @@
+# https://github.com/rbenv/rbenv/wiki/Unix-shell-initialization#misc-things-that-affect-path
+
 # https://0xmachos.com/2021-05-13-zsh-path-macos/
 # path_helper will reorder $PATH, so we can not set PATH in ~/.zshenv
 _ARCH=$(arch)
@@ -13,6 +15,7 @@ fi
 
 export PATH=~/bin:$PATH
 if [ $(command -v rbenv) ]; then
-  eval "$(rbenv init -)"
+  # https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell
+  eval "$(rbenv init - --no-rehash)"
 fi
 
