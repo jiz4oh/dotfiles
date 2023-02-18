@@ -4,6 +4,8 @@
 	signingkey = 78FB89DFD72A3154
 [credential]
 	helper = osxkeychain
+  helper = store
+  helper = cache --timeout 86400
 [core]
 	editor = ${EDITOR:-vim}
 	excludesfile = ~/.gitignore
