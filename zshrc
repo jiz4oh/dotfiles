@@ -88,13 +88,14 @@ git
 gitignore
 git-auto-fetch
 kubectl
-zsh-autosuggestions
-zsh-syntax-highlighting
 copybuffer
 command-not-found
 extract
 safe-paste
 )
+
+[ -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ] && plugins+=zsh-autosuggestions
+[ -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting ] && plugins+=zsh-syntax-highlighting
 
 source $ZSH/oh-my-zsh.sh
 

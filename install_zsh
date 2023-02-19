@@ -11,13 +11,13 @@ echo "installed oh-my-zsh"
 read -r -d '' plugins <<EOF
 source ~/.zshrc
 dir=\${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-[ ! -e \$dir ] && git clone https://github.com/zsh-users/zsh-autosuggestions \$dir
+[ ! -d \$dir ] && git clone https://github.com/zsh-users/zsh-autosuggestions \$dir
 
 dir=\${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-[ ! -e \$dir ] && git clone https://github.com/zsh-users/zsh-syntax-highlighting \$dir
+[ ! -d \$dir ] && git clone https://github.com/zsh-users/zsh-syntax-highlighting \$dir
 
 dir=\${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
-[ ! -e \$dir ] && git clone --depth=1 https://github.com/romkatv/powerlevel10k \$dir
+[ ! -d \$dir ] && git clone --depth=1 https://github.com/romkatv/powerlevel10k \$dir
 return 0
 EOF
 
