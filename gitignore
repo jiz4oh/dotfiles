@@ -1,0 +1,11 @@
+Session.vim
+.DS_Store
+tags*
+
+*tmp/
+/tmp
+/temp
+/node_modules
+
+.byebug_history
+.pry_history
