@@ -5,13 +5,13 @@
 _ARCH=$(arch)
 
 if [[ "$_ARCH" == "i386" ]]; then
- export PATH="/usr/local/bin:$PATH"
- export PATH="/usr/local/opt:$PATH"
+ export BREW_PREFIX="/usr/local"
 elif [[ "$_ARCH" == "arm64" ]]; then
- # export GEM_HOME=$HOME/.gems
- export PATH="/opt/homebrew/bin:$PATH"
- export PATH="/opt/homebrew/opt:$PATH"
+ export BREW_PREFIX="/opt/homebrew"
 fi
+
+export PATH="$BREW_PREFIX/bin:$PATH"
+export PATH="$BREW_PREFIX/opt:$PATH"
 
 export PATH=~/bin:$PATH
 if [ $(command -v rbenv) ]; then
