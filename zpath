@@ -19,3 +19,7 @@ if [ $(command -v rbenv) ]; then
   eval "$(rbenv init - --no-rehash)"
 fi
 
+export ASDF_GEM_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
+
+# git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+[ -d ~/.asdf ] && source ~/.asdf/asdf.sh
