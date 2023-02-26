@@ -46,7 +46,7 @@ if [ "$(uname -s)" = 'Darwin' ]; then
     telegram firefox
 
   brew tap homebrew/cask-fonts
-  brew install --cask font-hack-nerd-font
+  brew install --cask font-hack-nerd-font raycast
 
   brew install \
     fd ripgrep cmake git imagemagick gnupg fzf \
