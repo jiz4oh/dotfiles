@@ -21,5 +21,7 @@ fi
 
 export ASDF_GEM_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
 
+[ ! "$(command -v python)" ] && alias python=python3
+
 # git clone https://github.com/asdf-vm/asdf.git ~/.asdf
 [ -d ~/.asdf ] && source ~/.asdf/asdf.sh
