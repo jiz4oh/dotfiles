@@ -43,14 +43,14 @@ if [ "$(uname -s)" = 'Darwin' ]; then
   echo "Updating homebrew"
   brew install --cask iterm2 snipaste squirrel \
     qlcolorcode qlimagesize qlmarkdown qlstephen qlvideo quicklook-json quicklookase \
-    telegram firefox
+    telegram firefox raycast macvim 
 
   brew tap homebrew/cask-fonts
-  brew install --cask font-hack-nerd-font raycast
+  brew install --cask font-hack-nerd-font
 
   brew install \
     fd ripgrep cmake git imagemagick gnupg fzf \
-    ranger tree macvim wget zsh jq go highlight bat \
+    ranger tree wget zsh jq go highlight bat \
     rbenv node yarn \
     mysql postgresql redis \
     pinentry-mac bash-completion tmux \
