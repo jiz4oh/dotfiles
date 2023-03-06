@@ -1,0 +1,6 @@
+{
+  "extends": [
+    // Make sure to put prettier last
+    "prettier"
+  ]
+}

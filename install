@@ -9,7 +9,7 @@ mkdir -pv bak
 [ $(command -v zsh) ] && $BASE/install_zsh
 
 # dotfiles
-for rc in *rc tmux.conf tool-versions gitconfig gitignore zprofile zshenv zpath p10k.zsh rbenv/default-gems snipaste/config.ini; do
+for rc in *rc tmux.conf tool-versions gitconfig gitignore zprofile zshenv zpath p10k.zsh rbenv/default-gems snipaste/config.ini default-*-packages; do
   dir=$(dirname $rc)
   [ $dir != '.' ] && mkdir -pv bak/."$dir"
   mv -v ~/."$rc" bak/."$rc" >/dev/null 2>&1
