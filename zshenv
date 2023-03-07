@@ -1,6 +1,5 @@
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export HOMEBREW_NO_AUTO_UPDATE=true
 
 export EDITOR=vim
 
