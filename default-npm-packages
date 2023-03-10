@@ -1,6 +1,13 @@
-prettier
-eslint
+prettier-eslint-cli
+@prettier/plugin-ruby
+prettier-plugin-erb
+
 eslint-config-prettier
+eslint
+eslint-plugin-html
+eslint-plugin-prettier
+
 typescript
 bash-language-server
 typescript-language-server
+vscode-langservers-extracted
