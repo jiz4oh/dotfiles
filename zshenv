@@ -15,3 +15,4 @@ export GPG_TTY=$(tty)
 export RUBY_BUILD_MIRROR_URL=https://cache.ruby-china.com
 
 export ASDF_GEM_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
+export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
