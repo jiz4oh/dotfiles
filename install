@@ -37,33 +37,37 @@ for bin in $BASE/bin/*; do
   ln -svf "$bin" ~/bin
 done
 
-if [ "$(uname -s)" = 'Darwin' ]; then
-  # Homebrew
-  [ -z "$(which brew)" ] &&
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+OS=$(uname -s)
+if [ "${OS}" == "Darwin" ]; then
+  release="Darwin"
+elif [ "${OS}" == "Linux" ]; then
+  if [ -f /etc/centos-release ]; then
+    release="centos"
+  elif [ -f /etc/redhat-release ]; then
+    release="rhel"
+  elif grep -q -E -i "centos" < /etc/issue; then
+    release="centos"
+  elif grep -q -E -i "red hat|redhat" < /etc/issue; then
+    release="rhel"
+  elif grep -q -E -i "debian" < /etc/issue; then
+    release="debian"
+  elif grep -q -E -i "ubuntu" < /etc/issue; then
+    release="ubuntu"
+  elif grep -q -E -i "centos" < /proc/version; then
+    release="centos"
+  elif grep -q -E -i "red hat|redhat" < /proc/version; then
+    release="rhel"
+  elif grep -q -E -i "debian" < /proc/version; then
+    release="debian"
+  elif grep -q -E -i "ubuntu" < /proc/version; then
+    release="ubuntu"
+  elif [ -f /etc/os-release ]; then
+    release=$(grep -E "^ID" /etc/os-release | awk -F '=' '{print $2}')
+  fi
+fi
 
-  echo "Updating homebrew"
-  brew install --cask iterm2 snipaste squirrel \
-    qlcolorcode qlimagesize qlmarkdown qlstephen qlvideo quicklook-json quicklookase \
-    telegram firefox raycast macvim 
-
-  brew tap homebrew/cask-fonts
-  brew install --cask font-hack-nerd-font
-
-  brew install \
-    fd ripgrep cmake git imagemagick gnupg fzf \
-    ranger tree wget zsh jq go highlight bat \
-    rbenv node yarn \
-    mysql postgresql redis \
-    pinentry-mac bash-completion tmux \
-    translate-shell \
-    shellcheck shfmt
-
-  brew tap universal-ctags/universal-ctags
-  brew install --HEAD universal-ctags
-
-  # install fzf
-  $(brew --prefix)/opt/fzf/install
+if [ "$release" == "Darwin" ]; then
+  "$BASE"/install_osx
 fi
 
 [ ! -d ~/.asdf ] && git clone https://github.com/asdf-vm/asdf.git ~/.asdf

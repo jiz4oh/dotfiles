@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Homebrew
+[ -z "$(which brew)" ] &&
+  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+BREW_PREFIX=${BREW_PREFIX:-$(brew --prefix)}
+
+echo "Updating homebrew"
+brew install --cask iterm2 snipaste squirrel \
+  qlcolorcode qlimagesize qlmarkdown qlstephen qlvideo quicklook-json quicklookase \
+  telegram firefox raycast macvim 
+
+brew tap homebrew/cask-fonts
+brew install --cask font-hack-nerd-font
+
+brew install \
+  fd ripgrep cmake git imagemagick gnupg fzf \
+  ranger tree wget zsh jq go highlight bat \
+  rbenv node yarn \
+  mysql postgresql redis \
+  pinentry-mac bash-completion tmux \
+  translate-shell \
+  shellcheck shfmt
+
+brew tap universal-ctags/universal-ctags
+brew install --HEAD universal-ctags
+
+# install fzf
+"$BREW_PREFIX"/opt/fzf/install
