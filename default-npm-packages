@@ -7,6 +7,10 @@ eslint
 eslint-plugin-html
 eslint-plugin-prettier
 
+stylelint
+stylelint-config-standard-scss
+stylelint-prettier
+
 typescript
 bash-language-server
 typescript-language-server

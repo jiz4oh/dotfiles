@@ -9,8 +9,8 @@ mkdir -pv bak
 [ $(command -v zsh) ] && $BASE/install_zsh
 
 # dotfiles
-for rc in *rc tmux.conf tool-versions gitconfig gitignore zprofile zshenv zpath p10k.zsh \
-  prettierignore prettierrc.json \
+for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore zprofile zshenv zpath p10k.zsh \
+  prettierignore \
   rbenv/default-gems snipaste/config.ini default-*-packages; do
   dir=$(dirname $rc)
   [ $dir != '.' ] && mkdir -pv bak/."$dir"
@@ -56,7 +56,8 @@ if [ "$(uname -s)" = 'Darwin' ]; then
     rbenv node yarn \
     mysql postgresql redis \
     pinentry-mac bash-completion tmux \
-    translate-shell
+    translate-shell \
+    shellcheck shfmt
 
   brew tap universal-ctags/universal-ctags
   brew install --HEAD universal-ctags
