@@ -1,0 +1,12 @@
+#!/bin/bash
+
+apt update
+
+install() {
+	for i in "$@"; do
+		echo "Installing $i"
+		apt-get install -y "$i" -qq --no-install-recommends >/dev/null
+	done
+}
+
+install git shellcheck curl wget bat

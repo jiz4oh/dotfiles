@@ -68,6 +68,8 @@ fi
 
 if [ "$release" == "Darwin" ]; then
   "$BASE"/install_osx
+elif [ "$release" == "debian" ]; then
+  "$BASE"/install_debian
 fi
 
 [ ! -d ~/.asdf ] && git clone https://github.com/asdf-vm/asdf.git ~/.asdf
