@@ -71,13 +71,3 @@ if [ "$release" == "Darwin" ]; then
 elif [ "$release" == "debian" ]; then
   "$BASE"/install_debian
 fi
-
-[ ! -d ~/.asdf ] && git clone https://github.com/asdf-vm/asdf.git ~/.asdf
-
-mkdir -p ~/.rbenv/plugins
-if [ ! -e ~/.rbenv/plugins/rbenv-default-gems ]; then
-  git clone https://github.com/rbenv/rbenv-default-gems.git ~/.rbenv/plugins/rbenv-default-gems
-fi
-if [ ! -e ~/.rbenv/plugins/rbenv-ctags ]; then
-  git clone https://github.com/tpope/rbenv-ctags.git ~/.rbenv/plugins/rbenv-ctags
-fi
