@@ -3,4 +3,5 @@ gem-ctags
 bundler
 rails
 solargraph
+rubocop
 
