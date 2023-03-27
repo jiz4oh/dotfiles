@@ -92,6 +92,7 @@ copybuffer
 command-not-found
 extract
 safe-paste
+fzf
 )
 
 [ -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ] && plugins+=zsh-autosuggestions
@@ -158,8 +159,6 @@ if [ $(command -v mvim) ]; then
 fi
 
 [ -f $HOME/.zlocal ] && source $HOME/.zlocal
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 pods() {
   FZF_DEFAULT_COMMAND='
