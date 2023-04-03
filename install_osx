@@ -28,7 +28,4 @@ brew install \
 brew tap universal-ctags/universal-ctags
 brew install --HEAD universal-ctags
 
-# install fzf
-"$BREW_PREFIX"/opt/fzf/install
-
 "$BASE"/install_asdf
