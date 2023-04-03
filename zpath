@@ -3,6 +3,8 @@
 # https://0xmachos.com/2021-05-13-zsh-path-macos/
 # path_helper will reorder $PATH, so we can not set PATH in ~/.zshenv
 
+# https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
+export FPATH="$BREW_PREFIX/share/zsh/site-functions:${FPATH}"
 export PATH="$BREW_PREFIX/bin:$PATH"
 export PATH="$BREW_PREFIX/opt:$PATH"
 
