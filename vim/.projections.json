@@ -1,0 +1,13 @@
+{
+  "config/plugin.vim": {
+    "type": "config"
+  },
+  "config/plugin/*.vim": {
+    "type": "config",
+    "related": "bundle/{}/plugin/{}.vim"
+  },
+  "bundle/**/plugin/*.vim": {
+    "type": "plugin",
+    "related": "config/plugin/{dirname}.vim"
+  }
+}

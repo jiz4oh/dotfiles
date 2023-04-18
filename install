@@ -18,8 +18,9 @@ for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore zprofile zshe
   ln -sfv "$BASE/$rc" ~/."$rc"
 done
 
+mkdir -pv ~/.config
 # dotdirs
-for dir in git_template ctags.d; do
+for dir in git_template ctags.d vim config/nvim; do
   rm -rf bak/$dir
   mv -v ~/.$dir bak/$dir >/dev/null 2>&1
   
@@ -71,3 +72,5 @@ if [ "$release" == "Darwin" ]; then
 elif [ "$release" == "debian" ]; then
   "$BASE"/install_debian
 fi
+
+"$BASE"/vim/install
