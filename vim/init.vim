@@ -77,5 +77,3 @@ let &packpath = &runtimepath
 if filereadable($HOME . '/.vimrc.local')
   exec 'source' $HOME . '/.vimrc.local'
 endif
-
-command! -nargs=0 -bar ConfigUpgrade call personal#config#upgrade()

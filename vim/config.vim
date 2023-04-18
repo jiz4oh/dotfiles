@@ -4,9 +4,6 @@ let g:is_win            = has('win32') || has('win64')
 " https://unix.stackexchange.com/a/78220
 let g:has_linux_desktop = !empty($XDG_CURRENT_DESKTOP)
 
-let g:config_src = 'https://github.com/jiz4oh/vim.git'
-let g:config_dir = resolve(expand('<sfile>:p:h'))
-
 let g:notes_root              = $HOME . '/Notes'
 
 " needs to be defined before vim-polyglot is loaded
