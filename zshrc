@@ -144,7 +144,6 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias cd.='cd ..'
 alias cd..='cd ..'
-alias l.='ls -lhd .*'
 alias l='ls -alF'
 alias ll='ls -l'
 
@@ -159,6 +158,10 @@ if [ $(command -v mvim) ]; then
 fi
 
 [ -f $HOME/.zlocal ] && source $HOME/.zlocal
+
+l.() {
+  [ -z $1 ] && ls -lhd .* || ls -lhd $1/.*
+}
 
 pods() {
   FZF_DEFAULT_COMMAND='
