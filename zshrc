@@ -157,8 +157,6 @@ if [ $(command -v mvim) ]; then
   alias vm='mvim -v'
 fi
 
-[ -f $HOME/.zlocal ] && source $HOME/.zlocal
-
 l.() {
   [ -z $1 ] && ls -lhd .* || ls -lhd $1/.*
 }
@@ -210,3 +208,5 @@ zmodload zsh/zprof
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[ -f $HOME/.zlocal ] && source $HOME/.zlocal
