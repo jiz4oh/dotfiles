@@ -1,3 +1,5 @@
 yamllint
 vim-vint
 ipython
+virtualenv
+ruff
