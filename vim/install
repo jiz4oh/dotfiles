@@ -3,7 +3,8 @@
 BASE=$(dirname "$0")
 [ -f ~/.vimrc ] && mv -v ~/.vimrc "$(dirname "$(pwd)")"/bak
 if type vim &>/dev/null;then
-  vim +PlugInstall +qall
+  # https://github.com/junegunn/vim-plug/issues/730#issuecomment-363037250
+  vim +'PlugInstall --sync' +qall &> /dev/null < /dev/tty
 fi
 
 if type nvim &>/dev/null;then
