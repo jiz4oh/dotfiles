@@ -3,4 +3,5 @@ tags.lock
 tags.tmp
 .DS_Store
 bak/
+Brewfile.lock.json
 
