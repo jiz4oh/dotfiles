@@ -83,7 +83,7 @@ nmap <silent> <leader>ft :call <SID>toggle_virtualtext_cursor()<cr>
 augroup ale_augroup
   autocmd!
 
-  if has('nvim')
+  if has('nvim-0.5')
     autocmd VimEnter * lua vim.diagnostic.disable()
   endif
 
