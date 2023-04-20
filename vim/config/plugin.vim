@@ -147,7 +147,10 @@ let g:enable_lsp = get(g:, 'enable_lsp', 0)
 
 "lsp
 if g:enable_lsp
-  if has('nvim')
+  if has('nvim-0.5')
+    if has('nvim-0.7')
+      Plug 'simrat39/symbols-outline.nvim'
+    endif
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/nvim-lsp-installer'
     "fzf integration
