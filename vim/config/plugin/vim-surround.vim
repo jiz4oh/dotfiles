@@ -1,6 +1,8 @@
 augroup vim-surround-augroup
   autocmd! 
 
+  " <
+  let g:surround_60 = "<\1<: \1>\r</\1\1>"
   function! s:surround_rb() abort
     " i
     let b:surround_105 = "if \1if: \1 \r end" |
@@ -33,19 +35,19 @@ augroup vim-surround-augroup
     let b:surround_35 = "<%=# \r %>" |
     " surround area with <% <foo> (...) do %> <% end %>
     " i
-    let b:surround_105 = "<% if \1<% if: \1 %> \r <% end %>" |
+    let b:surround_105 = "<% if \1<% if: \1 %>\n \r \n<% end %>" |
     " u
-    let b:surround_117 = "<% unless \1<% unless: \1 %> \r <% end %>" |
+    let b:surround_117 = "<% unless \1<% unless: \1 %>\n \r \n<% end %>" |
     " w
-    let b:surround_119 = "<% while \1<% while: \1 do %> \r <% end %>" |
+    let b:surround_119 = "<% while \1<% while: \1 do %>\n \r \n<% end %>" |
     " e
     let b:surround_101 = "<% \r %>\n<% end %>" |
     " <C-E>
     let b:surround_5 = "<% \r %>\n<% end %>" |
     " E
-    let b:surround_69 = "\1expr: \1\rend" |
+    let b:surround_69 = "<% \1 <% expr: \1 %>\n \r \n<% end %>"
     " d
-    let b:surround_100 = "<% do %> \r <% end %>"
+    let b:surround_100 = "<% do %>\n \r \n<% end %>"
   endfunction
 
   autocmd FileType eruby call s:surround_erb()
