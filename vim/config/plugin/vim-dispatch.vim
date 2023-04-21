@@ -39,6 +39,8 @@ xnoremap g'<CR>            :Spawn<cr>
 nnoremap <leader>t'<space> :tab Start<space>
 nnoremap <leader>t'<CR>    :tab Start<cr>
 
+let test#strategy = 'dispatch_background'
+
 if !exists('g:dispatch_compilers')
   let g:dispatch_compilers = {}
 endif

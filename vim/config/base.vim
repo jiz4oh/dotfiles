@@ -598,6 +598,8 @@ function! ChangeCWDTo(dir) abort
     execute 'cd ' . expand(a:dir)
     echo 'cwd: ' . getcwd()
   end
+
+  let g:test#project_root = a:dir
 endfunction
 
 " change cwd

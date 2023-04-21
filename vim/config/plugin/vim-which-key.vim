@@ -156,8 +156,12 @@ let g:which_key_map['w'] = {
       \ }
 
 let g:which_key_map['t'] = {
-      \ 'name' : '+Tab',
+      \ 'name' : '+Tab/Test',
       \ 'n' : ['tabnew', 'New Tab'],
+      \ 'r' : ['TestNearest', 'Test nearest to the cursor'],
+      \ 'f' : ['TestFile', 'Test current File or last File'],
+      \ 'a' : ['TestSuite', 'run whole Test suite of current file or last file'],
+      \ 'l' : ['TestLast', 'run the Last Test'],
       \ '''' : {
       \   'name' : '+Start',
       \   }
