@@ -36,7 +36,7 @@ call SourceConfig('plugin')
 if exists('g:neovide')
   let g:neovide_input_use_logo=v:true
   " copy
-  vnoremap <D-c> "+y
+  xnoremap <D-c> "+y
 
   " paste
   nnoremap <D-v> "+p
@@ -47,6 +47,11 @@ if exists('g:neovide')
   " undo
   nnoremap <D-z> u
   inoremap <D-z> <Esc>ua
+
+  " others
+  if has('mac')
+    nmap <silent> <D-C-f> :let g:neovide_fullscreen = get(g:, "neovide_fullscreen", 0) == 0 ? 1 : 0<cr>
+  endif
 endif
 
 augroup PlugLazyLoad
