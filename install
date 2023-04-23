@@ -13,7 +13,7 @@ for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore zprofile zshe
   prettierignore yamllint.yaml \
   rbenv/default-gems snipaste/config.ini default-*-packages; do
   dir=$(dirname $rc)
-  [ $dir != '.' ] && mkdir -pv bak/."$dir"
+  [ "$dir" != '.' ] && mkdir -pv bak/."$dir"
   mv -v ~/."$rc" bak/."$rc" >/dev/null 2>&1
   ln -sfv "$BASE/$rc" ~/."$rc"
 done
@@ -22,6 +22,8 @@ mkdir -pv ~/.config
 # dotdirs
 for dir in git_template ctags.d vim config/nvim; do
   rm -rf bak/$dir
+  parent_dir=$(dirname "$dir")
+  [ "$parent_dir" != '.' ] && mkdir -pv bak/"$parent_dir"
   mv -v ~/.$dir bak/$dir >/dev/null 2>&1
   
   ln -svf "$BASE/$dir"/ ~/.$dir
