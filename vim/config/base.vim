@@ -1,4 +1,5 @@
-let g:neovide_fullscreen= 1
+" do not open fullscreen in macos, it is conflict with some plugins
+" let g:neovide_fullscreen= 1
 let $DISABLE_PRY_PAGER = 1
 let g:is_darwin = get(g:, 'is_darwin', has('mac'))
 let g:is_win    = get(g:, 'is_win', has('win32') || has('win64'))
