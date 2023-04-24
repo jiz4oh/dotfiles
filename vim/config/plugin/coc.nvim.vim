@@ -34,24 +34,28 @@ else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
-nnoremap <silent> <leader>ld <Plug>(coc-definition)
-nnoremap <silent> <leader>lD <Plug>(coc-declaration)
-nnoremap <silent> <leader>lt <Plug>(coc-type-definition)
-nnoremap <silent> <leader>li <Plug>(coc-implementation)
-nnoremap <silent> <leader>lr <Plug>(coc-references-used)
-nnoremap <silent> <leader>lR <Plug>(coc-rename)
-nnoremap <silent> <leader>lf <Plug>(coc-format-selected)
-xnoremap <silent> <leader>lf <Plug>(coc-format-selected)
-nnoremap <silent> <leader>ls :call CocActionAsync('documentSymbols')<cr>
-nnoremap <silent> <leader>lS :call CocActionAsync('getWorkspaceSymbols', '')<cr>
-nnoremap <silent> <leader>lK :call CocActionAsync('doHover')<cr>
+if !has('nvim')
+  nnoremap <silent> <leader>ld <Plug>(coc-definition)
+  nnoremap <silent> <leader>lD <Plug>(coc-declaration)
+  nnoremap <silent> <leader>lt <Plug>(coc-type-definition)
+  nnoremap <silent> <leader>li <Plug>(coc-implementation)
+  nnoremap <silent> <leader>lr <Plug>(coc-references-used)
+  nnoremap <silent> <leader>lR <Plug>(coc-rename)
+  nnoremap <silent> <leader>lf <Plug>(coc-format-selected)
+  xnoremap <silent> <leader>lf <Plug>(coc-format-selected)
+  nnoremap <silent> <leader>ls :call CocActionAsync('documentSymbols')<cr>
+  nnoremap <silent> <leader>lS :call CocActionAsync('getWorkspaceSymbols', '')<cr>
+  nnoremap <silent> <leader>lK :call CocActionAsync('doHover')<cr>
+endif
 
 augroup coc_augoup
   autocmd!
 
-  " Highlight the symbol and its references when holding the cursor.
-  autocmd CursorHold * silent call CocActionAsync('highlight')
   autocmd User CocStatusChange redrawstatus
-  autocmd User CocNvimInit ++once autocmd BufReadPost * if CocHasProvider('definition') | nmap <silent> <buffer> <leader>et :call CocAction('showOutline')<CR> | endif
+  if !has('nvim')
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+    autocmd User CocNvimInit ++once autocmd BufReadPost * if CocHasProvider('definition') | nmap <silent> <buffer> <leader>et :call CocAction('showOutline')<CR> | endif
+  endif
 augroup END
 
