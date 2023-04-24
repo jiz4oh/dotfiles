@@ -20,7 +20,7 @@ done
 
 mkdir -pv ~/.config
 # dotdirs
-for dir in git_template ctags.d vim config/nvim; do
+for dir in git_template ctags.d vim config/nvim config/solargraph; do
   rm -rf bak/$dir
   parent_dir=$(dirname "$dir")
   [ "$parent_dir" != '.' ] && mkdir -pv bak/"$parent_dir"
