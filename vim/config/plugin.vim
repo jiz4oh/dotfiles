@@ -151,6 +151,7 @@ if g:enable_lsp
   if has('nvim-0.5')
     if has('nvim-0.7')
       Plug 'simrat39/symbols-outline.nvim'
+      " Plug 'williamboman/mason.nvim' | Plug 'williamboman/mason-lspconfig.nvim'
     endif
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/nvim-lsp-installer'
