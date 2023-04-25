@@ -269,7 +269,7 @@ Plug 'troydm/zoomwintab.vim'
 " BEAUTIFY {{{
 " ============================================================================
 if has('nvim')
-  " Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+  Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 endif
 if has('nvim') || has('gui_running')
   " Plug 'vim-airline/vim-airline'
