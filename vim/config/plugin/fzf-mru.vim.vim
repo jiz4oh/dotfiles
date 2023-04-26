@@ -1,6 +1,7 @@
 let g:fzf_mru_no_sort = 1
 
-command! -bang -nargs=? FZFMru call fzf_mru#actions#mru(<q-args>, fzf#vim#with_preview({'options': '--prompt "MRU>"'}))
+command! -nargs=? FZFMru call fzf_mru#actions#mru(<q-args>, fzf#vim#with_preview({'options': '--no-sort --prompt "MRU>"'}))
+command! -nargs=? FZFFreshMru call fzf_mru#mrufiles#refresh() <bar> call fzf_mru#actions#mru(<q-args>, fzf#vim#with_preview({'options': '--no-sort --prompt "MRU>"'}))
 
 nnoremap <leader>sf :FZFMru<cr>
 
