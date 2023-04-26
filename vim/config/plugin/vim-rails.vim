@@ -210,9 +210,6 @@ augroup vim-rails-augroup
 
   autocmd FileType ruby
         \ if exists('b:rails_root') && filereadable(expand(b:rails_root.'/.rubocop.yml'))|let b:ale_ruby_rubocop_executable = 'bundle'|endif
-
-  autocmd FileType eruby
-        \ if RailsDetect() | call rails#ruby_setup() | endif
 augroup END
 
 " autocmd User Rails call <SID>setup_rails()

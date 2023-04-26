@@ -1,3 +1,9 @@
+augroup vim-rails-augroup
+  autocmd FileType eruby
+        \ if RailsDetect() | call rails#ruby_setup() | endif
+
+augroup END
+
 lua<<EOF
   vim.opt.foldmethod = 'expr'
   vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -22,7 +28,6 @@ lua<<EOF
     indent = {
       enable = true
     },
-    -- hightlight caused bug with rails.vim that gf is not working as expected
     highlight = {
       enable = true,
       additional_vim_regex_highlighting = false,
