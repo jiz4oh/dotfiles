@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# https://github.com/asdf-community/asdf-python/blob/8505457c6612514688ba473386d2063d4c83bb54/bin/install#L33
+install_default_python_packages() {
+  local packages_file="${ASDF_PYTHON_DEFAULT_PACKAGES_FILE:-$HOME/.default-python-packages}"
+
+  if [ -f "$packages_file" ]; then
+    echo -ne "\nInstalling default python packages..."
+    PATH="$ASDF_INSTALL_PATH/bin:$PATH" pip install -U -r "$packages_file"
+  fi
+}
+
+install_default_python_packages

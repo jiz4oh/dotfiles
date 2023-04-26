@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# https://github.com/asdf-vm/asdf-ruby/blob/f758de04122f498a309011c809092b98095a6a48/bin/install#L84
+install_default_gems() {
+  local args=()
+  local default_gems="${ASDF_GEM_DEFAULT_PACKAGES_FILE:=$HOME/.default-gems}"
+
+  if [ ! -f "$default_gems" ]; then
+    return
+  fi
+
+  echo ""
+
+  # Parsing of .default-gems was originally lifted from rbenv-default-gems
+  # which is Copyright (c) 2013 Sam Stephenson
+  # https://github.com/rbenv/rbenv-default-gems/blob/ead6788/LICENSE
+  while IFS=" " read -r -a line; do
+
+    # Skip empty lines.
+
+    # Skip comment lines that begin with `#`.
+    [ "${line[0]:0:1}" != "#" ] || continue
+
+    gem_name="${line[0]}"
+    gem_version="${line[1]-}"
+
+    if [ "$gem_version" == "--pre" ]; then
+      args=(--pre)
+    elif [ -n "$gem_version" ]; then
+      args=(--version "$gem_version")
+    else
+      args=()
+    fi
+
+    # shellcheck disable=SC2145
+    echo -n "Running: gem install $gem_name ${args[@]:-} ... "
+
+    if output=$(PATH="$ASDF_INSTALL_PATH/bin:$PATH" gem install "$gem_name" "${args[@]+"${args[@]}"}" 2>&1); then
+      echo -e "SUCCESS"
+    else
+      echo -e "FAIL: $output"
+    fi
+  done <"$default_gems"
+}
+
+install_default_gems
