@@ -364,7 +364,7 @@ augroup vimrc
 
    "Close preview window
   if exists('##CompleteDone')
-    autocmd CompleteDone * pclose
+    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
   else
     autocmd InsertLeave * if !pumvisible() && (!exists('*getcmdwintype') || empty(getcmdwintype())) | pclose | endif
   endif
@@ -432,9 +432,24 @@ augroup END
 " }}}
 "
 " ============================================================================
-" KEY MAP {{{
+" COMMAND {{{
 " ============================================================================
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+command! Cnext try | cnext | catch | cfirst | catch | endtry
+command! Cprev try | cprev | catch | clast | catch | endtry
+
+command! Lnext try | lnext | catch | lfirst | catch | endtry
+command! Lprev try | lprev | catch | llast | catch | endtry
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" REMOVE DUPLICATE LINES  {{{
+" https://vim.fandom.com/wiki/Uniq_-_Removing_duplicate_lines
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command! Uniq g/^\(.*\)\n\1$/d
+" }}}
+" }}}
+
 " ============================================================================
 " KEY MAP {{{
 " ============================================================================
@@ -473,13 +488,8 @@ elseif has('terminal') && exists(':terminal') == 2 && has('patch-8.1.1')
 endif
 
 " https://vi.stackexchange.com/a/8535
-command! Cnext try | cnext | catch | cfirst | catch | endtry
-command! Cprev try | cprev | catch | clast | catch | endtry
 nnoremap <silent> ]q :Cnext<cr>
 nnoremap <silent> [q :Cprev<cr>
-
-command! Lnext try | lnext | catch | lfirst | catch | endtry
-command! Lprev try | lprev | catch | llast | catch | endtry
 nnoremap <silent> ]l :Lnext<cr>
 nnoremap <silent> [l :Lprev<cr>
 
@@ -677,13 +687,6 @@ function! RenameFile()
   endif
 endfunction
 map <leader>fr :call RenameFile()<cr>
-"}}}
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" REMOVE DUPLICATE LINES  {{{
-" https://vim.fandom.com/wiki/Uniq_-_Removing_duplicate_lines
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-command! Uniq g/^\(.*\)\n\1$/d
 "}}}
 
 " if !exists("g:plugs") || !has_key(g:plugs, 'vim-rsi')

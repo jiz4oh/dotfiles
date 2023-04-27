@@ -15,5 +15,3 @@ inoremap <silent><expr> <TAB>
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " conflict with endwise
 inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
-
-autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
