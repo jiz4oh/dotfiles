@@ -5,5 +5,13 @@ require("symbols-outline").setup({
 })
 EOF
 
-map  <silent> <F9> :SymbolsOutline<CR>
-map! <silent> <F9> :SymbolsOutline<CR>
+function! s:on_lsp_buffer_enabled() abort
+  nmap  <buffer><silent> <Plug><OutlineToggle> :SymbolsOutline<CR>
+  imap  <buffer><silent> <Plug><OutlineToggle> <c-o>:SymbolsOutline<CR>
+endfunction
+
+augroup symbols-outline-augroup
+  autocmd!
+
+  autocmd User LspAttach call s:on_lsp_buffer_enabled()
+augroup END

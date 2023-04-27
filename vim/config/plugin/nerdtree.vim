@@ -125,12 +125,10 @@ endfunction
 
 nnoremap <silent> <leader>ep :NERDTree<cr>
 " Navigation
-nmap  <silent> <leader>ee :NERDTreeToggle<CR>
 nmap  <silent> <leader>ef :NERDTreeFind<CR>
-nmap  <silent> <special> <F2> :NERDTreeToggle<CR>
+nmap <Plug><ExpoloreToggle> :NERDTreeToggle<CR>
+imap <Plug><ExpoloreToggle> <c-o>:<c-u>NERDTreeToggle<CR>
 
 " Command to call the OpenFileOrExplorer function.
 command! -n=? -complete=file -bar -bang E    :call <SID>OpenFileOrExplorer('<args>', <bang>0)
 command! -n=? -complete=file -bar -bang Edit :call <SID>OpenFileOrExplorer('<args>', <bang>0)
-
-map! <silent> <special> <F2> <esc>:<c-u>NERDTreeToggle<CR>

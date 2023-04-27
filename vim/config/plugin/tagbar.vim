@@ -116,6 +116,5 @@ if executable('ripper-tags')
       \ }
 endif
 
-nmap  <silent> <leader>et :TagbarToggle<CR>
-map  <silent> <F8> :TagbarToggle<CR>
-map! <silent> <F8> <esc>:<c-u>TagbarToggle<CR>
+nmap  <silent> <Plug><OutlineToggle> :TagbarToggle<CR>
+imap  <silent> <Plug><OutlineToggle> <c-o>:<c-u>TagbarToggle<CR>

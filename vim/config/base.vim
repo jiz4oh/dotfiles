@@ -545,8 +545,12 @@ inoremap <C-s>     <C-O>:update<cr>
 nnoremap <C-s>     :update<cr>
 
 " switch setting
-map  <special> <F2> :Lexplore<CR>
-map! <special> <F2> <esc>:<c-u>Lexplore<CR>
+map  <silent>          <leader>ee <Plug><ExpoloreToggle>
+map  <silent><special> <F2>       <Plug><ExpoloreToggle>
+imap <silent><special> <F2>       <Plug><ExpoloreToggle>
+
+map  <Plug><ExpoloreToggle> :Lexplore<CR>
+imap <Plug><ExpoloreToggle> <c-o>:<c-u>Lexplore<CR>
 
 " remap U to <C-r> for easier redo
 nnoremap U <C-r>
@@ -651,6 +655,10 @@ inoremap <M-'> ''<esc>i
 inoremap <M-"> ""<esc>i
 inoremap <M-<> <><esc>i
 inoremap <M-{> {<esc>o}<esc>ko
+
+map  <silent>          <leader>et <Plug><OutlineToggle>
+map  <silent><special> <F8>       <Plug><OutlineToggle>
+imap <silent><special> <F8>       <c-o>:<Plug><OutlineToggle>
 
 " https://forum.obsidian.md/t/open-note-in-obsidian-from-within-vim-and-vice-versa/6837
 " Open file in Obsidian vault

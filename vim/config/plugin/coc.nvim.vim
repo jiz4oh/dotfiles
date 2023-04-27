@@ -27,14 +27,7 @@ function! CheckBackspace() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-if !has('nvim')
+function! s:on_lsp_buffer_enabled() abort
   nnoremap <silent> <leader>ld <Plug>(coc-definition)
   nnoremap <silent> <leader>lD <Plug>(coc-declaration)
   nnoremap <silent> <leader>lt <Plug>(coc-type-definition)
@@ -46,6 +39,15 @@ if !has('nvim')
   nnoremap <silent> <leader>ls :call CocActionAsync('documentSymbols')<cr>
   nnoremap <silent> <leader>lS :call CocActionAsync('getWorkspaceSymbols', '')<cr>
   nnoremap <silent> <leader>lK :call CocActionAsync('doHover')<cr>
+  nmap  <buffer><silent> <Plug><OutlineToggle> :call CocAction('showOutline')<CR>
+  imap  <buffer><silent> <Plug><OutlineToggle> <c-o>:<c-u>call CocAction('showOutline')<CR>
+endfunction
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
 augroup coc_augoup
@@ -55,7 +57,7 @@ augroup coc_augoup
   if !has('nvim')
     " Highlight the symbol and its references when holding the cursor.
     autocmd CursorHold * silent call CocActionAsync('highlight')
-    autocmd User CocNvimInit ++once autocmd BufReadPost * if CocHasProvider('definition') | nmap <silent> <buffer> <leader>et :call CocAction('showOutline')<CR> | endif
+    autocmd User CocNvimInit ++once autocmd BufReadPost * if CocHasProvider('definition') | call s:on_lsp_buffer_enabled() | endif
   endif
 augroup END
 
