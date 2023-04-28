@@ -230,3 +230,32 @@ function! fzf#customized#compilers()
   \ 'options': '+m --prompt="Compilers> "'
   \}))
 endfunction
+
+function! fzf#customized#quickfix(query, fullscreen) abort
+  let l:qf = getqflist()
+  let l:list = map(l:qf, { _, val -> bufname(val.bufnr). ':'. val.lnum . ':' . val.col . ':'. val.text})
+  if !empty(a:query)
+    let @/ = a:query
+  endif
+
+  let actions = {
+    \ 'ctrl-t': 'tab split',
+    \ 'ctrl-x': 'split',
+    \ 'ctrl-v': 'vsplit'
+    \}
+  let l:dir = getcwd()
+  let l:spec = {
+                \'dir': l:dir,
+                \'sink*': { lines -> fzf#helper#handler(lines, 1, actions) },
+                \'source': l:list,
+                \'options': [
+                  \'--expect', join(keys(actions), ','),
+                  \'--ansi',
+                  \'--prompt', 'Quickfix ',
+                  \'--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
+                  \'--delimiter', ':', '--preview-window', '+{2}-/2'
+                \]}
+
+  call fzf#run(fzf#wrap(fzf#vim#with_preview(l:spec), a:fullscreen))
+endfunction
+

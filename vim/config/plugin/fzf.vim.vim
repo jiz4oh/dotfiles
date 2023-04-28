@@ -9,6 +9,7 @@ endfunction
 command! -nargs=? -bang Compilers call fzf#customized#compilers()
 command! -nargs=? -bang Projects  call fzf#customized#projects(<q-args>, <bang>0)
 command! -nargs=? -bang Path      call fzf#customized#path(<q-args>, <bang>0)
+command! -nargs=? -bang Cfilter   call fzf#customized#quickfix(<q-args>, <bang>0)
 command! -nargs=? -bang Sessions  call fzf#customized#sessions(<bang>0)
 
 command! -nargs=? -bang RG        call fzf#customized#rg(<q-args>, <bang>0)
@@ -58,6 +59,7 @@ endif
 call FzfGrepMap('<leader>s<Space>', 'RG')
 call FzfGrepMap('<leader>ss', 'Sessions')
 call FzfGrepMap('<leader>sl', 'Path')
+call FzfGrepMap('<leader>sq', 'Cfilter')
 call FzfGrepMap('<leader>sp', 'Pg')
 call FzfGrepMap('<leader>sw', 'Wg')
 

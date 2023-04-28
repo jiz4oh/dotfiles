@@ -15,6 +15,17 @@ function! s:open(cmd, target)
   execute a:cmd personal#functions#escape(a:target)
 endfunction
 
+function! s:fill_quickfix(list, ...)
+  if len(a:list) > 1
+    call setqflist(a:list)
+    copen
+    wincmd p
+    if a:0
+      execute a:1
+    endif
+  endif
+endfunction
+
 " key (strint), [default (string)]
 function! s:action_for(key, ...)
   let default = a:0 ? a:1 : ''
@@ -53,6 +64,8 @@ function! fzf#helper#handler(lines, has_column, ...)
     normal! zvzz
   catch
   endtry
+
+  call s:fill_quickfix(list)
 endfunction
 
 function! s:_reserve_cmd(func)
