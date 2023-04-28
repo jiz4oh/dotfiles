@@ -129,7 +129,7 @@ let g:which_key_map['s'] = {
       \ ' ': 'Search with ripgrep',
       \ '/': 'Search search hisotry',
       \ ':': 'Search command history',
-      \ 'l': 'Search Library',
+      \ 'i': 'Search Include files',
       \ 'g': 'Search in Gems',
       \ 'p': 'Search in Project',
       \ 't': 'Search <cword> in Tags',
