@@ -26,6 +26,7 @@ function! s:on_lsp_buffer_enabled() abort
 
     autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
 
+    let g:vista_{&filetype}_executive = 'vim_lsp'
     " refer to doc to add more commands
 endfunction
 

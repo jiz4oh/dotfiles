@@ -39,8 +39,10 @@ function! s:on_lsp_buffer_enabled() abort
   nnoremap <silent> <leader>ls :call CocActionAsync('documentSymbols')<cr>
   nnoremap <silent> <leader>lS :call CocActionAsync('getWorkspaceSymbols', '')<cr>
   nnoremap <silent> <leader>lK :call CocActionAsync('doHover')<cr>
-  nmap  <buffer><silent> <Plug><OutlineToggle> :call CocAction('showOutline')<CR>
-  imap  <buffer><silent> <Plug><OutlineToggle> <c-o>:<c-u>call CocAction('showOutline')<CR>
+  " nmap  <buffer><silent> <Plug><OutlineToggle> :call CocAction('showOutline')<CR>
+  " imap  <buffer><silent> <Plug><OutlineToggle> <c-o>:<c-u>call CocAction('showOutline')<CR>
+
+  let g:vista_{&filetype}_executive = 'coc'
 endfunction
 
 " Use <c-space> to trigger completion.
@@ -54,10 +56,10 @@ augroup coc_augoup
   autocmd!
 
   autocmd User CocStatusChange redrawstatus
-  if !has('nvim')
+  if !has('nvim') || get(g:, 'lsp_loaded', 0)
     " Highlight the symbol and its references when holding the cursor.
     autocmd CursorHold * silent call CocActionAsync('highlight')
-    autocmd User CocNvimInit ++once autocmd BufReadPost * if CocHasProvider('definition') | call s:on_lsp_buffer_enabled() | endif
+    autocmd User CocNvimInit ++once autocmd FileType * if CocHasProvider('definition') | call s:on_lsp_buffer_enabled() | endif
   endif
 augroup END
 

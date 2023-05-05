@@ -12,6 +12,8 @@ function! s:on_lsp_buffer_enabled() abort
   nnoremap <buffer> <leader>lf <cmd>lua vim.lsp.buf.formatting()<CR>
   xnoremap <buffer> <leader>lf <cmd>lua vim.lsp.buf.range_formatting()<CR>
   nnoremap <buffer> <leader>lK <cmd>lua vim.lsp.buf.hover()<CR>
+
+  let g:vista_{&filetype}_executive = 'nvim_lsp'
   echo 'LSP attached'
 endfunction
 

@@ -18,6 +18,9 @@ else
   runtime macros/matchit.vim
 endif
 
+let g:enable_lsp = get(g:, 'enable_lsp', 0)
+let g:enable_autocomplete = get(g:, 'enable_autocomplete', 0)
+
 silent! if plug#begin('~/.vim/bundle')
 set updatetime=100
 " ============================================================================
@@ -134,6 +137,10 @@ if executable('ctags')
     Plug 'preservim/tagbar', { 'on': 'TagbarToggle' }
   endif
 endif
+
+if g:enable_lsp || executable('ctags')
+  Plug 'liuchengxu/vista.vim'
+endif
 "}}}
 
 " ============================================================================
@@ -144,13 +151,11 @@ if has('timers') && (has('nvim-0.2.0') || exists('*job_start') && exists('*ch_cl
   Plug 'git@github.com:jiz4oh/ale-autocorrect.vim.git'
 endif
 
-let g:enable_lsp = get(g:, 'enable_lsp', 0)
-
 "lsp
 if g:enable_lsp
   if has('nvim-0.5')
     if has('nvim-0.7')
-      Plug 'simrat39/symbols-outline.nvim'
+      " Plug 'simrat39/symbols-outline.nvim'
       " Plug 'williamboman/mason.nvim' | Plug 'williamboman/mason-lspconfig.nvim'
     endif
     Plug 'neovim/nvim-lspconfig'
@@ -165,8 +170,6 @@ if g:enable_lsp
     " Plug 'mattn/vim-lsp-settings'
   endif
 endif
-
-let g:enable_autocomplete = get(g:, 'enable_autocomplete', 0)
 
 "autocomplte
 if g:enable_autocomplete
