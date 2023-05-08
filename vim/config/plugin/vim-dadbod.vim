@@ -10,3 +10,9 @@ nmap <leader>db  <Plug>(DBExe)
 omap <leader>db  <Plug>(DBExe)
 nmap <leader>dbb <Plug>(DBExeLine)
 
+augroup vim-dadbod-augroup
+  autocmd!
+
+  autocmd FileType mysql,sql,plsql let b:start = ':DB' |
+        \ let b:dispatch = ':DB'
+augroup END
