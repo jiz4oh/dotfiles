@@ -43,6 +43,7 @@ function! s:on_lsp_buffer_enabled() abort
   " imap  <buffer><silent> <Plug><OutlineToggle> <c-o>:<c-u>call CocAction('showOutline')<CR>
 
   let g:vista_{&filetype}_executive = 'coc'
+  redraw | echomsg 'COC LSP attached'
 endfunction
 
 " Use <c-space> to trigger completion.

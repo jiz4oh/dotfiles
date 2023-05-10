@@ -14,7 +14,7 @@ function! s:on_lsp_buffer_enabled() abort
   nnoremap <buffer> <leader>lK <cmd>lua vim.lsp.buf.hover()<CR>
 
   let g:vista_{&filetype}_executive = 'nvim_lsp'
-  echo 'LSP attached'
+  redraw | echomsg 'NVIM LSP attached'
 endfunction
 
 augroup nvim-lspconfig-augroup

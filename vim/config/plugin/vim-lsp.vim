@@ -28,9 +28,10 @@ function! s:on_lsp_buffer_enabled() abort
 
     let g:vista_{&filetype}_executive = 'vim_lsp'
     " refer to doc to add more commands
+    redraw | echomsg 'VIM LSP attached'
 endfunction
 
-augroup lsp_install
+augroup vim-lsp-augroup
     au!
     " call s:on_lsp_buffer_enabled only for languages that has the server registered.
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
