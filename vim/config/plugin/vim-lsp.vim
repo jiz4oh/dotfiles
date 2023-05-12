@@ -31,10 +31,20 @@ function! s:on_lsp_buffer_enabled() abort
     redraw | echomsg 'VIM LSP attached'
 endfunction
 
+function! s:on_lsp_float_opened() abort
+  nnoremap <buffer><silent><nowait><expr> <M-j> lsp#scroll(+4)
+  nnoremap <buffer><silent><nowait><expr> <M-k> lsp#scroll(-4)
+  inoremap <buffer><silent><nowait><expr> <M-j> "\<c-r>=lsp#scroll(+4)\<cr>"
+  inoremap <buffer><silent><nowait><expr> <M-k> "\<c-r>=lsp#scroll(-4)\<cr>"
+  vnoremap <buffer><silent><nowait><expr> <M-j> lsp#scroll(+4)
+  vnoremap <buffer><silent><nowait><expr> <M-k> lsp#scroll(-4)
+endfunction
+
 augroup vim-lsp-augroup
     au!
     " call s:on_lsp_buffer_enabled only for languages that has the server registered.
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+    autocmd User lsp_float_opened call s:on_lsp_float_opened()
 augroup END
 
 if has('patch-8.2.4780')

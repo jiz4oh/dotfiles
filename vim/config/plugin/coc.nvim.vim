@@ -22,12 +22,20 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
 
 inoremap <silent><expr> <C-y> coc#pum#visible() ? coc#pum#confirm() : "\<C-y>"
 
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
 function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 function! s:on_lsp_buffer_enabled() abort
+  let b:coc_lsp_attached = 1
   nnoremap <silent> <leader>ld <Plug>(coc-definition)
   nnoremap <silent> <leader>lD <Plug>(coc-declaration)
   nnoremap <silent> <leader>lt <Plug>(coc-type-definition)
@@ -46,21 +54,26 @@ function! s:on_lsp_buffer_enabled() abort
   redraw | echomsg 'COC LSP attached'
 endfunction
 
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
+function! s:on_coc_float_opened() abort
+  if has('nvim-0.4.0') || has('patch-8.2.0750')
+    nnoremap <buffer><silent><nowait><expr> <M-j> coc#float#has_scroll() ? coc#float#scroll(1) : "\<M-j>"
+    nnoremap <buffer><silent><nowait><expr> <M-k> coc#float#has_scroll() ? coc#float#scroll(0) : "\<M-k>"
+    inoremap <buffer><silent><nowait><expr> <M-j> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<M-j>"
+    inoremap <buffer><silent><nowait><expr> <M-k> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<M-k>"
+    vnoremap <buffer><silent><nowait><expr> <M-j> coc#float#has_scroll() ? coc#float#scroll(1) : "\<M-j>"
+    vnoremap <buffer><silent><nowait><expr> <M-k> coc#float#has_scroll() ? coc#float#scroll(0) : "\<M-k>"
+  endif
+endfunction
 
 augroup coc_augoup
   autocmd!
 
   autocmd User CocStatusChange redrawstatus
-  if !has('nvim') || get(g:, 'lsp_loaded', 0)
+  if !get(g:, 'lspconfig', 0) && !get(g:, 'lsp_loaded', 0)
     " Highlight the symbol and its references when holding the cursor.
     autocmd CursorHold * silent call CocActionAsync('highlight')
-    autocmd User CocNvimInit ++once autocmd FileType * if CocHasProvider('definition') | call s:on_lsp_buffer_enabled() | endif
+    autocmd User CocNvimInit ++once autocmd FileType * if CocHasProvider('definition') && !get(b:, 'coc_lsp_attached', 0) | call s:on_lsp_buffer_enabled() | endif
+    autocmd User CocOpenFloat call s:on_coc_float_opened()
   endif
 augroup END
 
