@@ -1,13 +1,18 @@
-if has('nvim')
-  let g:slime_target = "neovim"
-elseif has('terminal') && exists(':terminal') == 2 && has('patch-8.1.1')
-  let g:slime_target = "vimterminal"
-endif
+function! s:reset(map) abort
+  if exists('*s:check') 
+    call s:check()
+  endif
+
+  if exists('b:slime_config') && empty(get(b:, 'slime_config')) 
+    unlet b:slime_config 
+  endif
+  return a:map
+endfunction
 
 let g:slime_no_mappings = 1
-xmap <silent> gz <Plug>SlimeRegionSend
-nmap <silent> gz <Plug>SlimeMotionSend
-nmap <silent> gzz <Plug>SlimeLineSend
+xmap <silent><expr> gz <SID>reset('<Plug>SlimeRegionSend')
+nmap <silent><expr> gz <SID>reset('<Plug>SlimeMotionSend')
+nmap <silent><expr> gzz <SID>reset('<Plug>SlimeLineSend')
 
 " https://github.com/pry/pry/issues/1524#issuecomment-237309299
 " https://github.com/pry/pry/issues/1524#issuecomment-276117072
@@ -18,3 +23,34 @@ nmap <silent> gzz <Plug>SlimeLineSend
 function! g:_EscapeText_ruby(text)
   return ["(\n", a:text, ")\n"]
 endfunction
+
+augroup vim-slime-augroup
+  autocmd!
+
+  if has('nvim')
+    let g:slime_target = 'neovim'
+
+    function! s:check() abort
+      let jobid = get(get(b:, 'slime_config', {}), 'jobid')
+      if index(get(g:, 'slime_died_channels', []), str2nr(jobid)) != -1
+        call setbufvar(bufnr(), 'slime_config', {})
+      endif
+    endfunction
+
+    let g:slime_channel_mapping = {}
+    let g:slime_died_channels = []
+
+    autocmd TermOpen * let g:slime_channel_mapping[expand('<abuf>')] = &channel
+    autocmd BufDelete term://* call add(g:slime_died_channels, get(g:slime_channel_mapping, expand('<abuf>'), v:null))
+  elseif exists('##TerminalWinOpen')
+    let g:slime_target = 'vimterminal'
+
+    function! s:check()
+      let bufnr = get(get(b:, 'slime_config', {}), 'bufnr')
+      
+      if !bufexists(bufnr)
+        call setbufvar(bufnr(), 'slime_config', {})
+      endif
+    endfunction
+  endif
+augroup END
