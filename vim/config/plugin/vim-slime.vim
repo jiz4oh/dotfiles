@@ -13,6 +13,7 @@ let g:slime_no_mappings = 1
 xmap <silent><expr> gz <SID>reset('<Plug>SlimeRegionSend')
 nmap <silent><expr> gz <SID>reset('<Plug>SlimeMotionSend')
 nmap <silent><expr> gzz <SID>reset('<Plug>SlimeLineSend')
+nmap <silent><expr> gZ <SID>reset('<Plug>SlimeMotionSend$')
 
 " https://github.com/pry/pry/issues/1524#issuecomment-237309299
 " https://github.com/pry/pry/issues/1524#issuecomment-276117072
