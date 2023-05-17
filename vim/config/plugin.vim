@@ -153,22 +153,22 @@ endif
 
 "lsp
 if g:enable_lsp
-  if has('nvim-0.5')
-    if has('nvim-0.7')
-      " Plug 'simrat39/symbols-outline.nvim'
-      " Plug 'williamboman/mason.nvim' | Plug 'williamboman/mason-lspconfig.nvim'
-    endif
-    Plug 'neovim/nvim-lspconfig'
-    Plug 'williamboman/nvim-lsp-installer'
-    "fzf integration
-    "https://github.com/ojroques/nvim-lspfuzzy
-    Plug 'ojroques/nvim-lspfuzzy'
-  else
+  "if has('nvim-0.5')
+  "  if has('nvim-0.7')
+  "    " Plug 'simrat39/symbols-outline.nvim'
+  "    " Plug 'williamboman/mason.nvim' | Plug 'williamboman/mason-lspconfig.nvim'
+  "  endif
+  "  Plug 'neovim/nvim-lspconfig'
+  "  Plug 'williamboman/nvim-lsp-installer'
+  "  "fzf integration
+  "  "https://github.com/ojroques/nvim-lspfuzzy
+  "  Plug 'ojroques/nvim-lspfuzzy'
+  "else
     " lsp
-    " Plug 'prabirshrestha/vim-lsp'
-    " Plug 'rhysd/vim-lsp-ale'
-    " Plug 'mattn/vim-lsp-settings'
-  endif
+    Plug 'prabirshrestha/vim-lsp'
+    Plug 'rhysd/vim-lsp-ale'
+    Plug 'mattn/vim-lsp-settings'
+  " endif
 endif
 
 "autocomplte
