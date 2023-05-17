@@ -428,6 +428,7 @@ augroup vimrc
   autocmd BufRead,BufNewFile gitconfig,gitconfig.local set filetype=gitconfig
   autocmd BufRead,BufNewFile tmux.conf,tmux.conf.local set filetype=tmux
   autocmd BufRead,BufNewFile vimrc,vimrc.local set filetype=vim
+  autocmd SessionLoadPost * call ChangeCWDTo(personal#project#find_home())
 augroup END
 " }}}
 "
