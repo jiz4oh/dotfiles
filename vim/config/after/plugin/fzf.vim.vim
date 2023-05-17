@@ -1,0 +1,7 @@
+nnoremap <silent> <plug>(lsp-document-symbol-search) :<c-u>FzfLspDocumentSymbol<cr>
+nnoremap <silent> <plug>(lsp-workspace-symbol-search) :<c-u>FzfLspWorkspaceSymbol<cr>
+nnoremap <silent> <plug>(lsp-definition) :<c-u>FzfLspDefintion<cr>
+nnoremap <silent> <plug>(lsp-declaration) :<c-u>FzfLspDeclaration<cr>
+nnoremap <silent> <plug>(lsp-type-definition) :<c-u>FzfLspTypeDefinition<cr>
+nnoremap <silent> <plug>(lsp-implementation) :<c-u>FzfLspImplementation<cr>
+nnoremap <silent> <plug>(lsp-references) :<c-u>FzfLspReferences<cr>
