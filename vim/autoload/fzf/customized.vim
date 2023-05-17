@@ -130,7 +130,7 @@ function! s:search_paths(query, fullscreen) abort
     let l:dir = getcwd()
     let l:spec = {
                   \'dir': l:dir,
-                  \'sink*': { lines -> fzf#helper#handler(lines, 1, actions) },
+                  \'sink*': { lines -> fzf#helper#colon_sink(lines, 1, actions) },
                   \'options': [
                     \'--expect', join(keys(actions), ','),
                     \'--ansi',
@@ -246,7 +246,7 @@ function! fzf#customized#quickfix(query, fullscreen) abort
   let l:dir = getcwd()
   let l:spec = {
                 \'dir': l:dir,
-                \'sink*': { lines -> fzf#helper#handler(lines, 1, actions) },
+                \'sink*': { lines -> fzf#helper#colon_sink(lines, 1, l:actions) },
                 \'source': l:list,
                 \'options': [
                   \'--expect', join(keys(actions), ','),
@@ -258,4 +258,3 @@ function! fzf#customized#quickfix(query, fullscreen) abort
 
   call fzf#run(fzf#wrap(fzf#vim#with_preview(l:spec), a:fullscreen))
 endfunction
-

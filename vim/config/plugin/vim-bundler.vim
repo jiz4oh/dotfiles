@@ -85,7 +85,7 @@ function! s:gems_search(query, fullscreen) abort
   let l:dir = getcwd()
   let l:spec = {
                 \'dir': l:dir,
-                \'sink*': { lines -> fzf#helper#handler(lines, 1, actions) },
+                \'sink*': { lines -> fzf#helper#colon_sink(lines, 1, actions) },
                 \'options': [
                   \'--expect', join(keys(actions), ','),
                   \'--ansi', 

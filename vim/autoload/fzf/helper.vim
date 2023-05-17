@@ -35,8 +35,8 @@ endfunction
 
 " lines (array), has_column (0/1), [actions (dict)]
 " extend fzf butil-in ag_handler
-" actions can be used with funcref
-function! fzf#helper#handler(lines, has_column, ...)
+" actions can be used with function which first parameter is {'filename': '', 'lnum': '', 'text': '', col: ''}
+function! fzf#helper#colon_sink(lines, has_column, ...)
   let has_column = a:has_column
   let key = a:lines[0]
   if a:0
@@ -53,7 +53,7 @@ function! fzf#helper#handler(lines, has_column, ...)
   let first = list[0]
   try
     if type(Cmd) == type(function('call'))
-      return Cmd(first.filename)
+      return Cmd(list)
     end
 
     call s:open(Cmd, first.filename)
