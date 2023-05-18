@@ -12,19 +12,18 @@ function! s:on_lsp_buffer_enabled() abort
       \ foldtext&vim
 
     setlocal omnifunc=lsp#complete
-    nmap <buffer> <leader>ld <plug>(lsp-definition)
-    nmap <buffer> <leader>lD <plug>(lsp-declaration)
-    nmap <buffer> <leader>lt <plug>(lsp-type-definition)
-    nmap <buffer> <leader>li <plug>(lsp-implementation)
-    nmap <buffer> <leader>lr <plug>(lsp-references)
-    nmap <buffer> <leader>lR <plug>(lsp-rename)
-    nmap <buffer> <leader>ls <plug>(lsp-document-symbol-search)
-    nmap <buffer> <leader>lS <plug>(lsp-workspace-symbol-search)
-    nmap <buffer> <leader>lf <plug>(lsp-document-format)
-    xmap <buffer> <leader>lf <plug>(lsp-document-range-format)
-    nmap <buffer> <leader>lK <plug>(lsp-hover)
-
-    autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
+    nmap <buffer>         <leader>ld <plug>(lsp-definition)
+    nmap <buffer>         <leader>lD <plug>(lsp-declaration)
+    nmap <buffer>         <leader>lt <plug>(lsp-type-definition)
+    nmap <buffer>         <leader>li <plug>(lsp-implementation)
+    nmap <buffer>         <leader>lr <plug>(lsp-references)
+    nmap <buffer>         <leader>lR <plug>(lsp-rename)
+    nmap <buffer>         <leader>ls <plug>(lsp-document-symbol-search)
+    nmap <buffer>         <leader>lS <plug>(lsp-workspace-symbol-search)
+    nmap <buffer>         <leader>lf <plug>(lsp-document-format)
+    xmap <buffer>         <leader>lf <plug>(lsp-document-range-format)
+    nmap <buffer><silent> <leader>lF :LspDocumentFold<cr>
+    nmap <buffer>         <leader>lK <plug>(lsp-hover)
 
     let g:vista_{&filetype}_executive = 'vim_lsp'
     " refer to doc to add more commands

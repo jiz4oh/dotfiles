@@ -108,6 +108,7 @@ let g:which_key_map['h'] = {
       \ 'p' : ['<Plug>(GitGutterPreviewHunk)', 'Preview Hunk'],
       \ 's' : ['<Plug>(GitGutterStageHunk)',   'Stage Hunk'],
       \ 'u' : ['<Plug>(GitGutterUndoHunk)',    'Undo Hunk'],
+      \ 'f' : ['GitGutterFold',                'Fold all unchange lines'],
       \ }
 
 let g:which_key_map['l'] = {
@@ -121,6 +122,7 @@ let g:which_key_map['l'] = {
       \ 's' : 'find Symbols on current buffer',
       \ 'S' : 'find Symbols on workspace',
       \ 'f' : 'Format a {motion}',
+      \ 'F' : 'recalculate Folds for the current buffer',
       \ 'K' : 'show documentation of current symbol',
       \ }
 
