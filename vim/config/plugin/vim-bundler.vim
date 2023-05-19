@@ -114,3 +114,9 @@ command! -nargs=? -bang Gems call s:gems_search(<q-args>, <bang>0)
 if exists('*FzfGrepMap')
   call FzfGrepMap('<leader>sg', 'Gems')
 endif
+
+augroup vim-bundler-augroup
+  autocmd!
+
+  autocmd! FileType ruby,eruby if !empty(bundler#project()) && bundler#project().has('solargraph') | let b:ale_ruby_solargraph_executable = 'bundle exec solargraph' | endif
+augroup END
