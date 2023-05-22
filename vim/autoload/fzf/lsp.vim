@@ -2,8 +2,11 @@ function! s:not_supported(what) abort
     return lsp#utils#error(printf("%s not supported for filetype '%s'", a:what, &filetype))
 endfunction
 
-function! s:fzf(type, list, fullscreen) abort
-  let actions = {
+function! s:fzf(type, list, ctx) abort
+  let l:fullscreen = get(a:ctx, 'fullscreen', 0)
+  let l:query = get(a:ctx, 'query', '')
+
+  let l:actions = {
     \ 'ctrl-t': 'tab split',
     \ 'ctrl-x': 'split',
     \ 'ctrl-v': 'vsplit'
@@ -24,7 +27,12 @@ function! s:fzf(type, list, fullscreen) abort
                   \'--preview-window', '+{2}-/2'
                 \]}
 
-  call fzf#run(fzf#wrap(fzf#vim#with_preview(l:spec), a:fullscreen))
+  if !empty(l:query)
+    call add(l:spec['options'], '--header')
+    call add(l:spec['options'], l:query)
+  endif
+
+  call fzf#run(fzf#wrap(fzf#vim#with_preview(l:spec), l:fullscreen))
 endfunction
 
 function! fzf#lsp#workspace_symbol(query, fullscreen) abort
@@ -45,13 +53,14 @@ function! fzf#lsp#workspace_symbol(query, fullscreen) abort
         endif
     endif
 
+    let l:ctx = { 'last_command_id': l:command_id, 'query': a:query, 'fullscreen': a:fullscreen }
     for l:server in l:servers
         call lsp#send_request(l:server, {
             \ 'method': 'workspace/symbol',
             \ 'params': {
             \   'query': l:query,
             \ },
-            \ 'on_notification': function('s:handle_symbol', [l:server, l:command_id, a:fullscreen, 'workspaceSymbol']),
+            \ 'on_notification': function('s:handle_symbol', [l:ctx, l:server, 'workspaceSymbol']),
             \ })
     endfor
 
@@ -67,13 +76,14 @@ function! fzf#lsp#document_symbol(fullscreen) abort
         return
     endif
 
+    let l:ctx = { 'last_command_id': l:command_id, 'query': '', 'fullscreen': a:fullscreen }
     for l:server in l:servers
         call lsp#send_request(l:server, {
             \ 'method': 'textDocument/documentSymbol',
             \ 'params': {
             \   'textDocument': lsp#get_text_document_identifier(),
             \ },
-            \ 'on_notification': function('s:handle_symbol', [l:server, l:command_id, a:fullscreen, 'documentSymbol']),
+            \ 'on_notification': function('s:handle_symbol', [l:ctx, l:server, 'documentSymbol']),
             \ })
     endfor
 
@@ -108,8 +118,8 @@ function! s:format_symbol_entry(val) abort
   return printf('%s:%s:%s: %s', l:filename, l:lnum, l:col, l:text)
 endfunction
 
-function! s:handle_symbol(server, last_command_id, fullscreen, type, data) abort
-    if a:last_command_id != lsp#_last_command()
+function! s:handle_symbol(ctx, server, type, data) abort "ctx = {last_command_id, fullscreen, query}
+    if a:ctx['last_command_id'] != lsp#_last_command()
         return
     endif
 
@@ -125,7 +135,7 @@ function! s:handle_symbol(server, last_command_id, fullscreen, type, data) abort
     else
       let l:list = map(l:list, 's:format_symbol_entry(v:val)')
 
-      call s:fzf(a:type, l:list, a:fullscreen)
+      call s:fzf(a:type, l:list, a:ctx)
     endif
 endfunction
 
@@ -218,7 +228,7 @@ function! s:format_location_entry(val) abort
   return printf('%s:%s:%s: %s', l:filename, l:lnum, l:col, l:text)
 endfunction
 
-function! s:handle_location(ctx, server, type, data) abort "ctx = {counter, list, last_command_id, jump_if_one, mods}
+function! s:handle_location(ctx, server, type, data) abort "ctx = {counter, list, last_command_id, jump_if_one, mods, fullscreen}
     if a:ctx['last_command_id'] != lsp#_last_command()
       return
     endif
@@ -245,7 +255,7 @@ function! s:handle_location(ctx, server, type, data) abort "ctx = {counter, list
           redraw
         else
           let l:list = map(a:ctx['list'], 's:format_location_entry(v:val)')
-          call s:fzf(a:type, l:list, a:ctx['fullscreen'])
+          call s:fzf(a:type, l:list, a:ctx)
         endif
       endif
     endif
