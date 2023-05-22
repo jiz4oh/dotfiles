@@ -20,6 +20,7 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer>         <leader>lR <plug>(lsp-rename)
     nmap <buffer>         <leader>ls <plug>(lsp-document-symbol-search)
     nmap <buffer>         <leader>lS <plug>(lsp-workspace-symbol-search)
+    xmap <buffer>         <leader>lS <plug>(lsp-workspace-symbol-search)
     nmap <buffer>         <leader>lf <plug>(lsp-document-format)
     xmap <buffer>         <leader>lf <plug>(lsp-document-range-format)
     nmap <buffer><silent> <leader>lF :LspDocumentFold<cr>
