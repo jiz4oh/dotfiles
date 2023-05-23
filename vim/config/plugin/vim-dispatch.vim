@@ -8,7 +8,7 @@ augroup vim-dispatch-autocmd
       \       matchstr(getline(1), '#!\%(/usr/bin/env \+\)\=\zs.*') . ' %:p:S' ) |
       \   let b:start = get(b:, 'start', '-wait=always ' . b:dispatch) |
       \ endif
-  autocmd FileType python let b:dispatch = 'python -m py_compile %:p:S'
+  autocmd FileType python let b:dispatch = 'python %:p:S'
 
   if executable('ipython')
     autocmd FileType python let b:start = 'ipython'
@@ -23,10 +23,8 @@ augroup vim-dispatch-autocmd
         \ if exists('b:rails_root') || exists('b:dispatch') |
         \ elseif expand('%') =~# '_spec\.rb$' |
         \   let b:dispatch = get(b:, 'dispatch', 'rspec %:s/$/\=exists("l#") ? ":".l# : ""/') |
-        \ elseif join(getline(max([line('$')-8,1]), '$'), "\n") =~# '\$0\>' |
-        \   let b:dispatch = 'ruby %' |
         \ elseif !exists('b:dispatch') |
-        \   let b:dispatch = 'ruby -wc %' |
+        \   let b:dispatch = 'ruby %:p:S' |
         \ endif
 augroup END
 
