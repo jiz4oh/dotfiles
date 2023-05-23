@@ -1,6 +1,7 @@
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 tap "homebrew/services"
+tap "localsend/localsend"
 tap "universal-ctags/universal-ctags"
 brew "bat"
 brew "cmake"
@@ -11,6 +12,7 @@ brew "gnupg"
 brew "highlight"
 brew "imagemagick"
 brew "jq"
+brew "localsend"
 brew "mysql", restart_service: true
 brew "pinentry-mac"
 brew "postgresql@14", restart_service: true
