@@ -14,6 +14,7 @@ brew "imagemagick"
 brew "jq"
 brew "localsend"
 brew "mysql", restart_service: true
+brew "pandoc"
 brew "pinentry-mac"
 brew "postgresql@14", restart_service: true
 brew "ranger"
