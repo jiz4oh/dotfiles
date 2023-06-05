@@ -18,7 +18,7 @@ function! Terminal_MetaMode()
   function! s:meta_code(key)
     if has("gui_running") && has("gui_macvim")
       set macmeta
-    elseif index(get(g:, "alt_compatible_programs", []), $TERM_PROGRAM) < 0
+    elseif !get(g:, "alt_compatible", v:false)
       exec "set <M-".a:key.">=\e".a:key
     endif
 

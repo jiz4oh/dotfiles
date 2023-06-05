@@ -28,9 +28,13 @@ let g:project_markers = [
       \'.fslckout', 'package.json', 'Gemfile', '.projections.json'
       \]
 
-let g:enable_nerd_font        = g:is_mac_gui || index(['iTerm.app'], $TERM_PROGRAM) >= 0
+let g:enable_nerd_font        = g:is_mac_gui || 
+      \index(['iTerm.app'], $TERM_PROGRAM) >= 0 ||
+      \exists('$KITTY_WINDOW_ID')
 let g:enable_markdown_preview = g:is_win || g:is_darwin || g:has_linux_desktop
 let g:enable_autocomplete     = g:is_win || g:is_darwin || g:has_linux_desktop
 let g:enable_lsp              = g:is_win || g:is_darwin || g:has_linux_desktop
 
-let g:alt_compatible_programs = ['iTerm.app']
+" https://github.com/kovidgoyal/kitty/issues/957
+let g:alt_compatible = index(['iTerm.app'], $TERM_PROGRAM) >= 0 ||
+      \exists('$KITTY_WINDOW_ID')

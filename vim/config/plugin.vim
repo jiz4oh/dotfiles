@@ -103,6 +103,7 @@ if has('nvim')
   Plug 'nathom/filetype.nvim'
 endif
 Plug 'sheerun/vim-polyglot'
+Plug 'fladson/vim-kitty'
 Plug 'craigmac/vim-mermaid'
 Plug 'hallison/vim-rdoc'
 if executable('bundle')

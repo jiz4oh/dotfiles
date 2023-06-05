@@ -146,6 +146,8 @@ alias cd.='cd ..'
 alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -l'
+alias s='kitty +kitten ssh'
+alias hg='kitty +kitten hyperlinked_grep'
 
 # software
 alias vi=$EDITOR
