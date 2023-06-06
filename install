@@ -11,7 +11,8 @@ mkdir -pv bak
 # dotfiles
 for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore zprofile zshenv zpath p10k.zsh \
   prettierignore yamllint.yaml \
-  rbenv/default-gems snipaste/config.ini default-*-packages; do
+  rbenv/default-gems snipaste/config.ini hammerspoon/init.lua\
+  default-*-packages; do
   dir=$(dirname $rc)
   [ "$dir" != '.' ] && mkdir -pv bak/."$dir"
   mv -v ~/."$rc" bak/."$rc" >/dev/null 2>&1
