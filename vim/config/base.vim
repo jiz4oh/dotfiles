@@ -319,7 +319,8 @@ endif
   endif
 
   " inside kitty
-  if $TERM ==# 'xterm-kitty'
+  " https://neovim.io/doc/user/vim_diff.html#nvim-removed
+  if !has('nvim') && $TERM ==# 'xterm-kitty'
     " https://sw.kovidgoyal.net/kitty/faq/#using-a-color-theme-with-a-background-color-does-not-work-well-in-vim
     " Styled and colored underline support
     let &t_AU = "\e[58:5:%dm"
