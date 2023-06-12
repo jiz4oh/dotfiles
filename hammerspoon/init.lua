@@ -1,6 +1,6 @@
 -- https://github.com/kovidgoyal/kitty/issues/45#issuecomment-573196169
 hs.hotkey.bind({"cmd"}, "F12", function()
-  local app = hs.application.get("kitty")
+  local app = hs.application.get("net.kovidgoyal.kitty")
 
   if app then
       if not app:mainWindow() then
@@ -11,8 +11,8 @@ hs.hotkey.bind({"cmd"}, "F12", function()
           app:activate()
       end
   else
-      hs.application.launchOrFocus("kitty")
-      app = hs.application.get("kitty")
+      hs.application.launchOrFocusByBundleID("net.kovidgoyal.kitty")
+      app = hs.application.get("net.kovidgoyal.kitty")
   end
 
   app:mainWindow():moveToUnit'[100,50,0,0]'
