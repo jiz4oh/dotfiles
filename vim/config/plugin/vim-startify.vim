@@ -29,9 +29,9 @@ let g:startify_bookmarks = [
 " `2>/dev/null` makes the command fail quietly, so that when we are not
 " in a git repo, the list will be empty
 let g:startify_lists = [
+        \ { 'type': 'bookmarks',                                       'header': ['   Bookmarks']               },
         \ { 'type': function('MRUCwd', [g:startify_files_number]),     'header': ['   MRU']                     },
         \ { 'type': 'sessions',                                        'header': ['   Sessions']                },
-        \ { 'type': 'bookmarks',                                       'header': ['   Bookmarks']               },
         \ { 'type': 'commands',                                        'header': ['   Commands']                },
         \ ]
 
