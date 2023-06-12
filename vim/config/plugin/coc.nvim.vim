@@ -72,7 +72,22 @@ augroup coc_augoup
   if !get(g:, 'lspconfig', 0) && !get(g:, 'lsp_loaded', 0)
     " Highlight the symbol and its references when holding the cursor.
     autocmd CursorHold * silent call CocActionAsync('highlight')
-    autocmd User CocNvimInit ++once autocmd FileType * if CocHasProvider('definition') && !get(b:, 'coc_lsp_attached', 0) | call s:on_lsp_buffer_enabled() | endif
+
+    function! s:try_lsp() abort
+      try
+        " CocHasProvider cause
+        " E608: Cannot :throw exceptions with 'Vim' prefix
+        let has_lsp = CocHasProvider('definition') && !get(b:, 'coc_lsp_attached', 0)
+      catch
+        let has_lsp = 0
+      endtry
+
+      if has_lsp
+        call s:on_lsp_buffer_enabled()
+      endif
+    endfunction
+
+    autocmd User CocNvimInit ++once autocmd FileType * call s:try_lsp()
     autocmd User CocOpenFloat call s:on_coc_float_opened()
   endif
 augroup END
