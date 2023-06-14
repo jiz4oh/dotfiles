@@ -103,7 +103,7 @@ function! fzf#customized#sessions(fullscreen) abort
   endtry
 endfunction
 
-function! s:search_paths(query, fullscreen) abort
+function! fzf#customized#paths(query, fullscreen) abort
   if !empty(a:query)
     let @/ = a:query
   endif
@@ -193,7 +193,7 @@ function! fzf#customized#path(query, fullscreen) abort
   function! container.func() closure
     let g:fzf_action = {
       \ 'enter':  {dir -> fzf#customized#grep(fnamemodify(dir[0], ':p'), a:query, a:fullscreen) },
-      \ 'ctrl-l':  {_ -> s:search_paths(a:query, a:fullscreen) },
+      \ 'ctrl-l':  {_ -> fzf#customized#paths(a:query, a:fullscreen) },
       \ 'ctrl-t': 'NERDTree ',
       \ 'ctrl-x': 'NERDTree ',
       \ 'ctrl-v': 'NERDTree '
