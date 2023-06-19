@@ -68,7 +68,14 @@ let g:projectionist_heuristics['Chart.yaml'] = {
 let g:projects = []
 
 function! s:activate() abort
-  let ps = filter(keys(b:projectionist), 'v:val !~ "^fugitive:.*"')
+  if exists('*repeat')
+    map <silent> <Plug>UpwardProject :call <SID>up_project()<bar>silent! call repeat#set("\<Plug>UpwardProject", v:count)<cr>
+    nmap <silent> <leader>cdP <Plug>UpwardProject
+  else
+    noremap <silent> <leader>cdP :call <SID>up_project()<cr>
+  end
+
+  let ps = s:current_projects()
   call extend(g:projects, ps)
 
   let dict = {}
@@ -80,6 +87,22 @@ function! s:activate() abort
   return g:projects
 endfunction
 
+function! s:current_projects() abort
+  return filter(keys(b:projectionist), 'v:val !~? "^fugitive:.*"')
+endfunction
+
+function! s:up_project() abort
+  let cwd = getcwd()
+  let projects = reverse(s:current_projects())
+  let i = index(projects, cwd)
+  if i ==# -1 || len(projects) == i + 1
+    let path = fnamemodify(projects[0], ':p:h')
+  else
+    let path = projects[i + 1]
+  endif
+
+  call ChangeCWDTo(expand(path))
+endfunction
 
 augroup projectionist-augroup
   autocmd!
