@@ -1,6 +1,6 @@
 [user]
 	name = jiz4oh
-	email = jiz4oh@gmail.com
+	email = me@jiz4oh.com
 	signingkey = 78FB89DFD72A3154
 [credential]
 	helper = osxkeychain
@@ -27,3 +27,19 @@
 	user = jiz4oh
 [log]
 	date = iso
+[status]
+  # Display submodule rev change summaries in status
+  submoduleSummary = true
+[color "branch"]
+  # Blue on black is hard to read in git branch -vv: use cyan instead
+  upstream = cyan
+[tag]
+  # Sort tags as version numbers whenever applicable, so 1.10.2 is AFTER 1.2.0.
+  sort = version:refname
+[versionsort]
+  prereleaseSuffix = -pre
+  prereleaseSuffix = .pre
+  prereleaseSuffix = -beta
+  prereleaseSuffix = .beta
+  prereleaseSuffix = -rc
+  prereleaseSuffix = .rc
