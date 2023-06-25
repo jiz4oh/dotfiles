@@ -54,16 +54,16 @@ let g:projectionist_heuristics = {
       \}
 
 " https://helm.sh/docs/topics/charts/
-let g:projectionist_heuristics['Chart.yaml'] = {
-      \   'templates/*.yaml': {
-      \      'make': 'helm',
-      \      'dispatch': 'helm template %:s/.*/\=projectionist#path()/',
-      \   },
-      \   'values.yaml': {
-      \      'make': 'helm',
-      \      'dispatch': 'helm template %:s/.*/\=projectionist#path()/',
-      \   },
-      \ }
+" let g:projectionist_heuristics['Chart.yaml'] = {
+"       \   'templates/*.yaml': {
+"       \      'make': 'helm',
+"       \      'dispatch': 'helm template %:s/.*/\=projectionist#path()/',
+"       \   },
+"       \   'values.yaml': {
+"       \      'make': 'helm',
+"       \      'dispatch': 'helm template %:s/.*/\=projectionist#path()/',
+"       \   },
+"       \ }
 
 let g:projects = []
 
