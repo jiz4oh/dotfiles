@@ -10,9 +10,22 @@ nmap <leader>db  <Plug>(DBExe)
 omap <leader>db  <Plug>(DBExe)
 nmap <leader>dbb <Plug>(DBExeLine)
 
+function! s:init_sqlite() abort
+  if executable('file')
+    let path = expand('%:p')
+    let output = system('file ' . path)
+    if output =~# 'SQLite'
+      let b:start = ':DB'
+      execute 'DB b:db = sqlite:' . path
+    endif
+  endif
+endfunction
+
 augroup vim-dadbod-augroup
   autocmd!
 
   autocmd FileType mysql,sql,plsql let b:start = ':DB' |
         \ let b:dispatch = ':DB'
+
+  autocmd BufRead,BufNewFile *.db call <SID>init_sqlite()
 augroup END
