@@ -207,9 +207,6 @@ augroup vim-rails-augroup
 
   autocmd FileType ruby
         \ if !empty(rails#app())|call <SID>setup_zepl()|endif
-
-  autocmd FileType ruby
-        \ if exists('b:rails_root') && filereadable(expand(b:rails_root.'/.rubocop.yml'))|let b:ale_ruby_rubocop_executable = 'bundle'|endif
 augroup END
 
 " autocmd User Rails call <SID>setup_rails()
