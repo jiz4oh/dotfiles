@@ -722,7 +722,7 @@ imap <silent><special> <F8>       <c-o>:<Plug><OutlineToggle>
 
 " https://forum.obsidian.md/t/open-note-in-obsidian-from-within-vim-and-vice-versa/6837
 " Open file in Obsidian vault
-nnoremap <silent> <leader>io :execute "silent !open 'obsidian://open?vault=" . fnamemodify(g:notes_root, ':t') . "&file=index" . expand('%:r') . "'"<cr>
+nnoremap <silent> <leader>io :execute "silent !open 'obsidian://open?vault=" . fnamemodify(g:notes_root, ':t') . "&file=" . expand('%:r') . "'"<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE {{{
