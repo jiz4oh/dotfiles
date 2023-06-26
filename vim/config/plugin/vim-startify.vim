@@ -1,3 +1,9 @@
+if !exists('*MRUCwd')
+  function! MRUCwd() abort
+    return []
+  endfunction
+endif
+
 if exists('g:session_dir')
   let g:startify_session_dir          = g:session_dir
 endif

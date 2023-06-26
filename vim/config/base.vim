@@ -320,7 +320,7 @@ endif
 
   " inside kitty
   " https://neovim.io/doc/user/vim_diff.html#nvim-removed
-  if !has('nvim') && $TERM ==# 'xterm-kitty'
+  if !has('nvim') && exists('$KITTY_WINDOW_ID')
     " https://sw.kovidgoyal.net/kitty/faq/#using-a-color-theme-with-a-background-color-does-not-work-well-in-vim
     " Styled and colored underline support
     let &t_AU = "\e[58:5:%dm"
@@ -354,8 +354,11 @@ endif
     " Focus tracking
     let &t_fe = "\e[?1004h"
     let &t_fd = "\e[?1004l"
-    execute "set <FocusGained>=\<Esc>[I"
-    execute "set <FocusLost>=\<Esc>[O"
+    try
+      execute "set <FocusGained>=\<Esc>[I"
+      execute "set <FocusLost>=\<Esc>[O"
+    catch
+    endtry
     " Window title
     let &t_ST = "\e[22;2t"
     let &t_RT = "\e[23;2t"
