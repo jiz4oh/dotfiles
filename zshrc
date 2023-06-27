@@ -147,6 +147,7 @@ alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -l'
 alias s='kitty +kitten ssh'
+alias d="kitty +kitten diff"
 alias hg='kitty +kitten hyperlinked_grep'
 
 # software
