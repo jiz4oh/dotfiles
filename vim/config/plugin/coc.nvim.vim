@@ -1,3 +1,4 @@
+let g:coc_config_home = '~/.vim'
 let g:coc_global_extensions = [
       \'coc-json',
       \'coc-tag',
