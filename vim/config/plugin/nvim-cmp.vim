@@ -5,8 +5,8 @@ local cmp = require('cmp')
 -- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/default.lua
 cmp.setup({
   mapping = cmp.mapping.preset.insert({
-    ['<M-n>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-    ['<M-p>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+    ['<M-n>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+    ['<M-p>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
     ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           if vim.fn.pumvisible() == 1 then
@@ -31,13 +31,27 @@ cmp.setup({
       end, {"i","s","c",}),
   }),
   sources = cmp.config.sources({
+      { name = 'vim_lsp' },
       { name = 'nvim_lsp' },
       -- { name = 'vsnip' }, -- For vsnip users.
       -- { name = 'luasnip' }, -- For luasnip users.
       -- { name = 'ultisnips' }, -- For ultisnips users.
       -- { name = 'snippy' }, -- For snippy users.
       { name = 'cmp_tabnine' },
-    }, {
+      { name = 'kitty',
+          option = {
+              -- this is where any configuration should be inserted
+          }
+      },
+      {
+          name = 'spell',
+          option = {
+              keep_all_entries = false,
+              enable_in_context = function()
+                  return true
+              end,
+          },
+      },
       { name = 'buffer' },
       { name = 'tags' },
     }),
@@ -62,6 +76,9 @@ cmp.setup({
 
       vim.api.nvim_buf_set_lines(0, line_num - 1, line_num, true, replace)
     end,
+  },
+  formatting = {
+    format = require("tailwindcss-colorizer-cmp").formatter
   }
 })
 
@@ -78,6 +95,7 @@ end
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
+    { name = 'cmdline_history' },
     { name = 'cmdline' },
     { name = 'path' },
   })

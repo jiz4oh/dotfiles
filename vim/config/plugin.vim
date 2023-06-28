@@ -159,6 +159,7 @@ if g:enable_lsp
   "    " Plug 'simrat39/symbols-outline.nvim'
   "    " Plug 'williamboman/mason.nvim' | Plug 'williamboman/mason-lspconfig.nvim'
   "  endif
+  "  Plug 'hrsh7th/cmp-nvim-lsp'
   "  Plug 'neovim/nvim-lspconfig'
   "  Plug 'williamboman/nvim-lsp-installer'
   "  "fzf integration
@@ -169,49 +170,51 @@ if g:enable_lsp
     Plug 'prabirshrestha/vim-lsp'
     Plug 'rhysd/vim-lsp-ale'
     Plug 'mattn/vim-lsp-settings'
+    Plug 'dmitmel/cmp-vim-lsp'
   " endif
 endif
 
-"autocomplte
-if g:enable_autocomplete
-  if executable('node')
-    Plug 'Shougo/neco-vim'
-    Plug 'neoclide/coc-neco'
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  else
-    Plug 'skywind3000/vim-auto-popmenu'
+"autocomplete
+if g:enable_autocomplete && has('nvim')
+  Plug 'hrsh7th/nvim-cmp'
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'hrsh7th/cmp-path'
+  Plug 'hrsh7th/cmp-cmdline'
+  Plug 'hrsh7th/cmp-buffer'
+  Plug 'f3fora/cmp-spell'
+  if exists('$KITTY_WINDOW_ID')
+    Plug 'garyhurtz/cmp_kitty'
   endif
-  
-  " if has('nvim')
-  "   Plug 'hrsh7th/nvim-cmp'
-  "   if g:enable_lsp
-      " Plug 'hrsh7th/cmp-nvim-lsp'
-  "   endif
-  "   Plug 'hrsh7th/cmp-path'
-  "   Plug 'hrsh7th/cmp-cmdline'
-  "   Plug 'hrsh7th/cmp-buffer'
+  Plug 'roobert/tailwindcss-colorizer-cmp.nvim'
 
-  "   if executable('ctags')
-  "     Plug 'quangnguyen30192/cmp-nvim-tags'
-  "   endif
+  if executable('ctags')
+    Plug 'quangnguyen30192/cmp-nvim-tags'
+  endif
 
-  "   Plug 'tzachar/cmp-tabnine', { 'do': g:is_win ? 'powershell.exe .\install.ps1' : './install.sh' }
-  " elseif v:version >= 800
-  "   " Plug 'lifepillar/vim-mucomplete'
-  "   " autocomplete
-  "   Plug 'prabirshrestha/asyncomplete.vim'
-  "   Plug 'machakann/asyncomplete-ezfilter.vim'
-  "   Plug 'prabirshrestha/asyncomplete-buffer.vim'
-  "   Plug 'prabirshrestha/asyncomplete-file.vim'
+  Plug 'tzachar/cmp-tabnine', { 'do': g:is_win ? 'powershell.exe .\install.ps1' : './install.sh' }
+" elseif v:version >= 800
+  " Plug 'lifepillar/vim-mucomplete'
+  " autocomplete
+  " Plug 'prabirshrestha/asyncomplete.vim'
+  " Plug 'machakann/asyncomplete-ezfilter.vim'
+  " Plug 'prabirshrestha/asyncomplete-buffer.vim'
+  " Plug 'prabirshrestha/asyncomplete-file.vim'
 
-  "   if executable('ctags')
-  "     Plug 'prabirshrestha/asyncomplete-tags.vim'
-  "   endif
-
-  "   Plug 'kitagry/asyncomplete-tabnine.vim', { 'do': g:is_win ? 'powershell.exe .\install.ps1' : './install.sh' }
+  " if executable('ctags')
+  "   Plug 'prabirshrestha/asyncomplete-tags.vim'
   " endif
+
+  " Plug 'kitagry/asyncomplete-tabnine.vim', { 'do': g:is_win ? 'powershell.exe .\install.ps1' : './install.sh' }
+else
+  Plug 'skywind3000/vim-auto-popmenu'
 endif
 
+if executable('node')
+  " Plug 'Shougo/neco-vim'
+  " Plug 'neoclide/coc-neco'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
+  
 Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-surround'
