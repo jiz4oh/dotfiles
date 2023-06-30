@@ -17,6 +17,8 @@ function! s:init_sqlite() abort
     if output =~# 'SQLite'
       let b:start = ':DB'
       execute 'DB b:db = sqlite:' . path
+      let g:dbs = get(g:, 'dbs', {})
+      let g:dbs[pathshorten(path)] = b:db
     endif
   endif
 endfunction
