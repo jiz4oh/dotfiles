@@ -723,9 +723,15 @@ map  <silent>          <leader>et <Plug><OutlineToggle>
 map  <silent><special> <F8>       <Plug><OutlineToggle>
 imap <silent><special> <F8>       <c-o>:<Plug><OutlineToggle>
 
+" https://github.com/tpope/vim-unimpaired/blob/6d44a6dc2ec34607c41ec78acf81657248580bf1/plugin/unimpaired.vim#L460-L463
+function! UrlEncode(str) abort
+  " iconv trick to convert utf-8 bytes to 8bits indiviual char.
+  return substitute(iconv(a:str, 'latin1', 'utf-8'),'[^A-Za-z0-9_.~-]','\="%".printf("%02X",char2nr(submatch(0)))','g')
+endfunction
+
 " https://forum.obsidian.md/t/open-note-in-obsidian-from-within-vim-and-vice-versa/6837
 " Open file in Obsidian vault
-nnoremap <silent> <leader>io :execute "silent !open 'obsidian://open?vault=" . fnamemodify(g:notes_root, ':t') . "&file=" . expand('%:r') . "'"<cr>
+nnoremap <silent> <leader>io :execute "silent !open 'obsidian://open?path=" . escape(UrlEncode(expand('%:p')), '%') . "'"<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE {{{
