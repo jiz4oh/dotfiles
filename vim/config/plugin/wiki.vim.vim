@@ -38,7 +38,24 @@ let g:wiki_mappings_local_journal = {
       \ '<plug>(wiki-journal-next)' : ']w',
       \}
 
+function! JournalTemplateFallback(context) abort
+  let name = a:context.name
+  if name =~# 'summary'
+    " month
+    call append(0, '# ' . join(split(a:context.date, '-')[0:1], '-'))
+  elseif name =~# 'week'
+    " week
+    call append(0, '# ' . a:context.name)
+  else
+    " daily
+    call append(0, '# ' . a:context.date)
+  endif
 endfunction
+
+let g:wiki_templates = [
+      \ { 'match_func': {ctx -> ctx.path_wiki =~# 'journal'},
+      \   'source_func': function('JournalTemplateFallback')},
+      \]
 
 augroup wiki-vim-augroup
   autocmd!
