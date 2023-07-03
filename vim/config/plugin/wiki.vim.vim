@@ -1,7 +1,26 @@
 let g:wiki_filetypes          = ['md', 'wiki']
-let g:wiki_link_extension     = '.md'
-let g:wiki_link_target_type   = 'md'
 let g:wiki_global_load        = 0
+
+let g:wiki_link_creation = {
+      \ 'md': {
+      \   'link_type': 'md',
+      \   'url_extension': '.md',
+      \   'url_transform': { x ->
+      \     substitute(tolower(x), '\s\+', '-', 'g') },
+      \ },
+      \ 'org': {
+      \   'link_type': 'org',
+      \   'url_extension': '.org',
+      \ },
+      \ 'adoc': {
+      \   'link_type': 'adoc_xref_bracket',
+      \   'url_extension': '',
+      \ },
+      \ '_': {
+      \   'link_type': 'wiki',
+      \   'url_extension': '',
+      \ },
+      \}
 
 let g:wiki_journal = {
       \ 'name': 'journal',
@@ -19,9 +38,6 @@ let g:wiki_mappings_local_journal = {
       \ '<plug>(wiki-journal-next)' : ']w',
       \}
 
-let g:wiki_map_text_to_link = 'MyTextToLink'
-function MyTextToLink(text) abort
-  return [substitute(tolower(a:text), '\s\+', '-', 'g'), a:text]
 endfunction
 
 augroup wiki-vim-augroup
