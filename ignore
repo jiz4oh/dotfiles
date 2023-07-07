@@ -2,3 +2,4 @@ tags*
 .DS_Store
 session/
 Session.vim
+node_modules
