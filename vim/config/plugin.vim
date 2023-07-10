@@ -106,6 +106,9 @@ Plug 'sheerun/vim-polyglot'
 Plug 'fladson/vim-kitty'
 Plug 'craigmac/vim-mermaid'
 Plug 'hallison/vim-rdoc'
+if executable('plutil')
+  Plug 'darfink/vim-plist'
+endif
 if executable('bundle')
   Plug 'tpope/vim-bundler'
 endif
