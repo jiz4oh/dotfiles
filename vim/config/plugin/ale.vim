@@ -16,6 +16,7 @@ let g:ale_fixers = {
       \   'json': ['fixjson', 'jq', 'autocorrect', 'remove_trailing_lines', 'trim_whitespace'],
       \   'yaml': ['prettier', 'autocorrect'],
       \   'javascript': ['prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
+      \   'xml': ['xmllint', ],
       \   'html': ['prettier-eslint'],
       \   'css': ['stylelint'],
       \   'scss': ['stylelint'],
