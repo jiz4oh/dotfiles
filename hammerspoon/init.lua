@@ -15,5 +15,5 @@ hs.hotkey.bind({"cmd"}, "F12", function()
       app = hs.application.get("net.kovidgoyal.kitty")
   end
 
-  app:mainWindow():moveToUnit'[100,50,0,0]'
+  app:mainWindow():moveToUnit'[100,100,0,0]'
 end)
