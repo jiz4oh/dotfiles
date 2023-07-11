@@ -9,7 +9,7 @@ BASE=$(pwd)
 BREW_PREFIX=${BREW_PREFIX:-$(brew --prefix)}
 
 echo "Updating homebrew"
-brew bundle
+brew bundle --no-upgrade
 echo "Updated homebrew"
 
 "$BASE"/install_asdf
