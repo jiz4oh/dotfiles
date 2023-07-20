@@ -13,3 +13,7 @@ brew bundle --no-upgrade
 echo "Updated homebrew"
 
 "$BASE"/install_asdf
+
+# https://github.com/artginzburg/MiddleClick-Ventura#number-of-fingers
+defaults write com.rouge41.middleClick fingers 5
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/MiddleClick.app", hidden:true}'
