@@ -5,6 +5,7 @@
 
 # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 export FPATH="$BREW_PREFIX/share/zsh/site-functions:${FPATH}"
+export PATH="$PATH:$HOME/go/bin"
 export PATH="$BREW_PREFIX/bin:$PATH"
 export PATH="$BREW_PREFIX/opt:$PATH"
 
