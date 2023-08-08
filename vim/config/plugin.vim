@@ -153,7 +153,7 @@ endif
 " ============================================================================
 if has('timers') && (has('nvim-0.2.0') || exists('*job_start') && exists('*ch_close_in'))
   Plug 'dense-analysis/ale'
-  Plug 'git@github.com:jiz4oh/ale-autocorrect.vim.git'
+  Plug 'jiz4oh/ale-autocorrect.vim'
 endif
 
 "lsp
