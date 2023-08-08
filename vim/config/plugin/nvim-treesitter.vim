@@ -5,8 +5,8 @@ augroup vim-rails-augroup
 augroup END
 
 lua<<EOF
-  vim.opt.foldmethod = 'expr'
-  vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+  -- vim.opt.foldmethod = 'expr'
+  -- vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 
   require'nvim-treesitter.configs'.setup {
     auto_install = true,

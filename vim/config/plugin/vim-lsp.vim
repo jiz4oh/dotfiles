@@ -11,6 +11,10 @@ function! s:on_lsp_buffer_enabled() abort
       \ foldexpr=lsp#ui#vim#folding#foldexpr()
       \ foldtext&vim
 
+    if &filetype ==# 'json'
+      LspEnableFold
+    endif
+
     setlocal omnifunc=lsp#complete
     nmap <buffer>         <leader>ld <plug>(lsp-definition)
     nmap <buffer>         <leader>lD <plug>(lsp-declaration)
