@@ -73,6 +73,7 @@ if v:version >= 800 && get(g:, 'enable_markdown_preview', 0)
   Plug 'iamcco/markdown-preview.nvim', { 'do': ':call mkdp#util#install()' }
 endif
 Plug 'ferrine/md-img-paste.vim', { 'for': 'markdown' }
+Plug 'jiz4oh/vim-upgit', { 'do': './install' }
 " }}}
 
 " ============================================================================
