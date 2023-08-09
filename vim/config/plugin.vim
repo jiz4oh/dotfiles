@@ -172,6 +172,7 @@ if g:enable_lsp
   "else
     " lsp
     Plug 'prabirshrestha/vim-lsp'
+    Plug 'jiz4oh/vim-lspfuzzy'
     Plug 'rhysd/vim-lsp-ale'
     Plug 'mattn/vim-lsp-settings'
     Plug 'dmitmel/cmp-vim-lsp'
