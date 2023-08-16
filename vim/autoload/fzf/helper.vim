@@ -1,6 +1,12 @@
+let s:default_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit'
+  \}
+
 function! s:split_grep(line, has_column)
   let parts = matchlist(a:line, '\(.\{-}\)\s*:\s*\(\d\+\)\%(\s*:\s*\(\d\+\)\)\?\%(\s*:\(.*\)\)\?')
-  let dict = {'filename': &acd ? fnamemodify(parts[1], ':p') : parts[1], 'lnum': parts[2], 'text': parts[4]}
+  let dict = {'filename': &autochdir ? fnamemodify(parts[1], ':p') : parts[1], 'lnum': parts[2], 'text': parts[4]}
   if a:has_column
     let dict.col = parts[3]
   endif
@@ -30,7 +36,7 @@ endfunction
 function! s:action_for(key, ...)
   let default = a:0 ? a:1 : ''
   let Cmd = get(get(g:, 'fzf_action', s:default_action), a:key, default)
-  return type(Cmd) == s:TYPE.string ? Cmd : default
+  return type(Cmd) == type('') ? Cmd : default
 endfunction
 
 " lines (array), has_column (0/1), [actions (dict)]
