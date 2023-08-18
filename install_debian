@@ -9,4 +9,19 @@ install() {
 	done
 }
 
+install_ctags(){
+  release="2023.08.13%2Bce46d93811faefaa75b87e334d768fbf9a831861"
+  file="uctags-2023.08.13-linux-x86_64"
+  curl -fsSL "https://github.com/universal-ctags/ctags-nightly-build/releases/download/$release/$file.tar.xz" -o ctags.tar.xz
+
+  tar -xf ctags.tar.xz
+
+  sudo mv $file/bin/* /usr/local/bin/
+
+  rm ctags.tar.xz
+  rm -rf $file
+}
+
 install git shellcheck curl wget bat
+
+install_ctags
