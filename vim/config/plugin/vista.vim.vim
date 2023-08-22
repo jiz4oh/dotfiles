@@ -3,6 +3,9 @@ let g:vista_executive_for = {
     \ 'vimwiki': 'markdown',
     \ 'pandoc': 'markdown',
     \ 'markdown': 'toc',
+    \ 'vim': 'ctags',
+    \ 'go': 'ctags',
+    \ 'ruby': 'ctags',
     \ }
 
 let g:vista_ctags_cmd = {}
@@ -40,5 +43,30 @@ if exists('*nvim_open_win') || exists('*popup_create')
   let g:vista_echo_cursor_strategy = 'floating_win'
 endif
 
-nmap <silent> <Plug><OutlineToggle> :Vista!!<CR>
-imap <silent> <Plug><OutlineToggle> <c-o>:Vista!!<CR>
+function! s:get_executive() abort
+  let l:filetype = &filetype
+  if has_key(g:vista_executive_for, l:filetype)
+    return g:vista_executive_for[l:filetype]
+  endif
+
+  if exists('g:vista_'.l:filetype.'_executive')
+    return g:vista_{l:filetype}_executive
+  endif
+
+  return g:vista_default_executive
+endfunction
+
+function! s:vista() abort
+  if s:get_executive() ==? 'ctags'
+    try
+      TagbarToggle
+    catch
+      Vista!!
+    endtry
+  else
+    Vista!!
+  endif
+endfunction
+
+nmap <silent> <Plug><OutlineToggle> :call <SID>vista()<CR>
+imap <silent> <Plug><OutlineToggle> <c-o>:call <SID>vista()<CR>
