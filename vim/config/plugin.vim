@@ -237,7 +237,7 @@ Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-eunuch'
 Plug 'jiz4oh/vim-terminal-help'
-Plug 'tweekmonster/helpful.vim'
+Plug 'tweekmonster/helpful.vim', { 'on': 'HelpfulVersion' }
 Plug 'mhinz/vim-hugefile'
 Plug 'pbogut/fzf-mru.vim'
 Plug 'liuchengxu/vim-which-key'
