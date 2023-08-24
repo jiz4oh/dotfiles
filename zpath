@@ -21,6 +21,10 @@ elif [ $(command -v vim) ]; then
   export EDITOR=vim
 fi
 
+if [ $(command -v brew) ]; then
+  eval "$(brew shellenv)"
+fi
+
 # git clone https://github.com/asdf-vm/asdf.git ~/.asdf
 [ -d ~/.asdf ] && source ~/.asdf/asdf.sh
 
