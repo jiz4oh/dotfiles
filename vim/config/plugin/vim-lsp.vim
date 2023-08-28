@@ -1,19 +1,25 @@
 let g:lsp_document_highlight_enabled = 0
 let g:lsp_format_sync_timeout = 1000
 
+function! s:fold_by_lsp() abort
+  let b:foldmethod = &foldmethod
+  let b:foldexpr = &foldexpr
+  let b:foldtext = &foldtext
+  setlocal foldmethod=expr
+  setlocal foldexpr=lsp#ui#vim#folding#foldexpr()
+  setlocal foldtext=lsp#ui#vim#folding#foldtext()
+endfunction
+
+function! s:restore_fold() abort
+  let &l:foldmethod = b:foldmethod
+  let &l:foldexpr = b:foldexpr
+  let &l:foldtext = b:foldtext
+endfunction
+
 function! s:on_lsp_buffer_enabled() abort
     " folds slow down vim with large text
-    command! -buffer LspEnableFold :setlocal foldmethod=expr
-      \ foldexpr=lsp#ui#vim#folding#foldexpr()
-      \ foldtext=lsp#ui#vim#folding#foldtext()
-
-    command! -buffer LspDisableFold :setlocal foldmethod=expr
-      \ foldexpr=lsp#ui#vim#folding#foldexpr()
-      \ foldtext&vim
-
-    if &filetype ==# 'json'
-      LspEnableFold
-    endif
+    command! -buffer LspEnableFold call <SID>fold_by_lsp()
+    command! -buffer LspDisableFold call <SID>restore_fold()
 
     setlocal omnifunc=lsp#complete
     nmap <buffer>         <leader>ld <plug>(lsp-definition)
