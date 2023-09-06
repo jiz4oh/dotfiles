@@ -144,7 +144,7 @@ function! fzf#customized#paths(query, fullscreen) abort
       call add(l:spec['options'], a:query)
     endif
 
-    call fzf#run(fzf#wrap(fzf#vim#with_preview(l:spec), a:fullscreen))
+    call fzf#run(fzf#wrap('paths', fzf#vim#with_preview(l:spec), a:fullscreen))
   endfunction
 
   call fzf#helper#reserve_cmd(container.func)()
@@ -213,7 +213,7 @@ function! fzf#customized#path(query, fullscreen) abort
       call add(l:spec['options'], a:query)
     endif
 
-    call fzf#run(fzf#wrap('paths', l:spec, a:fullscreen))
+    call fzf#run(fzf#wrap(l:spec, a:fullscreen))
   endfunction
 
   call fzf#helper#reserve_action(container.func)()
@@ -256,5 +256,5 @@ function! fzf#customized#quickfix(query, fullscreen) abort
                   \'--delimiter', ':', '--preview-window', '+{2}-/2'
                 \]}
 
-  call fzf#run(fzf#wrap(fzf#vim#with_preview(l:spec), a:fullscreen))
+  call fzf#run(fzf#wrap('quickfix', fzf#vim#with_preview(l:spec), a:fullscreen))
 endfunction
