@@ -8,11 +8,11 @@ if !executable('rg')
       let l:query = fzf#shellescape(a:query)
       let l:grep_cmd = 'git grep --color=always --line-number ' . l:query . ' -- ' . a:dir
 
-      call fzf#vim#grep(l:grep_cmd, 0, fzf#vim#with_preview({'dir': a:dir, 'options': ['--prompt', personal#functions#shortpath(a:dir) . ' ', '--delimiter', ':', '--nth', '3..']}), a:fullscreen)
+      call fzf#vim#grep(l:grep_cmd, fzf#vim#with_preview({'dir': a:dir, 'options': ['--prompt', personal#functions#shortpath(a:dir) . ' ', '--delimiter', ':', '--nth', '3..']}), a:fullscreen)
     else
       let l:grep_cmd = 'find ' . a:dir . ' -type f -iname "*' . a:query . '*"'
 
-      call fzf#vim#grep(l:grep_cmd, 0, fzf#vim#with_preview({'dir': a:dir, 'options': ['--prompt', personal#functions#shortpath(a:dir) . ' ']}), a:fullscreen)
+      call fzf#vim#grep(l:grep_cmd, fzf#vim#with_preview({'dir': a:dir, 'options': ['--prompt', personal#functions#shortpath(a:dir) . ' ']}), a:fullscreen)
     endif
 
   endfunction
@@ -52,7 +52,7 @@ else
       call add(l:spec['options'], a:query)
     endif
 
-    call fzf#vim#grep(l:grep_cmd, 1, fzf#vim#with_preview(l:spec), a:fullscreen)
+    call fzf#vim#grep(l:grep_cmd, fzf#vim#with_preview(l:spec), a:fullscreen)
   endfunction
 
   function! fzf#customized#rg(query, fullscreen)
@@ -69,7 +69,7 @@ else
              \'--bind', 'change:reload:'.l:reload_command
              \]}
 
-    call fzf#vim#grep(l:grep_cmd, 1, fzf#vim#with_preview(l:spec), a:fullscreen)
+    call fzf#vim#grep(l:grep_cmd, fzf#vim#with_preview(l:spec), a:fullscreen)
   endfunction
 endif
 
@@ -121,7 +121,7 @@ function! fzf#customized#paths(query, fullscreen) abort
   let container = {}
   function! container.func() closure
     let $FZF_DEFAULT_COMMAND = l:grep_cmd
-    let actions = {
+    let l:actions = {
       \ 'ctrl-l':  {_ -> fzf#customized#path(a:query, a:fullscreen) },
       \ 'ctrl-t': 'tab split',
       \ 'ctrl-x': 'split',
@@ -130,7 +130,7 @@ function! fzf#customized#paths(query, fullscreen) abort
     let l:dir = getcwd()
     let l:spec = {
                   \'dir': l:dir,
-                  \'sink*': { lines -> fzf#helper#colon_sink(lines, 1, actions) },
+                  \'sink*': { lines -> fzf#helper#colon_sink(lines, l:actions) },
                   \'options': [
                     \'--expect', join(keys(actions), ','),
                     \'--ansi',
@@ -220,9 +220,9 @@ function! fzf#customized#path(query, fullscreen) abort
 endfunction
 
 function! fzf#customized#compilers()
-  let compilers = split(globpath(&rtp, "compiler/*.vim"), "\n")
+  let compilers = split(globpath(&runtimepath, 'compiler/*.vim'), '\n')
   if has('packages')
-    let compilers += split(globpath(&packpath, "pack/*/opt/*/compiler/*.vim"), "\n")
+    let compilers += split(globpath(&packpath, 'pack/*/opt/*/compiler/*.vim'), '\n')
   endif
   return fzf#run(fzf#wrap('compilers', {
   \ 'source':  fzf#vim#_uniq(map(compilers, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")),
@@ -238,7 +238,7 @@ function! fzf#customized#quickfix(query, fullscreen) abort
     let @/ = a:query
   endif
 
-  let actions = {
+  let l:actions = {
     \ 'ctrl-t': 'tab split',
     \ 'ctrl-x': 'split',
     \ 'ctrl-v': 'vsplit'
@@ -246,7 +246,7 @@ function! fzf#customized#quickfix(query, fullscreen) abort
   let l:dir = getcwd()
   let l:spec = {
                 \'dir': l:dir,
-                \'sink*': { lines -> fzf#helper#colon_sink(lines, 1, l:actions) },
+                \'sink*': { lines -> fzf#helper#colon_sink(lines, l:actions) },
                 \'source': l:list,
                 \'options': [
                   \'--expect', join(keys(actions), ','),

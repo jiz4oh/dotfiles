@@ -18,7 +18,7 @@ function! s:gem_content_search(gem, query, fullscreen) abort
     call add(l:spec['options'], a:query)
   endif
 
-  call fzf#vim#grep(l:grep_cmd, 1, fzf#vim#with_preview(l:spec), a:fullscreen)
+  call fzf#vim#grep(l:grep_cmd, fzf#vim#with_preview(l:spec), a:fullscreen)
 endfunction
 
 " Gem search
@@ -27,9 +27,9 @@ function! s:gem_search(query, fullscreen) abort
     echo 'not in a ruby project'
     return
   endif
-  " call fzf#vim#grep("bundle list | sed '1d;$d' | cut -d ' ' -f 4", 0, {'sink': {gem -> s:gem_content_search(gem, a:query, a:fullscreen)}}, a:fullscreen)
+  " call fzf#vim#grep("bundle list | sed '1d;$d' | cut -d ' ' -f 4", {'sink': {gem -> s:gem_content_search(gem, a:query, a:fullscreen)}}, a:fullscreen)
   " let l:gems = "echo " . fzf#shellescape(join(keys(bundler#project().paths()), ' ')) . "|awk '{for(i=1;i<=NF;++i) print $i}'"
-  " call fzf#vim#grep(l:gems, 0, {'sink': {gem -> s:gem_content_search(gem, a:query, a:fullscreen)}}, a:fullscreen)
+  " call fzf#vim#grep(l:gems, {'sink': {gem -> s:gem_content_search(gem, a:query, a:fullscreen)}}, a:fullscreen)
   let l:gems = keys(bundler#project().paths())
 
   try
@@ -76,7 +76,7 @@ function! s:gems_search(query, fullscreen) abort
     let l:grep_cmd = 'find '. join(l:gem_paths, ' ') . ' -type f'
   endif
 
-  let actions = {
+  let l:actions = {
     \ 'ctrl-l':  {_ -> s:gem_search(a:query, a:fullscreen) },
     \ 'ctrl-t': 'tab split',
     \ 'ctrl-x': 'split',
@@ -85,7 +85,7 @@ function! s:gems_search(query, fullscreen) abort
   let l:dir = getcwd()
   let l:spec = {
                 \'dir': l:dir,
-                \'sink*': { lines -> fzf#helper#colon_sink(lines, 1, actions) },
+                \'sink*': { lines -> fzf#helper#colon_sink(lines, l:actions) },
                 \'options': [
                   \'--expect', join(keys(actions), ','),
                   \'--ansi', 

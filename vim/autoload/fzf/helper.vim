@@ -4,10 +4,10 @@ let s:default_action = {
   \ 'ctrl-v': 'vsplit'
   \}
 
-function! s:split_grep(line, has_column)
+function! s:split_grep(line)
   let parts = matchlist(a:line, '\(.\{-}\)\s*:\s*\(\d\+\)\%(\s*:\s*\(\d\+\)\)\?\%(\s*:\(.*\)\)\?')
   let dict = {'filename': &autochdir ? fnamemodify(parts[1], ':p') : parts[1], 'lnum': parts[2], 'text': parts[4]}
-  if a:has_column
+  if len(parts[3])
     let dict.col = parts[3]
   endif
   return dict
@@ -39,11 +39,10 @@ function! s:action_for(key, ...)
   return type(Cmd) == type('') ? Cmd : default
 endfunction
 
-" lines (array), has_column (0/1), [actions (dict)]
+" lines (array), [actions (dict)]
 " extend fzf butil-in ag_handler
 " actions can be used with function which first parameter is {'filename': '', 'lnum': '', 'text': '', col: ''}
-function! fzf#helper#colon_sink(lines, has_column, ...)
-  let has_column = a:has_column
+function! fzf#helper#colon_sink(lines, ...)
   let key = a:lines[0]
   if a:0
     let Cmd = get(a:1, key, 'e')
@@ -51,7 +50,7 @@ function! fzf#helper#colon_sink(lines, has_column, ...)
     let Cmd = s:action_for(key, 'e')
   end
 
-  let list = map(filter(a:lines[1:], 'len(v:val)'), 's:split_grep(v:val, has_column)')
+  let list = map(filter(a:lines[1:], 'len(v:val)'), 's:split_grep(v:val)')
   if empty(list)
     return
   endif
@@ -64,7 +63,7 @@ function! fzf#helper#colon_sink(lines, has_column, ...)
 
     call s:open(Cmd, first.filename)
     execute first.lnum
-    if has_column
+    if has_key(first, 'col')
       call cursor(0, first.col)
     endif
     normal! zvzz
