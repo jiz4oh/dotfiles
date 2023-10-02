@@ -19,7 +19,9 @@ elseif has('nvim') || has('patch-8.2.191')
 
   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 else
-  autocmd! FileType fzf tnoremap <expr> <C-r> getreg(nr2char(getchar()))
+  if exists('tnoremap')
+    autocmd! FileType fzf tnoremap <expr> <C-r> getreg(nr2char(getchar()))
+  endif
 
   " disable popup in favor of location window
   let g:fzf_layout = { 'down': '60%' }

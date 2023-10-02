@@ -26,7 +26,9 @@ function! Terminal_MetaMode()
 
     let lhs = '<m-'. a:key .'>'
     if empty(maparg(lhs, 't'))
-      exec 'tnoremap '.lhs.' <Esc>'.a:key
+      if exists('tnoremap')
+        exec 'tnoremap '.lhs.' <Esc>'.a:key
+      endif
     endif
   endfunc
   for i in range(10)
