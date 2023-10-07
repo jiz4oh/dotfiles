@@ -301,4 +301,29 @@ endif
 call plug#end()
 endif
 
+function! s:plug_gf() abort
+  let plug_name = split(expand('<cfile>'), '/')[-1]
+  let dir = get(get(g:plugs, plug_name, {}), 'dir')
+  if isdirectory(dir)
+    let path = dir
+    for file in ['doc/*.txt', 'README.md', 'plugin/*.vim', 'lug/**.lua', 'autoload/**.vim']
+      let res = glob(dir . file, '', 1)
+      if !empty(res)
+        let path = res[0]
+        break
+      endif
+    endfor
+    execute 'e ' . path
+  else
+    echom plug_name . " is not installed"
+    normal! gf
+  end
+endfunction
+
+augroup vim-plug-augroup
+  autocmd!
+
+  execute 'autocmd BufEnter '. expand('<sfile>:p') . ' nnoremap <buffer><silent> gf :call <SID>plug_gf()<cr>'
+augroup END
+
 silent! colorscheme gruvbox-material
