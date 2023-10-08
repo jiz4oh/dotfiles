@@ -4,10 +4,16 @@
   },
   "vim/config/plugin/*.vim": {
     "type": "config",
-    "related": "bundle/{}/plugin/{}.vim"
+    "alternate": [
+      "vim/bundle/{}/plugin/{}.vim",
+      "vim/bundle/{}/README.md",
+      "vim/bundle/{}/README.mkd",
+      "vim/bundle/{}/README.markdown"
+    ],
+    "related": "vim/bundle/{}/plugin/{}.vim"
   },
   "vim/bundle/**/plugin/*.vim": {
     "type": "plugin",
-    "related": "config/plugin/{dirname}.vim"
+    "related": "vim/config/plugin/{dirname}.vim"
   }
 }
