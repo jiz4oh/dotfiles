@@ -68,7 +68,6 @@ call FzfGrepMap('<leader>ss', 'Sessions')
 call FzfGrepMap('<leader>si', 'Path')
 call FzfGrepMap('<leader>sq', 'Cfilter')
 call FzfGrepMap('<leader>sp', 'Pg')
-call FzfGrepMap('<leader>sw', 'Wg')
 
 nnoremap <leader>pp :Projects<cr>
 nnoremap <leader>st :Tags<cr>
