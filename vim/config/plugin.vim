@@ -18,8 +18,7 @@ else
   runtime macros/matchit.vim
 endif
 
-let g:enable_lsp = get(g:, 'enable_lsp', 0)
-let g:enable_autocomplete = get(g:, 'enable_autocomplete', 0)
+let g:as_ide = get(g:, 'as_ide', 0)
 
 silent! if plug#begin('~/.vim/bundle')
 set updatetime=100
@@ -143,7 +142,7 @@ if executable('ctags')
   endif
 endif
 
-if g:enable_lsp || executable('ctags')
+if g:as_ide || executable('ctags')
   Plug 'liuchengxu/vista.vim'
 endif
 "}}}
@@ -157,7 +156,7 @@ if has('timers') && (has('nvim-0.2.0') || exists('*job_start') && exists('*ch_cl
 endif
 
 "lsp
-if g:enable_lsp
+if g:as_ide
   "if has('nvim-0.5')
   "  if has('nvim-0.7')
   "    " Plug 'simrat39/symbols-outline.nvim'
@@ -180,7 +179,7 @@ if g:enable_lsp
 endif
 
 "autocomplete
-if g:enable_autocomplete && has('nvim')
+if g:as_ide && has('nvim')
   Plug 'hrsh7th/nvim-cmp'
   Plug 'nvim-lua/plenary.nvim'
   Plug 'hrsh7th/cmp-path'
@@ -280,23 +279,25 @@ Plug 'troydm/zoomwintab.vim'
 " ============================================================================
 " BEAUTIFY {{{
 " ============================================================================
-if has('nvim')
-  Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+if g:as_ide
+  if has('nvim')
+    Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+  endif
+  if has('nvim') || has('gui_running')
+    " Plug 'vim-airline/vim-airline'
+  endif
+  Plug 'junegunn/rainbow_parentheses.vim'
+  Plug 'vim/killersheep'
+
+  if get(g:, 'enable_nerd_font', 0)
+    Plug 'ryanoasis/vim-devicons'
+  endif
 endif
-if has('nvim') || has('gui_running')
-  " Plug 'vim-airline/vim-airline'
-endif
-Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'sainnhe/gruvbox-material'
 Plug 'sainnhe/everforest'
 Plug 'sainnhe/edge'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'uguu-org/vim-matrix-screensaver'
-Plug 'vim/killersheep'
-
-if get(g:, 'enable_nerd_font', 0)
-  Plug 'ryanoasis/vim-devicons'
-endif
 "}}}
 call plug#end()
 endif
@@ -319,4 +320,6 @@ augroup vim-plug-augroup
   execute 'autocmd BufEnter '. expand('<sfile>:p') . ' nnoremap <buffer><silent> gf :call <SID>plug_gf()<cr>'
 augroup END
 
-silent! colorscheme gruvbox-material
+if g:as_ide
+  silent! colorscheme gruvbox-material
+endif
