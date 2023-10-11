@@ -117,7 +117,7 @@ Plug 'tpope/vim-rbenv'
 " Plug 'vlime/vlime', {'rtp': 'vim/'}
 " Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }
 if has('nvim') || has('patch-8.0.1453')
-  Plug 'fatih/vim-go', { 'for': 'go' }
+  Plug 'fatih/vim-go'
 endif
 " }}}
 
