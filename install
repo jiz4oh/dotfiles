@@ -9,7 +9,8 @@ mkdir -pv bak
 [ $(command -v zsh) ] && $BASE/install_zsh
 
 # dotfiles
-for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore zprofile zshenv zpath p10k.zsh \
+for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
+  alias zprofile zshenv zpath p10k.zsh \
   ignore \
   prettierignore yamllint.yaml vintrc.yaml \
   rbenv/default-gems snipaste/config.ini hammerspoon/init.lua\

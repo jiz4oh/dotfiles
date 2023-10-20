@@ -130,35 +130,6 @@ setopt AUTO_CD
 # ============================Example aliases============================
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-# macos
-alias abrew="/opt/homebrew/bin/brew"
-alias i="arch -x86_64"
-alias i="arch -x86_64"
-alias ibrew="arch -x86_64 /usr/local/bin/brew"
-
-# unix
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ......='cd ../../../../..'
-alias cd.='cd ..'
-alias cd..='cd ..'
-alias l='ls -alF'
-alias ll='ls -l'
-alias s='kitty +kitten ssh'
-alias d="kitty +kitten diff"
-alias hg='kitty +kitten hyperlinked_grep'
-
-# software
-alias vi=$EDITOR
-if [ "$EDITOR" = "nvim" ];then
-  alias vimdiff='nvim -d'
-fi
-
-if [ $(command -v mvim) ]; then
-  alias vm='mvim -v'
-fi
 
 l.() {
   [ -z $1 ] && ls -lhd .* || ls -lhd $1/.*
@@ -213,3 +184,5 @@ zmodload zsh/zprof
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 [ -f $HOME/.zlocal ] && source $HOME/.zlocal
+
+[ -f $HOME/.alias ] && source $HOME/.alias
