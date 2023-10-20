@@ -11,7 +11,7 @@ omap <leader>db  <Plug>(DBExe)
 nmap <leader>dbb <Plug>(DBExeLine)
 
 function! s:init_sqlite() abort
-  if executable('file')
+  if executable('file') && executable('file')
     let path = expand('%:p')
     let output = system('file ' . path)
     if output =~# 'SQLite'
@@ -29,5 +29,5 @@ augroup vim-dadbod-augroup
   autocmd FileType mysql,sql,plsql let b:start = ':DB' |
         \ let b:dispatch = ':DB'
 
-  autocmd BufRead,BufNewFile *.db call <SID>init_sqlite()
+  autocmd BufRead,BufNewFile *.db,*.sqlite3 call <SID>init_sqlite()
 augroup END
