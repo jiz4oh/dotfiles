@@ -31,7 +31,6 @@ let g:project_markers = [
 let g:enable_nerd_font        = g:is_mac_gui || 
       \index(['iTerm.app'], $TERM_PROGRAM) >= 0 ||
       \exists('$KITTY_WINDOW_ID')
-let g:enable_markdown_preview = g:is_win || g:is_darwin || g:has_linux_desktop
 let g:as_ide                  = g:is_win || g:is_darwin || g:has_linux_desktop
 
 " https://github.com/kovidgoyal/kitty/issues/957

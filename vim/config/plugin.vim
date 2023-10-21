@@ -68,7 +68,7 @@ if v:version >= 704
 endif
 
 " markdown preview
-if v:version >= 800 && get(g:, 'enable_markdown_preview', 0)
+if v:version >= 800 && get(g:, 'as_ide', 0)
   Plug 'iamcco/markdown-preview.nvim', { 'do': ':call mkdp#util#install()' }
 endif
 Plug 'ferrine/md-img-paste.vim', { 'for': 'markdown' }
@@ -233,10 +233,12 @@ Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 " ============================================================================
 " Utils {{{
 " ============================================================================
-Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-eunuch'
 Plug 'jiz4oh/vim-terminal-help'
-Plug 'tweekmonster/helpful.vim', { 'on': 'HelpfulVersion' }
+if g:as_ide
+  Plug 'tpope/vim-scriptease'
+  Plug 'tweekmonster/helpful.vim', { 'on': 'HelpfulVersion' }
+end
 Plug 'mhinz/vim-hugefile'
 Plug 'pbogut/fzf-mru.vim'
 Plug 'liuchengxu/vim-which-key'
