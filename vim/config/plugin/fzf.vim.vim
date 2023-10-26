@@ -6,13 +6,6 @@ function! FzfGrepMap(lhs, cmd)
   execute "vnoremap <silent> " . a:lhs . " :<C-u>execute ':" . a:cmd . " '.personal#functions#selected()<CR>"
 endfunction
 
-command! -nargs=? -bang FzfLspDocumentSymbol  call fzf#lsp#document_symbol(<bang>0)
-command! -nargs=? -bang FzfLspWorkspaceSymbol call fzf#lsp#workspace_symbol(<q-args>,<bang>0)
-command! -nargs=? -bang FzfLspDefintion       call fzf#lsp#definition(<bang>0)
-command! -nargs=? -bang FzfLspDeclaration     call fzf#lsp#declaration(<bang>0)
-command! -nargs=? -bang FzfLspTypeDefinition  call fzf#lsp#type_definition(<bang>0)
-command! -nargs=? -bang FzfLspImplementation  call fzf#lsp#implementation(<bang>0)
-command! -nargs=? -bang FzfLspReferences      call fzf#lsp#references(<bang>0)
 command! -nargs=? -bang Compilers             call fzf#customized#compilers()
 command! -nargs=? -bang Projects              call fzf#customized#projects(<q-args>, <bang>0)
 command! -nargs=? -bang Path                  call fzf#customized#paths(<q-args>, <bang>0)

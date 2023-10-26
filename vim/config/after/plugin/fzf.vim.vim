@@ -1,3 +1,4 @@
+command! -nargs=? -bang FzfLspReferences      call fzf#lsp#references(<bang>0, {'jump_if_one': 1})
 nnoremap <silent> <plug>(lsp-document-symbol-search) :<c-u>FzfLspDocumentSymbol<cr>
 nnoremap <silent> <plug>(lsp-workspace-symbol-search) :<c-u>FzfLspWorkspaceSymbol<cr>
 xnoremap <silent> <plug>(lsp-workspace-symbol-search) :<c-u>execute ':FzfLspWorkspaceSymbol '.personal#functions#selected()<cr>
