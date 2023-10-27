@@ -15,6 +15,8 @@ export GPG_TTY=$(tty)
 export RUBY_BUILD_MIRROR_URL=https://cache.ruby-china.com
 
 export ASDF_GEM_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
+export ASDF_GOLANG_MOD_VERSION_ENABLED=true
+
 export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
 
 export HOMEBREW_NO_AUTO_UPDATE=1
