@@ -181,8 +181,12 @@ RG() {
 zmodload zsh/zprof
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-[ -f $HOME/.zlocal ] && source $HOME/.zlocal
-
-[ -f $HOME/.alias ] && source $HOME/.alias
+for file in $HOME/.asdf/plugins/golang/set-env.zsh \
+  $HOME/.p10k.zsh \
+  $HOME/.zlocal \
+  $HOME/.alias; do
+  if test -f "$file"; then
+    # 文件存在,执行source命令加载文件
+    source "$file"
+  fi
+done
