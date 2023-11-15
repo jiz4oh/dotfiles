@@ -19,5 +19,6 @@ if ! command -v pandoc &> /dev/null; then
       exit 1;
 fi
 
+export LANG="en_US.UTF-8"
 export LC_CTYPE=UTF-8
 osascript -e 'the clipboard as "HTML"'| perl -ne 'print chr foreach unpack("C*",pack("H*",substr($_,11,-3)))' | pandoc --from=html --to=gfm | pbcopy

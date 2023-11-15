@@ -14,7 +14,8 @@
 # @raycast.author Vishal Telangre
 # @raycast.authorURL https://github.com/vishaltelangre
 
-path=$(osascript <<'EOF'
+path=$(
+	osascript <<'EOF'
     tell application "Finder"
         if exists Finder window 1 then
             get the POSIX path of (target of Finder window 1 as alias)
@@ -24,5 +25,8 @@ path=$(osascript <<'EOF'
     end tell
 EOF
 )
+
+export LANG="en_US.UTF-8"
+export LC_CTYPE=UTF-8
 echo $path | tr -d '\n' | pbcopy
 echo "Copied $path to clipboard"
