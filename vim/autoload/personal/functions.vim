@@ -29,9 +29,30 @@ function! personal#functions#escape_for_regexp(str)
   return escape(a:str, '^$.*?/\[]')
 endfunction
 
+" https://github.com/tpope/vim-dispatch/blob/00e77d90452e3c710014b26dc61ea919bc895e92/autoload/dispatch.vim#L433
+function! personal#functions#parse_start(command, ...) abort
+  let command = a:command
+  let opts = {}
+  while command =~# '^\%(-\|++\)\%(\w\+\)\%([= ]\|$\)'
+    let opt = matchstr(command, '\zs\w\+')
+    if command =~# '^\%(-\|++\)\w\+='
+      let val = matchstr(command, '\w\+=\zs\%(\\.\|\S\)*')
+    else
+      let val = 1
+    endif
+    if opt ==# 'dir' || opt ==# 'directory'
+      let opts.directory = fnamemodify(expand(val), ':p:s?[^:]\zs[\\/]$??')
+    elseif index(['compiler', 'title', 'wait'], opt) >= 0
+      let opts[opt] = substitute(val, '\\\(\s\)', '\1', 'g')
+    endif
+    let command = substitute(command, '^\%(-\|++\)\w\+\%(=\%(\\.\|\S\)*\)\=\s*', '', '')
+  endwhile
+  return [command, extend(opts, a:0 ? a:1 : {})]
+endfunction
+
 " stole from https://github.com/junegunn/dotfiles/blob/master/vimrc
 function! s:colors(...)
-  return filter(map(filter(split(globpath(&rtp, 'colors/*.vim'), "\n"),
+  return filter(map(filter(split(globpath(&runtimepath, 'colors/*.vim'), "\n"),
         \                  'v:val !~ "^/usr/"'),
         \           'fnamemodify(v:val, ":t:r")'),
         \       '!a:0 || stridx(v:val, a:1) >= 0')

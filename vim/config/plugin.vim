@@ -137,7 +137,7 @@ Plug 'whatyouhide/vim-textobj-erb', { 'for': 'eruby' }
 " ============================================================================
 if executable('ctags')
   Plug 'ludovicchabant/vim-gutentags'
-  if has("patch-7.3.1058")
+  if has('patch-7.3.1058')
     Plug 'preservim/tagbar', { 'on': 'TagbarToggle' }
   endif
 endif
@@ -234,7 +234,8 @@ Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 " Utils {{{
 " ============================================================================
 Plug 'tpope/vim-eunuch'
-Plug 'jiz4oh/vim-terminal-help'
+" Plug 'jiz4oh/vim-terminal-help'
+Plug 'voldikss/vim-floaterm'
 if g:as_ide
   Plug 'tpope/vim-scriptease'
   Plug 'tweekmonster/helpful.vim', { 'on': 'HelpfulVersion' }

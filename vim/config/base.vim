@@ -519,12 +519,12 @@ noremap gV `[v`]
 " expand %% to path of current buffer in command mode.
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
-function! Tnoremap(lhs, rhs) abort
+function! Tnoremap(lhs, rhs, mods) abort
   if has('nvim')
-    let s:cmd = 'tnoremap <silent>'.(a:lhs). ' '
+    let s:cmd = 'tnoremap '. a:mods . ' ' .(a:lhs). ' '
     execute s:cmd . '<c-\><c-n>' . a:rhs
   elseif has('terminal') && exists(':terminal') == 2 && has('patch-8.1.1')
-    let s:cmd = 'tnoremap <silent>'.(a:lhs). ' '
+    let s:cmd = 'tnoremap '. a:mods . ' ' .(a:lhs). ' '
     let termwinkey = empty(&termwinkey) ? '<c-w>' : &termwinkey
     execute s:cmd . termwinkey . a:rhs
   endif
@@ -717,7 +717,7 @@ for s:i in range(1, 9)
   " <Leader>[1-9] move to tab [1-9]
   execute 'nnoremap <Leader>'.s:i s:i.'gt'
   execute 'nnoremap <m-'.s:i.'>' s:i.'gt'
-  call Tnoremap('<m-'.s:i.'>', s:i.'gt')
+  call Tnoremap('<m-'.s:i.'>', s:i.'gt', '<silent>')
 
   " <Leader>w[1-9] move to window [1-9]
   execute 'nnoremap <Leader>w'.s:i ' :'.s:i.'wincmd w<CR>'

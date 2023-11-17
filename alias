@@ -19,7 +19,11 @@ alias d="kitty +kitten diff"
 alias hg='kitty +kitten hyperlinked_grep'
 
 # software
-alias vi=$EDITOR
+if [ $(command -v floaterm) ]; then
+  alias vi=floaterm
+else
+  alias vi=$EDITOR
+fi
 if [ "$EDITOR" = "nvim" ];then
   alias vimdiff='nvim -d'
 fi

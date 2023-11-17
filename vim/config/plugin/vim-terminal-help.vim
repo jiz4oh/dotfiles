@@ -13,7 +13,7 @@ let g:terminal_close = 1
 let s:cmd = 'nnoremap <silent>'.(g:terminal_key). ' '
 execute s:cmd . ':call TerminalToggle()<cr>'
 
-call Tnoremap(g:terminal_key, ':call TerminalToggle()<cr>')
+call Tnoremap(g:terminal_key, ':call TerminalToggle()<cr>', '<silent>')
 
 augroup vim-terminal-help-augroup
   autocmd!
