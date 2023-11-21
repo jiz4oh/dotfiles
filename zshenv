@@ -9,7 +9,11 @@ fi
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-export EDITOR=vim
+if [ -n "$NVIM" ]; then
+  export EDITOR=nvim
+else
+  export EDITOR=vim
+fi
 
 export GPG_TTY=$(tty)
 export RUBY_BUILD_MIRROR_URL=https://cache.ruby-china.com
