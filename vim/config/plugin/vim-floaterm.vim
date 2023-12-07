@@ -14,7 +14,9 @@ let g:floaterm_keymap_toggle = '<m-=>'
 let g:floaterm_width = 0.9
 let g:floaterm_height = 0.8
 
+nnoremap <silent> <m--> :FloatermNew<cr>
 function! s:init_floaterm() abort
+  call Tnoremap('<m-->', ':FloatermNew<cr>', '<silent><buffer>')
   call Tnoremap('<m-[>', ':FloatermPrev<cr>', '<silent><buffer>')
   call Tnoremap('<m-]>', ':FloatermNext<cr>', '<silent><buffer>')
 endfunction
