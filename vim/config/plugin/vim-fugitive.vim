@@ -27,6 +27,8 @@ function! s:fugitive_init() abort
   nnoremap <buffer><silent> cbt :execute ':Git branch --set-upstream-to=origin/' . FugitiveHead()<cr>
   " merge force
   nnoremap <buffer> cmf :Git merge -X theirs<space>
+
+  nnoremap <buffer> cp  :Git cherry-pick<space>
   nnoremap <buffer> cob :Git checkout -b<space>
   nnoremap <buffer> cbd :Git branch -d<space>
   nnoremap <buffer> cbD :Git branch -D<space>
