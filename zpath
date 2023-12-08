@@ -3,11 +3,24 @@
 # https://0xmachos.com/2021-05-13-zsh-path-macos/
 # path_helper will reorder $PATH, so we can not set PATH in ~/.zshenv
 
+export PATH="$BREW_PREFIX/bin:$PATH"
+export PATH="$BREW_PREFIX/opt:$PATH"
+if [ $(command -v brew) ]; then
+  eval "$(brew shellenv)"
+fi
 # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 export FPATH="$BREW_PREFIX/share/zsh/site-functions:${FPATH}"
 export PATH="$PATH:$HOME/go/bin"
-export PATH="$BREW_PREFIX/bin:$PATH"
-export PATH="$BREW_PREFIX/opt:$PATH"
+
+if [ $(uname -s) = "Darwin" ]; then
+  # for ruby version < 2.4
+  openssl_version="@1-0"
+  # for ruby version 2.4 - 3.0
+  openssl_version="@1.1"
+  # for ruby version > 3.0
+  openssl_version=""
+  export PATH="$BREW_PREFIX/opt/openssl$openssl_version/bin:$PATH"
+fi
 
 export PATH=~/bin:$PATH
 if [ $(command -v rbenv) ]; then
@@ -19,10 +32,6 @@ if [ $(command -v nvim) ]; then
   export EDITOR=nvim
 elif [ $(command -v vim) ]; then
   export EDITOR=vim
-fi
-
-if [ $(command -v brew) ]; then
-  eval "$(brew shellenv)"
 fi
 
 # git clone https://github.com/asdf-vm/asdf.git ~/.asdf
