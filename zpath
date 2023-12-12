@@ -35,6 +35,8 @@ elif [ $(command -v vim) ]; then
 fi
 
 # git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+# ruby 2.6 is not working on macos 13
+# https://bugs.ruby-lang.org/issues/18912
 [ -d ~/.asdf ] && source ~/.asdf/asdf.sh
 
 [ -f ~/.zshenv.local ] && source ~/.zshenv.local
