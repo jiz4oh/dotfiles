@@ -21,7 +21,7 @@ let g:ale_fixers = {
       \   'css': ['stylelint'],
       \   'scss': ['stylelint'],
       \   'sass': ['stylelint'],
-      \   'python': ['ruff', 'black', 'isort', 'remove_trailing_lines', 'trim_whitespace'],
+      \   'python': ['ruff_format', 'autocorrect', 'black', 'isort', 'remove_trailing_lines', 'trim_whitespace'],
       \   'ruby': ['rubocop'],
       \   'sh': ['shfmt', ],
       \   'md': ['prettier', 'autocorrect'],
