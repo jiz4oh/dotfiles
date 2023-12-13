@@ -23,10 +23,10 @@ if [ $(uname -s) = "Darwin" ]; then
 fi
 
 export PATH=~/bin:$PATH
-if [ $(command -v rbenv) ]; then
-  # https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell
-  eval "$(rbenv init - --no-rehash)"
-fi
+# if [ $(command -v rbenv) ]; then
+#   # https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell
+#   eval "$(rbenv init - --no-rehash)"
+# fi
 
 if [ $(command -v nvim) ]; then
   export EDITOR=nvim

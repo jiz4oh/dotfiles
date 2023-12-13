@@ -113,7 +113,8 @@ if executable('bundle')
   Plug 'tpope/vim-bundler'
 endif
 Plug 'tpope/vim-rails'
-Plug 'tpope/vim-rbenv'
+Plug 'jiz4oh/asdf.vim'
+" Plug 'tpope/vim-rbenv'
 " Plug 'vlime/vlime', {'rtp': 'vim/'}
 " Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }
 if has('nvim') || has('patch-8.0.1453')
