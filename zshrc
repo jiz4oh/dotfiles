@@ -190,11 +190,3 @@ for file in $HOME/.asdf/plugins/golang/set-env.zsh \
     source "$file"
   fi
 done
-
-# pnpm
-export PNPM_HOME="~/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end

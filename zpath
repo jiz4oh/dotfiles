@@ -39,4 +39,12 @@ fi
 # https://bugs.ruby-lang.org/issues/18912
 [ -d ~/.asdf ] && source ~/.asdf/asdf.sh
 
+# pnpm
+export PNPM_HOME="~/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
 [ -f ~/.zshenv.local ] && source ~/.zshenv.local
