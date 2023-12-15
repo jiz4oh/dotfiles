@@ -184,9 +184,11 @@ zmodload zsh/zprof
 for file in $HOME/.asdf/plugins/golang/set-env.zsh \
   $HOME/.p10k.zsh \
   $HOME/.zlocal \
+  "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc" \
   $HOME/.alias; do
   if test -f "$file"; then
     # 文件存在,执行source命令加载文件
     source "$file"
   fi
 done
+source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
