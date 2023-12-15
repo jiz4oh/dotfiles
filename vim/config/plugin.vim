@@ -22,6 +22,9 @@ let g:as_ide = get(g:, 'as_ide', 0)
 
 silent! if plug#begin('~/.vim/bundle')
 set updatetime=100
+Plug 'direnv/direnv.vim'
+Plug 'jiz4oh/asdf.vim'
+" Plug 'tpope/vim-rbenv'
 " ============================================================================
 " NAVIGATION / MOVE / Easier READ {{{
 " ============================================================================
@@ -113,8 +116,6 @@ if executable('bundle')
   Plug 'tpope/vim-bundler'
 endif
 Plug 'tpope/vim-rails'
-Plug 'jiz4oh/asdf.vim'
-" Plug 'tpope/vim-rbenv'
 " Plug 'vlime/vlime', {'rtp': 'vim/'}
 " Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }
 if has('nvim') || has('patch-8.0.1453')
