@@ -20,6 +20,7 @@ export RUBY_BUILD_MIRROR_URL=https://cache.ruby-china.com
 
 export ASDF_GEM_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
 export ASDF_GOLANG_MOD_VERSION_ENABLED=true
+export ASDF_DIRENV_IGNORE_MISSING_PLUGINS=1
 
 export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
 
