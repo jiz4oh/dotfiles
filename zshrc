@@ -191,4 +191,3 @@ for file in $HOME/.asdf/plugins/golang/set-env.zsh \
     source "$file"
   fi
 done
-source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
