@@ -31,6 +31,8 @@ cmp.setup({
       end, {"i","s","c",}),
   }),
   sources = cmp.config.sources({
+      -- Copilot Source
+      { name = 'copilot' },
       { name = 'vim_lsp' },
       { name = 'nvim_lsp' },
       -- { name = 'vsnip' }, -- For vsnip users.

@@ -181,36 +181,42 @@ if g:as_ide
 endif
 
 "autocomplete
-if g:as_ide && has('nvim')
-  Plug 'hrsh7th/nvim-cmp'
-  Plug 'nvim-lua/plenary.nvim'
-  Plug 'hrsh7th/cmp-path'
-  Plug 'hrsh7th/cmp-cmdline'
-  Plug 'hrsh7th/cmp-buffer'
-  Plug 'f3fora/cmp-spell'
-  if exists('$KITTY_WINDOW_ID')
-    Plug 'garyhurtz/cmp_kitty'
+if g:as_ide
+  if has('nvim')
+    Plug 'zbirenbaum/copilot.lua'
+    Plug 'zbirenbaum/copilot-cmp'
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-cmdline'
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'f3fora/cmp-spell'
+    if exists('$KITTY_WINDOW_ID')
+      Plug 'garyhurtz/cmp_kitty'
+    endif
+    Plug 'roobert/tailwindcss-colorizer-cmp.nvim'
+
+    if executable('ctags')
+      Plug 'quangnguyen30192/cmp-nvim-tags'
+    endif
+
+    Plug 'tzachar/cmp-tabnine', { 'do': g:is_win ? 'powershell.exe .\install.ps1' : './install.sh' }
+  elseif has('patch-9.0.0185') && executable('node')
+    Plug 'github/copilot.vim'
+  " elseif v:version >= 800
+    " Plug 'lifepillar/vim-mucomplete'
+    " autocomplete
+    " Plug 'prabirshrestha/asyncomplete.vim'
+    " Plug 'machakann/asyncomplete-ezfilter.vim'
+    " Plug 'prabirshrestha/asyncomplete-buffer.vim'
+    " Plug 'prabirshrestha/asyncomplete-file.vim'
+
+    " if executable('ctags')
+    "   Plug 'prabirshrestha/asyncomplete-tags.vim'
+    " endif
+
+    " Plug 'kitagry/asyncomplete-tabnine.vim', { 'do': g:is_win ? 'powershell.exe .\install.ps1' : './install.sh' }
   endif
-  Plug 'roobert/tailwindcss-colorizer-cmp.nvim'
-
-  if executable('ctags')
-    Plug 'quangnguyen30192/cmp-nvim-tags'
-  endif
-
-  Plug 'tzachar/cmp-tabnine', { 'do': g:is_win ? 'powershell.exe .\install.ps1' : './install.sh' }
-" elseif v:version >= 800
-  " Plug 'lifepillar/vim-mucomplete'
-  " autocomplete
-  " Plug 'prabirshrestha/asyncomplete.vim'
-  " Plug 'machakann/asyncomplete-ezfilter.vim'
-  " Plug 'prabirshrestha/asyncomplete-buffer.vim'
-  " Plug 'prabirshrestha/asyncomplete-file.vim'
-
-  " if executable('ctags')
-  "   Plug 'prabirshrestha/asyncomplete-tags.vim'
-  " endif
-
-  " Plug 'kitagry/asyncomplete-tabnine.vim', { 'do': g:is_win ? 'powershell.exe .\install.ps1' : './install.sh' }
 else
   Plug 'skywind3000/vim-auto-popmenu'
 endif
