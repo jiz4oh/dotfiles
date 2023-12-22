@@ -1,3 +1,5 @@
+# https://zsh.sourceforge.io/Guide/zshguide02.html#l24
+typeset -U PATH path
 _ARCH=$(arch)
 
 if [[ "$_ARCH" == "i386" ]]; then

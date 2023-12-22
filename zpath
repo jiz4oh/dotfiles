@@ -1,6 +1,7 @@
 # https://github.com/rbenv/rbenv/wiki/Unix-shell-initialization#misc-things-that-affect-path
 
 # https://0xmachos.com/2021-05-13-zsh-path-macos/
+# https://gist.github.com/Linerre/f11ad4a6a934dcf01ee8415c9457e7b2
 # path_helper will reorder $PATH, so we can not set PATH in ~/.zshenv
 
 export PATH="$BREW_PREFIX/bin:$PATH"
