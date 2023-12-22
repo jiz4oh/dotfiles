@@ -14,9 +14,18 @@ alias cd.='cd ..'
 alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -l'
-alias s='kitty +kitten ssh'
-alias d="kitty +kitten diff"
-alias hg='kitty +kitten hyperlinked_grep'
+
+if [ -n "$KITTY_WINDOW_ID" ];then
+  alias s='kitty +kitten ssh'
+  alias d="kitty +kitten diff"
+  alias hg='kitty +kitten hyperlinked_grep'
+fi
+
+if [ -n "$WEZTERM_UNIX_SOCKET" ];then
+  function s(){
+    wezterm connect SSHMUX:$1
+  }
+fi
 
 # software
 if [ $(command -v floaterm) ]; then
