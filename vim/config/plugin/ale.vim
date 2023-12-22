@@ -23,6 +23,7 @@ let g:ale_fixers = {
       \   'sass': ['stylelint'],
       \   'python': ['ruff_format', 'autocorrect', 'black', 'isort', 'remove_trailing_lines', 'trim_whitespace'],
       \   'ruby': ['rubocop'],
+      \   'lua': ['stylua', ],
       \   'sh': ['shfmt', ],
       \   'md': ['prettier', 'autocorrect'],
       \   'go': ['gofmt', ],
