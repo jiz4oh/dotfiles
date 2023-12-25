@@ -1,6 +1,9 @@
 -- https://github.com/kovidgoyal/kitty/issues/45#issuecomment-573196169
 hs.hotkey.bind({"cmd"}, "F12", function()
-  local app = hs.application.get("net.kovidgoyal.kitty")
+  -- osascript -e 'id of app "kitty"'
+  local app_bundle_id = "net.kovidgoyal.kitty"
+  -- local app_bundle_id = "com.github.wez.wezterm"
+  local app = hs.application.get(app_bundle_id)
 
   if app then
       if not app:mainWindow() then
@@ -11,8 +14,8 @@ hs.hotkey.bind({"cmd"}, "F12", function()
           app:activate()
       end
   else
-      hs.application.launchOrFocusByBundleID("net.kovidgoyal.kitty")
-      app = hs.application.get("net.kovidgoyal.kitty")
+      hs.application.launchOrFocusByBundleID(app_bundle_id)
+      app = hs.application.get(app_bundle_id)
   end
 
   app:mainWindow():moveToUnit'[100,100,0,0]'
