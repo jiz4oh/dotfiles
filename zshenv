@@ -2,11 +2,18 @@
 typeset -U PATH path
 _ARCH=$(arch)
 
-if [[ "$_ARCH" == "i386" ]]; then
- export BREW_PREFIX="/usr/local"
-elif [[ "$_ARCH" == "arm64" ]]; then
- export BREW_PREFIX="/opt/homebrew"
-fi
+case $(uname -s) in
+  "Darwin")
+    if [[ "$_ARCH" == "i386" ]]; then
+      export BREW_PREFIX="/usr/local"
+    elif [[ "$_ARCH" == "arm64" ]]; then
+      export BREW_PREFIX="/opt/homebrew"
+    fi
+    ;;
+  "Linux")
+    export BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+    ;;
+esac
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
