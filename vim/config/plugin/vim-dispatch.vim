@@ -26,6 +26,8 @@ augroup vim-dispatch-autocmd
         \ elseif !exists('b:dispatch') |
         \   let b:dispatch = 'ruby %:p:S' |
         \ endif
+
+  autocmd BufNewFile,BufRead go.mod,go.sum let b:dispatch = 'go mod tidy'
 augroup END
 
 xnoremap `!                :Dispatch!

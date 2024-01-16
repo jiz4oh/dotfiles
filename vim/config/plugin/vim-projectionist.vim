@@ -50,7 +50,18 @@ let g:projectionist_heuristics = {
       \      'make': 'pip',
       \      'dispatch': 'pip install -r %',
       \   },
-      \ }
+      \ },
+      \ 'go.mod': {
+      \   '*.go': {
+      \      'make': 'go',
+      \   },
+      \   'go.mod': {
+      \      'make': 'go',
+      \   },
+      \   'go.sum': {
+      \      'make': 'go',
+      \   },
+      \ },
       \}
 
 " https://helm.sh/docs/topics/charts/
