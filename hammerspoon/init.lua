@@ -2,7 +2,7 @@
 hs.hotkey.bind({"cmd"}, "F12", function()
   -- osascript -e 'id of app "kitty"'
   local app_bundle_id = "net.kovidgoyal.kitty"
-  -- local app_bundle_id = "com.github.wez.wezterm"
+  local app_bundle_id = "com.github.wez.wezterm"
   local app = hs.application.get(app_bundle_id)
 
   if app then
