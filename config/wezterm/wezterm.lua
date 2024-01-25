@@ -2,6 +2,12 @@
 local wezterm = require("wezterm")
 local config = {}
 
+-- Note: if you change your VISUAL or EDITOR environment,
+-- you will need to restart wezterm for this to take effect,
+-- as there isn't a way for wezterm to "see into" your shell
+-- environment and capture it.
+local editor = os.getenv("VISUAL") or os.getenv("EDITOR") or "vi"
+
 -- In newer versions of wezterm, use the config_builder which will
 -- help provide clearer error messages
 if wezterm.config_builder then
@@ -43,6 +49,28 @@ config.mouse_bindings = {
 }
 
 config.keys = {
+  -- https://ansidev.xyz/posts/2023-05-18-wezterm-cheatsheet
+  {
+    key = 't',
+    mods = 'CMD|SHIFT',
+    action = act.ShowTabNavigator,
+  },
+  {
+    key = ',',
+    mods = 'CMD',
+    action = act.SpawnCommandInNewTab {
+      cwd = os.getenv('WEZTERM_CONFIG_DIR'),
+      set_environment_variables = {
+        TERM = 'screen-256color',
+      },
+      args = {
+        editor,
+        os.getenv('WEZTERM_CONFIG_FILE'),
+      },
+    },
+  },
+  { key = "P", mods = "SUPER", action = act.ActivateCommandPalette },
+  { key = "P", mods = "SHIFT|SUPER", action = act.ActivateCommandPalette },
   { key = "f", mods = "SUPER|CTRL", action = wezterm.action.ToggleFullScreen },
   { key = "d", mods = "SHIFT|SUPER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   { key = "d", mods = "SUPER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
