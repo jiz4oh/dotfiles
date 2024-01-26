@@ -28,6 +28,7 @@ augroup vim-dispatch-autocmd
         \ endif
 
   autocmd BufNewFile,BufRead go.mod,go.sum let b:dispatch = 'go mod tidy'
+  autocmd BufReadPost *.go let b:dispatch = 'go run ' . substitute(getline(search('package ', 'n')), 'package ', '', '')
 augroup END
 
 xnoremap `!                :Dispatch!
