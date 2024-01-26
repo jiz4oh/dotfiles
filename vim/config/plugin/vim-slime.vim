@@ -31,18 +31,19 @@ augroup vim-slime-augroup
   if has('nvim')
     let g:slime_target = 'neovim'
 
-    function! s:check() abort
-      let jobid = get(get(b:, 'slime_config', {}), 'jobid')
-      if index(get(g:, 'slime_died_channels', []), str2nr(jobid)) != -1
-        call setbufvar(bufnr(), 'slime_config', {})
-      endif
+    function! s:remove() abort
+      let current_buffer_jobid = get(b:,"terminal_job_id",-1)
+
+      let related_bufs = filter(getbufinfo(), {_, val -> has_key(val['variables'], "slime_config")
+          \ && get(val['variables']['slime_config'], 'jobid', -2) == current_buffer_jobid})
+
+      for buf in related_bufs
+        call setbufvar(buf['bufnr'], 'slime_config', {})
+      endfor
     endfunction
 
-    let g:slime_channel_mapping = {}
-    let g:slime_died_channels = []
-
-    autocmd TermOpen * let g:slime_channel_mapping[expand('<abuf>')] = &channel
-    autocmd BufDelete term://* call add(g:slime_died_channels, get(g:slime_channel_mapping, expand('<abuf>'), v:null))
+    "TODO removed after https://github.com/jpalardy/vim-slime/pull/416 merged
+    autocmd TermClose * call <SID>remove()
   elseif exists('##TerminalWinOpen')
     let g:slime_target = 'vimterminal'
 
