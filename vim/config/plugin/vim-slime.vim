@@ -47,12 +47,17 @@ augroup vim-slime-augroup
   elseif exists('##TerminalWinOpen')
     let g:slime_target = 'vimterminal'
 
-    function! s:check()
-      let bufnr = get(get(b:, 'slime_config', {}), 'bufnr')
-      
-      if !bufexists(bufnr)
-        call setbufvar(bufnr(), 'slime_config', {})
+    function! s:remove(bufnr) abort
+      if exists('*getbufinfo')
+        let related_bufs = filter(getbufinfo(), {_, val -> has_key(val['variables'], "slime_config") 
+              \ && get(val['variables']['slime_config'], 'bufnr', -1) == str2nr(a:bufnr)})
+        
+        for buf in related_bufs
+          call setbufvar(buf['bufnr'], 'slime_config', {})
+        endfor
       endif
     endfunction
+
+    autocmd BufUnload * call <SID>remove(expand('<abuf>'))
   endif
 augroup END
