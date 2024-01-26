@@ -16,55 +16,47 @@
 # @raycast.authorURL https://github.com/jiz4oh
 
 on run {input}
+  set terminal to "wezterm"
+  set scriptPath to POSIX path of (path to me)
+  set scriptDir to do shell script "dirname " & quoted form of scriptPath
+
 	-- If run without input, open random file at $HOME
 	try
 		if (length of input is not 0) then
 			set filename to input
 		else
-			tell application "Finder"
-				-- Check if there's a selection; works if there's a window open or not.
-				if selection is not {} then
-					set i to item 1 of (get selection)
-					
-					-- If it's an alias, set the item to the original item.
-					if class of i is alias file then
-						set i to original item of i
-					end if
-					
-          set p to i
-				else if (exists window 1) and (exists folder of window 1) then
-					-- If a window exists, use its folder property as the path.
-					set p to folder of window 1
-				else
-					-- Fallback to the error logic
-					error "No valid Finder window or input provided."
-				end if
-				
-				set filename to POSIX path of (p as alias)
-			end tell
+      set filename to run script scriptDir & "/utils/get-finder-path.applescript"
 		end if
 	on error
 		set filename to "vim-" & (do shell script "date +%F") & "__" & (random number from 1000 to 9999) & ".txt"
 	end try
 	
-	-- Set your editor here
-	set myEditor to "${EDITOR:-vim}"
-	-- Open the file and auto exit after done
-	set command to myEditor & " " & quoted form of filename & " && exit"
-	
-	tell application "iTerm"
-		activate
-		set hasNoWindows to ((count of windows) is 0)
-		if hasNoWindows then
-			create window with default profile
-		end if
-		select first window
-		
-		tell the first window
-			if hasNoWindows is false then
-				create tab with default profile
-			end if
-			tell current session to write text command
-		end tell
-	end tell
+  if terminal is equal to "wezterm" then
+    tell application "System Events"
+      tell application "WezTerm"
+        do shell script "sh -c 'ruby \"" & scriptDir & "/utils/open-wezterm.rb\" \"" & filename & "\"'"
+      end tell
+    end tell
+  else if terminal is equal to "iterm2" then
+    -- Set your editor here
+    set myEditor to "${EDITOR:-vim}"
+    -- Open the file and auto exit after done
+    set command to myEditor & " " & quoted form of filename & " && exit"
+
+    tell application "iTerm"
+      activate
+      set hasNoWindows to ((count of windows) is 0)
+      if hasNoWindows then
+        create window with default profile
+      end if
+      select first window
+      
+      tell the first window
+        if hasNoWindows is false then
+          create tab with default profile
+        end if
+        tell current session to write text command
+      end tell
+    end tell
+  end if
 end run
