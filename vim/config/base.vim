@@ -318,9 +318,9 @@ endif
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=2
   endif
 
-  " inside kitty
+  " inside kitty and wezterm
   " https://neovim.io/doc/user/vim_diff.html#nvim-removed
-  if !has('nvim') && exists('$KITTY_WINDOW_ID')
+  if !has('nvim') && (exists('$KITTY_WINDOW_ID') || exists('$WEZTERM_UNIX_SOCKET'))
     " https://sw.kovidgoyal.net/kitty/faq/#using-a-color-theme-with-a-background-color-does-not-work-well-in-vim
     " Styled and colored underline support
     let &t_AU = "\e[58:5:%dm"
