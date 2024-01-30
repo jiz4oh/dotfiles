@@ -34,3 +34,8 @@ export ASDF_DIRENV_IGNORE_MISSING_PLUGINS=1
 export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
 
 export HOMEBREW_NO_AUTO_UPDATE=1
+
+# http://blog.joncairns.com/2013/12/understanding-ssh-agent-and-ssh-add/
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+  eval $(ssh-agent) > /dev/null
+fi
