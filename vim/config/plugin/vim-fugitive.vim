@@ -14,7 +14,7 @@ augroup fugitive_vim
   autocmd FileType fugitive call s:fugitive_init()
 augroup END
 
-if exists('*setbufline')
+if exists('*setbufline') && !exists('$SSH_CLIENT')
   let s:git_cmd = ':Git!'
 else
   let s:git_cmd = ':Git'
