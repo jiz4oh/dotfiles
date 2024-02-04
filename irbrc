@@ -15,3 +15,5 @@ IRB.conf[:HISTORY_FILE] = if defined?(Rails) && Rails.root
                           else
                             File.expand_path('~/.history.rb')
                           end
+# https://github.com/ruby/irb/issues/43#issuecomment-572981408
+IRB.conf[:USE_MULTILINE] = false
