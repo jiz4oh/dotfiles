@@ -346,6 +346,7 @@ config.key_tables = {
 
 --- {{{ appearance
 config.font = wezterm.font({ family = "Hack" })
+config.front_end = "WebGpu"
 config.font_size = 16.0
 config.window_background_opacity = 0.9
 -- https://wezfurlong.org/wezterm/config/lua/config/window_padding.html
