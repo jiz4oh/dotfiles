@@ -19,6 +19,7 @@
 [push]
 	default = upstream
   autoSetupRemote = true
+	followtags = true
 [rebase]
 	autosquash = true
 [include]
@@ -43,3 +44,13 @@
   prereleaseSuffix = .beta
   prereleaseSuffix = -rc
   prereleaseSuffix = .rc
+[merge]
+	conflictstyle = zdiff3
+[commit]
+	verbose = true
+[diff]
+	algorithm = histogram
+[branch]
+	sort = -committerdate
+[fetch]
+	prune = true
