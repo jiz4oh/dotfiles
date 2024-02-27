@@ -28,13 +28,13 @@ let g:project_markers = [
       \'.fslckout', 'package.json', 'Gemfile', '.projections.json'
       \]
 
+let g:is_iterm2 = 'iTerm.app' == $TERM_PROGRAM
+
 let g:enable_nerd_font        = g:is_mac_gui || 
-      \index(['iTerm.app'], $TERM_PROGRAM) >= 0 ||
+      \g:is_iterm2 ||
       \exists('$KITTY_WINDOW_ID') ||
       \exists('$WEZTERM_UNIX_SOCKET')
 let g:as_ide                  = g:is_win || g:is_darwin || g:has_linux_desktop
 
 " https://github.com/kovidgoyal/kitty/issues/957
-let g:alt_compatible = index(['iTerm.app'], $TERM_PROGRAM) >= 0 ||
-      \exists('$KITTY_WINDOW_ID') ||
-      \exists('$WEZTERM_UNIX_SOCKET')
+let g:alt_compatible = exists('$KITTY_WINDOW_ID')
