@@ -1,3 +1,4 @@
+let g:projectionist_transformations = {}
 let g:projectionist_heuristics = {
       \ ".git/": {
       \   ".git/hooks/*": {"type": "githook"},
@@ -54,15 +55,27 @@ let g:projectionist_heuristics = {
       \ 'go.mod': {
       \   '*.go': {
       \      'make': 'go',
+      \      "alternate": "{}_test.go",
+      \   },
+      \   '*_test.go': {
+      \      'make': 'go',
+      \      "alternate": "{gotest}.go",
       \   },
       \   'go.mod': {
       \      'make': 'go',
+      \      'type': 'lib',
+      \      'dispatch': 'go mod tidy',
       \   },
       \   'go.sum': {
       \      'make': 'go',
+      \      'dispatch': 'go mod tidy',
       \   },
       \ },
       \}
+
+function! g:projectionist_transformations.gotest(input, o) abort
+  return substitute(a:input, '_test', '', 'g')
+endfunction
 
 " https://helm.sh/docs/topics/charts/
 " let g:projectionist_heuristics['Chart.yaml'] = {

@@ -27,8 +27,6 @@ augroup vim-dispatch-autocmd
         \   let b:dispatch = 'ruby %:p:S' |
         \ endif
 
-  autocmd BufNewFile,BufRead go.mod,go.sum let b:dispatch = 'go mod tidy'
-
   " https://github.com/tpope/vim-commentary/blob/f67e3e67ea516755005e6cccb178bc8439c6d402/plugin/commentary.vim#L16C1-L25C12
   function! s:strip_white_space(l,r,line) abort
     let [l, r] = [a:l, a:r]
