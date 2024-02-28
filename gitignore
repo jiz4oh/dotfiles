@@ -1,6 +1,8 @@
 Session.vim
 .DS_Store
-tags*
+tags
+tags.lock
+tags.temp
 
 *tmp/
 /tmp
@@ -9,3 +11,4 @@ tags*
 
 .byebug_history
 .pry_history
+.envrc
