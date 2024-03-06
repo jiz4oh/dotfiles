@@ -1,3 +1,5 @@
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
+
 augroup rainbow_parentheses_augroup
   autocmd!
   autocmd FileType lisp,clojure,scheme RainbowParentheses
