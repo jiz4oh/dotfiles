@@ -28,36 +28,7 @@ augroup vim-dispatch-autocmd
         \   let b:dispatch = 'ruby %:p:S' |
         \ endif
 
-  " https://github.com/tpope/vim-commentary/blob/f67e3e67ea516755005e6cccb178bc8439c6d402/plugin/commentary.vim#L16C1-L25C12
-  function! s:strip_white_space(l,r,line) abort
-    let [l, r] = [a:l, a:r]
-    if l[-1:] ==# ' ' && stridx(a:line,l) == -1 && stridx(a:line,l[0:-2]) == 0
-      let l = l[:-2]
-    endif
-    if r[0] ==# ' ' && (' ' . a:line)[-strlen(r)-1:] != r && a:line[-strlen(r):] == r[1:]
-      let r = r[1:]
-    endif
-    return [l, r]
-  endfunction
-
-  function! s:uncomment_line(lnum1, lnum2) abort
-    let [l, r] = split(get(b:, 'commentary_format', substitute(substitute(substitute(
-        \ &commentstring, '^$', '%s', ''), '\S\zs%s',' %s', '') ,'%s\ze\S', '%s ', '')), '%s', 1)
-    let uncomment = 2
-
-    for lnum in range(a:lnum1,a:lnum2)
-      let line = matchstr(getline(lnum),'\S.*\s\@<!')
-      let [l, r] = s:strip_white_space(l,r,line)
-      if len(line) && (stridx(line,l) || line[strlen(line)-strlen(r) : -1] != r)
-        return lnum
-      endif
-    endfor
-
-    return 0
-  endfunction
-
-  autocmd BufReadPost *.go let line = <SID>uncomment_line(1, 20) |
-        \ if line | let b:dispatch = 'go run ' . substitute(getline(line), 'package ', '', '') | endif
+  autocmd BufReadPost *.go let b:dispatch = 'go run ' . get(b:, 'package_name', '')
 augroup END
 
 xnoremap `!                :Dispatch!
