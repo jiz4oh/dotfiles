@@ -16,7 +16,7 @@
 # @raycast.authorURL https://github.com/jiz4oh
 
 on run {input}
-  set terminal to "wezterm"
+  set terminal to "kitty"
   set scriptPath to POSIX path of (path to me)
   set scriptDir to do shell script "dirname " & quoted form of scriptPath
 
@@ -35,6 +35,12 @@ on run {input}
     tell application "System Events"
       tell application "WezTerm"
         do shell script "sh -c 'ruby \"" & scriptDir & "/utils/open-wezterm.rb\" \"" & filename & "\"'"
+      end tell
+    end tell
+  else if terminal is equal to "kitty" then
+    tell application "System Events"
+      tell application "Kitty"
+        do shell script "sh -c 'ruby \"" & scriptDir & "/utils/open-kitty.rb\" \"" & filename & "\"'"
       end tell
     end tell
   else if terminal is equal to "iterm2" then
