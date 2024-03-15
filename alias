@@ -1,3 +1,6 @@
+# docker
+alias dlf='docker logs -n 50 -f '
+
 # macos
 alias abrew="/opt/homebrew/bin/brew"
 alias i="arch -x86_64"
