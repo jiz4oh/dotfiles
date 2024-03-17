@@ -754,7 +754,8 @@ endfunction
 
 " https://forum.obsidian.md/t/open-note-in-obsidian-from-within-vim-and-vice-versa/6837
 " Open file in Obsidian vault
-nnoremap <silent> <leader>io :execute "silent !open 'obsidian://open?path=" . escape(UrlEncode(expand('%:p')), '%') . "'"<cr>
+command! Obsidian execute "silent !open 'obsidian://open?path=" . escape(UrlEncode(expand('%:p')), '%') . "'"
+nnoremap <silent> <leader>io :Obsidian<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE {{{
