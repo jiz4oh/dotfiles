@@ -14,7 +14,7 @@ function! personal#project#find_home()
   let dir = personal#project#find_root()
   " fallback to the directory containing the file
   if empty(dir)
-    let dir = expand('%:h:p')
+    let dir = expand('%:p:h')
   endif
   " or the user's home directory
   if empty(dir)

@@ -483,6 +483,71 @@ augroup vimrc
   autocmd BufRead,BufNewFile vimrc,vimrc.local set filetype=vim
   autocmd SessionLoadPost * call ChangeCWDTo(personal#project#find_home())
 
+  function! s:GoIncludeExpr(filename) abort
+    let paths = split(a:filename, '/')
+
+    let package = paths[0]
+    " search in current package
+    if package ==# get(b:, 'package_name')
+      call remove(paths, 0)
+      let current_dir = expand('%:p:h')
+      let dirs = [expand('%:p')]
+      let project_dir = personal#project#find_home()
+      for i in split(current_dir, '/')
+        let current_dir = fnamemodify(current_dir, ':h')
+        call add(dirs, current_dir)
+        if current_dir ==# project_dir
+          break
+        end
+      endfor
+    else
+      let gopath = $GOPATH
+      let builtin = fnamemodify(gopath, ':h') . '/go/src'
+      let dirs = [gopath . '/pkg/mod', builtin] + split(&path, ',')
+      call filter(uniq(map(dirs, 'fnamemodify(v:val, ":p")')), 'isdirectory(v:val)')
+    end
+
+    for d in dirs
+      let dir = s:find(d, paths)
+      if dir !=# d && isdirectory(dir)
+        " get first file in the directory
+        let files = filter(readdir(dir), { idx, val -> !isdirectory(dir . '/' .v:val)})
+        if !empty(files)
+          let gofiles = filter(copy(files), 'v:val =~# ".*\.go"')
+          let first = get(gofiles, 0, files[0])
+            
+          return dir . '/' . first
+        end
+      end
+    endfor
+  endfunction
+
+  function! s:find(dir, paths) abort
+    if empty(a:paths)
+      return a:dir
+    end
+
+    let paths = copy(a:paths)
+
+    let path = remove(paths, 0)
+    " xxxx@v0.0.0
+    let dirs = readdir(a:dir, {n -> n =~ '^' . path})
+    if empty(dirs)
+      return a:dir
+    endif
+
+    for i in dirs
+      let dir = a:dir . '/' . i
+      let paths = paths
+      let dir = s:find(dir, paths)
+    endfor
+
+    return dir
+  endfunction
+
+  autocmd FileType go setlocal includeexpr=<SID>GoIncludeExpr(v:fname)
+  autocmd BufReadPost,BufNewFile go.mod setlocal includeexpr=<SID>GoIncludeExpr(v:fname)
+
   " https://github.com/tpope/vim-commentary/blob/f67e3e67ea516755005e6cccb178bc8439c6d402/plugin/commentary.vim#L16C1-L25C12
   function! s:strip_white_space(l,r,line) abort
     let [l, r] = [a:l, a:r]
