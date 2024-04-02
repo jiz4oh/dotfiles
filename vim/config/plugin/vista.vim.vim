@@ -2,11 +2,14 @@ let g:vista_sidebar_width = 35
 let g:vista_executive_for = {
     \ 'vimwiki': 'markdown',
     \ 'pandoc': 'markdown',
-    \ 'markdown': 'toc',
-    \ 'vim': 'ctags',
-    \ 'go': 'ctags',
-    \ 'ruby': 'ctags',
+    \ 'markdown': 'toc'
     \ }
+
+if executable('ctags')
+  let g:vista_executive_for.vim = 'ctags'
+  let g:vista_executive_for.go = 'ctags'
+  let g:vista_executive_for.ruby = 'ctags'
+end
 
 let g:vista_ctags_cmd = {}
 if executable('ripper-tags')
