@@ -10,6 +10,7 @@ augroup vim-dispatch-autocmd
       \   let b:start = get(b:, 'start', '-wait=always ' . b:dispatch) |
       \ endif
   autocmd FileType python let b:dispatch = 'python %:p:S'
+  autocmd FileType zeroapi let b:dispatch = 'goctl api format -dir %:p:h:S'
 
   if executable('ipython')
     autocmd FileType python let b:start = 'ipython'
