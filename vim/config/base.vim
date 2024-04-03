@@ -476,7 +476,7 @@ augroup vimrc
   autocmd BufRead,BufNewFile
     \ *zpath,.zlocal,zshenv.local,zlogin.local,zlogout.local,zshrc.local,zprofile.local,*/zsh/configs/*,
     \ set filetype=zsh
-  autocmd BufRead,BufNewFile .env.*
+  autocmd BufRead,BufNewFile .env.local,.env.development,.env.development.local,.env.test,.env.test.local,
     \ set filetype=sh
   autocmd BufRead,BufNewFile gitconfig,gitconfig.local set filetype=gitconfig
   autocmd BufRead,BufNewFile tmux.conf,tmux.conf.local set filetype=tmux
