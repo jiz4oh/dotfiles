@@ -576,7 +576,7 @@ augroup vimrc
     return 0
   endfunction
 
-  autocmd BufReadPost,BufNewFile *.go let line = <SID>uncomment_line(1, 20) |
+  autocmd BufReadPost,BufNewFile,BufWritePost *.go let line = <SID>uncomment_line(1, 20) |
         \ if line | let b:package_name = substitute(getline(line), 'package ', '', '') | endif
 augroup END
 " }}}
