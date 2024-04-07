@@ -208,7 +208,8 @@ endif
 set ttyfast
 " https://github.com/vim/vim/issues/1735#issuecomment-383353563
 set synmaxcol=200
-if v:version < 800 && &term =~ "xterm.*"
+" https://stackoverflow.com/a/7053522
+if (v:version < 800 && &term =~ "xterm.*") || &term ==# "xterm-kitty"
     let &t_ti = &t_ti . "\e[?2004h"
     let &t_te = "\e[?2004l" . &t_te
     function! XTermPasteBegin(ret)
