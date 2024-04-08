@@ -5,6 +5,9 @@ let g:dbs = {
 \ 'reids_development': 'redis:0',
 \ }
 
+" ~/.local/share/db_ui/connections.json
+let g:db_ui_save_location = '~/.local/share/db_ui'
+
 let g:db_ui_use_nerd_fonts = get(g:, 'enable_nerd_font', 0)
 let g:db_ui_auto_execute_table_helpers = 1
 
