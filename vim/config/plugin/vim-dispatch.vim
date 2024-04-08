@@ -2,7 +2,8 @@ augroup vim-dispatch-autocmd
   autocmd!
   
   autocmd BufNewFile,BufRead Dockerfile* let b:dispatch = 'docker build %:p:h -t %:p:h:t:gs/.*/\L&/:S'
-  autocmd BufNewFile,BufRead docker-compose.yaml,docker-compose.yml let b:dispatch = 'docker compose -f %:p up -d'
+  " https://docs.docker.com/compose/compose-application-model/#the-compose-file
+  autocmd BufNewFile,BufRead compose.yaml,compose.yml,docker-compose.yaml,docker-compose.yml let b:dispatch = 'docker compose -f %:p up -d'
   autocmd BufReadPost *
       \ if getline(1) =~# '^#!' |
       \   let b:dispatch = get(b:, 'dispatch',
