@@ -6,7 +6,9 @@ if executable('ripper-tags')
   let g:gutentags_ctags_executable_ruby = 'ripper-tags'
 endif
 
-if executable('gotags')
-  let g:gutentags_ctags_executable_go = 'gotags'
-endif
+" gotags does not fill the requirement of vim-gutentags
+" https://github.com/jstemmer/gotags/issues/28
+" if executable('gotags')
+"   let g:gutentags_ctags_executable_go = 'gotags'
+" endif
 
