@@ -27,6 +27,7 @@ let g:ale_fixers = {
       \   'sh': ['shfmt', ],
       \   'md': ['prettier', 'autocorrect'],
       \   'go': ['gofmt', ],
+      \   'zeroapi': ['zeroapifmt', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
       \   'eruby': ['erblint', 'remove_trailing_lines', 'trim_whitespace']
       \}
 
@@ -80,6 +81,14 @@ nmap [a <Plug>(ale_previous_wrap)
 nmap <leader>ff <Plug>(ale_fix)
 
 nmap <silent> <leader>ft :call <SID>toggle_virtualtext_cursor()<cr>
+
+call ale#fix#registry#Add('zeroapifmt',
+      \'ale#fixers#zeroapifmt#Fix', 
+      \[
+      \'zeroapifmt',
+      \], 
+      \'Correct spaces, words, and punctuations between CJK (Chinese, Japanese, Korean). '
+      \)
 
 augroup ale_augroup
   autocmd!
