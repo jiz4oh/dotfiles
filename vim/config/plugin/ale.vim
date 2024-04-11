@@ -26,6 +26,7 @@ let g:ale_fixers = {
       \   'lua': ['stylua', ],
       \   'sh': ['shfmt', ],
       \   'md': ['prettier', 'autocorrect'],
+      \   'rust': ['rustfmt', ],
       \   'go': ['gofmt', ],
       \   'zeroapi': ['zeroapifmt', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
       \   'eruby': ['erblint', 'remove_trailing_lines', 'trim_whitespace']
