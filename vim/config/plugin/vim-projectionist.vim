@@ -55,19 +55,21 @@ let g:projectionist_heuristics = {
       \ 'go.mod': {
       \   '*.go': {
       \      'make': 'go',
-      \      "alternate": "{}_test.go",
+      \      'alternate': '{}_test.go',
       \   },
       \   '*_test.go': {
       \      'make': 'go',
-      \      "alternate": "{gotest}.go",
+      \      'alternate': '{gotest}.go',
       \   },
       \   'go.mod': {
       \      'make': 'go',
       \      'type': 'lib',
+      \      'alternate': 'go.sum',
       \      'dispatch': 'go mod tidy',
       \   },
       \   'go.sum': {
       \      'make': 'go',
+      \      'alternate': 'go.mod',
       \      'dispatch': 'go mod tidy',
       \   },
       \ },
