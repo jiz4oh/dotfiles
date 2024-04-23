@@ -1,8 +1,8 @@
 let g:slime_no_mappings = 1
-xmap <silent><expr> gz  <Plug>SlimeRegionSend
-nmap <silent><expr> gz  <Plug>SlimeMotionSend
-nmap <silent><expr> gzz <Plug>SlimeLineSend
-nmap <silent><expr> gZ  <Plug>SlimeMotionSend$
+xmap <silent> gz  <Plug>SlimeRegionSend
+nmap <silent> gz  <Plug>SlimeMotionSend
+nmap <silent> gzz <Plug>SlimeLineSend
+nmap <silent> gZ  <Plug>SlimeMotionSend$
 
 " https://github.com/pry/pry/issues/1524#issuecomment-237309299
 " https://github.com/pry/pry/issues/1524#issuecomment-276117072
