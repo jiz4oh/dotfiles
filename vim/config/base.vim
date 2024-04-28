@@ -502,7 +502,15 @@ augroup vimrc
         end
       endfor
     else
-      let gopath = $GOPATH
+      if exists('*go#path#Default')
+        let gopath = go#path#Default()
+      elseif empty($GOPATH)
+        let gopath = substitute(systemlist(['go', 'env', 'GOPATH'])[0], '\n', '', 'g')
+        let $GOPATH = gopath
+      else
+        let gopath = $GOPATH
+      endif
+
       let builtin = fnamemodify(gopath, ':h') . '/go/src'
       let dirs = [gopath . '/pkg/mod', builtin] + split(&path, ',')
       call filter(uniq(map(dirs, 'fnamemodify(v:val, ":p")')), 'isdirectory(v:val)')
