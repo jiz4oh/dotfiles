@@ -10,7 +10,7 @@ mkdir -pv bak
 
 # dotfiles
 for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
-  alias zprofile zshenv zpath p10k.zsh \
+  alias shenv zprofile zshenv zpath p10k.zsh \
   ignore \
   prettierignore yamllint.yaml vintrc.yaml \
   rbenv/default-gems snipaste/config.ini hammerspoon/init.lua config/direnv/direnv.toml\
