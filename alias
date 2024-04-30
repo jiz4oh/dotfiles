@@ -43,3 +43,22 @@ fi
 if [ $(command -v mvim) ]; then
   alias vm='mvim -v'
 fi
+
+if [ $(command -v yazi) ]; then
+  # default keymap
+  # https://github.com/sxyazi/yazi/blob/latest/yazi-config/preset/keymap.toml
+  yy() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+      cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+  }
+
+  alias f=yy
+elif [ $(command -v lf) ]; then
+  alias f=lf
+elif [ $(command -v ranger) ]; then
+  alias f=ranger
+fi
