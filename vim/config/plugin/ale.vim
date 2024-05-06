@@ -33,7 +33,7 @@ let g:ale_fixers = {
       \}
 
 let g:ale_use_global_executables = 1
-
+let g:ale_go_gopls_options = '-remote=auto'
 let g:ale_dockerfile_hadolint_use_docker = 'yes'
 
 let g:ale_lint_on_text_changed           = 'always'
