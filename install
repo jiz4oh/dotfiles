@@ -14,7 +14,7 @@ for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
   ignore \
   prettierignore yamllint.yaml vintrc.yaml \
   rbenv/default-gems snipaste/config.ini hammerspoon/init.lua config/direnv/direnv.toml\
-  default-*-packages default-golang-pkgs; do
+  default-*-packages; do
   dir=$(dirname $rc)
   [ "$dir" != '.' ] && mkdir -pv bak/."$dir" && mkdir -pv ~/."$dir"
   mv -v ~/."$rc" bak/."$rc" >/dev/null 2>&1
