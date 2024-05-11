@@ -3,6 +3,9 @@
 # https://0xmachos.com/2021-05-13-zsh-path-macos/
 # https://gist.github.com/Linerre/f11ad4a6a934dcf01ee8415c9457e7b2
 # path_helper will reorder $PATH, so we can not set PATH in ~/.zshenv
+if [ "$_ZPATH_LOADED" = "1" ]; then
+  return
+fi
 
 export PATH="$BREW_PREFIX/bin:$PATH"
 export PATH="$BREW_PREFIX/opt:$PATH"
@@ -47,3 +50,5 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+export _ZPATH_LOADED=1
