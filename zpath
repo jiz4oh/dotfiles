@@ -38,11 +38,6 @@ elif [ $(command -v vim) ]; then
   export EDITOR=vim
 fi
 
-# git clone https://github.com/asdf-vm/asdf.git ~/.asdf
-# ruby 2.6 is not working on macos 13
-# https://bugs.ruby-lang.org/issues/18912
-[ -d ~/.asdf ] && source ~/.asdf/asdf.sh
-
 # pnpm
 export PNPM_HOME="~/Library/pnpm"
 case ":$PATH:" in
@@ -50,5 +45,21 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+if [ $(command -v mise) ]; then
+  # https://mise.jdx.dev/dev-tools/shims.html#zshrc-bashrc-files
+  eval "$(mise activate zsh --shims)"
+elif [ -d ~/.asdf ]; then
+  # git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+  # ruby 2.6 is not working on macos 13
+  # https://bugs.ruby-lang.org/issues/18912
+  source ~/.asdf/asdf.sh
+  for file in $HOME/.asdf/plugins/golang/set-env.zsh \
+              ${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc; do
+    if [ -f $file ]; then
+      source $file
+    fi
+  done
+fi
 
 export _ZPATH_LOADED=1
