@@ -28,6 +28,10 @@ export RUBY_BUILD_MIRROR_URL=https://cache.ruby-china.com
 export MISE_RUBY_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
 # https://mise.jdx.dev/configuration.html#mise-use-toml-0
 export MISE_USE_TOML=1
+# avoid stuck vim if someone is not installed
+# https://mise.jdx.dev/configuration.html#mise-not-found-auto-install-true
+export MISE_NOT_FOUND_AUTO_INSTALL=false
+
 export ASDF_GEM_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
 export ASDF_GOLANG_DEFAULT_PACKAGES_FILE=~/.default-go-packages
 export ASDF_GOLANG_MOD_VERSION_ENABLED=true
