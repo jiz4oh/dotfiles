@@ -69,6 +69,7 @@ nnoremap <leader>sm     :Marks<cr>
 nnoremap <leader>s:     :History:<cr>
 nnoremap <leader>s/     :History/<cr>
 nnoremap <silent><C-]>  :execute ':Tags '. expand('<cword>')<cr>
+vnoremap <silent><C-]>  :<C-u>execute ':Tags '.personal#functions#selected()<cr>
 
 augroup update_bat_theme
   autocmd!
