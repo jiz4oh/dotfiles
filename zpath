@@ -26,7 +26,6 @@ if [ $(uname -s) = "Darwin" ]; then
   export PATH="$BREW_PREFIX/opt/openssl$openssl_version/bin:$PATH"
 fi
 
-export PATH=~/bin:$PATH
 # if [ $(command -v rbenv) ]; then
 #   # https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell
 #   eval "$(rbenv init - --no-rehash)"
@@ -62,4 +61,6 @@ elif [ -d ~/.asdf ]; then
   done
 fi
 
+
+export PATH=~/bin:$PATH
 export _ZPATH_LOADED=1
