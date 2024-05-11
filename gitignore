@@ -12,3 +12,5 @@ tags.temp
 .byebug_history
 .pry_history
 .envrc
+.mise.local.toml
+.mise.*.local.toml
