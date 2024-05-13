@@ -22,8 +22,13 @@ let g:as_ide = get(g:, 'as_ide', 0)
 
 silent! if plug#begin('~/.vim/bundle')
 set updatetime=100
-Plug 'direnv/direnv.vim'
-Plug 'jiz4oh/asdf.vim'
+if executable('mise')
+  Plug 'jiz4oh/mise.vim'
+elseif executable('asdf')
+  Plug 'direnv/direnv.vim'
+  Plug 'jiz4oh/asdf.vim'
+end
+  
 " Plug 'tpope/vim-rbenv'
 " ============================================================================
 " NAVIGATION / MOVE / Easier READ {{{
