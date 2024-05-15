@@ -25,7 +25,7 @@ set updatetime=100
 if executable('mise')
   Plug 'jiz4oh/mise.vim'
 elseif executable('asdf')
-  Plug 'direnv/direnv.vim'
+  Plug 'jiz4oh/direnv.vim'
   Plug 'jiz4oh/asdf.vim'
 end
   
