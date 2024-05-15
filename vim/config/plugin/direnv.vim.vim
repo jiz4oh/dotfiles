@@ -1,4 +1,7 @@
 let g:direnv_auto = 0
+" https://github.com/asdf-community/asdf-direnv?tab=readme-ov-file#pro-tips
+" log breaks direnv.vim
+let $DIRENV_LOG_FORMAT=""
 
 augroup direnv_rc
   au!
