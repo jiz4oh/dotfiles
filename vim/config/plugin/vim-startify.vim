@@ -51,12 +51,13 @@ function! LoadSessionFromFzf(name) abort
   execute 'SLoad ' . a:name
 endfunction
 
+let s:ignore = ['__LAST__', 'tags']
 function! GetSessions() abort
   if !isdirectory(g:session_dir)
     call mkdir(fnamemodify(g:session_dir, ':p'), 'p')
   endif
 
-  return filter(systemlist('ls ' . g:session_dir), 'v:val !=? "__LAST__"')
+  return filter(systemlist('ls ' . g:session_dir), 'index(s:ignore, v:val) == -1')
 endfunction
 
 function! SaveSession() abort
