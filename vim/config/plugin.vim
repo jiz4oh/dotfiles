@@ -237,7 +237,11 @@ endif
 Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
+" neovim 0.10.0 has native commentary like comment support
+" https://neovim.io/doc/user/various.html#commenting
+if !has('nvim-0.10.0')
+  Plug 'tpope/vim-commentary'
+end
 Plug 'tpope/vim-endwise'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'junegunn/vim-easy-align'
