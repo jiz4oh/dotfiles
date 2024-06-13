@@ -44,7 +44,7 @@ Plug 'tracyone/fzf-funky'
 
 Plug 'preservim/nerdtree', { 'on': ['NERDTree', 'NERDTreeVCS', 'NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'for': 'NERDTree' }
-Plug 'PhilRunninger/nerdtree-visual-selection'
+Plug 'PhilRunninger/nerdtree-visual-selection', { 'for': 'NERDTree' }
 " }}}
 
 " ============================================================================
