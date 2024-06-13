@@ -30,7 +30,7 @@ augroup vim-dispatch-autocmd
         \   let b:dispatch = 'ruby %:p:S' |
         \ endif
 
-  autocmd BufReadPost *.go let b:dispatch = 'go run ' . get(b:, 'package_name', '')
+  autocmd BufReadPost *.go let b:dispatch = 'go run %:p:h:S'
 augroup END
 
 xnoremap `!                :Dispatch!
