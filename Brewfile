@@ -1,5 +1,4 @@
 tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
 tap "homebrew/services"
 tap "localsend/localsend"
 tap "universal-ctags/universal-ctags"
