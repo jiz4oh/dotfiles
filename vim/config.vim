@@ -32,9 +32,10 @@ let g:is_iterm2 = 'iTerm.app' == $TERM_PROGRAM
 
 let g:enable_nerd_font        = g:is_mac_gui || 
       \g:is_iterm2 ||
+      \'xterm-kitty' == $TERM ||
       \exists('$KITTY_WINDOW_ID') ||
       \exists('$WEZTERM_UNIX_SOCKET')
 let g:as_ide                  = g:is_win || g:is_darwin || g:has_linux_desktop
 
 " https://github.com/kovidgoyal/kitty/issues/957
-let g:alt_compatible = exists('$KITTY_WINDOW_ID')
+let g:alt_compatible = 'xterm-kitty' == $TERM || exists('$KITTY_WINDOW_ID')
