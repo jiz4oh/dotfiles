@@ -1,4 +1,11 @@
-let g:db = "postgresql://postgres:@localhost/postgres"
+if !empty(getenv('USER'))
+  let user = getenv('USER')
+elseif !empty(getenv('USERNAME'))
+  let user = getenv('USERNAME')
+else
+  let user = 'postgres'
+end
+let g:db = "postgresql://" . getenv('USER') . ":@localhost/postgres"
 
 " https://habamax.github.io/2019/09/02/use-vim-dadbod-to-query-databases.html
 xnoremap <expr> <Plug>(DBExe)     db#op_exec()
