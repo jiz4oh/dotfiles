@@ -14,7 +14,6 @@ brew "pandoc"
 brew "postgresql@14", restart_service: true
 brew "ranger"
 brew "ruby-build"
-brew "rbenv"
 brew "redis"
 brew "ripgrep"
 brew "scrcpy"
