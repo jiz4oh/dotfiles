@@ -460,10 +460,12 @@ augroup vimrc
   autocmd FileType eruby compiler eruby
 
   autocmd FileType coffee,javascript setlocal iskeyword+=$
-  autocmd FileType c,cpp,cs,java,arduino setlocal commentstring=//\ %s
-  autocmd FileType desktop              setlocal commentstring=#\ %s
-  autocmd FileType sql                  setlocal commentstring=--\ %s
-  autocmd FileType xdefaults            setlocal commentstring=!%s
+
+  autocmd FileType c,cpp,cs,java,arduino,zeroapi,proto setlocal commentstring=//\ %s
+  autocmd FileType desktop                             setlocal commentstring=#\  %s
+  autocmd FileType sql                                 setlocal commentstring=--\ %s
+  autocmd FileType xdefaults                           setlocal commentstring=!%s
+
   autocmd FileType git,gitcommit        setlocal foldmethod=syntax foldlevel=1
   autocmd FileType json                 setlocal foldmethod=syntax
   " set '-' to be part of a word when dealing with CSS classes and IDs.
