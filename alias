@@ -62,3 +62,13 @@ elif [ $(command -v lf) ]; then
 elif [ $(command -v ranger) ]; then
   alias f=ranger
 fi
+
+if [ $(command -v asdf) ]; then
+  __goinstall() {
+    go install $@
+    asdf reshim golang
+  }
+  alias goinstall=__goinstall
+else
+  alias goinstall=go install
+fi
