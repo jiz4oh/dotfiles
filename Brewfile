@@ -8,6 +8,7 @@ brew "fd"
 brew "fzf"
 brew "git"
 brew "gnupg"
+brew "httpie"
 brew "jq"
 brew "mysql", restart_service: true
 brew "pandoc"
