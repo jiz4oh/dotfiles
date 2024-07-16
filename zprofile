@@ -1,4 +1,5 @@
-[ -f $HOME/.zpath ] && source $HOME/.zpath
+# [ -f $HOME/.zpath ] && source $HOME/.zpath
+export PATH=$__PATH
 
 
 # Added by OrbStack: command-line tools and integration
