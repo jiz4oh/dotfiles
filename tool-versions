@@ -3,3 +3,4 @@ nodejs 20.10.0 system
 golang 1.21.3 system
 ruby 3.2.2 system
 direnv 2.33.0
+pdm 2.15.4
