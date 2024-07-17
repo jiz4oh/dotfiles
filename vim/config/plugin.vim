@@ -98,6 +98,8 @@ Plug 'kristijanhusak/vim-dadbod-completion'
 " ============================================================================
 " Plug 'axvr/zepl.vim'
 Plug 'tpope/vim-dispatch'
+Plug 'skywind3000/asyncrun.vim'
+Plug 'skywind3000/asynctasks.vim'
 " search compiler from
 " :e $VIMRUNTIME/compiler
 " https://github.com/search?p=1&q=current_compiler++NOT+Maintainer+extension%3Avim+path%3Acompiler%2F+language%3A%22Vim+script%22&type=Code

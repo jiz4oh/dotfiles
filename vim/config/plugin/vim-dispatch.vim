@@ -36,14 +36,12 @@ augroup vim-dispatch-autocmd
         \ endif
 augroup END
 
-xnoremap `!                :Dispatch!
 xnoremap `<CR>             :Dispatch<cr>
-xnoremap m<CR>             :Make<cr>
-xnoremap g'!               :Spawn!
-xnoremap g'<CR>            :Spawn<cr>
-nnoremap <leader>t'<space> :tab Start<space>
-nnoremap <leader>t'<CR>    :tab Start<cr>
+nnoremap `<CR>             :Dispatch<cr>
+xnoremap m<space>          :Make 
+nnoremap m<space>          :Make 
 
+let g:dispatch_no_maps = 1
 let test#strategy = 'dispatch_background'
 
 if !exists('g:dispatch_compilers')

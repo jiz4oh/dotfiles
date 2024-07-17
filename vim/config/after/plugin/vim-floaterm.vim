@@ -34,4 +34,4 @@ function! s:start() abort
   end
 endfunction
 
-nmap <silent> '<CR> :call <SID>start()<CR>
+command! FloatermStart      call <SID>start()
