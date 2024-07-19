@@ -488,26 +488,18 @@ augroup vimrc
 
   function! s:GoIncludeExpr(filename) abort
     let paths = split(a:filename, '/')
+    let dirs = []
 
-    let package = paths[0]
     " search in current package
-    if package ==# get(b:, 'package_name')
+    let module = personal#go#module()
+    if !empty(module) && paths[0] == fnamemodify(module, ':t')
       call remove(paths, 0)
-      let current_dir = expand('%:p:h')
-      let dirs = [expand('%:p')]
-      let project_dir = personal#project#find_home()
-      for i in split(current_dir, '/')
-        let current_dir = fnamemodify(current_dir, ':h')
-        call add(dirs, current_dir)
-        if current_dir ==# project_dir
-          break
-        end
-      endfor
+      call add(dirs, module)
     else
       if exists('*go#path#Default')
         let gopath = go#path#Default()
       elseif empty($GOPATH)
-        let gopath = substitute(systemlist(['go', 'env', 'GOPATH'])[0], '\n', '', 'g')
+        let gopath = substitute(personal#go#env('GOPATH'), '\n', '', 'g')
         let $GOPATH = gopath
       else
         let gopath = $GOPATH
