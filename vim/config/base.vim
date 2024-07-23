@@ -492,8 +492,20 @@ augroup vimrc
 
     " search in current package
     let module = personal#go#module()
-    if !empty(module) && paths[0] == fnamemodify(module, ':t')
-      call remove(paths, 0)
+    if !exists('b:go_module_name')
+      if !empty(module)
+        let gomod = fnamemodify(module, ':p:h') . '/go.mod'
+        if filereadable(gomod)
+          let line = personal#functions#uncomment_line(readfile(gomod, '', 20))
+          if !empty(line)
+            let b:go_module_name = substitute(line, 'module ', '', '')
+          endif
+        end
+      end
+    end
+
+    if exists('b:go_module_name') && stridx(a:filename, b:go_module_name) == 0
+      let paths = split(substitute(a:filename, b:go_module_name . '/', '', ''), '/')
       call add(dirs, module)
     else
       if exists('*go#path#Default')
