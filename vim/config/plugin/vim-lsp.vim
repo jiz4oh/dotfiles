@@ -22,6 +22,7 @@ function! s:on_lsp_buffer_enabled() abort
     command! -buffer LspDisableFold call <SID>restore_fold()
 
     setlocal omnifunc=lsp#complete
+    nmap <buffer>         <leader>la <plug>(lsp-code-actions)
     nmap <buffer>         <leader>ld <plug>(lsp-definition)
     nmap <buffer>         <leader>lD <plug>(lsp-declaration)
     nmap <buffer>         <leader>lt <plug>(lsp-type-definition)
