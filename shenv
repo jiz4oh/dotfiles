@@ -45,6 +45,3 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval $(ssh-agent) > /dev/null
 fi
-
-[ -f $HOME/.zpath ] && source $HOME/.zpath
-export __PATH=$PATH

@@ -5,3 +5,5 @@ for file in $HOME/.shenv \
     source "$file"
   fi
 done
+
+[ -f $HOME/.zpath ] && source $HOME/.zpath
