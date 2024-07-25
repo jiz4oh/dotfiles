@@ -26,6 +26,7 @@ brew "shfmt"
 brew "universal-ctags", args: ["HEAD"]
 brew "wget"
 brew "yarn"
+brew "yamllint"
 brew "zsh"
 cask "android-platform-tools"
 cask "firefox"
