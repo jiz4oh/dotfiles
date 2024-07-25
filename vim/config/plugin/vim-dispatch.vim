@@ -4,6 +4,10 @@ augroup vim-dispatch-autocmd
   autocmd BufNewFile,BufRead Dockerfile* let b:dispatch = 'docker build %:p:h -t %:p:h:t:gs/.*/\L&/:S'
   " https://docs.docker.com/compose/compose-application-model/#the-compose-file
   autocmd BufNewFile,BufRead compose.yaml,compose.yml,docker-compose.yaml,docker-compose.yml let b:dispatch = 'docker compose -f %:p up -d'
+  autocmd BufNewFile,BufRead requirements.txt let b:dispatch = 'pip install -r %'
+  autocmd BufNewFile,BufRead yarn.lock let b:dispatch = 'yarn install'
+  autocmd BufNewFile,BufRead pnpm-lock.yaml let b:dispatch = 'pnpm install'
+  autocmd BufNewFile,BufRead package-lock.json let b:dispatch = 'npm install'
   autocmd BufReadPost *
       \ if getline(1) =~# '^#!' |
       \   let b:dispatch = get(b:, 'dispatch',
