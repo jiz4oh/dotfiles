@@ -4,3 +4,4 @@ golang 1.21.3 system
 ruby 3.2.2 system
 direnv 2.33.0
 pdm 2.15.4
+pnpm 9.6.0

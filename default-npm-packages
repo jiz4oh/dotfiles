@@ -17,6 +17,4 @@ bash-language-server
 typescript-language-server
 vscode-langservers-extracted
 
-@pnpm/exe
-
 fixjson
