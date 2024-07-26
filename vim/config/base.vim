@@ -776,7 +776,8 @@ endfunction
 
 " change cwd
 noremap <silent> <leader>cd. :call ChangeCWDTo('%:p:h')<cr>
-noremap <silent> <leader>cdp :call ChangeCWDTo(personal#project#find_home())<cr>
+map <silent> <leader>cdp <Plug>UpwardProject
+noremap <Plug>UpwardProject :call ChangeCWDTo(personal#project#find_home())<cr>
 
 function! QFOpen()
   if exists(':Copen')

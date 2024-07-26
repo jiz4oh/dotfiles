@@ -19,9 +19,8 @@ let g:projects = []
 function! s:activate() abort
   if exists('*repeat')
     map <silent> <Plug>UpwardProject :call <SID>up_project()<bar>silent! call repeat#set("\<Plug>UpwardProject", v:count)<cr>
-    nmap <silent> <leader>cdP <Plug>UpwardProject
   else
-    noremap <silent> <leader>cdP :call <SID>up_project()<cr>
+    noremap <silent> <Plug>UpwardProject :call <SID>up_project()<cr>
   end
 
   let ps = s:current_projects()

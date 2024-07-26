@@ -63,9 +63,9 @@ call FzfGrepMap('<leader>sq', 'Cfilter')
 call FzfGrepMap('<leader>sp', 'Pg')
 
 nnoremap <leader>pp     :Projects<cr>
-nnoremap <leader>st     :Tags<cr>
+nnoremap <leader>s]     :Tags<cr>
 nnoremap <leader>sb     :BLines<cr>
-nnoremap <leader>sm     :Marks<cr>
+nnoremap <leader>s'     :Marks<cr>
 nnoremap <leader>s:     :History:<cr>
 nnoremap <leader>s/     :History/<cr>
 nnoremap <silent><C-]>  :execute ':Tags '. expand('<cword>')<cr>
