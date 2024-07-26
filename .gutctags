@@ -1,2 +1,3 @@
 --recurse=yes
 --exclude=bak/*
+--exclude=config/nvim/*

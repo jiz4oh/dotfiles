@@ -5,11 +5,6 @@ let g:vimrc_loaded = 1
 
 let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 
-if has('nvim')
-  exec 'set runtimepath^=~/.vim'
-  exec 'set runtimepath+=~/.vim/after'
-endif
-
 exec 'source ' . s:home . '/config.vim'
 
 function SourceConfig(configName) abort
@@ -72,11 +67,6 @@ augroup PlugLazyLoad
   endif
 augroup END
 
-" let s:user_home = expand("~/.vim")
-" remove ~/.vim and ~/.vim/after
-" let &runtimepath = join(filter(split(&runtimepath, ','), 'v:val !~ "^' . s:user_home .'$\\|^' . s:user_home . '/after$"'), ',')
-" exec 'set runtimepath^=~/.vim,'.s:home
-" exec 'set runtimepath+='.s:home .'/after,~/.vim/after'
 let &packpath = &runtimepath
 
 if filereadable($HOME . '/.vimrc.local')
