@@ -164,6 +164,9 @@ endif
 if executable('pipx')
   Plug 'Vimjas/vint', { 'on': 'Ajksdhfas', 'do': 'pipx install .' } " just install vint by vim-plug, do not load it
 endif
+if executable('npm')
+  Plug 'rhysd/fixjson', { 'on': 'Ajksdhfas', 'do': 'npm install . && npm link && npm install -g fixjson' }
+endif
 if has('timers') && (has('nvim-0.2.0') || exists('*job_start') && exists('*ch_close_in'))
   Plug 'dense-analysis/ale'
   Plug 'jiz4oh/ale-autocorrect.vim'
