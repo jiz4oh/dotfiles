@@ -161,6 +161,9 @@ endif
 " ============================================================================
 " Easier EDIT {{{
 " ============================================================================
+if executable('pipx')
+  Plug 'Vimjas/vint', { 'on': 'Ajksdhfas', 'do': 'pipx install .' } " just install vint by vim-plug, do not load it
+endif
 if has('timers') && (has('nvim-0.2.0') || exists('*job_start') && exists('*ch_close_in'))
   Plug 'dense-analysis/ale'
   Plug 'jiz4oh/ale-autocorrect.vim'

@@ -14,6 +14,7 @@ brew "httpie"
 brew "jq"
 brew "mysql", restart_service: true
 brew "pandoc"
+brew "pipx"
 brew "postgresql@14", restart_service: true
 brew "ranger"
 brew "ruby-build"

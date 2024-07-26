@@ -79,6 +79,10 @@ fi
 #   fi
 # fi
 
+# pipx
+export PATH=~/.local/bin:$PATH
+# pipx end
+
 export PATH=~/bin:$PATH
 # or asdf reshim every time
 # export PATH="$PATH:$(go env GOPATH)/bin" 2>/dev/null
