@@ -52,7 +52,23 @@ function! s:up_project() abort
   call ChangeCWDTo(expand(path))
 endfunction
 
+let s:filename = (exists($XDG_CACHE_HOME) ? $XDG_CACHE_HOME : '~/.cache' ). '/jiz4oh/vim-projects'
+call mkdir(fnamemodify(expand(s:filename), ':p:h'), 'p')
+
+function! s:load_projects() abort
+  if filereadable(expand(s:filename))
+    let g:projects = readfile(expand(s:filename))
+  end
+endfunction
+
+function! s:save_projects() abort
+  call writefile(g:projects, expand(s:filename))
+endfunction
+
 augroup projectionist-augroup
   autocmd!
+
+  autocmd VimEnter * call s:load_projects()
+  autocmd VimLeave * call s:save_projects()
   autocmd User ProjectionistActivate call s:activate()
 augroup END
