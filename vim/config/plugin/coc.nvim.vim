@@ -38,6 +38,9 @@ endfunction
 
 function! s:on_lsp_buffer_enabled() abort
   let b:coc_lsp_attached = 1
+  " Highlight the symbol and its references when holding the cursor.
+  autocmd coc_augoup CursorHold <buffer> * silent call CocActionAsync('highlight')
+
   nnoremap <silent> <leader>ld <Plug>(coc-definition)
   nnoremap <silent> <leader>lD <Plug>(coc-declaration)
   nnoremap <silent> <leader>lt <Plug>(coc-type-definition)
@@ -72,9 +75,6 @@ augroup coc_augoup
 
   autocmd User CocStatusChange redrawstatus
   if !get(g:, 'lspconfig', 0) && !get(g:, 'lsp_loaded', 0)
-    " Highlight the symbol and its references when holding the cursor.
-    autocmd CursorHold * silent call CocActionAsync('highlight')
-
     function! s:try_lsp() abort
       try
         " CocHasProvider cause
