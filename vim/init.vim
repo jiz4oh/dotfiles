@@ -3,12 +3,12 @@ if get(g:, 'vimrc_loaded', 0) != 0
 endif
 let g:vimrc_loaded = 1
 
-let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+let g:config_home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 
-exec 'source ' . s:home . '/config.vim'
+exec 'source ' . g:config_home . '/config.vim'
 
 function SourceConfig(configName) abort
-    let l:vim_path = s:home . '/config/' . a:configName . '.vim'
+    let l:vim_path = g:config_home . '/config/' . a:configName . '.vim'
     if filereadable(l:vim_path)
       exec 'source ' . l:vim_path
     endif
@@ -24,7 +24,7 @@ function! HasInstall(plugName) abort
 endfunction
 
 call SourceConfig('base')
-execute 'source ' . s:home . '/autoload/plug.vim'
+execute 'source ' . g:config_home . '/autoload/plug.vim'
 call SourceConfig('plugin')
 
 " https://github.com/neovide/neovide/discussions/1220

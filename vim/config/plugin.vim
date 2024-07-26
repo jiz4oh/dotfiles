@@ -20,7 +20,7 @@ endif
 
 let g:as_ide = get(g:, 'as_ide', 0)
 
-silent! if plug#begin('~/.vim/bundle')
+silent! if plug#begin(get(g:, 'config_home', '~/.vim') . '/bundle')
 set updatetime=100
 if executable('mise')
   Plug 'jiz4oh/mise.vim'
