@@ -20,5 +20,9 @@ endfunction
 augroup nvim-lspconfig-augroup
   autocmd!
 
-  autocmd User LspAttach call s:on_lsp_buffer_enabled()
+  if has('nvim-0.8')
+    autocmd LspAttach * call s:on_lsp_buffer_enabled()
+  else
+    autocmd User LspAttach call s:on_lsp_buffer_enabled()
+  end
 augroup END
