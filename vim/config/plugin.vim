@@ -311,6 +311,7 @@ Plug 'troydm/zoomwintab.vim'
 " ============================================================================
 if g:as_ide
   if has('nvim')
+    Plug 'rcarriga/nvim-notify'
     Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
   endif
   if has('nvim') || has('gui_running')
