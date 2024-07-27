@@ -10,9 +10,11 @@ if executable('yazi')
   command! Yazi FloatermNew yazi
 endif
 
+let g:floaterm_position = 'bottom'
+let g:floaterm_autohide = '2'
 let g:floaterm_keymap_toggle = '<m-=>'
-let g:floaterm_width = 0.9
-let g:floaterm_height = 0.8
+let g:floaterm_width = 0.999999
+let g:floaterm_height = 0.3
 
 nnoremap <silent> <m--> :FloatermNew<cr>
 function! s:init_floaterm() abort

@@ -5,7 +5,7 @@ function!  s:escape(str) abort
 endfunction
 
 function! s:start() abort
-  let cmd = '--name=start'
+  let cmd = '--name=start --position=right --width=0.5 --height=0.999999'
   let name = 'start'
   if !empty(get(b:, 'start', ''))
     let [cmdd, opts] = personal#functions#parse_start(b:start)
