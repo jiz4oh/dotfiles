@@ -1,29 +1,30 @@
 lua<<EOF
-require("mason-lspconfig").setup()
+require("mason-lspconfig").setup({
+  ensure_installed = {"typos_lsp"}
+})
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
-  vim.api.nvim_command("doautocmd <nomodeline> User LspAttach")
+  if vim.fn.has('nvim-0.8') == 0 then
+    vim.api.nvim_command("doautocmd <nomodeline> User LspAttach")
+  end
 end
 
-local opts = {
+local default_opts = {
   on_attach = on_attach,
   flags = {
     debounce_text_changes = 100,
   }
 }
 
-if 0 ~= vim.fn.HasInstall('cmp-nvim-lsp') then
-  opts["capabilities"] = require('cmp_nvim_lsp').default_capabilities()
-end
-
--- https://stackoverflow.com/a/641993
-function table.shallow_copy(t)
-  local t2 = {}
-  for k,v in pairs(t) do
-    t2[k] = v
-  end
-  return t2
+local ok1, cmp = pcall(require, 'cmp_nvim_lsp')
+  if ok1 then
+  -- https://github.com/hrsh7th/cmp-nvim-lsp/issues/38#issuecomment-1815265121
+  local capabilities = vim.tbl_deep_extend("force",
+    vim.lsp.protocol.make_client_capabilities(),
+    cmp.default_capabilities()
+  )
+  default_opts["capabilities"] = capabilities
 end
 
 require("mason-lspconfig").setup_handlers {
@@ -31,20 +32,21 @@ require("mason-lspconfig").setup_handlers {
   -- and will be called for each installed server that doesn't have
   -- a dedicated handler.
   function (server_name) -- default handler (optional)
-    local default_opts = table.shallow_copy(opts)
+    local opts = vim.tbl_deep_extend('keep', {}, default_opts)
     require("lspconfig")[server_name].setup(default_opts)
   end,
   ['lua_ls'] = function ()
-    local default_opts = table.shallow_copy(opts)
-    default_opts.settings = {
-      Lua = {
-        diagnostics = {
-          globals = { 'vim' }
+    local opts = vim.tbl_deep_extend('keep', {
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { 'vim' }
+            }
+          }
         }
-      }
-    }
+      }, default_opts)
 
-    require("lspconfig")['lua_ls'].setup(default_opts)
+    require("lspconfig")['lua_ls'].setup(opts)
   end
 }
 EOF

@@ -76,9 +76,6 @@ function! s:activate_ale_by_projectionist() abort
   endfor
 endfunction
 
-nmap ]a <Plug>(ale_next_wrap)
-nmap [a <Plug>(ale_previous_wrap)
-
 nmap <leader>ff <Plug>(ale_fix)
 
 nmap <silent> <leader>ft :call <SID>toggle_virtualtext_cursor()<cr>
@@ -94,9 +91,31 @@ call ale#fix#registry#Add('zeroapifmt',
 augroup ale_augroup
   autocmd!
 
-  if has('nvim-0.5')
-    let g:ale_use_neovim_diagnostics_api = 0
-    autocmd VimEnter * lua vim.diagnostic.disable()
+  if !has('nvim-0.6')
+    nmap ]d <Plug>(ale_next_wrap)
+    nmap [d <Plug>(ale_previous_wrap)
+  elseif !has('nvim-0.10.0')
+lua<<EOF
+  vim.keymap.set('n', ']d', function()
+    vim.diagnostic.goto_next({ float = false })
+  end, { desc = 'Jump to the next diagnostic' })
+
+  vim.keymap.set('n', '[d', function()
+    vim.diagnostic.goto_prev({ float = false })
+  end, { desc = 'Jump to the previous diagnostic' })
+
+  vim.keymap.set('n', '<C-W>d', function()
+    vim.diagnostic.open_float()
+  end, { desc = 'Show diagnostics under the cursor' })
+
+  vim.keymap.set(
+    'n',
+    '<C-W><C-D>',
+    '<C-W>d',
+    { remap = true, desc = 'Show diagnostics under the cursor' }
+  )
+EOF
+
   endif
 
   autocmd User ProjectionistActivate call s:activate_ale_by_projectionist()
