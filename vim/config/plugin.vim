@@ -313,6 +313,9 @@ if g:as_ide
   if has('nvim')
     Plug 'rcarriga/nvim-notify'
     Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+    if has('nvim-0.9')
+      Plug 'stevearc/aerial.nvim'
+    endif
   endif
   if has('nvim') || has('gui_running')
     " Plug 'vim-airline/vim-airline'
