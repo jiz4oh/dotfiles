@@ -1,4 +1,7 @@
 function! s:on_lsp_buffer_enabled() abort
+  if index(['vim-plug'], &filetype)
+    return
+  end
   setlocal omnifunc=v:lua.vim.lsp.omnifunc
 
   nnoremap <buffer> <leader>ld <cmd>lua vim.lsp.buf.definition()<CR>
