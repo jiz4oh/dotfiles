@@ -44,7 +44,11 @@ function! s:up_project() abort
   let projects = reverse(s:current_projects())
   let i = index(projects, cwd)
   if i ==# -1 || len(projects) == i + 1
-    let path = fnamemodify(projects[0], ':p:h')
+    if len(projects) == 0
+      let path = fnamemodify(getcwd(), ':p:h')
+    else
+      let path = fnamemodify(projects[0], ':p:h')
+    end
   else
     let path = projects[i + 1]
   endif
