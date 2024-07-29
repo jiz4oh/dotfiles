@@ -384,6 +384,10 @@ set showtabline=2
 augroup vimrc
   autocmd!
 
+  "https://github.com/vim/vim/issues/6445
+  if exists('&winfixbuf')
+    autocmd FileType nerdtree,tagbar,floaterm,fzf,vista_kind,aerial,notify,startuptime,toggleterm,qf setlocal winfixbuf
+  endif
   " Keep a list of the most recent two tabs.
   let g:tablist = [1, 1]
   autocmd TabLeave * let g:tablist[0] = g:tablist[1] | let g:tablist[1] = tabpagenr()
