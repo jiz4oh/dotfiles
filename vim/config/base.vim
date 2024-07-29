@@ -768,6 +768,10 @@ nnoremap dg# g*``dgN
 nnoremap <silent><leader>/ :nohls<CR>
 
 function! ChangeCWDTo(dir) abort
+  if expand(getcwd()) == expand(a:dir)
+    return
+  end
+
   if exists(':tcd')
     execute 'tcd ' . expand(a:dir)
   else
