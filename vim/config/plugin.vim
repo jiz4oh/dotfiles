@@ -45,6 +45,7 @@ Plug 'tracyone/fzf-funky'
 Plug 'preservim/nerdtree', { 'on': ['NERDTree', 'NERDTreeVCS', 'NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'for': 'NERDTree' }
 Plug 'PhilRunninger/nerdtree-visual-selection', { 'for': 'NERDTree' }
+Plug 'nvimdev/indentmini.nvim'
 " }}}
 
 " ============================================================================
