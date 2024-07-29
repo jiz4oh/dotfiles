@@ -58,12 +58,17 @@ function! s:toggle_virtualtext_cursor() abort
   if g:ale_virtualtext_cursor == 1
     let g:ale_virtualtext_cursor = 2
     ALEDisableBuffer | ALEEnableBuffer
-    echomsg 'all warnings be shown'
+    let msg = 'all warnings be shown'
   else
     let g:ale_virtualtext_cursor = 1
     ALEDisableBuffer | ALEEnableBuffer
-    echomsg 'message will be shown when a cursor is near a warning or error'
+    let msg = 'message will be shown when a cursor is near a warning or error'
   endif
+  if has('nvim')
+    call v:lua.vim.notify('ALE: ' .. msg, 'info')
+  else
+    echomsg 'ALE: ' . msg
+  end
 endfunction
 
 function! s:activate_ale_by_projectionist() abort

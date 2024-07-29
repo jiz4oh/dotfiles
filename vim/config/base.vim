@@ -765,10 +765,14 @@ nnoremap <silent><leader>/ :nohls<CR>
 function! ChangeCWDTo(dir) abort
   if exists(':tcd')
     execute 'tcd ' . expand(a:dir)
-    echo 'cwd: ' . getcwd()
   else
     execute 'cd ' . expand(a:dir)
-    echo 'cwd: ' . getcwd()
+  end
+  let msg = 'cwd: ' . getcwd()
+  if has('nvim')
+    call v:lua.vim.notify(msg)
+  else
+    echomsg msg
   end
 
   let g:test#project_root = a:dir

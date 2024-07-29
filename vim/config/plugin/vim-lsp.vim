@@ -39,7 +39,13 @@ function! s:on_lsp_buffer_enabled() abort
 
     let g:vista_{&filetype}_executive = 'vim_lsp'
     " refer to doc to add more commands
-    redraw | echomsg 'VIM LSP attached'
+    redraw
+    let msg = 'VIM LSP attached'
+    if has('nvim')
+      call v:lua.vim.notify(msg)
+    else
+      echomsg msg
+    end
 endfunction
 
 function! s:on_lsp_float_opened() abort

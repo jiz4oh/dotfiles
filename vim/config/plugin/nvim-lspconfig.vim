@@ -17,7 +17,11 @@ function! s:on_lsp_buffer_enabled() abort
   nnoremap <buffer> <leader>lK <cmd>lua vim.lsp.buf.hover()<CR>
 
   let g:vista_{&filetype}_executive = 'nvim_lsp'
-  redraw | echomsg 'NVIM LSP attached'
+  redraw
+  let msg = 'NVIM LSP attached'
+  if !has('nvim')
+    echomsg msg
+  end
 endfunction
 
 augroup nvim-lspconfig-augroup
@@ -25,6 +29,15 @@ augroup nvim-lspconfig-augroup
 
   if has('nvim-0.8')
     autocmd LspAttach * call s:on_lsp_buffer_enabled()
+lua<<EOF
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    vim.notify('LSP: ' .. client.name .. ' attached')
+  end,
+})
+EOF
   else
     autocmd User LspAttach call s:on_lsp_buffer_enabled()
   end

@@ -56,7 +56,13 @@ function! s:on_lsp_buffer_enabled() abort
   " imap  <buffer><silent> <Plug><OutlineToggle> <c-o>:<c-u>call CocAction('showOutline')<CR>
 
   let g:vista_{&filetype}_executive = 'coc'
-  redraw | echomsg 'COC LSP attached'
+  redraw
+  let msg = 'COC LSP attached'
+  if has('nvim')
+    call v:lua.vim.notify(msg)
+  else
+    echomsg msg
+  end
 endfunction
 
 function! s:on_coc_float_opened() abort

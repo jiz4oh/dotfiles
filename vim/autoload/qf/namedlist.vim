@@ -25,7 +25,12 @@ let s:last_saved_list = ''
 function! qf#namedlist#SaveList(add, name) abort
     if a:name == ''
         if s:last_saved_list == ''
-            echomsg 'No last saved list'
+            let msg = 'No last saved list'
+            if has('nvim')
+              call v:lua.vim.notify(msg)
+            else
+              echomsg 'msg
+            end
 
             return
         endif
@@ -74,7 +79,12 @@ function! qf#namedlist#LoadList(add, ...)
 
     for name in names
         if ! has_key(s:named_lists, name)
-            echomsg 'No list named "' . name . '" saved'
+            let msg = 'No list named "' . name . '" saved'
+            if has('nvim')
+              call v:lua.vim.notify(msg)
+            else
+              echomsg 'msg
+            end
             return
         endif
 
