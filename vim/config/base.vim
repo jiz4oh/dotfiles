@@ -568,6 +568,7 @@ augroup END
 " ============================================================================
 " COMMAND {{{
 " ============================================================================
+command! -nargs=1 Echo echom <q-args>
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 command! Cnext try | cnext | catch | cfirst | catch | endtry
