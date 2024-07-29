@@ -12,6 +12,7 @@ nnoremap <leader>m<space> :AsyncTask<space>
 nnoremap <leader>mf       :AsyncTask file-build<cr>
 nnoremap <leader>mp       :AsyncTask project-build -make=
 nnoremap <leader>mr       :AsyncTask project-run<cr>
+nnoremap <leader>md       :AsyncTask project-database<cr>
 nnoremap '<CR>            :AsyncTask .file-repl<CR>
 xnoremap `<CR>            :AsyncTask file-run<cr>
 nnoremap `<CR>            :AsyncTask file-run<cr>
