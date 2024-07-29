@@ -66,7 +66,8 @@ function! s:load_projects() abort
 endfunction
 
 function! s:save_projects() abort
-  call writefile(g:projects, expand(s:filename))
+  let projects = g:projects[:100]
+  call writefile(filter(projects, 'isdirectory(v:val)'), expand(s:filename))
 endfunction
 
 augroup projectionist-augroup
