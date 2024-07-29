@@ -203,8 +203,8 @@ if g:as_ide
     Plug 'zbirenbaum/copilot-cmp'
     Plug 'hrsh7th/nvim-cmp'
     Plug 'nvim-lua/plenary.nvim'
-    if has('python3') && has('nvim-0.9.5')
-      Plug 'CopilotC-Nvim/CopilotChat.nvim'
+    if has('nvim-0.9.5')
+      Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
     endif
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-cmdline'
