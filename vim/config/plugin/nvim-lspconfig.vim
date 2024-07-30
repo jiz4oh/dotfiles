@@ -30,11 +30,18 @@ augroup nvim-lspconfig-augroup
   if has('nvim-0.8')
     autocmd LspAttach * call s:on_lsp_buffer_enabled()
 lua<<EOF
+-- do not set tagfunc, it's slowly with cmp-nvim-tags
+TAGFUNC_ALWAYS_EMPTY = function()
+    return vim.NIL
+end
+
+-- if tagfunc is already registered, nvim lsp will not try to set tagfunc as vim.lsp.tagfunc.
+vim.o.tagfunc = "v:lua.TAGFUNC_ALWAYS_EMPTY"
+
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
     local client = vim.lsp.get_client_by_id(args.data.client_id)
-    vim.notify('LSP: ' .. client.name .. ' attached')
   end,
 })
 EOF

@@ -1,6 +1,33 @@
 lua<<EOF
 local cmp = require('cmp')
 
+local default_sources = {
+  -- Copilot Source
+  { name = 'copilot' },
+  { name = 'vim_lsp' },
+  { name = 'nvim_lsp' },
+  -- { name = 'vsnip' }, -- For vsnip users.
+  -- { name = 'luasnip' }, -- For luasnip users.
+  -- { name = 'ultisnips' }, -- For ultisnips users.
+  -- { name = 'snippy' }, -- For snippy users.
+  { name = 'cmp_tabnine' },
+  { name = 'kitty',
+      option = {
+          -- this is where any configuration should be inserted
+      }
+  },
+  {
+      name = 'spell',
+      option = {
+          keep_all_entries = false,
+          enable_in_context = function()
+              return true
+          end,
+      },
+  },
+  { name = 'buffer' },
+}
+
 -- default config
 -- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/default.lua
 cmp.setup({
@@ -30,33 +57,7 @@ cmp.setup({
         end
       end, {"i","s","c",}),
   }),
-  sources = cmp.config.sources({
-      -- Copilot Source
-      { name = 'copilot' },
-      { name = 'vim_lsp' },
-      { name = 'nvim_lsp' },
-      -- { name = 'vsnip' }, -- For vsnip users.
-      -- { name = 'luasnip' }, -- For luasnip users.
-      -- { name = 'ultisnips' }, -- For ultisnips users.
-      -- { name = 'snippy' }, -- For snippy users.
-      { name = 'cmp_tabnine' },
-      { name = 'kitty',
-          option = {
-              -- this is where any configuration should be inserted
-          }
-      },
-      {
-          name = 'spell',
-          option = {
-              keep_all_entries = false,
-              enable_in_context = function()
-                  return true
-              end,
-          },
-      },
-      { name = 'buffer' },
-      { name = 'tags' },
-    }),
+  sources = cmp.config.sources(default_sources),
   snippet = {
     -- We recommend using *actual* snippet engine.
     -- It's a simple implementation so it might not work in some of the cases.
@@ -83,6 +84,14 @@ cmp.setup({
     format = require("tailwindcss-colorizer-cmp").formatter
   }
 })
+
+for _, filetypee in ipairs({'vim', 'go', 'ruby'}) do
+  cmp.setup.filetype(filetypee, {
+    sources = vim.tbl_extend('keep', {
+      { name = 'tags' }
+    }, default_sources)
+  })
+end
 
 for _, cmd_type in ipairs({'/', '?', '@'}) do
   cmp.setup.cmdline(cmd_type, {
