@@ -16,10 +16,13 @@ function! s:on_lsp_buffer_enabled() abort
   xnoremap <buffer> <leader>lf <cmd>lua vim.lsp.buf.range_formatting()<CR>
   nnoremap <buffer> <leader>lK <cmd>lua vim.lsp.buf.hover()<CR>
 
-  let g:vista_{&filetype}_executive = 'nvim_lsp'
-  redraw
+  try
+    let g:vista_{&filetype}_executive = 'nvim_lsp'
+  catch
+  endtry
   let msg = 'NVIM LSP attached'
   if !has('nvim')
+    redraw
     echomsg msg
   end
 endfunction
