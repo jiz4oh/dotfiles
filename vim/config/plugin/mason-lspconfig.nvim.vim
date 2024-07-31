@@ -18,7 +18,7 @@ local default_opts = {
 }
 
 local ok1, cmp = pcall(require, 'cmp_nvim_lsp')
-  if ok1 then
+if ok1 then
   -- https://github.com/hrsh7th/cmp-nvim-lsp/issues/38#issuecomment-1815265121
   local capabilities = vim.tbl_deep_extend("force",
     vim.lsp.protocol.make_client_capabilities(),
@@ -27,11 +27,19 @@ local ok1, cmp = pcall(require, 'cmp_nvim_lsp')
   default_opts["capabilities"] = capabilities
 end
 
+local self_managed_servers = { 'tsserver' }
+
 require("mason-lspconfig").setup_handlers {
   -- The first entry (without a key) will be the default handler
   -- and will be called for each installed server that doesn't have
   -- a dedicated handler.
   function (server_name) -- default handler (optional)
+    for i, name in ipairs(self_managed_servers) do
+      if server_name == name then
+        return
+      end
+    end
+
     local opts = vim.tbl_deep_extend('keep', {}, default_opts)
     require("lspconfig")[server_name].setup(default_opts)
   end,

@@ -16,6 +16,9 @@ let g:ale_fixers = {
       \   'json': ['fixjson', 'jq', 'autocorrect', 'remove_trailing_lines', 'trim_whitespace'],
       \   'yaml': ['prettier', 'autocorrect'],
       \   'javascript': ['prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
+      \   'typescript': ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
+      \   'typescriptreact': ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
+      \   'typescript.tsx': ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
       \   'xml': ['xmllint', ],
       \   'html': ['prettier-eslint'],
       \   'css': ['stylelint'],
@@ -89,6 +92,22 @@ call ale#fix#registry#Add('zeroapifmt',
       \'ale#fixers#zeroapifmt#Fix', 
       \[
       \'zeroapifmt',
+      \], 
+      \'Correct spaces, words, and punctuations between CJK (Chinese, Japanese, Korean). '
+      \)
+
+function! FixTypescript(buffer) abort
+  TSToolsOrganizeImports
+  TSToolsAddMissingImports
+  TSToolsFixAll
+endfunction
+
+call ale#fix#registry#Add('typescript-tools',
+      \'FixTypescript', 
+      \[
+      \'typescript',
+      \'typescriptreact',
+      \'typescript.tsx',
       \], 
       \'Correct spaces, words, and punctuations between CJK (Chinese, Japanese, Korean). '
       \)

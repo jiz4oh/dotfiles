@@ -133,6 +133,11 @@ Plug 'tpope/vim-rails'
 if has('nvim') || has('patch-8.0.1453')
   Plug 'fatih/vim-go'
 endif
+
+if g:as_ide && has('nvim-0.8')
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'pmizio/typescript-tools.nvim'
+endif
 " }}}
 
 " ============================================================================
