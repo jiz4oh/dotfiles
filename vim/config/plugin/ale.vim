@@ -11,14 +11,17 @@ let g:ale_linters = {
       \   'go': ['gofmt',]
       \}
 
+let ts_fixers = ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect']
 let g:ale_fixers = {
       \   '*': ['remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
       \   'json': ['fixjson', 'jq', 'autocorrect', 'remove_trailing_lines', 'trim_whitespace'],
       \   'yaml': ['prettier', 'autocorrect'],
-      \   'javascript': ['prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
-      \   'typescript': ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
-      \   'typescriptreact': ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
-      \   'typescript.tsx': ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
+      \   'javascript': ts_fixers,
+      \   'javascriptreact': ts_fixers,
+      \   'javascript.tsx': ts_fixers,
+      \   'typescript': ts_fixers,
+      \   'typescriptreact': ts_fixers,
+      \   'typescript.tsx': ts_fixers,
       \   'xml': ['xmllint', ],
       \   'html': ['prettier-eslint'],
       \   'css': ['stylelint'],
