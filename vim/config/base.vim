@@ -572,6 +572,10 @@ augroup END
 " ============================================================================
 " COMMAND {{{
 " ============================================================================
+if !has('nvim-0.9')
+  command! Inspect echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
+endif
+
 command! -nargs=1 Echo echom <q-args>
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
@@ -593,7 +597,6 @@ command! Uniq g/^\(.*\)\n\1$/d
 " KEY MAP {{{
 " ============================================================================
 " Determining the highlight group that the word under the cursor belongs to
-nmap <silent> <F11>   :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 " " Prevent common mistake of pressing q: instead :q
 " map q: :q
