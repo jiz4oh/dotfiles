@@ -197,6 +197,7 @@ if g:as_ide
     "fzf integration
     "https://github.com/ojroques/nvim-lspfuzzy
     Plug 'ojroques/nvim-lspfuzzy'
+    Plug 'b0o/schemastore.nvim'
   else
     "https://github.com/prabirshrestha/vim-lsp/issues/1492
     Plug 'prabirshrestha/vim-lsp'
