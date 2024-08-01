@@ -214,6 +214,7 @@ if g:as_ide
     Plug 'zbirenbaum/copilot.lua'
     Plug 'zbirenbaum/copilot-cmp'
     Plug 'hrsh7th/nvim-cmp'
+    Plug 'lukas-reineke/cmp-under-comparator'
     Plug 'nvim-lua/plenary.nvim'
     if has('nvim-0.9.5')
       Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
