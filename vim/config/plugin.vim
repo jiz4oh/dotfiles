@@ -183,6 +183,10 @@ if has('nvim-0.6')
   Plug 'dgagn/diagflow.nvim'
 endif
 
+if has('nvim-0.10')
+  Plug 'Zeioth/garbage-day.nvim'
+endif
+
 "lsp
 if g:as_ide
   if has('nvim-0.8')
