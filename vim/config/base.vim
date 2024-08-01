@@ -579,11 +579,11 @@ endif
 command! -nargs=1 Echo echom <q-args>
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
-command! Cnext try | cnext | catch | cfirst | catch | endtry
-command! Cprev try | cprev | catch | clast | catch | endtry
+command! -bar Cnext try | cnext | catch | cfirst | catch | endtry
+command! -bar Cprev try | cprev | catch | clast | catch | endtry
 
-command! Lnext try | lnext | catch | lfirst | catch | endtry
-command! Lprev try | lprev | catch | llast | catch | endtry
+command! -bar Lnext try | lnext | catch | lfirst | catch | endtry
+command! -bar Lprev try | lprev | catch | llast | catch | endtry
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " REMOVE DUPLICATE LINES  {{{
