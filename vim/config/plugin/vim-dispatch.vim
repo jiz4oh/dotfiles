@@ -34,7 +34,11 @@ augroup vim-dispatch-autocmd
         \   let b:dispatch = 'ruby %:p:S' |
         \ endif
 
-  autocmd BufReadPost *.go let b:dispatch = 'go run %:p:S'
+  if executable('air')
+    autocmd BufReadPost *.go let b:dispatch = 'air'
+  else
+    autocmd BufReadPost *.go let b:dispatch = 'go run %:p:S'
+  end
   autocmd BufReadPost pyproject.toml if executable('pdm') |
         \ let b:dispatch = 'pdm install -p %:p:h:S'|
         \ endif
