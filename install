@@ -24,7 +24,8 @@ done
 mkdir -pv ~/.config
 # dotdirs
 for dir in git_template ctags.d vim raycast \
-  config/rubocop config/nvim config/solargraph config/kitty config/wezterm config/mise; do
+  config/rubocop config/nvim config/solargraph config/kitty config/wezterm config/mise \
+  terminfo; do
   rm -rf bak/$dir
   parent_dir=$(dirname "$dir")
   [ "$parent_dir" != '.' ] && mkdir -pv bak/"$parent_dir"
