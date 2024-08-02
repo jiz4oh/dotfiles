@@ -118,10 +118,10 @@ cmp.setup({
 })
 
 for _, filetypee in ipairs({'vim', 'go', 'ruby'}) do
+  local sources = vim.tbl_deep_extend('force', {}, default_sources)
+  table.insert(sources, { name = 'tags', group_index = 2 })
   cmp.setup.filetype(filetypee, {
-    sources = vim.tbl_extend('keep', {
-      { name = 'tags' }
-    }, default_sources)
+    sources = sources
   })
 end
 
