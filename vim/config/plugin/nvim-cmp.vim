@@ -62,6 +62,29 @@ if ok2 then
   table.insert(comparators, 1, copilot_cmp.prioritize)
 end
 
+local ok3, tailwindcss_colorizer_cmp = pcall(require, 'tailwindcss-colorizer-cmp')
+
+local ok4, lspkind = pcall(require, 'lspkind')
+if ok4 then
+  local lspkind_ops = {
+    mode = 'symbol_text',
+    maxwidth = 50,
+    ellipsis_char = '...',
+    symbol_map = { Copilot = "" },
+  }
+
+  if ok4 then
+    lspkind_ops.before = function (entry, vim_item)
+      vim_item = tailwindcss_colorizer_cmp.formatter(entry, vim_item)
+      return vim_item
+    end
+  end
+
+  formatter = lspkind.cmp_format(lspkind_ops)
+elseif ok3 then
+  formatter = tailwindcss_colorizer_cmp.formatter
+end
+
 -- default config
 -- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/default.lua
 cmp.setup({
@@ -118,7 +141,7 @@ cmp.setup({
     end,
   },
   formatting = {
-    format = require("tailwindcss-colorizer-cmp").formatter
+    format = formatter
   }
 })
 
