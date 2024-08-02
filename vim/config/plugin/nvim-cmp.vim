@@ -57,6 +57,11 @@ else
   }
 end
 
+local ok2, copilot_cmp = pcall(require, 'copilot_cmp.comparators')
+if ok2 then
+  table.insert(comparators, 1, copilot_cmp.prioritize)
+end
+
 -- default config
 -- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/default.lua
 cmp.setup({
