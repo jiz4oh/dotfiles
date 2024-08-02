@@ -31,7 +31,7 @@ augroup nerd_loader
         \| endif
 
   if exists('&winfixbuf')
-    autocmd FileType nerdtree if !b:NERDTree.isWinTree() | setlocal winfixbuf | endif
+    autocmd FileType nerdtree if !(exists('b:NERDTree') && b:NERDTree.isWinTree()) | setlocal winfixbuf | endif
   else
     " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
     autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
