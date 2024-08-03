@@ -12,9 +12,20 @@ function! s:on_lsp_buffer_enabled() abort
   nnoremap <buffer> <leader>lR <cmd>lua vim.lsp.buf.rename()<CR>
   nnoremap <buffer> <leader>ls <cmd>lua vim.lsp.buf.document_symbol()<CR>
   nnoremap <buffer> <leader>lS <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-  nnoremap <buffer> <leader>lf <cmd>lua vim.lsp.buf.formatting()<CR>
-  xnoremap <buffer> <leader>lf <cmd>lua vim.lsp.buf.range_formatting()<CR>
+  if has('nvim-0.8')
+    nnoremap <buffer> <leader>lf <cmd>lua vim.lsp.buf.format()<CR>
+    xnoremap <buffer> <leader>lf <cmd>lua vim.lsp.buf.format()<CR>
+  else
+    nnoremap <buffer> <leader>lf <cmd>lua vim.lsp.buf.formatting()<CR>
+    xnoremap <buffer> <leader>lf <cmd>lua vim.lsp.buf.range_formatting()<CR>
+  endif
   nnoremap <buffer> <leader>lK <cmd>lua vim.lsp.buf.hover()<CR>
+  nnoremap <buffer> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
+  if has('nvim-0.8')
+    xnoremap <buffer> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
+  else
+    xnoremap <buffer> <leader>la <cmd>lua vim.lsp.buf.range_code_action()<CR>
+  endif
 
   try
     let g:vista_{&filetype}_executive = 'nvim_lsp'

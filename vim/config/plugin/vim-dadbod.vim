@@ -12,10 +12,12 @@ xnoremap <expr> <Plug>(DBExe)     db#op_exec()
 nnoremap <expr> <Plug>(DBExe)     db#op_exec()
 nnoremap <expr> <Plug>(DBExeLine) db#op_exec() . '_'
 
-xmap <leader>db  <Plug>(DBExe)
-nmap <leader>db  <Plug>(DBExe)
-omap <leader>db  <Plug>(DBExe)
-nmap <leader>dbb <Plug>(DBExeLine)
+function! s:init() abort
+  xmap <buffer><leader>db  <Plug>(DBExe)
+  nmap <buffer><leader>db  <Plug>(DBExe)
+  omap <buffer><leader>db  <Plug>(DBExe)
+  nmap <buffer><leader>dbb <Plug>(DBExeLine)
+endfunction
 
 function! s:init_sqlite() abort
   if executable('file') && executable('file')
@@ -28,13 +30,15 @@ function! s:init_sqlite() abort
       let g:dbs[pathshorten(path)] = b:db
     endif
   endif
+  call s:init()
 endfunction
 
 augroup vim-dadbod-augroup
   autocmd!
 
   autocmd FileType mysql,sql,plsql let b:start = ':DB' |
-        \ let b:dispatch = ':DB'
+        \ let b:dispatch = ':DB' |
+        \ call s:init()
 
   autocmd BufRead,BufNewFile *.db,*.sqlite3 call <SID>init_sqlite()
 augroup END
