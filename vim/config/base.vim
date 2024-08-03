@@ -479,6 +479,10 @@ augroup vimrc
   autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab ai |
         \compiler python
   autocmd Filetype gitcommit setlocal spell textwidth=72 colorcolumn=72
+  if exists(':tnoremap')
+    " https://github.com/junegunn/fzf.vim/issues/672#issuecomment-1191112563
+    autocmd! FileType fzf,floaterm tnoremap <expr> <C-r> getreg(nr2char(getchar()))
+  end
 
   autocmd BufRead,BufNewFile
     \ *zpath,.zlocal,zshenv.local,zlogin.local,zlogout.local,zshrc.local,zprofile.local,*/zsh/configs/*,

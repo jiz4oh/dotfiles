@@ -13,16 +13,8 @@ let g:fzf_history_dir = '~/.local/share/fzf-history'
 if exists('$TMUX')
   let g:fzf_layout = { 'tmux': '-p90%,60%' }
 elseif has('nvim') || has('patch-8.2.191')
-  " https://github.com/junegunn/fzf.vim/issues/672#issuecomment-1191112563
-  " autocmd! FileType fzf tnoremap <expr> <C-r> getreg(nr2char(getchar()))
-  autocmd! FileType fzf tnoremap <expr> <C-r> getreg(nr2char(getchar()))
-
   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 else
-  if exists('tnoremap')
-    autocmd! FileType fzf tnoremap <expr> <C-r> getreg(nr2char(getchar()))
-  endif
-
   " disable popup in favor of location window
   let g:fzf_layout = { 'down': '60%' }
 endif
@@ -32,8 +24,9 @@ function! s:fzf_sink(what)
 	if p1 >= 0
 		let name = strpart(a:what, 0, p1)
 		let name = substitute(name, '^\s*\(.\{-}\)\s*$', '\1', '')
-		if name != ''
-			call feedkeys(":AsyncTask ". fnameescape(name) ."\<CR>")
+		if name !=# ''
+			call feedkeys(':AsyncTask '. fnameescape(name))
+      call feedkeys("\<CR>")
 		endif
 	endif
 endfunction
