@@ -17,11 +17,8 @@ let g:ale_fixers = {
       \   'json': ['fixjson', 'jq', 'autocorrect', 'remove_trailing_lines', 'trim_whitespace'],
       \   'yaml': ['prettier', 'autocorrect'],
       \   'javascript': ts_fixers,
-      \   'javascriptreact': ts_fixers,
       \   'javascript.tsx': ts_fixers,
       \   'typescript': ts_fixers,
-      \   'typescriptreact': ts_fixers,
-      \   'typescript.tsx': ts_fixers,
       \   'xml': ['xmllint', ],
       \   'html': ['prettier-eslint'],
       \   'css': ['stylelint'],
@@ -31,12 +28,18 @@ let g:ale_fixers = {
       \   'ruby': ['rubocop'],
       \   'lua': ['stylua', ],
       \   'sh': ['shfmt', ],
-      \   'md': ['prettier', 'autocorrect'],
+      \   'markdown': ['prettier', 'autocorrect'],
       \   'rust': ['rustfmt', ],
       \   'go': ['gofmt', ],
       \   'zeroapi': ['zeroapifmt', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
       \   'eruby': ['erblint', 'remove_trailing_lines', 'trim_whitespace']
       \}
+
+let g:ale_linter_aliases = {
+      \ 'html': ['html', 'javascript', 'css'],
+      \ 'typescript.tsx': ['typescript', 'jsx'],
+      \ 'javascript.tsx': ['javascript', 'jsx'],
+      \ }
 
 let g:ale_use_global_executables = 1
 let g:ale_go_gopls_options = '-remote=auto'
@@ -112,7 +115,7 @@ call ale#fix#registry#Add('typescript-tools',
       \'typescriptreact',
       \'typescript.tsx',
       \], 
-      \'Correct spaces, words, and punctuations between CJK (Chinese, Japanese, Korean). '
+      \'add missing imports, sorts and removes unused imports, fixes all fixable errors'
       \)
 
 augroup ale_augroup
