@@ -177,6 +177,10 @@ RG() {
   [ -n "$selected" ] && $EDITOR "$selected"
 }
 
+kport () {
+  kill -9 $(lsof -t -i :$1)
+}
+
 # run 'zprof' to get profiling information
 zmodload zsh/zprof
 
