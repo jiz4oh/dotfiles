@@ -7,7 +7,7 @@ local default_sources = {
   { name = 'vim_lsp' },
   { name = 'nvim_lsp' },
   -- { name = 'vsnip' }, -- For vsnip users.
-  -- { name = 'luasnip' }, -- For luasnip users.
+  { name = 'luasnip' }, -- For luasnip users.
   -- { name = 'ultisnips' }, -- For ultisnips users.
   -- { name = 'snippy' }, -- For snippy users.
   { name = 'cmp_tabnine' },
@@ -73,7 +73,7 @@ if ok4 then
     symbol_map = { Copilot = "" },
   }
 
-  if ok4 then
+  if ok3 then
     lspkind_ops.before = function (entry, vim_item)
       vim_item = tailwindcss_colorizer_cmp.formatter(entry, vim_item)
       return vim_item
@@ -83,8 +83,13 @@ if ok4 then
   formatter = lspkind.cmp_format(lspkind_ops)
 elseif ok3 then
   formatter = tailwindcss_colorizer_cmp.formatter
+else
+  formatter = function(entry, vim_item)
+    return vim_item
+  end
 end
 
+local ok5, luasnip = pcall(require, 'luasnip')
 -- default config
 -- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/default.lua
 cmp.setup({
@@ -101,6 +106,8 @@ cmp.setup({
           else
             cmp.select_next_item()
           end
+        elseif ok5 and luasnip.locally_jumpable(1) then
+          luasnip.jump(1)
         else
           fallback()
         end
@@ -112,6 +119,8 @@ cmp.setup({
           else
             cmp.select_prev_item()
           end
+        elseif ok5 and luasnip.locally_jumpable(-1) then
+          luasnip.jump(-1)
         else
           fallback()
         end
@@ -119,25 +128,10 @@ cmp.setup({
   }),
   sources = cmp.config.sources(default_sources),
   snippet = {
-    -- We recommend using *actual* snippet engine.
-    -- It's a simple implementation so it might not work in some of the cases.
     expand = function(args)
-      local line_num, col = unpack(vim.api.nvim_win_get_cursor(0))
-      local line_text = vim.api.nvim_buf_get_lines(0, line_num - 1, line_num, true)[1]
-      local indent = string.match(line_text, '^%s*')
-      local replace = vim.split(args.body, '\n', true)
-      local surround = string.match(line_text, '%S.*') or ''
-      local surround_end = surround:sub(col)
-
-      replace[1] = surround:sub(0, col - 1)..replace[1]
-      replace[#replace] = replace[#replace]..(#surround_end > 1 and ' ' or '')..surround_end
-      if indent ~= '' then
-        for i, line in ipairs(replace) do
-         replace[i] = indent..line
-        end
+      if ok5 then
+        luasnip.lsp_expand(args.body) -- For `luasnip` users.
       end
-
-      vim.api.nvim_buf_set_lines(0, line_num - 1, line_num, true, replace)
     end,
   },
   formatting = {
