@@ -288,7 +288,9 @@ end
 Plug 'mhinz/vim-hugefile'
 Plug 'pbogut/fzf-mru.vim'
 Plug 'liuchengxu/vim-which-key'
-Plug 'ojroques/vim-oscyank'
+if exists('$SSH_TTY') && !has('nvim-0.10')
+  Plug 'ojroques/vim-oscyank'
+endif
 Plug 'skywind3000/vim-dict'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'justinmk/vim-gtfo'

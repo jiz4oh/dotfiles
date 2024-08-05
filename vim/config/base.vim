@@ -190,7 +190,9 @@ set wildignore+=*.linux2,*.win32,*.darwin,*.freebsd,*.linux,*.android
 " others
 set backspace=indent,eol,start         " make that backspace key work the way it should
 set whichwrap+=<,>,h,l
-set clipboard+=unnamed
+if !exists('$SSH_TTY')
+  set clipboard+=unnamed
+end
 set updatetime=100
 
 " https://vi.stackexchange.com/a/24938
@@ -600,6 +602,13 @@ command! Uniq g/^\(.*\)\n\1$/d
 " ============================================================================
 " KEY MAP {{{
 " ============================================================================
+"https://github.com/neovim/neovim/pull/25872
+"https://github.com/neovim/neovim/pull/26064
+":h clipboard-osc52
+if has('nvim-0.10')
+  noremap <leader>y "+y
+  map <leader>Y "+Y
+endif
 " Determining the highlight group that the word under the cursor belongs to
 
 " " Prevent common mistake of pressing q: instead :q
