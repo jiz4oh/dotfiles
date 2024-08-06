@@ -12,18 +12,15 @@ lua<<EOF
     auto_install = true,
 
     ensure_installed = {
-      "vim",
       "html",
       "css",
       "tsx",
       "javascript",
       "json",
-      "lua",
       "toml",
       "yaml",
       "ruby",
       "go",
-      "bash",
     },
     indent = {
       enable = true
