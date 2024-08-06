@@ -42,3 +42,28 @@ augroup vim-dadbod-augroup
 
   autocmd BufRead,BufNewFile *.db,*.sqlite3 call <SID>init_sqlite()
 augroup END
+
+function! s:pg_dump(with_data) abort
+  if exists('b:db')
+    let h = db#url#parse(b:db)
+    let host = get(h, 'host', 'localhost')
+    let port = get(h, 'port', '5432')
+    let user = get(h, 'user', 'postgres')
+    let database = get(h, 'path', '/postgres')
+    let scheme = get(h, 'schema')
+    if scheme ==# 'postgresql' || scheme ==# 'postgres'
+      if a:with_data
+        let command = 'pg_dump'
+      else
+        let command = 'pg_dump -s'
+      end
+      let command = command . ' -h ' . host . ' -U ' . user . ' ' . database[1:] . ' > schema.sql'  
+      exec 'Echo ' . 'dadbod: ' . command
+      call system(command)
+    end
+  end
+endfunction
+
+if executable('pg_dump')
+  command! -bang PgDump call <SID>pg_dump(<bang>0)
+end

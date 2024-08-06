@@ -109,6 +109,10 @@ Plug 'skywind3000/asynctasks.vim'
 Plug 'drgarcia1986/python-compilers.vim'
 Plug 'jpalardy/vim-slime'
 Plug 'vim-test/vim-test'
+
+if has('nvim-0.10')
+  Plug 'andrewferrier/debugprint.nvim'
+endif
 " }}}
 
 " ============================================================================
@@ -170,10 +174,10 @@ endif
 " Easier EDIT {{{
 " ============================================================================
 if executable('pipx')
-  Plug 'Vimjas/vint', { 'on': 'Ajksdhfas', 'do': 'pipx install .' } " just install vint by vim-plug, do not load it
+  Plug 'Vimjas/vint', { 'on': 'DoNotLoad', 'do': 'pipx install .' } " just install vint by vim-plug, do not load it
 endif
 if executable('npm')
-  Plug 'rhysd/fixjson', { 'on': 'Ajksdhfas', 'do': 'npm install . && npm link && npm install -g fixjson' }
+  Plug 'rhysd/fixjson', { 'on': 'DoNotLoad', 'do': 'npm install . && npm link && npm install -g fixjson' }
 endif
 if has('timers') && (has('nvim-0.2.0') || exists('*job_start') && exists('*ch_close_in'))
   Plug 'dense-analysis/ale'
