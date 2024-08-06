@@ -335,12 +335,14 @@ Plug 'troydm/zoomwintab.vim'
 " BEAUTIFY {{{
 " ============================================================================
 if g:as_ide
-  if has('nvim')
-    Plug 'rcarriga/nvim-notify'
+  if has('nvim-0.9.2')
     Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-    if has('nvim-0.9')
-      Plug 'stevearc/aerial.nvim'
-    endif
+    Plug 'stevearc/aerial.nvim'
+  endif
+
+  if has('nvim-0.5')
+    Plug 'rcarriga/nvim-notify'
+    Plug 'mrded/nvim-lsp-notify'
   endif
   if has('nvim') || has('gui_running')
     " Plug 'vim-airline/vim-airline'

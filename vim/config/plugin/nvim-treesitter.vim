@@ -1,6 +1,6 @@
 augroup vim-rails-augroup
   autocmd FileType eruby
-        \ if RailsDetect() | call rails#ruby_setup() | endif
+        \ if RailsDetect() | cmap <buffer><script><expr> <Plug><cfile> rails#ruby_cfile() | endif
 
 augroup END
 
@@ -26,7 +26,7 @@ lua<<EOF
       enable = true
     },
     highlight = {
-      enable = false,
+      enable = true,
       additional_vim_regex_highlighting = false,
     },
   }
