@@ -322,7 +322,10 @@ endif
 " ============================================================================
 " Plug 'andymass/vim-matchup'
 Plug 'ypcrts/securemodelines'
-Plug 'tyru/open-browser.vim'
+"https://github.com/neovim/neovim/commit/af6e6ccf3dee815850639ec5613dda3442caa7d6
+if !has('nvim-0.10')
+  Plug 'tyru/open-browser.vim'
+end
 Plug 'vim-utils/vim-man'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'tpope/vim-repeat'
