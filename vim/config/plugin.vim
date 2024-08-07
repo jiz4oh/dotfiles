@@ -197,6 +197,7 @@ if g:as_ide
     Plug 'williamboman/mason.nvim' 
     Plug 'williamboman/mason-lspconfig.nvim'
     Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
     Plug 'neovim/nvim-lspconfig'
     "fzf integration
     "https://github.com/ojroques/nvim-lspfuzzy
