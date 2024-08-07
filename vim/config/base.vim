@@ -225,6 +225,22 @@ if (v:version < 800 && &term =~ "xterm.*") || &term ==# "xterm-kitty"
     cmap <Esc>[200~ <nop>
     cmap <Esc>[201~ <nop>
 endif
+
+if has('nvim')
+lua<<EOF
+  local diagnostics_fmt = {
+    [vim.diagnostic.severity.ERROR] = 'E',
+    [vim.diagnostic.severity.WARN] = 'W',
+    [vim.diagnostic.severity.INFO] = 'I',
+    [vim.diagnostic.severity.HINT] = 'D'
+  }
+  _G.my_diagnostic_format_func = function(diagnostic)
+    return string.format("[%s] [%s] %s", diagnostics_fmt[diagnostic.severity], diagnostic.source, diagnostic.message)
+  end
+
+  vim.diagnostic.config({ virtual_text = { severity_sort = true, source = true, format = my_diagnostic_format_func }, float = { severity_sort = true, source = true }})
+EOF
+end
 " ============================================================================
 " UI {{{
 " ============================================================================
