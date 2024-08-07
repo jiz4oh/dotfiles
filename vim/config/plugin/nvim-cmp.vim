@@ -16,15 +16,6 @@ local default_sources = {
           -- this is where any configuration should be inserted
       }
   },
-  {
-      name = 'spell',
-      option = {
-          keep_all_entries = false,
-          enable_in_context = function()
-              return true
-          end,
-      },
-  },
   { name = 'buffer' },
 }
 

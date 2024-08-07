@@ -227,7 +227,6 @@ if g:as_ide
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-cmdline'
     Plug 'hrsh7th/cmp-buffer'
-    Plug 'f3fora/cmp-spell'
     if has('nvim-0.7')
       Plug 'L3MON4D3/LuaSnip', { 'do': 'make install_jsregexp' }
       Plug 'saadparwaiz1/cmp_luasnip'

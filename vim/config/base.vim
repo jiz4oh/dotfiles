@@ -34,10 +34,6 @@ set splitbelow                  " split a window one the below
 set splitright                  " vsplit a window on the right
 set exrc
 
-set spell
-set spelllang=en_us,cjk
-set spellsuggest=best,9
-
 set history=2000                " how many lines of history VIM has to remember
 
 if has('vim_starting') && exists('+undofile')
@@ -496,7 +492,7 @@ augroup vimrc
 
   autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab ai |
         \compiler python
-  autocmd Filetype gitcommit setlocal spell textwidth=72 colorcolumn=72
+  autocmd Filetype gitcommit setlocal textwidth=72 colorcolumn=72
   if exists(':tnoremap')
     " https://github.com/junegunn/fzf.vim/issues/672#issuecomment-1191112563
     autocmd! FileType fzf,floaterm tnoremap <expr> <C-r> getreg(nr2char(getchar()))
