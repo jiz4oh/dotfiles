@@ -1,19 +1,17 @@
 lua<<EOF
-local filetypes = { "vim", "go", "ruby" }
 require("aerial").setup({
   layout = {
-    max_width = { 35, 0.2 },
+    width = 35,
   },
-  backends = { "treesitter", "asciidoc", "man" },
+  backends = { "treesitter", "lsp", "asciidoc", "man" },
   ignore = {
     filetypes = filetypes,
   },
+  placement = "edge",
   -- optionally use on_attach to set keymaps when aerial has attached to a buffer
   on_attach = function(bufnr)
-    for k,v in pairs(filetypes) do
-      if v == vim.bo[bufnr].filetype then
-        return
-      end
+    if 'ctags' == vim.g.vista_executive_for[vim.bo[bufnr].filetype] then
+      return
     end
 
     vim.keymap.set("n", "<Plug><OutlineToggle>", "<cmd>AerialToggle<CR>", { buffer = bufnr, silent = true })
