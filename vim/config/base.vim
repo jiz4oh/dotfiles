@@ -222,7 +222,7 @@ if (v:version < 800 && &term =~ "xterm.*") || &term ==# "xterm-kitty"
     cmap <Esc>[201~ <nop>
 endif
 
-if has('nvim')
+if has('nvim-0.6')
 lua<<EOF
   local diagnostics_fmt = {
     [vim.diagnostic.severity.ERROR] = 'E',
@@ -234,7 +234,9 @@ lua<<EOF
     return string.format("[%s] [%s] %s", diagnostics_fmt[diagnostic.severity], diagnostic.source, diagnostic.message)
   end
 
-  vim.diagnostic.config({ virtual_text = { severity_sort = true, source = true, format = my_diagnostic_format_func }, float = { severity_sort = true, source = true }})
+  vim.diagnostic.config({ float = { severity_sort = true, source = true }})
+  vim.diagnostic.config({ virtual_text = { severity_sort = true, source = true, format = my_diagnostic_format_func }})
+
 EOF
 end
 " ============================================================================

@@ -183,8 +183,11 @@ if has('timers') && (has('nvim-0.2.0') || exists('*job_start') && exists('*ch_cl
   Plug 'dense-analysis/ale'
   Plug 'jiz4oh/ale-autocorrect.vim'
 endif
-if has('nvim-0.6')
-  Plug 'dgagn/diagflow.nvim'
+"if has('nvim-0.6')
+"  Plug 'dgagn/diagflow.nvim'
+"endif
+if has('nvim-0.10')
+  Plug 'rachartier/tiny-inline-diagnostic.nvim'
 endif
 
 if has('nvim-0.10')
