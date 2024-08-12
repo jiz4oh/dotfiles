@@ -1,4 +1,5 @@
 function! s:on_lsp_buffer_enabled() abort
+  let b:ale_disable_lsp = 1
   if index(['vim-plug'], &filetype) > -1
     return
   end
