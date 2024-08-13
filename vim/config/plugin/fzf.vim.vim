@@ -6,9 +6,6 @@ function! FzfGrepMap(lhs, cmd)
   execute "vnoremap <silent> " . a:lhs . " :<C-u>execute ':" . a:cmd . " '.personal#functions#selected()<CR>"
 endfunction
 
-command! -nargs=? -bang Compilers             call fzf#customized#compilers()
-command! -nargs=? -bang Projects              call fzf#customized#projects(<q-args>, <bang>0)
-command! -nargs=? -bang Path                  call fzf#customized#paths(<q-args>, <bang>0)
 command! -nargs=? -bang Cfilter               call fzf#customized#quickfix(<q-args>, <bang>0)
 command! -nargs=? -bang Sessions              call fzf#customized#sessions(<bang>0)
 

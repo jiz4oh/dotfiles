@@ -74,12 +74,7 @@ else
 endif
 
 function! fzf#customized#sessions(fullscreen) abort
-  if !exists('*GetSessions')
-    echo 'GetSessions is not defined'
-    return
-  endif
-
-  let l:paths = GetSessions()
+  let l:paths = select#get_sessions()
 
   try
     let action = get(g:, 'fzf_action')
@@ -150,8 +145,8 @@ function! fzf#customized#paths(query, fullscreen) abort
   call fzf#helper#reserve_cmd(container.func)()
 endfunction
 
-function! fzf#customized#projects(query, fullscreen) abort
-  let l:projects = get(g:, 'projects', [])
+function! fzf#customized#projects() abort
+  let l:projects = select#get_projects()
 
   let container = {}
   function! container.func() closure
@@ -171,12 +166,7 @@ function! fzf#customized#projects(query, fullscreen) abort
                   \'source': l:projects,
                   \}
 
-    if !empty(a:query)
-      call add(l:spec['options'], '--header')
-      call add(l:spec['options'], a:query)
-    endif
-
-    call fzf#run(fzf#wrap('projects', l:spec, a:fullscreen))
+    call fzf#run(fzf#wrap('projects', l:spec))
   endfunction
 
   call fzf#helper#reserve_action(container.func)()
@@ -185,9 +175,7 @@ endfunction
 " pick up from 'path'
 function! fzf#customized#path(query, fullscreen) abort
   let l:slash = (g:is_win && !&shellslash) ? '\\' : '/'
-  let l:paths = map(split(&path, ','), {_, val -> fnamemodify(expand(val), ':~:.')})
-  let l:paths = uniq(sort(sort(l:paths), {i1, i2 -> len(split(i1, l:slash)) - len(split(i2, l:slash))}))
-  let l:paths = filter(l:paths, {_, v -> isdirectory(fnamemodify(v, ':p')) })
+  let l:paths = select#get_paths()
 
   let container = {}
   function! container.func() closure
@@ -220,12 +208,8 @@ function! fzf#customized#path(query, fullscreen) abort
 endfunction
 
 function! fzf#customized#compilers()
-  let compilers = split(globpath(&runtimepath, 'compiler/*.vim'), '\n')
-  if has('packages')
-    let compilers += split(globpath(&packpath, 'pack/*/opt/*/compiler/*.vim'), '\n')
-  endif
   return fzf#run(fzf#wrap('compilers', {
-  \ 'source':  fzf#vim#_uniq(map(compilers, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")),
+  \ 'source':  select#get_compilers(),
   \ 'sink':    'compiler ',
   \ 'options': '+m --prompt="Compilers> "'
   \}))
@@ -233,7 +217,7 @@ endfunction
 
 function! fzf#customized#quickfix(query, fullscreen) abort
   let l:qf = getqflist()
-  let l:list = map(l:qf, { _, val -> bufname(val.bufnr). ':'. val.lnum . ':' . val.col . ':'. val.text})
+  let l:list = map(l:qf, funcref('fzf#customized#_format_qf_item'))
   if !empty(a:query)
     let @/ = a:query
   endif
@@ -257,4 +241,8 @@ function! fzf#customized#quickfix(query, fullscreen) abort
                 \]}
 
   call fzf#run(fzf#wrap('quickfix', fzf#vim#with_preview(l:spec), a:fullscreen))
+endfunction
+
+function! fzf#customized#_format_qf_item(_, val) abort
+  return bufname(a:val.bufnr). ':'. a:val.lnum . ':' . a:val.col . ':'. a:val.text
 endfunction
