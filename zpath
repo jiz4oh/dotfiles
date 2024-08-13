@@ -7,6 +7,7 @@ if [ "$_ZPATH_LOADED" = "1" ]; then
   return
 fi
 
+export _DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 export PATH="$BREW_PREFIX/bin:$PATH"
 export PATH="$BREW_PREFIX/opt:$PATH"
 if [ $(command -v brew) ]; then
@@ -83,7 +84,7 @@ fi
 export PATH=~/.local/bin:$PATH
 # pipx end
 
-export PATH=~/bin:$PATH
+export PATH=~/bin:$_DOTFILES_PATH/bin:$PATH
 # or asdf reshim every time
 # export PATH="$PATH:$(go env GOPATH)/bin" 2>/dev/null
 export _ZPATH_LOADED=1

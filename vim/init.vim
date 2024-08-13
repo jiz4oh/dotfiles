@@ -3,7 +3,11 @@ if get(g:, 'vimrc_loaded', 0) != 0
 endif
 let g:vimrc_loaded = 1
 
-let g:config_home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+if exists('$_DOTFILES_PATH')
+  let g:config_home = $_DOTFILES_PATH . '/vim'
+else
+  let g:config_home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+end
 
 exec 'source ' . g:config_home . '/config.vim'
 

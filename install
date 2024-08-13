@@ -39,12 +39,6 @@ if [ ! -e ~/.git-prompt.sh ]; then
   curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
 fi
 
-# scripts
-mkdir -p ~/bin
-for bin in $BASE/bin/*; do
-  ln -svf "$bin" ~/bin
-done
-
 OS=$(uname -s)
 if [ "${OS}" == "Darwin" ]; then
   release="Darwin"
