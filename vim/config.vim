@@ -25,7 +25,8 @@ let g:session_dir          = session_dir
 
 let g:project_markers = [
       \'.git', '.hg', '.svn', '.bzr', '_darcs', '_FOSSIL_',
-      \'.fslckout', 'package.json', 'Gemfile', '.projections.json'
+      \'.fslckout', 'package.json', 'Gemfile', '.projections.json',
+      \'go.mod', 'requirements.txt'
       \]
 
 let g:is_iterm2 = 'iTerm.app' == $TERM_PROGRAM

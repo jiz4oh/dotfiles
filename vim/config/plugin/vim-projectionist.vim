@@ -2,11 +2,42 @@ let g:projectionist_transformations = {}
 
 "https://gist.github.com/jiz4oh/d763f906c65e302b0162a3c05723138b
 let g:projectionist_heuristics = {
-      \ ".git/": {
-      \   ".git/hooks/*": {"type": "githook"},
-      \   ".github/workflows/*": {"type": "githubworkflow"}
+      \ '.git/': {
+      \   '.git/hooks/*': {'type': 'githook'},
+      \   '.github/workflows/*': {'type': 'githubworkflow'}
       \ },
-      \ ".hg/|.svn/|.bzr/": {
+      \ '.hg/|.svn/|.bzr/': {
+      \ },
+      \ 'package.json': {
+      \   '*.js': {
+      \      'console': 'node'
+      \   },
+      \ },
+      \ 'Gemfile|Rakefile|*.gemspec': {
+      \ },
+      \ 'requirements.txt|requirements.in': {
+      \   '*.py': {
+      \      'console': 'python',
+      \   },
+      \   'requirements.txt': {
+      \      'dispatch': 'pip install -r %',
+      \   },
+      \ },
+      \ 'go.mod': {
+      \   '*.go': {
+      \      'alternate': '{}_test.go',
+      \   },
+      \   '*_test.go': {
+      \      'alternate': '{gotest}.go',
+      \   },
+      \   'go.mod': {
+      \     'alternate': 'go.sum',
+      \     'dispatch': 'go mod tidy'
+      \   },
+      \   'go.sum': {
+      \     'alternate': 'go.mod',
+      \     'dispatch': 'go mod tidy'
+      \   }
       \ },
       \}
 
