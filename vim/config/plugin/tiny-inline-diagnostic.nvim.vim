@@ -5,6 +5,9 @@ vim.diagnostic.config({ virtual_text = false })
 
 require('tiny-inline-diagnostic').setup({
 CursorLine = { bg = "None" },
+options = {
+  format = my_diagnostic_format_func,
+},
 hi = {
 		error = "DiagnosticError",
 		warn = "DiagnosticWarn",
