@@ -1,5 +1,10 @@
 let g:projectionist_transformations = {}
 
+if executable('air')
+  let s:go_dispatch = 'air'
+else
+  let s:go_dispatch = 'go run %:p:S'
+end
 "https://gist.github.com/jiz4oh/d763f906c65e302b0162a3c05723138b
 let g:projectionist_heuristics = {
       \ '.git/': {
@@ -12,19 +17,32 @@ let g:projectionist_heuristics = {
       \   '*.js': {
       \      'console': 'node'
       \   },
+      \   'pnpm-lock.yaml': {
+      \      'dispatch': 'pnpm install'
+      \   },
+      \   'yarn.lock': {
+      \      'dispatch': 'yarn install'
+      \   },
+      \   'package-lock.json': {
+      \      'dispatch': 'npm install'
+      \   },
       \ },
       \ 'Gemfile|Rakefile|*.gemspec': {
       \ },
-      \ 'requirements.txt|requirements.in': {
+      \ 'requirements.txt|requirements.in|pyproject.toml': {
       \   '*.py': {
       \      'console': 'python',
       \   },
       \   'requirements.txt': {
       \      'dispatch': 'pip install -r %',
       \   },
+      \   'pyproject.toml': {
+      \      'dispatch': 'pdm install -p %:p:h:S',
+      \   },
       \ },
       \ 'go.mod': {
       \   '*.go': {
+      \      'dispatch': s:go_dispatch,
       \      'alternate': '{}_test.go',
       \   },
       \   '*_test.go': {

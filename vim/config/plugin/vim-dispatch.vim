@@ -1,47 +1,39 @@
 augroup vim-dispatch-autocmd
   autocmd!
   
-  autocmd BufNewFile,BufRead Dockerfile* let b:dispatch = 'docker build %:p:h -t %:p:h:t:gs/.*/\L&/:S'
+  autocmd BufNewFile,BufRead Dockerfile* let b:dispatch = get(b:, 'dispatch', 'docker build %:p:h -t %:p:h:t:gs/.*/\L&/:S')
   " https://docs.docker.com/compose/compose-application-model/#the-compose-file
-  autocmd BufNewFile,BufRead compose.yaml,compose.yml,docker-compose.yaml,docker-compose.yml let b:dispatch = 'docker compose -f %:p up -d'
-  autocmd BufNewFile,BufRead requirements.txt let b:dispatch = 'pip install -r %'
-  autocmd BufNewFile,BufRead yarn.lock let b:dispatch = 'yarn install'
-  autocmd BufNewFile,BufRead pnpm-lock.yaml let b:dispatch = 'pnpm install'
-  autocmd BufNewFile,BufRead package-lock.json let b:dispatch = 'npm install'
+  autocmd BufNewFile,BufRead compose.yaml,compose.yml,docker-compose.yaml,docker-compose.yml let b:dispatch = get(b:, 'dispatch', 'docker compose -f %:p up -d')
   autocmd BufReadPost *
       \ if getline(1) =~# '^#!' |
       \   let b:dispatch = get(b:, 'dispatch',
       \       matchstr(getline(1), '#!\%(/usr/bin/env \+\)\=\zs.*') . ' %:p:S' ) |
       \   let b:start = get(b:, 'start', '-wait=always ' . b:dispatch) |
       \ endif
-  autocmd FileType python let b:dispatch = 'python %:p:S'
-  autocmd FileType zeroapi let b:dispatch = 'goctl api go --api %:p:S -dir %:p:h:S --style=go_zero'
+  autocmd FileType zeroapi let b:dispatch = get(b:, 'dispatch', 'goctl api go --api %:p:S -dir %:p:h:S --style=go_zero')
 
+  autocmd FileType python let b:dispatch = get(b:, 'dispatch', 'python %:p:S')
   if executable('ipython')
-    autocmd FileType python let b:start = 'ipython'
+    autocmd FileType python let b:start = get(b:, 'start', 'ipython')
   else
-    autocmd FileType python let b:start = 'python'
+    autocmd FileType python let b:start = get(b:, 'start', 'python')
   endif
 
   autocmd FileType ruby
-        \ if !exists('b:rails_root') && !exists('b:start') |
-        \   let b:start = 'irb -r %:p:S' |
-        \ endif |
-        \ if exists('b:rails_root') || exists('b:dispatch') |
-        \ elseif expand('%') =~# '_spec\.rb$' |
-        \   let b:dispatch = get(b:, 'dispatch', 'rspec %:s/$/\=exists("l#") ? ":".l# : ""/') |
-        \ elseif !exists('b:dispatch') |
-        \   let b:dispatch = 'ruby %:p:S' |
+        \ if !exists('b:rails_root') |
+        \   let b:start = get(b:, 'start', 'irb -r %:p:S') |
+        \   if expand('%') =~# '_spec\.rb$' |
+        \     let b:dispatch = get(b:, 'dispatch', 'rspec %:s/$/\=exists("l#") ? ":".l# : ""/') |
+        \   else |
+        \     let b:dispatch = get(b:, 'dispatch', 'ruby %:p:S') |
+        \   endif |
         \ endif
 
   if executable('air')
-    autocmd BufReadPost *.go let b:dispatch = 'air'
+    autocmd FileType go let b:dispatch = get(b:, 'dispatch', 'air')
   else
-    autocmd BufReadPost *.go let b:dispatch = 'go run %:p:S'
+    autocmd FileType go let b:dispatch = get(b:, 'dispatch', 'go run %:p:S')
   end
-  autocmd BufReadPost pyproject.toml if executable('pdm') |
-        \ let b:dispatch = 'pdm install -p %:p:h:S'|
-        \ endif
 augroup END
 
 xnoremap `<CR>             :Dispatch<cr>
