@@ -29,11 +29,7 @@ augroup vim-dispatch-autocmd
         \   endif |
         \ endif
 
-  if executable('air')
-    autocmd FileType go let b:dispatch = get(b:, 'dispatch', 'air')
-  else
-    autocmd FileType go let b:dispatch = get(b:, 'dispatch', 'go run %:p:S')
-  end
+  autocmd FileType go let b:dispatch = get(b:, 'dispatch', 'go run %:p:S')
 augroup END
 
 xnoremap `<CR>             :Dispatch<cr>

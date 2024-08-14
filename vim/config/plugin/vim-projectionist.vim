@@ -1,10 +1,5 @@
 let g:projectionist_transformations = {}
 
-if executable('air')
-  let s:go_dispatch = 'air'
-else
-  let s:go_dispatch = 'go run %:p:S'
-end
 "https://gist.github.com/jiz4oh/d763f906c65e302b0162a3c05723138b
 let g:projectionist_heuristics = {
       \ '.git/': {
@@ -42,7 +37,8 @@ let g:projectionist_heuristics = {
       \ },
       \ 'go.mod': {
       \   '*.go': {
-      \      'dispatch': s:go_dispatch,
+      \      'dispatch': 'go run %:p:S',
+      \      'start': 'air',
       \      'alternate': '{}_test.go',
       \   },
       \   '*_test.go': {
