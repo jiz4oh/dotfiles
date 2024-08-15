@@ -62,6 +62,20 @@ endfunction
 let g:projects = []
 
 function! s:activate() abort
+  for [root, command] in projectionist#query_exec('console')
+    let b:console = '++dir=' . fnameescape(root) .
+          \ ' ++title=' . escape(fnamemodify(root, ':t'), '\ ') . '\ console ' .
+          \ command
+    break
+  endfor
+
+  for [root, command] in projectionist#query_exec('server')
+    let b:server = '++dir=' . fnameescape(root) .
+          \ ' ++title=' . escape(fnamemodify(root, ':t'), '\ ') . '\ server ' .
+          \ command
+    break
+  endfor
+
   if exists('*repeat')
     map <silent> <Plug>UpwardProject :call <SID>up_project()<bar>silent! call repeat#set("\<Plug>UpwardProject", v:count)<cr>
   else

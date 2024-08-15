@@ -32,10 +32,44 @@ augroup vim-dispatch-autocmd
   autocmd FileType go let b:dispatch = get(b:, 'dispatch', 'go run %:p:S')
 augroup END
 
-xnoremap `<CR>             :Dispatch<cr>
-nnoremap `<CR>             :Dispatch<cr>
-xnoremap m<space>          :Make 
-nnoremap m<space>          :Make 
+function! s:console(bang) abort
+  doautocmd User OpenConsolePre
+  try
+    let cmd = get(b:, 'console', get(b:, 'start', ''))
+    if a:bang
+      exec ':botright Start! ' . cmd
+    else
+      exec ':botright Start ' . cmd
+    end
+  finally
+    doautocmd User OpenConsolePost
+  endtry
+endfunction
+
+function! s:server(bang) abort
+  doautocmd User OpenServerPre
+  try
+    let cmd = get(b:, 'server', get(b:, 'start', ''))
+    if a:bang
+      exec ':botright Start! ' . cmd
+    else
+      exec ':botright Start ' . cmd
+    end
+  finally
+    doautocmd User OpenServerPost
+  endtry
+endfunction
+
+command! -bang Console  :call <SID>console(<bang>0)
+command! -bang Server   :call <SID>server(<bang>0)
+
+xnoremap          `<CR>     :Dispatch<cr>
+nnoremap          `<CR>     :Dispatch<cr>
+xnoremap          m<space>  :Make
+nnoremap          m<space>  :Make
+nmap     <silent> '<CR>     :Start<CR>
+nmap     <silent> '<leader> :Server<CR>
+nmap     <silent> '\        :Console<CR>
 
 let g:dispatch_no_maps = 1
 let test#strategy = 'dispatch_background'
