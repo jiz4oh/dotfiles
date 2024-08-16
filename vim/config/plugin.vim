@@ -101,8 +101,12 @@ Plug 'kristijanhusak/vim-dadbod-completion'
 " ============================================================================
 " Plug 'axvr/zepl.vim'
 Plug 'tpope/vim-dispatch'
-Plug 'skywind3000/asyncrun.vim'
-Plug 'skywind3000/asynctasks.vim'
+"Plug 'skywind3000/asyncrun.vim'
+"Plug 'skywind3000/asynctasks.vim'
+if has('nvim-0.8')
+  Plug 'stevearc/overseer.nvim'
+  Plug 'pianocomposer321/officer.nvim'
+end
 " search compiler from
 " :e $VIMRUNTIME/compiler
 " https://github.com/search?p=1&q=current_compiler++NOT+Maintainer+extension%3Avim+path%3Acompiler%2F+language%3A%22Vim+script%22&type=Code
@@ -366,11 +370,12 @@ if g:as_ide
   if get(g:, 'enable_nerd_font', 0)
     Plug 'ryanoasis/vim-devicons'
   endif
+
+  Plug 'sainnhe/gruvbox-material'
+  Plug 'sainnhe/everforest'
+  Plug 'sainnhe/edge'
+  Plug 'rafi/awesome-vim-colorschemes'
 endif
-Plug 'sainnhe/gruvbox-material'
-Plug 'sainnhe/everforest'
-Plug 'sainnhe/edge'
-Plug 'rafi/awesome-vim-colorschemes'
 Plug 'uguu-org/vim-matrix-screensaver'
 "}}}
 call plug#end()
