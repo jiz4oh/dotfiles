@@ -306,7 +306,11 @@ if g:as_ide
 end
 Plug 'mhinz/vim-hugefile'
 Plug 'pbogut/fzf-mru.vim'
-Plug 'liuchengxu/vim-which-key'
+if has('nvim-0.10')
+  Plug 'folke/which-key.nvim'
+else
+  Plug 'liuchengxu/vim-which-key'
+end
 if exists('$SSH_TTY') && !has('nvim-0.10')
   Plug 'ojroques/vim-oscyank'
 endif
@@ -343,7 +347,8 @@ if !has('nvim') && exists('##TextYankPost')
   Plug 'machakann/vim-highlightedyank'
 end
 Plug 'markonm/traces.vim'
-Plug 'junegunn/vim-peekaboo'
+" replace by which-key.nvim
+"Plug 'junegunn/vim-peekaboo'
 Plug 'haya14busa/vim-asterisk', { 'on': ['<Plug>(asterisk-z*)', '<Plug>(asterisk-z#)', '<Plug>(asterisk-gz*)', '<Plug>(asterisk-gz#)'] }
 Plug 'troydm/zoomwintab.vim'
 " }}}

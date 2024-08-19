@@ -770,8 +770,8 @@ xnoremap s :s//g<Left><Left>
 " Swap implementations of ` and ' jump to markers
 " By default, ' jumps to the marked line, ` jumps to the marked line and
 " column, so swap them
-nnoremap ' `
-nnoremap ` '
+"nnoremap ' `
+"nnoremap ` '
 
 " Improve scroll, credits: https://github.com/Shougo
 nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
@@ -845,11 +845,10 @@ for s:i in range(1, 9)
 
   " <Leader>w[1-9] move to window [1-9]
   execute 'nnoremap <Leader>w'.s:i ' :'.s:i.'wincmd w<CR>'
-
-  " <Leader>b[1-9] move to buffer [1-9]
-  execute 'nnoremap <Leader>b'.s:i ':b'.s:i.'<CR>'
 endfor
 unlet s:i
+
+nnoremap <leader>tb :tabnew<CR>
 
 " insert mode fast
 inoremap <c-x>( ()<esc>i
