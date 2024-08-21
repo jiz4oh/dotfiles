@@ -8,7 +8,6 @@ let g:ale_linters = {
       \   'python': ['flake8', 'pylint', 'ruff'],
       \   'ruby': ['ruby', 'rubocop', 'solargraph'],
       \   'vim': ['vint',],
-      \   'go': ['gofmt',]
       \}
 
 let ts_fixers = ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect']
@@ -30,7 +29,7 @@ let g:ale_fixers = {
       \   'sh': ['shfmt', ],
       \   'markdown': ['prettier', 'autocorrect'],
       \   'rust': ['rustfmt', ],
-      \   'go': ['gofmt', ],
+      \   'go': ['gofmt', 'gopls', 'goimports'],
       \   'zeroapi': ['zeroapifmt', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
       \   'eruby': ['erblint', 'remove_trailing_lines', 'trim_whitespace']
       \}
