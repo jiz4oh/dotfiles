@@ -18,6 +18,8 @@ let g:ale_fixers = {
       \   'javascript': ts_fixers,
       \   'javascript.tsx': ts_fixers,
       \   'typescript': ts_fixers,
+      \   'typescript.tsx': ts_fixers,
+      \   'typescriptreact': ts_fixers,
       \   'xml': ['xmllint', ],
       \   'html': ['prettier-eslint'],
       \   'css': ['stylelint'],
@@ -37,6 +39,7 @@ let g:ale_fixers = {
 let g:ale_linter_aliases = {
       \ 'html': ['html', 'javascript', 'css'],
       \ 'typescript.tsx': ['typescript', 'jsx'],
+      \ 'typescriptreact': ['typescript', 'jsx'],
       \ 'javascript.tsx': ['javascript', 'jsx'],
       \ }
 
@@ -102,16 +105,18 @@ call ale#fix#registry#Add('zeroapifmt',
       \)
 
 function! FixTypescript(buffer) abort
-  TSToolsOrganizeImports
-  TSToolsAddMissingImports
-  TSToolsFixAll
+  try
+    TSToolsOrganizeImports
+    TSToolsAddMissingImports
+    TSToolsFixAll
+  catch
+  endtry
 endfunction
 
 call ale#fix#registry#Add('typescript-tools',
       \'FixTypescript', 
       \[
       \'typescript',
-      \'typescriptreact',
       \'typescript.tsx',
       \], 
       \'add missing imports, sorts and removes unused imports, fixes all fixable errors'
