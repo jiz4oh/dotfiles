@@ -1,4 +1,5 @@
 _ARCH=$(arch)
+unset _ZPATH_LOADED
 
 case $(uname -s) in
   "Darwin")
