@@ -73,31 +73,6 @@ else
   endfunction
 endif
 
-function! fzf#customized#sessions(fullscreen) abort
-  let l:paths = select#get_sessions()
-
-  try
-    let action = get(g:, 'fzf_action')
-    let g:fzf_action = {
-      \ 'enter': {name -> LoadSessionFromFzf(name[0])},
-      \}
-    let l:spec = {
-                  \'options': [
-                    \'--prompt', 'Sessions> ',
-                  \],
-                  \'source': l:paths,
-                  \}
-
-    call fzf#run(fzf#wrap('sessions', l:spec, a:fullscreen))
-  finally
-    if exists('action') && type(action) != type(0)
-      let g:fzf_action = action
-    else
-      unlet! g:fzf_action
-    endif
-  endtry
-endfunction
-
 function! fzf#customized#paths(query, fullscreen) abort
   if !empty(a:query)
     let @/ = a:query
@@ -145,33 +120,6 @@ function! fzf#customized#paths(query, fullscreen) abort
   call fzf#helper#reserve_cmd(container.func)()
 endfunction
 
-function! fzf#customized#projects() abort
-  let l:projects = select#get_projects()
-
-  let container = {}
-  function! container.func() closure
-    let g:fzf_action = {
-      \ 'enter':  {dir -> ChangeCWDTo(dir[0])},
-      \ 'ctrl-t': 'NERDTree ',
-      \ 'ctrl-x': 'NERDTree ',
-      \ 'ctrl-v': 'NERDTree '
-      \}
-
-    let l:dir = getcwd()
-    let l:spec = {
-                  \'dir': l:dir,
-                  \'options': [
-                    \'--prompt', personal#functions#shortpath(getcwd()) .' ',
-                  \],
-                  \'source': l:projects,
-                  \}
-
-    call fzf#run(fzf#wrap('projects', l:spec))
-  endfunction
-
-  call fzf#helper#reserve_action(container.func)()
-endfunction
-
 " pick up from 'path'
 function! fzf#customized#path(query, fullscreen) abort
   let l:slash = (g:is_win && !&shellslash) ? '\\' : '/'
@@ -205,14 +153,6 @@ function! fzf#customized#path(query, fullscreen) abort
   endfunction
 
   call fzf#helper#reserve_action(container.func)()
-endfunction
-
-function! fzf#customized#compilers()
-  return fzf#run(fzf#wrap('compilers', {
-  \ 'source':  select#get_compilers(),
-  \ 'sink':    'compiler ',
-  \ 'options': '+m --prompt="Compilers> "'
-  \}))
 endfunction
 
 function! fzf#customized#quickfix(query, fullscreen) abort

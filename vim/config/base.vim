@@ -586,6 +586,19 @@ augroup vimrc
 
   autocmd FileType go setlocal includeexpr=<SID>GoIncludeExpr(v:fname)
   autocmd BufReadPost,BufNewFile go.mod setlocal includeexpr=<SID>GoIncludeExpr(v:fname)
+
+  function! Csv2Json() abort
+    let results = systemlist('csv2json ' . expand('%:p'))
+    if v:shell_error != 0
+      echoerr v:shell_error
+    else
+      for res in results
+        echom res
+      endfor
+    endif
+  endfunction
+
+  autocmd FileType csv let b:dispatch = ':call Csv2Json()'
 augroup END
 " }}}
 "
@@ -677,8 +690,8 @@ nnoremap << <<_
 xnoremap <silent> <C-l> >gv
 xnoremap <silent> <C-h> <gv
 
-noremap <C-a> <Home>
-noremap <C-e> <End>
+"noremap <C-a> <Home>
+"noremap <C-e> <End>
 
 " https://stackoverflow.com/a/59950870
 nnoremap <silent> zh :call HorizontalScrollMode('h')<CR>

@@ -39,5 +39,5 @@ sethandler <C-I> n:vim
 sethandler <C-O> n:vim
 
 nmap <C-W>u <Action>(ReopenClosedTab)
-noremap <C-a> <Home>
-noremap <C-e> <End>
+"noremap <C-a> <Home>
+"noremap <C-e> <End>

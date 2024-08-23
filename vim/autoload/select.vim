@@ -1,9 +1,19 @@
+function! s:input(prompt, list, func) abort
+  let list = copy(a:list)
+  call map(list, { i,v -> i + 1 . ':' . v})
+  call insert(list, a:prompt, 0)
+  let idx = inputlist(list)
+  if idx > 0 && idx <= len(a:list)
+    call a:func(a:list[idx - 1], idx - 1)
+  end
+endfunction
+
 function! select#get_compilers() abort
   let compilers = split(globpath(&runtimepath, 'compiler/*.vim'), '\n')
   if has('packages')
     let compilers += split(globpath(&packpath, 'pack/*/opt/*/compiler/*.vim'), '\n')
   endif
-  return fzf#vim#_uniq(map(compilers, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')"))
+  return uniq(map(compilers, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')"))
 endfunction
 
 function! select#get_paths() abort
@@ -25,62 +35,72 @@ function! select#get_sessions() abort
   return GetSessions()
 endfunction
 
+function! select#on_choice_compiler(item, idx)
+  if !empty(a:item)
+    execute 'compiler' a:item
+  end
+endfunction
+
+function! select#on_choice_directory(item, idx)
+  if !empty(a:item)
+    execute 'cd' a:item
+  end
+endfunction
+
+function! select#on_choice_session(item, idx)
+  if !empty(a:item)
+    call LoadSessionFromFzf(a:item)
+  end
+endfunction
+
+function! select#sessions()
+  if has('nvim-0.6')
+lua<<EOF
+  vim.ui.select(vim.fn['select#get_sessions'](), {prompt = 'Sessions> '}, vim.fn['select#on_choice_session'])
+EOF
+    return
+  end
+
+  let list = select#get_sessions()
+  let prompt = 'Sessions> '
+  call s:input(prompt, list, function('select#on_choice_session'))
+endfunction
+
 function! select#compilers()
   if has('nvim-0.6')
 lua<<EOF
-  vim.ui.select(vim.fn['select#get_compilers'](), {prompt = 'Compilers> '}, function(item, idx)
-    if item == nil then
-      return
-    end
-
-    vim.cmd('compiler ' .. item)
-  end)
+  vim.ui.select(vim.fn['select#get_compilers'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, vim.fn['select#on_choice_compiler'])
 EOF
-  return
-end
-
-  if exists('*fzf#customized#compilers')
-    call fzf#customized#compilers()
     return
   end
+
+  let list = select#get_compilers()
+  let prompt = 'Compilers> '
+  call s:input(prompt, list, function('select#on_choice_compiler'))
 endfunction
 
 function! select#projects()
   if has('nvim-0.6')
 lua<<EOF
-  vim.ui.select(vim.fn['select#get_projects'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, function(item, idx)
-    if item == nil then
-      return
-    end
-
-    vim.cmd('NERDTree ' .. item)
-  end)
+  vim.ui.select(vim.fn['select#get_projects'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, vim.fn['select#on_choice_directory'])
 EOF
-  return
-end
-
-  if exists('*fzf#customized#projects')
-    call fzf#customized#projects()
     return
   end
+
+  let list = select#get_projects()
+  let prompt = personal#functions#shortpath(getcwd()) . ' '
+  call s:input(prompt, list, function('select#on_choice_directory'))
 endfunction
 
 function! select#paths(query, fullscreen)
   if has('nvim-0.6')
 lua<<EOF
-  vim.ui.select(vim.fn['select#get_paths'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, function(item, idx)
-    if item == nil then
-      return
-    end
-
-    vim.cmd('NERDTree ' .. item)
-  end)
+  vim.ui.select(vim.fn['select#get_paths'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, vim.fn['select#on_choice_directory'])
 EOF
-  return
-end
-
-  if exists('*fzf#customized#path')
-    call fzf#customized#path(a:query, a:fullscreen)
     return
   end
+
+  let list = select#get_paths()
+  let prompt = personal#functions#shortpath(getcwd()) . ' '
+  call s:input(prompt, list, function('select#on_choice_directory'))
 endfunction

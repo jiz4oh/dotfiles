@@ -8,6 +8,7 @@ let g:ale_linters = {
       \   'python': ['flake8', 'pylint', 'ruff'],
       \   'ruby': ['ruby', 'rubocop', 'solargraph'],
       \   'vim': ['vint',],
+      \   'go': ['gofmt', 'gopls']
       \}
 
 let ts_fixers = ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect']
@@ -99,7 +100,7 @@ nmap <silent> <leader>ft :call <SID>toggle_virtualtext_cursor()<cr>
 call ale#fix#registry#Add('zeroapifmt',
       \'ale#fixers#zeroapifmt#Fix', 
       \[
-      \'zeroapifmt',
+      \'zeroapi',
       \], 
       \'Correct spaces, words, and punctuations between CJK (Chinese, Japanese, Korean). '
       \)

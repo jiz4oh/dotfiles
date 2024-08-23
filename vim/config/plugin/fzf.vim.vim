@@ -7,8 +7,6 @@ function! FzfGrepMap(lhs, cmd)
 endfunction
 
 command! -nargs=? -bang Cfilter               call fzf#customized#quickfix(<q-args>, <bang>0)
-command! -nargs=? -bang Sessions              call fzf#customized#sessions(<bang>0)
-
 command! -nargs=? -bang RG                    call fzf#customized#rg(<q-args>, <bang>0)
 command! -nargs=? -bang Pg                    call fzf#customized#grep(getcwd(), <q-args>, <bang>0)
 command! -nargs=? -bang GitGrep               call fzf#customized#grep(personal#git#Repo(), <q-args>, <bang>0)
