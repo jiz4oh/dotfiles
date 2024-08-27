@@ -23,22 +23,7 @@ xmap <M-Tab> <plug>(fzf-maps-x)
 " fzf
 imap <c-x><c-k> <plug>(fzf-complete-word)
 if executable('rg')
-  set grepprg=rg\ --vimgrep\ --smart-case\ --follow
-  set grepformat=%f:%l:%c:%m
   let $FZF_DEFAULT_COMMAND='rg --files --hidden -g "!{.git}/*" 2>/dev/null'
-
-  let g:_fzf_ignore = []
-  " https://github.com/junegunn/fzf.vim/issues/133#issuecomment-225541566
-  function! FzfWithWildignore(args)
-    let rgignore = '/tmp/rgignore-for-fzf'
-    let entries = split(&wildignore, ',')
-    if g:_fzf_ignore != entries
-      call writefile(entries, rgignore)
-      let g:_fzf_ignore = entries
-    endif
-    let source = 'rg --no-ignore-vcs --ignore-file ' . rgignore .' --column --line-number --no-heading --smart-case --follow --color=always ' . a:args . ' || true'
-    return source
-  endfunction
 
   inoremap <expr> <c-x><c-f> fzf#vim#complete#path($FZF_DEFAULT_COMMAND)
   inoremap <expr> <c-x><c-l> fzf#vim#complete(fzf#wrap('lines',{

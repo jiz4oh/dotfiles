@@ -19,6 +19,31 @@ filetype on
 filetype plugin on
 filetype indent on
 
+" ============================================================================
+" Function {{{
+" ============================================================================
+if executable('rg')
+  let g:__rg_ignore = []
+  " https://github.com/junegunn/fzf.vim/issues/133#issuecomment-225541566
+  function! RgWithWildignore(args)
+    let rgignore = '/tmp/rgignore-for-vim'
+    let entries = split(&wildignore, ',')
+    if g:__rg_ignore != entries
+      call writefile(entries, rgignore)
+      let g:__rg_ignore = entries
+    endif
+
+    let source = 'rg --no-ignore-vcs --ignore-file ' . rgignore .' --column --line-number --no-heading --smart-case --follow --color=always ' . a:args . ' || true'
+    return source
+  endfunction
+endif
+" }}}
+
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+  set grepformat=%f:%l:%c:%m
+endif
+
 " base
 set nocompatible                " don't bother with vi compatibility
 set autoread                    " reload files when changed on disk, i.e. via `git checkout`

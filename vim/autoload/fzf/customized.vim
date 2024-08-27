@@ -37,9 +37,9 @@ else
               \'--delimiter', ':',
             \]}
 
-    if exists('*FzfWithWildignore')
+    if exists('*RgWithWildignore')
       let l:query = empty(a:query) ? fzf#shellescape('') : '-w ' . fzf#shellescape(a:query)
-      let l:grep_cmd = FzfWithWildignore(l:query)
+      let l:grep_cmd = RgWithWildignore(l:query)
 
       call add(l:spec['options'], '--nth')
       call add(l:spec['options'], '4..')
@@ -59,8 +59,8 @@ else
     if !empty(a:query)
       let @/ = a:query
     endif
-    let l:grep_cmd = FzfWithWildignore(fzf#shellescape(a:query))
-    let l:reload_command = FzfWithWildignore('{q}')
+    let l:grep_cmd = RgWithWildignore(fzf#shellescape(a:query))
+    let l:reload_command = RgWithWildignore('{q}')
     let l:spec = {
           \'options': [
              \'--prompt', personal#functions#shortpath(getcwd()) .'> ',
@@ -78,12 +78,11 @@ function! fzf#customized#paths(query, fullscreen) abort
     let @/ = a:query
   endif
 
-  let l:slash = (g:is_win && !&shellslash) ? '\\' : '/'
   let l:paths = substitute(&path, ',', ' ', 'g')
 
-  if exists('*FzfWithWildignore')
+  if exists('*RgWithWildignore')
     let l:query = empty(a:query) ? fzf#shellescape('') : '-w ' . fzf#shellescape(a:query)
-    let l:grep_cmd = FzfWithWildignore(l:query . ' ' . l:paths)
+    let l:grep_cmd = RgWithWildignore(l:query . ' ' . l:paths)
   else
     let l:grep_cmd = 'find '. l:paths . ' -type f'
   endif
@@ -122,7 +121,6 @@ endfunction
 
 " pick up from 'path'
 function! fzf#customized#path(query, fullscreen) abort
-  let l:slash = (g:is_win && !&shellslash) ? '\\' : '/'
   let l:paths = select#get_paths()
 
   let container = {}

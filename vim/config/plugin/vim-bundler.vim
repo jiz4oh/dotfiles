@@ -1,8 +1,8 @@
 function! s:gem_content_search(gem, query, fullscreen) abort
   " let l:gemdir = substitute(system("bundle show " . a:gem), '\n\+$', '', '')
   let l:gemdir = bundler#project().paths()[a:gem]
-  if exists('*FzfWithWildignore')
-    let l:grep_cmd = FzfWithWildignore(fzf#shellescape(a:query))
+  if exists('*RgWithWildignore')
+    let l:grep_cmd = RgWithWildignore(fzf#shellescape(a:query))
   else
     let l:grep_cmd = 'find '. l:gemdir . ''
   endif
@@ -69,9 +69,9 @@ function! s:gems_search(query, fullscreen) abort
   let l:project = bundler#project()
   let l:gem_paths = values(bundler#project().paths())
 
-  if exists('*FzfWithWildignore')
+  if exists('*RgWithWildignore')
     let l:query = empty(a:query) ? fzf#shellescape('') : '-w ' . fzf#shellescape(a:query)
-    let l:grep_cmd = FzfWithWildignore(l:query . ' ' . join(l:gem_paths, ' '))
+    let l:grep_cmd = RgWithWildignore(l:query . ' ' . join(l:gem_paths, ' '))
   else
     let l:grep_cmd = 'find '. join(l:gem_paths, ' ') . ' -type f'
   endif

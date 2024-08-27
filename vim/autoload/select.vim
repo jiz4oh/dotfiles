@@ -1,3 +1,5 @@
+let s:is_win = has('win32') || has('win64')
+
 function! s:input(prompt, list, func) abort
   let list = copy(a:list)
   call map(list, { i,v -> i + 1 . ':' . v})
@@ -17,7 +19,7 @@ function! select#get_compilers() abort
 endfunction
 
 function! select#get_paths() abort
-  let l:slash = (g:is_win && !&shellslash) ? '\\' : '/'
+  let l:slash = (s:is_win && !&shellslash) ? '\\' : '/'
   let l:paths = map(split(&path, ','), {_, val -> fnamemodify(expand(val), ':~:.')})
   let l:paths = uniq(sort(sort(l:paths), {i1, i2 -> len(split(i1, l:slash)) - len(split(i2, l:slash))}))
   let l:paths = filter(l:paths, {_, v -> isdirectory(fnamemodify(v, ':p')) })
