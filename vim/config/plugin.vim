@@ -382,6 +382,9 @@ if g:as_ide
   Plug 'rafi/awesome-vim-colorschemes'
 endif
 Plug 'uguu-org/vim-matrix-screensaver'
+if has('nvim-0.8')
+  Plug 'stevearc/dressing.nvim'
+endif
 "}}}
 call plug#end()
 endif
