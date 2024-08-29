@@ -1,5 +1,5 @@
 let $FZF_DEFAULT_OPTS="--reverse --bind 'change:first,alt-n:page-down,alt-p:page-up,alt-j:preview-down,alt-k:preview-up'"
-let g:fzf_preview_window = ['down:60%', 'ctrl-/']
+let g:fzf_preview_window = ['down:60%:+{2}-/2', 'ctrl-/']
 
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',

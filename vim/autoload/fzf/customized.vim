@@ -105,7 +105,7 @@ function! fzf#customized#paths(query, fullscreen) abort
                     \'--ansi',
                     \'--prompt', personal#functions#shortpath(l:dir) .' ',
                     \'--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
-                    \'--delimiter', ':', '--preview-window', '+{2}-/2'
+                    \'--delimiter', ':'
                   \]}
 
     if !empty(a:query)
@@ -175,7 +175,7 @@ function! fzf#customized#quickfix(query, fullscreen) abort
                   \'--ansi',
                   \'--prompt', 'Quickfix ',
                   \'--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
-                  \'--delimiter', ':', '--preview-window', '+{2}-/2'
+                  \'--delimiter', ':'
                 \]}
 
   call fzf#run(fzf#wrap('quickfix', fzf#vim#with_preview(l:spec), a:fullscreen))
