@@ -1,3 +1,6 @@
 [submodule "config/kitty/kitty_search"]
 	path = config/kitty/kitty_search
 	url = https://github.com/trygveaa/kitty-kitten-search
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm

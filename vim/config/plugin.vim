@@ -351,6 +351,11 @@ Plug 'markonm/traces.vim'
 "Plug 'junegunn/vim-peekaboo'
 Plug 'haya14busa/vim-asterisk', { 'on': ['<Plug>(asterisk-z*)', '<Plug>(asterisk-z#)', '<Plug>(asterisk-gz*)', '<Plug>(asterisk-gz#)'] }
 Plug 'troydm/zoomwintab.vim'
+
+"https://github.com/tmux-plugins/vim-tmux-focus-events?tab=readme-ov-file#tmux-focus-eventsvim
+if has('patch-8.2.2345') || has('nvim')
+  Plug 'roxma/vim-tmux-clipboard'
+endif
 " }}}
 
 " ============================================================================

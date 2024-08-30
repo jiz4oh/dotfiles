@@ -21,9 +21,9 @@ for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
   ln -sfv "$BASE/$rc" ~/."$rc"
 done
 
-mkdir -pv ~/.config
 # dotdirs
 for dir in git_template ctags.d vim raycast \
+  tmux/plugins/tpm \
   config/rubocop config/nvim config/solargraph config/kitty config/wezterm config/mise \
   terminfo; do
   rm -rf bak/$dir
@@ -31,6 +31,7 @@ for dir in git_template ctags.d vim raycast \
   [ "$parent_dir" != '.' ] && mkdir -pv bak/"$parent_dir"
   mv -v ~/.$dir bak/$dir >/dev/null 2>&1
   
+  mkdir -pv ~/.$parent_dir
   ln -svf "$BASE/$dir"/ ~/.$dir
 done
 

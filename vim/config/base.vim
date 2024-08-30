@@ -781,8 +781,8 @@ inoremap <m-J> <esc><c-w>j
 inoremap <m-K> <esc><c-w>k
 
 " save
-inoremap <C-s>     <C-O>:update<cr>
-nnoremap <C-s>     :update<cr>
+inoremap <C-s>     <C-O>:wall<cr>
+nnoremap <C-s>     :wall<cr>
 
 " switch setting
 map  <silent>          <leader>ee <Plug><ExpoloreToggle>
