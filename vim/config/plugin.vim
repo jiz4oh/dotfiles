@@ -45,9 +45,10 @@ Plug 'tracyone/fzf-funky'
 Plug 'preservim/nerdtree', { 'on': ['NERDTree', 'NERDTreeVCS', 'NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'for': 'NERDTree' }
 Plug 'PhilRunninger/nerdtree-visual-selection', { 'for': 'NERDTree' }
-if has('nvim')
-  Plug 'nvimdev/indentmini.nvim'
-endif
+" isn't compatible with easymotion
+"if has('nvim')
+"  Plug 'nvimdev/indentmini.nvim'
+"endif
 " }}}
 
 " ============================================================================
