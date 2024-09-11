@@ -93,6 +93,7 @@ command-not-found
 extract
 safe-paste
 fzf
+tailscale
 )
 
 [ -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ] && plugins+=zsh-autosuggestions
