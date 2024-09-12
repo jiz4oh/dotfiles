@@ -8,7 +8,7 @@ let g:ale_linters = {
       \   'python': ['flake8', 'pylint', 'ruff'],
       \   'ruby': ['ruby', 'rubocop', 'solargraph'],
       \   'vim': ['vint',],
-      \   'go': ['gofmt', 'gopls']
+      \   'go': ['gofmt', 'gopls', 'golangci-lint']
       \}
 
 let ts_fixers = ['typescript-tools', 'prettier-eslint', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect']
