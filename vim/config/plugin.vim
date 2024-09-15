@@ -29,6 +29,9 @@ elseif executable('asdf')
   Plug 'jiz4oh/asdf.vim'
 end
   
+if g:as_ide && has('nvim-0.9.2')
+  Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+end
 " Plug 'tpope/vim-rbenv'
 " ============================================================================
 " NAVIGATION / MOVE / Easier READ {{{
@@ -158,6 +161,9 @@ Plug 'kana/vim-textobj-user'
 Plug 'jeremiahkellick/vim-textobj-rubyblock', { 'for': 'ruby' }
 Plug 'adriaanzon/vim-textobj-matchit'
 Plug 'whatyouhide/vim-textobj-erb', { 'for': 'eruby' }
+if g:as_ide && has('nvim-0.9.2')
+  Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+end
 " }}}
 
 " ============================================================================
@@ -368,7 +374,6 @@ endif
 " ============================================================================
 if g:as_ide
   if has('nvim-0.9.2')
-    Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
     Plug 'stevearc/aerial.nvim'
   endif
 
