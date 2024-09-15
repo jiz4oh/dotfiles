@@ -233,8 +233,12 @@ if g:as_ide
     Plug 'hrsh7th/nvim-cmp'
     Plug 'lukas-reineke/cmp-under-comparator'
     Plug 'nvim-lua/plenary.nvim'
-    if has('nvim-0.9.5')
-      Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
+    if has('nvim-0.10')
+      "Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
+      Plug 'nvim-lua/plenary.nvim'
+      Plug 'grapp-dev/nui-components.nvim'
+      Plug 'MunifTanjim/nui.nvim'
+      Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': { -> avante#build('source=true') } }
     endif
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-cmdline'
