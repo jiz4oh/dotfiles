@@ -91,28 +91,32 @@ cmp.setup({
   mapping = cmp.mapping.preset.insert({
     ['<M-n>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
     ['<M-p>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = false }),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
     ["<Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
+        if ok5 and luasnip.locally_jumpable(1) then
+          luasnip.jump(1)
+        elseif cmp.visible() then
           if vim.fn.pumvisible() == 1 then
             cmp.complete()
           else
             cmp.select_next_item()
           end
-        elseif ok5 and luasnip.locally_jumpable(1) then
-          luasnip.jump(1)
         else
           fallback()
         end
       end, {"i","s","c",}),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
+        if ok5 and luasnip.locally_jumpable(-1) then
+          luasnip.jump(-1)
+        elseif cmp.visible() then
           if vim.fn.pumvisible() == 1 then
             cmp.complete()
           else
             cmp.select_prev_item()
           end
-        elseif ok5 and luasnip.locally_jumpable(-1) then
-          luasnip.jump(-1)
         else
           fallback()
         end
@@ -150,7 +154,11 @@ for _, cmd_type in ipairs({'/', '?', '@'}) do
 end
 
 cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
+  mapping = cmp.mapping.preset.cmdline({
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = false }),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+  }),
   sources = cmp.config.sources({
     { name = 'cmdline_history' },
     { name = 'cmdline' },
