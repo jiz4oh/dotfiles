@@ -132,10 +132,10 @@ let g:which_key_map['g'] = {
 
 let g:which_key_map['h'] = {
       \ 'name' : '+Hunk',
-      \ 'p' : ['<Plug>(GitGutterPreviewHunk)', 'Preview Hunk'],
-      \ 's' : ['<Plug>(GitGutterStageHunk)',   'Stage Hunk'],
-      \ 'u' : ['<Plug>(GitGutterUndoHunk)',    'Undo Hunk'],
-      \ 'f' : ['GitGutterFold',                'Fold all unchange lines'],
+      \ 'p' : 'Preview Hunk',
+      \ 's' : 'Stage Hunk',
+      \ 'u' : 'Undo Hunk',
+      \ 'f' : 'Fold all unchange lines',
       \ }
 
 let g:which_key_map['l'] = {
