@@ -244,7 +244,7 @@ if g:as_ide
       Plug 'nvim-lua/plenary.nvim'
       Plug 'grapp-dev/nui-components.nvim'
       Plug 'MunifTanjim/nui.nvim'
-      Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': { -> avante#build('source=true') } }
+      Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make', 'on': ['AvanteAsk', 'AvanteChat'] }
     endif
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-cmdline'
