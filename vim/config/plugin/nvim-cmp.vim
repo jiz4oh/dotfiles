@@ -96,27 +96,27 @@ cmp.setup({
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
     ['<C-y>'] = cmp.mapping.confirm({ select = true }),
     ["<Tab>"] = cmp.mapping(function(fallback)
-        if ok5 and luasnip.locally_jumpable(1) then
-          luasnip.jump(1)
-        elseif cmp.visible() then
+        if cmp.visible() then
           if vim.fn.pumvisible() == 1 then
             cmp.complete()
           else
             cmp.select_next_item()
           end
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
         else
           fallback()
         end
       end, {"i","s","c",}),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if ok5 and luasnip.locally_jumpable(-1) then
-          luasnip.jump(-1)
-        elseif cmp.visible() then
+        if cmp.visible() then
           if vim.fn.pumvisible() == 1 then
             cmp.complete()
           else
             cmp.select_prev_item()
           end
+        elseif ok5 and luasnip.jumpable(-1) then
+          luasnip.jump(-1)
         else
           fallback()
         end
