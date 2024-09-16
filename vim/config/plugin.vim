@@ -149,7 +149,7 @@ endif
 
 if g:as_ide && has('nvim-0.8')
   Plug 'nvim-lua/plenary.nvim'
-  Plug 'pmizio/typescript-tools.nvim'
+  Plug 'pmizio/typescript-tools.nvim', { 'for': ['javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx'] }
 endif
 " }}}
 
