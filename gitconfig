@@ -21,7 +21,7 @@
   # 提交完了，发现还需要一点小修改，不想新建一个提交
   onemore = commit -a --amend --no-edit
 [pull]
-	rebase = true
+	autostash = true
 [push]
 	default = upstream
   autoSetupRemote = true
