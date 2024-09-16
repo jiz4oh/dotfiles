@@ -29,7 +29,7 @@ function! qf#namedlist#SaveList(add, name) abort
             if has('nvim')
               call v:lua.vim.notify(msg)
             else
-              echomsg 'msg
+              echomsg msg
             end
 
             return
@@ -83,7 +83,7 @@ function! qf#namedlist#LoadList(add, ...)
             if has('nvim')
               call v:lua.vim.notify(msg)
             else
-              echomsg 'msg
+              echomsg msg
             end
             return
         endif
