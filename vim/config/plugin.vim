@@ -91,6 +91,7 @@ if v:version >= 800 && get(g:, 'as_ide', 0)
 endif
 Plug 'ferrine/md-img-paste.vim', { 'for': 'markdown' }
 Plug 'jiz4oh/vim-upgit', { 'do': './install' }
+Plug 'qadzek/link.vim'
 " }}}
 
 " ============================================================================
