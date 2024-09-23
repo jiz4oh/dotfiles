@@ -68,7 +68,11 @@ highlight! link ALEVirtualTextWarning Comment
 
 function! s:toggle_virtualtext_cursor() abort
   if g:ale_virtualtext_cursor == 1
-    let g:ale_virtualtext_cursor = 2
+    if get(g:, 'ale_use_neovim_diagnostics_api')
+      let g:ale_virtualtext_cursor = 0
+    else
+      let g:ale_virtualtext_cursor = 2
+    end
     ALEDisableBuffer | ALEEnableBuffer
     let msg = 'all warnings be shown'
   else

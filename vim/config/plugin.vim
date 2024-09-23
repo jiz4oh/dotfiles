@@ -200,7 +200,7 @@ endif
 "  Plug 'dgagn/diagflow.nvim'
 "endif
 if has('nvim-0.10')
-  Plug 'rachartier/tiny-inline-diagnostic.nvim'
+  "Plug 'rachartier/tiny-inline-diagnostic.nvim'
 endif
 
 if has('nvim-0.10')
