@@ -216,7 +216,8 @@ if g:as_ide
     Plug 'b0o/schemastore.nvim'
     Plug 'onsails/lspkind.nvim'
     if has('nvim-0.9.4')
-      Plug 'maxandron/goplements.nvim'
+      "TextChanged event is too slow
+      "Plug 'maxandron/goplements.nvim'
     endif
   else
     "https://github.com/prabirshrestha/vim-lsp/issues/1492
