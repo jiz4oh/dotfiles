@@ -27,12 +27,12 @@ let g:ale_fixers = {
       \   'scss': ['stylelint'],
       \   'sass': ['stylelint'],
       \   'python': ['ruff_format', 'autocorrect', 'black', 'isort', 'remove_trailing_lines', 'trim_whitespace'],
-      \   'ruby': ['rubocop'],
+      \   'ruby': ['rubyfmt', 'rubocop'],
       \   'lua': ['stylua', ],
       \   'sh': ['shfmt', ],
       \   'markdown': ['prettier', 'autocorrect'],
       \   'rust': ['rustfmt', ],
-      \   'go': ['gofmt', 'gopls', 'goimports'],
+      \   'go': ['golines', 'autocorrect'],
       \   'zeroapi': ['zeroapifmt', 'remove_trailing_lines', 'trim_whitespace', 'autocorrect'],
       \   'eruby': ['erblint', 'remove_trailing_lines', 'trim_whitespace']
       \}

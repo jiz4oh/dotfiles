@@ -15,7 +15,7 @@ if [ $(command -v brew) ]; then
 fi
 # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 export FPATH="$BREW_PREFIX/share/zsh/site-functions:${FPATH}"
-export PATH="${XDG_DATA_HOME:-~/.local/share/nvim}/mason/bin:$PATH:$HOME/go/bin"
+export PATH="${XDG_DATA_HOME:-~/.local/share}/nvim/mason/bin:$PATH:$HOME/go/bin"
 export FZF_BASE=$_DOTFILES_PATH/vim/bundle/fzf
 
 if [ $(uname -s) = "Darwin" ]; then

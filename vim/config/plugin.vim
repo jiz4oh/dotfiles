@@ -186,12 +186,6 @@ endif
 " ============================================================================
 " Easier EDIT {{{
 " ============================================================================
-if executable('pipx')
-  Plug 'Vimjas/vint', { 'on': 'DoNotLoad', 'do': 'pipx install .' } " just install vint by vim-plug, do not load it
-endif
-if executable('npm')
-  Plug 'rhysd/fixjson', { 'on': 'DoNotLoad', 'do': 'npm install . && npm link && npm install -g fixjson' }
-endif
 if has('timers') && (has('nvim-0.2.0') || exists('*job_start') && exists('*ch_close_in'))
   Plug 'dense-analysis/ale'
   Plug 'jiz4oh/ale-autocorrect.vim'
@@ -212,6 +206,7 @@ if g:as_ide
   if has('nvim-0.8')
     Plug 'williamboman/mason.nvim' 
     Plug 'williamboman/mason-lspconfig.nvim'
+    Plug 'WhoIsSethDaniel/mason-tool-installer.nvim'
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
     Plug 'neovim/nvim-lspconfig'

@@ -1,6 +1,5 @@
 lua<<EOF
 require("mason-lspconfig").setup({
-  ensure_installed = {"typos_lsp"}
 })
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -57,7 +56,7 @@ require("mason-lspconfig").setup_handlers {
     require("lspconfig")['lua_ls'].setup(opts)
   end,
   ['jsonls'] = function ()
-    local opts
+    local opts = {}
     local ok1, schemasstore = pcall(require, 'schemastore')
     if ok1 then
       opts = {
@@ -68,14 +67,12 @@ require("mason-lspconfig").setup_handlers {
           },
         },
       }
-    else
-      opts = {}
     end
 
     require("lspconfig")['jsonls'].setup(vim.tbl_deep_extend('keep', opts, default_opts))
   end,
   ['yamlls'] = function ()
-    local opts
+    local opts = {}
     local ok1, schemasstore = pcall(require, 'schemastore')
     if ok1 then
       opts = {
@@ -92,8 +89,6 @@ require("mason-lspconfig").setup_handlers {
             },
           },
         }
-    else
-      opts = {}
     end
 
     require("lspconfig")['yamlls'].setup(vim.tbl_deep_extend('keep', opts, default_opts))
