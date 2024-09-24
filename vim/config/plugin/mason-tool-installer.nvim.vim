@@ -22,11 +22,13 @@ require('mason-tool-installer').setup {
     'gotests',
     'impl',
     'json-to-struct',
+    'staticcheck',
     -- }}}
 
     'lua-language-server',
     'stylua',
 
+    'typescript-language-server',
     'jq',
     'fixjson',
 
@@ -39,8 +41,6 @@ require('mason-tool-installer').setup {
 
     'rubocop',
     'rubyfmt',
-
-    'type-language-server',
   },
 
   -- if set to true this will check each tool for updates. If updates

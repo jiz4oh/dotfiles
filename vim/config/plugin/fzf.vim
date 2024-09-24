@@ -16,3 +16,5 @@ else
   " disable popup in favor of location window
   let g:fzf_layout = { 'down': '60%' }
 endif
+
+let g:go_decls_mode = 'fzf'
