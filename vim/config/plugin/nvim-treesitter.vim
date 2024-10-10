@@ -27,7 +27,11 @@ lua<<EOF
     },
     highlight = {
       enable = true,
+      disable = {'ruby'},
       additional_vim_regex_highlighting = false,
+    },
+    endwise = {
+      enable = true,
     },
     textobjects = {
       -- syntax-aware textobjects
