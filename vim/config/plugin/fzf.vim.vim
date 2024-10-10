@@ -11,6 +11,7 @@ command! -nargs=? -bang RG                    call fzf#customized#rg(<q-args>, <
 command! -nargs=? -bang Pg                    call fzf#customized#grep(getcwd(), <q-args>, <bang>0)
 command! -nargs=? -bang GitGrep               call fzf#customized#grep(personal#git#Repo(), <q-args>, <bang>0)
 command! -nargs=? -bang GGrep                 call fzf#customized#grep(personal#git#Repo(), <q-args>, <bang>0)
+command! -nargs=? -bang Paths                 call fzf#customized#paths(<q-args>, <bang>0)
 command! -nargs=* -bang Tags                  call fzf#vim#tags(<q-args>, fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel 2>/dev/null || pwd')[0], "placeholder": "--tag {2}:{-1}:{3..}", 'options': '--exact --select-1 +i'}), <bang>0)
 command! -bar -bang Imaps                     call fzf#vim#maps("i", <bang>0)
 command! -bar -bang Xmaps                     call fzf#vim#maps("x", <bang>0)
@@ -38,7 +39,7 @@ endif
 
 call FzfGrepMap('<leader>s<Space>', 'RG')
 call FzfGrepMap('<leader>ss', 'Sessions')
-call FzfGrepMap('<leader>si', 'Path')
+call FzfGrepMap('<leader>si', 'Paths')
 call FzfGrepMap('<leader>sq', 'Cfilter')
 call FzfGrepMap('<leader>sp', 'Pg')
 

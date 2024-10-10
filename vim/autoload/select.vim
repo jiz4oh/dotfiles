@@ -10,6 +10,25 @@ function! s:input(prompt, list, func) abort
   end
 endfunction
 
+function select#get_files(query, paths)
+  if exists('*RgWithWildignore')
+    let l:query = empty(a:query) ? shellescape('') : '-w ' . shellescape(a:query)
+    let l:paths = join(flatten(copy(a:paths)), ' ')
+    let l:grep_cmd = RgWithWildignore(l:query . ' ' . l:paths)
+  else
+    let l:grep_cmd = 'find '. a:paths . ' -type f'
+  endif
+
+  if has('nvim-0.5')
+    lua vim.notify('searching')
+  else
+    echo 'searching'
+  end
+
+  let files = systemlist(l:grep_cmd)
+  return files
+endfunction
+
 function! select#get_compilers() abort
   let compilers = split(globpath(&runtimepath, 'compiler/*.vim'), '\n')
   if has('packages')
@@ -105,4 +124,41 @@ EOF
   let list = select#get_paths()
   let prompt = personal#functions#shortpath(getcwd()) . ' '
   call s:input(prompt, list, function('select#on_choice_directory'))
+endfunction
+
+function! select#grep(query, ...)
+  if !executable('rg')
+    if has('nvim-0.5')
+      lua vim.notify({'rg is not installed', vim.log.levels.ERROR})
+    else
+      echoerr 'rg is not installed'
+    end
+    return
+  end
+
+  if empty(a:0)
+    let l:paths = getcwd()
+  else
+    let l:paths = a:000
+  endif
+
+  let g:__select_grep_query = a:query
+  let g:__select_grep_paths = a:000
+
+  if has('nvim-0.6')
+lua<<EOF
+  vim.ui.select(
+    vim.fn['select#get_files'](vim.g.__select_grep_query, vim.g.__select_grep_paths),
+    {
+      prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '
+    }, function(item, index)
+      vim.fn['fzf#helper#colon_sink']({'enter', item}, { enter = 'edit'})
+    end)
+EOF
+    return
+  end
+
+  let list = select#get_files(a:query, l:paths)
+  let prompt = personal#functions#shortpath(getcwd()) . ' '
+  call s:input(prompt, list, { l, _ -> fzf#helper#colon_sink(['enter',l], { 'enter': 'edit'})})
 endfunction
