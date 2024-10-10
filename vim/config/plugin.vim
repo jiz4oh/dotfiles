@@ -298,9 +298,10 @@ if !has('nvim-0.10.0')
 end
 if g:with_treesitter
   Plug 'RRethy/nvim-treesitter-endwise'
+else
+  " endwise based on vim syntax group and is not compatible with nvim-treesitter 
+  Plug 'tpope/vim-endwise'
 end
-" endwise based on vim syntax group and is not compatible with nvim-treesitter 
-Plug 'tpope/vim-endwise', {'for': 'ruby'}
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'junegunn/vim-easy-align'
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }

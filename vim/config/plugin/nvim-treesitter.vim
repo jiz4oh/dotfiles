@@ -1,9 +1,3 @@
-augroup vim-rails-augroup
-  autocmd FileType eruby
-        \ if RailsDetect() | cmap <buffer><script><expr> <Plug><cfile> rails#ruby_cfile() | endif
-
-augroup END
-
 lua<<EOF
   -- vim.opt.foldmethod = 'expr'
   -- vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -27,8 +21,7 @@ lua<<EOF
     },
     highlight = {
       enable = true,
-      disable = {'ruby'},
-      additional_vim_regex_highlighting = false,
+      additional_vim_regex_highlighting = {'embedded_template', 'ruby'},
     },
     endwise = {
       enable = true,
