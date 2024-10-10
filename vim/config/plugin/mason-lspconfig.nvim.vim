@@ -26,7 +26,7 @@ if ok1 then
   default_opts["capabilities"] = capabilities
 end
 
-local self_managed_servers = { 'tsserver', 'ts_ls' }
+local self_managed_servers = { 'tsserver', 'ts_ls', 'rubocop' }
 
 require("mason-lspconfig").setup_handlers {
   -- The first entry (without a key) will be the default handler
