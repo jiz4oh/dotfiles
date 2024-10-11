@@ -11,7 +11,7 @@ let g:db_ui_save_location = '~/.local/share/db_ui'
 let g:db_ui_use_nerd_fonts = get(g:, 'enable_nerd_font', 0)
 let g:db_ui_auto_execute_table_helpers = 1
 
-nmap  <silent> <leader>ed :DBUIToggle<CR>
+nmap  <silent> <leader>ed :tabnew<CR>:DBUIToggle<CR>
 
 augroup dbui_zvim
   autocmd!
@@ -20,6 +20,7 @@ augroup dbui_zvim
 augroup END
 
 function! s:dbui_init() abort
+  nnoremap <silent><buffer> <leader>, :execute 'tabedit'. g:db_ui_save_location . '/connections.json'<CR>
   nnoremap <silent><buffer> h <Plug>(DBUI_GotoParentNode)<Plug>(DBUI_SelectLine)
   nnoremap <silent><buffer> l <Plug>(DBUI_GotoChildNode)
 endfunction

@@ -41,7 +41,7 @@ let g:startify_lists = [
         \ ]
 
 let g:startify_commands = [
-    \ {'d': ['Databases',       'enew | DBUI']      },
+    \ {'d': ['Databases',       'tabnew | DBUI']      },
     \ {'u': ['Update Plugins',  'PlugUpdate']  },
     \ {'i': ['Install Plugins', 'PlugInstall'] },
     \ ]
