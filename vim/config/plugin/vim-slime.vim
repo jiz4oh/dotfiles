@@ -24,7 +24,7 @@ augroup vim-slime-augroup
 
     function! s:remove(bufnr) abort
       if exists('*getbufinfo')
-        let related_bufs = filter(getbufinfo(), {_, val -> has_key(val['variables'], "slime_config") 
+        let related_bufs = filter(getbufinfo(), {_, val -> has_key(val['variables'], 'slime_config') 
               \ && get(val['variables']['slime_config'], 'bufnr', -1) == str2nr(a:bufnr)})
         
         for buf in related_bufs

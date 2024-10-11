@@ -69,8 +69,8 @@ function! select#on_choice_directory(item, idx)
 endfunction
 
 function! select#on_choice_session(item, idx)
-  if !empty(a:item)
-    call LoadSessionFromFzf(a:item)
+  if !empty(a:item) && exists('*GetSessions')
+    call LoadSession(a:item)
   end
 endfunction
 

@@ -37,7 +37,6 @@ let g:startify_bookmarks = [
 let g:startify_lists = [
         \ { 'type': 'bookmarks',                                       'header': ['   Bookmarks']               },
         \ { 'type': function('MRUCwd', [g:startify_files_number]),     'header': ['   MRU']                     },
-        \ { 'type': 'sessions',                                        'header': ['   Sessions']                },
         \ { 'type': 'commands',                                        'header': ['   Commands']                },
         \ ]
 
@@ -47,7 +46,7 @@ let g:startify_commands = [
     \ {'i': ['Install Plugins', 'PlugInstall'] },
     \ ]
 
-function! LoadSessionFromFzf(name) abort
+function! LoadSession(name) abort
   execute 'SLoad ' . a:name
 endfunction
 
@@ -67,4 +66,4 @@ function! SaveSession() abort
   SClose
 endfunction
 
-nnoremap <silent> <leader><tab> :call SaveSession()<cr>
+nnoremap <silent> <leader><tab> :Startify<cr>
