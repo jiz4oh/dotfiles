@@ -87,7 +87,9 @@ function! s:nerdtreeinit() abort
   nnoremap <silent><buffer> <Left>        :<C-u>call <SID>nerdtree_h()<CR>
   nnoremap <silent><buffer> <Right>       :<C-u>call <SID>nerdtree_l()<CR>
   nnoremap <silent><buffer> <C-N>         :<C-u>call NERDTreeAddNode()<CR>
+  " nowait is now working with which key
   nnoremap <silent><buffer><nowait> d     :<C-u>call NERDTreeDeleteNode()<CR>
+  nnoremap <silent><buffer> dd            :<C-u>call NERDTreeDeleteNode()<CR>
   nnoremap <silent><buffer> <CR>          :<C-u>call <SID>nerdtree_enter()<CR>
   nnoremap <silent><buffer> <Home>        :call cursor(2, 1)<cr>
   nnoremap <silent><buffer> <End>         :call cursor(line('$'), 1)<cr>
