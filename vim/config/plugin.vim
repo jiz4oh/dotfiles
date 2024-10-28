@@ -134,7 +134,9 @@ endif
 if has('nvim') && !has('nvim-0.7')
   Plug 'nathom/filetype.nvim'
 endif
-Plug 'sheerun/vim-polyglot'
+if !has('nvim-0.9')
+  Plug 'sheerun/vim-polyglot'
+end
 Plug 'fladson/vim-kitty'
 Plug 'craigmac/vim-mermaid'
 Plug 'hallison/vim-rdoc'
