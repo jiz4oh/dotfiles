@@ -81,7 +81,11 @@ else
   end
 end
 
-local ok5, luasnip = pcall(require, 'luasnip')
+function load_luasnip()
+  local ok, luasnip = pcall(require, 'luasnip')
+  return ok, luasnip
+end
+
 -- default config
 -- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/default.lua
 cmp.setup({
@@ -102,10 +106,13 @@ cmp.setup({
           else
             cmp.select_next_item()
           end
-        elseif luasnip.expand_or_jumpable() then
-          luasnip.expand_or_jump()
         else
-          fallback()
+          local ok, luasnip = load_luasnip()
+          if ok and luasnip.expand_or_jumpable() then
+            luasnip.expand_or_jump()
+          else
+            fallback()
+          end
         end
       end, {"i","s","c",}),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
@@ -115,17 +122,21 @@ cmp.setup({
           else
             cmp.select_prev_item()
           end
-        elseif ok5 and luasnip.jumpable(-1) then
-          luasnip.jump(-1)
         else
-          fallback()
+          local ok, luasnip = load_luasnip()
+          if ok and luasnip.jumpable(-1) then
+            luasnip.jump(-1)
+          else
+            fallback()
+          end
         end
       end, {"i","s","c",}),
   }),
   sources = cmp.config.sources(default_sources),
   snippet = {
     expand = function(args)
-      if ok5 then
+      local ok, luasnip = load_luasnip()
+      if ok then
         luasnip.lsp_expand(args.body) -- For `luasnip` users.
       end
     end,
