@@ -21,6 +21,7 @@ lua<<EOF
     },
     highlight = {
       enable = true,
+      disable = {'git', 'gitcommit', 'json'},
       additional_vim_regex_highlighting = {'embedded_template', 'ruby'},
     },
     endwise = {
