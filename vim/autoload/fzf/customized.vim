@@ -78,11 +78,11 @@ function! fzf#customized#paths(query, fullscreen) abort
     let @/ = a:query
   endif
 
-  let l:paths = substitute(&path, ',', ' ', 'g')
+  let l:paths = select#get_paths()
 
   if exists('*RgWithWildignore')
     let l:query = empty(a:query) ? fzf#shellescape('') : '-w ' . fzf#shellescape(a:query)
-    let l:grep_cmd = RgWithWildignore('--color=always ' .l:query . ' ' . l:paths)
+    let l:grep_cmd = RgWithWildignore('--color=always ' .l:query . ' ' . join(l:paths, ' '))
   else
     let l:grep_cmd = 'find '. l:paths . ' -type f'
   endif

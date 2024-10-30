@@ -39,9 +39,10 @@ endfunction
 
 function! select#get_paths() abort
   let l:slash = (s:is_win && !&shellslash) ? '\\' : '/'
-  let l:paths = map(split(&path, ','), {_, val -> fnamemodify(expand(val), ':~:.')})
-  let l:paths = uniq(sort(sort(l:paths), {i1, i2 -> len(split(i1, l:slash)) - len(split(i2, l:slash))}))
-  let l:paths = filter(l:paths, {_, v -> isdirectory(fnamemodify(v, ':p')) })
+  let l:paths = split(&path, ',')
+  let l:paths = uniq(l:paths, {i1, i2 -> fnamemodify(expand(i1), ':p:~:.') != fnamemodify(expand(i2), ':p:~:.')})
+  let l:paths = filter(l:paths, {_, v -> isdirectory(expand(v)) })
+  let l:paths = map(l:paths, {_, val -> fnamemodify(expand(val), ':~:.')})
   return l:paths
 endfunction
 
