@@ -7,6 +7,9 @@ vim.api.nvim_create_autocmd('User', {
     require('avante_lib').load()
 
     require('avante').setup({
+      behaviour = {
+        auto_set_keymaps = false,
+      },
       provider = "copilot",
       auto_suggestions_provider = "copilot",
       copilot = {
