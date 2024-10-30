@@ -16,12 +16,13 @@ function! personal#op#exec(...) abort
 endfunction
 
 function! personal#op#build(command) abort
-  set operatorfunc={range\ ->\ personal#op#exec(range,a:command)}
+  exec printf('setlocal operatorfunc={range->personal#op#exec(range,%s)}', string(a:command))
   return 'g@'
 endfunction
 
 function! personal#op#map(lhs, cmd) abort
-  execute 'nmap <expr> ' . a:lhs . " personal#op#build(" . string(a:cmd) .")"
-  execute 'xmap <expr> ' . a:lhs . " personal#op#build(" . string(a:cmd) .")"
-  execute 'omap <expr> ' . a:lhs . " personal#op#build(" . string(a:cmd) .")"
+  let l:modes = ['n', 'x', 'o']
+  for l:mode in l:modes
+    execute printf('%smap <expr> %s personal#op#build(%s)', l:mode, a:lhs, escape(string(a:cmd), '"'))
+  endfor
 endfunction
