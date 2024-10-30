@@ -243,7 +243,7 @@ if g:as_ide
     Plug 'lukas-reineke/cmp-under-comparator'
     Plug 'nvim-lua/plenary.nvim'
     if has('nvim-0.10')
-      "Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
+      Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
       Plug 'nvim-lua/plenary.nvim'
       Plug 'grapp-dev/nui-components.nvim'
       Plug 'MunifTanjim/nui.nvim'

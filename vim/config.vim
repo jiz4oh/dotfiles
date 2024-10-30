@@ -13,6 +13,8 @@ let ruby_operators        = 1
 let ruby_pseudo_operators = 1
 let ruby_no_expensive     = 1
 
+let g:copilot_model = 'claude-3.5-sonnet'
+
 if has('nvim')
   let session_dir = has('nvim-0.3.1')
         \ ? stdpath('data').'/session'

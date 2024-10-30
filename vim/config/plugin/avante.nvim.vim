@@ -9,6 +9,9 @@ vim.api.nvim_create_autocmd('User', {
     require('avante').setup({
       provider = "copilot",
       auto_suggestions_provider = "copilot",
+      copilot = {
+        model = vim.g.copilot_model,
+      },
       claude = {
         endpoint = os.getenv("ANTHROPIC_ENDPOINT") or "https://api.anthropic.com",
       },
