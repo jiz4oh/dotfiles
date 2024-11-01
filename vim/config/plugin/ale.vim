@@ -87,16 +87,6 @@ function! s:toggle_virtualtext_cursor() abort
   end
 endfunction
 
-function! s:activate_ale_by_projectionist() abort
-  for [_root, options] in projectionist#query('ale')
-    if type(options) == type({})
-      for [name, value] in items(options)
-        call setbufvar(bufnr(), 'ale_' . name, value)
-      endfor
-    endif
-  endfor
-endfunction
-
 nmap <leader>ff <Plug>(ale_fix)
 
 nmap <silent> <leader>ft :call <SID>toggle_virtualtext_cursor()<cr>
@@ -156,6 +146,4 @@ lua<<EOF
 EOF
 
   endif
-
-  autocmd User ProjectionistActivate call s:activate_ale_by_projectionist()
 augroup END

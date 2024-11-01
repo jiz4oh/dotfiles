@@ -62,6 +62,38 @@ endfunction
 let g:projects = []
 
 function! s:activate() abort
+  for [_root, options] in projectionist#query('b:')
+    if type(options) == type({})
+      for [name, value] in items(options)
+        call setbufvar(bufnr(), name, value)
+      endfor
+    endif
+  endfor
+
+  for [_root, options] in projectionist#query('w:')
+    if type(options) == type({})
+      for [name, value] in items(options)
+        call setwinvar(winnr(), name, value)
+      endfor
+    endif
+  endfor
+
+  for [_root, options] in projectionist#query('t:')
+    if type(options) == type({})
+      for [name, value] in items(options)
+        call settabvar(tabpagenr(), name, value)
+      endfor
+    endif
+  endfor
+
+  for [_root, options] in projectionist#query('g:')
+    if type(options) == type({})
+      for [name, value] in items(options)
+        execute printf('let g:%s = %s', name, value)
+      endfor
+    endif
+  endfor
+
   for [root, command] in projectionist#query_exec('console')
     let b:console = '++dir=' . fnameescape(root) .
           \ ' ++title=' . escape(fnamemodify(root, ':t'), '\ ') . '\ console ' .
