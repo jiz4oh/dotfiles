@@ -3,84 +3,91 @@
 
 patch:
   # 以下为主题配置
-  style:
-    color_scheme: flat_light
+  style/color_scheme: flat_light
 
   # 针对单独 app 的选项
   # vim_mode: true 设定应用支持 vim 的 esc 切换英文模式
   # ascii_mode: true 设定应用默认使用英文模式
-  app_options:
-    # 在以下 app 默认使用英文输入
-    com.apple.systempreferences:
-      ascii_mode: true
-    com.runningwithcrayons.Alfred:
-      ascii_mode: true
-    com.apple.Spotlight:
-      ascii_mode: true
-    com.sublimetext.3:
-      ascii_mode: true
-    com.apple.finder:
-      ascii_mode: true
-    com.postmanlabs.mac: # postman
-      ascii_mode: true
-    com.fatcatsoftware.pledpro: # PlistEdit
-      ascii_mode: true
-    com.jetbrains.rubymine:
-      vim_mode: true
-      ascii_mode: true
-    com.jetbrains.pycharm:
-      vim_mode: true
-      ascii_mode: true
-    com.jetbrains.intellij:
-      vim_mode: true
-      ascii_mode: true
-    com.googlecode.iterm2:
-      vim_mode: true
-      ascii_mode: true
-    com.microsoft.VSCode:
-      ascii_mode: true
-      vim_mode: true
-    org.vim.MacVim:
-      vim_mode: true
-      ascii_mode: true
-    com.qvacua.VimR:
-      vim_mode: true
-      ascii_mode: true
-    com.neovide.neovide:
-      vim_mode: true
-      ascii_mode: true
-    md.obsidian:
-      vim_mode: true
-      ascii_mode: true
-    net.kovidgoyal.kitty:
-      vim_mode: true
-      no_inline: true   # 不使用行內編輯
-      ascii_mode: true
-    com.github.wez.wezterm:
-      vim_mode: true
-      ascii_mode: true
+  # 在以下 app 默认使用英文输入
+  app_options/com.apple.systempreferences/ascii_mode: true
+  app_options/com.apple.finder/ascii_mode: true
 
-    # 在以下 app 中默认使用中文输入
-    com.tdesktop.Telegram: # telegram 官网跨平台版
-      ascii_mode: false
-      inline: true
-    org.telegram.desktop: # telegram lite
-      ascii_mode: false
-    ru.keepcoder.Telegram: # telegram appstore 版
-      ascii_mode: false
-      inline: true
-    com.microsoft.Word:
-      ascii_mode: false
-    com.microsoft.Excel:
-      ascii_mode: false
-    com.microsoft.Powerpoint:
-      ascii_mode: false
-    com.tencent.qq:
-      ascii_mode: false
-    com.tencent.WeWorkMac:
-      ascii_mode: false
-    com.tencent.xinWeChat:
-      ascii_mode: false
-    com.google.Chrome:
-      # 規避 https://github.com/rime/squirrel/issues/435
-      inline: true
+  app_options/com.runningwithcrayons.Alfred/ascii_mode: true
+  app_options/com.postmanlabs.mac/ascii_mode: true # postman
+
+  app_options/com.fatcatsoftware.pledpro/ascii_mode: true # PlistEdit
+  app_options/md.obsidian/ascii_mode: true
+  app_options/com.sublimetext.3/ascii_mode: true
+  app_options/com.qvacua.VimR/ascii_mode: true
+  app_options/com.neovide.neovide/ascii_mode: true
+
+  app_options/com.jetbrains.rubymine/ascii_mode: true
+  app_options/com.jetbrains.pycharm/ascii_mode: true
+  app_options/com.jetbrains.intellij/ascii_mode: true
+
+  app_options/net.kovidgoyal.kitty/ascii_mode: true
+  app_options/com.github.wez.wezterm/ascii_mode: true
+
+  # 在以下 app 中默认使用中文输入
+  app_options/com.tdesktop.Telegram/ascii_mode: false # telegram 官网跨平台版
+  app_options/ru.keepcoder.Telegram/ascii_mode: false # telegram appstore 版
+  app_options/org.telegram.desktop/ascii_mode: false # telegram lite
+
+  app_options/com.microsoft.Word/ascii_mode: false
+  app_options/com.microsoft.Excel/ascii_mode: false
+  app_options/com.microsoft.Powerpoint/ascii_mode: false
+
+  app_options/com.tencent.qq/ascii_mode: false
+  app_options/com.tencent.WeWorkMac/ascii_mode: false
+  app_options/com.tencent.xinWeChat/ascii_mode: false
+
+  # 在以下 app 中开启 vim mode
+  app_options/com.jetbrains.rubymine/vim_mode: true
+  app_options/com.jetbrains.pycharm/vim_mode: true
+  app_options/com.jetbrains.intellij/vim_mode: true
+
+  app_options/md.obsidian/vim_mode: true
+  app_options/com.microsoft.VSCode/vim_mode: true
+  app_options/com.qvacua.VimR/vim_mode: true
+  app_options/com.neovide.neovide/vim_mode: true
+
+  app_options/com.googlecode.iterm2/vim_mode: true
+  app_options/net.kovidgoyal.kitty/vim_mode: true
+  app_options/com.github.wez.wezterm/vim_mode: true
+
+  # 修复以下 app 中的输入框
+  app_options/ru.keepcoder.Telegram/inline: true # telegram appstore 版
+  app_options/com.tdesktop.Telegram/inline: true # telegram 官网跨平台版
+  app_options/org.telegram.desktop/inline: true # telegram 官网跨平台版
+
+  app_options/net.kovidgoyal.kitty/inline: true
+
+  # https://github.com/LEOYoon-Tsaw/Squirrel-Designer/issues/9#issuecomment-1577555819
+  preset_color_schemes/flat_light:
+    name: "扁平明／Flat Light"
+    font_point: 18.0
+    candidate_list_layout: linear
+    text_orientation: horizontal
+    inline_preedit: false
+    translucency: true
+    mutual_exclusive: true
+    corner_radius: 15.0
+    hilited_corner_radius: 13.0
+    border_height: -5.0
+    border_width: -5.0
+    line_spacing: 4.0
+    spacing: 10.0
+    alpha: 100
+    shadow_size: 1.0
+    color_space: display_p3
+    back_color: 0x1AFFFFFF
+    candidate_text_color: 0xB3000000
+    comment_text_color: 0x80333333
+    label_color: 0xBB333333
+    hilited_candidate_back_color: 0x4DFFFFFF
+    hilited_candidate_text_color: 0x000000
+    hilited_comment_text_color: 0xBF333333
+    hilited_candidate_label_color: 0x000000
+    preedit_back_color: 0x1A000000
+    text_color: 0xBF323232
+    hilited_text_color: 0xBF1A1A1A
