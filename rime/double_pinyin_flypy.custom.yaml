@@ -25,3 +25,6 @@ patch:
     enable_completion: false
     enable_sentence: false
     initial_quality: 99
+
+  translator/dictionary: pinyin_flypy
+  radical_reverse_lookup/dictionary: pinyin_flypy

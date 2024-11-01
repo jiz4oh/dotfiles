@@ -6,11 +6,13 @@ RIME_DIR=${1:-~/Library/Rime}
 
 [ -d "$RIME_DIR" ] && echo "Rime already installed" && exit 0
 
-[ ! -d "$RIME_DIR" ] && git clone --depth 1 https://github.com/gaboolic/rime-frost "$BASE"/tmp/Rime
+git clone --depth 1 https://github.com/gaboolic/rime-frost "$BASE"/tmp/Rime 2>/dev/null
 
-ln -s "$BASE"/tmp/Rime "$RIME_DIR"
+ln -sf "$BASE"/tmp/Rime "$RIME_DIR"
 
 for file in rime/*; do
   [ -e "$RIME_DIR/$file" ] && mv -v "$RIME_DIR/$file" bak/"$file"
   ln -sfv "$BASE/$file" "$RIME_DIR/$(basename "$file")"
 done
+
+ln -sf "$BASE"/tmp/Rime/rime_frost.dict.yaml "$RIME_DIR"/pinyin_flypy.dict.yaml
