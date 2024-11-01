@@ -5,3 +5,4 @@ tags.tmp
 bak/
 Brewfile.lock.json
 tmux/plugins
+tmp/

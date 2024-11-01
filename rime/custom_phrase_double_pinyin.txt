@@ -1,0 +1,68 @@
+# Rime table
+Apple	apple	0
+CSS	css	0
+GBK	gbk	0
+GitHub	github	24
+Google Analytics	ga	0
+IPTV	iptv	0
+IPv4	ipv	1
+IPv6	ipv	0
+JavaScript	js	0
+Mac App Store	mas	0
+Mac Pro	macpro	0
+Mac mini	macmini	0
+MacBook	macbook	0
+MacBook Pro	mbp	0
+MySQL	mysql	0
+OS X	osx	0
+Objective-C	ojbc	0
+Rime	rime	4
+Ruby	ruby	8
+Rust	rust	0
+SQL	sql	15
+Swift	swift	0
+U 盘	upj	0
+UTF-8	utfba	0
+WeChat	wechat	1
+X-Ray	xray	0
+Xbox One	xbox	0
+YouTube	youtube	0
+Youku	youku	0
+http://rime.im/	rime	1
+iMac	imac	1
+iOS	ios	0
+iPad	ipad	0
+iPad Air	ipad	0
+iPad Pro	ipad	0
+iPad mini	ipad	0
+iPhone	iphone	2
+iPhone X	iphonex	0
+iPod	ipod	0
+iTunes	itunes	0
+jQuery	jquery	0
+macOS	macos	4
+macOS Catalina	macos	3
+macOS High Sierra	macos	1
+macOS Mojave	macos	2
+•	dm	51
+⇧	shift	0
+⌃	ctl	0
+⌘	cmd	2
+⌥	opt	2
+中州韻輸入法引擎	rime	2
+又双叒叕	yyy	0
+可能	ken	1
+吗	m	1
+吗	ma	560
+哈哈哈哈哈哈哈	hhh	90
+嗯呐	enn	6
+嘛	m	15
+嘛	ma	158
+牛逼	nqb	6
+艹	cc	14
+那就	naj	4
+	apple	0
+ MUSIC	applemusic	0
+ PAY	applepay	0
+ WATCH	applewatch	0
+ tv 4K	appletv	0

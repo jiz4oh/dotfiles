@@ -1,0 +1,86 @@
+# macos 发行版配置
+# 获取 app 名示例：osascript -e 'id of app "Finder"'
+
+patch:
+  # 以下为主题配置
+  style:
+    color_scheme: flat_light
+
+  # 针对单独 app 的选项
+  # vim_mode: true 设定应用支持 vim 的 esc 切换英文模式
+  # ascii_mode: true 设定应用默认使用英文模式
+  app_options:
+    # 在以下 app 默认使用英文输入
+    com.apple.systempreferences:
+      ascii_mode: true
+    com.runningwithcrayons.Alfred:
+      ascii_mode: true
+    com.apple.Spotlight:
+      ascii_mode: true
+    com.sublimetext.3:
+      ascii_mode: true
+    com.apple.finder:
+      ascii_mode: true
+    com.postmanlabs.mac: # postman
+      ascii_mode: true
+    com.fatcatsoftware.pledpro: # PlistEdit
+      ascii_mode: true
+    com.jetbrains.rubymine:
+      vim_mode: true
+      ascii_mode: true
+    com.jetbrains.pycharm:
+      vim_mode: true
+      ascii_mode: true
+    com.jetbrains.intellij:
+      vim_mode: true
+      ascii_mode: true
+    com.googlecode.iterm2:
+      vim_mode: true
+      ascii_mode: true
+    com.microsoft.VSCode:
+      ascii_mode: true
+      vim_mode: true
+    org.vim.MacVim:
+      vim_mode: true
+      ascii_mode: true
+    com.qvacua.VimR:
+      vim_mode: true
+      ascii_mode: true
+    com.neovide.neovide:
+      vim_mode: true
+      ascii_mode: true
+    md.obsidian:
+      vim_mode: true
+      ascii_mode: true
+    net.kovidgoyal.kitty:
+      vim_mode: true
+      no_inline: true   # 不使用行內編輯
+      ascii_mode: true
+    com.github.wez.wezterm:
+      vim_mode: true
+      ascii_mode: true
+
+    # 在以下 app 中默认使用中文输入
+    com.tdesktop.Telegram: # telegram 官网跨平台版
+      ascii_mode: false
+      inline: true
+    org.telegram.desktop: # telegram lite
+      ascii_mode: false
+    ru.keepcoder.Telegram: # telegram appstore 版
+      ascii_mode: false
+      inline: true
+    com.microsoft.Word:
+      ascii_mode: false
+    com.microsoft.Excel:
+      ascii_mode: false
+    com.microsoft.Powerpoint:
+      ascii_mode: false
+    com.tencent.qq:
+      ascii_mode: false
+    com.tencent.WeWorkMac:
+      ascii_mode: false
+    com.tencent.xinWeChat:
+      ascii_mode: false
+    com.google.Chrome:
+      # 規避 https://github.com/rime/squirrel/issues/435
+      inline: true
