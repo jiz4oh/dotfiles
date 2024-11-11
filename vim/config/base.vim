@@ -661,6 +661,17 @@ command! Uniq g/^\(.*\)\n\1$/d
 if has('nvim-0.10')
   noremap <leader>y "+y
   map <leader>Y "+Y
+
+lua<<EOF
+vim.api.nvim_create_autocmd('TextYankPost', {
+  callback = function()
+    local copy_to_unnamedplus = require('vim.ui.clipboard.osc52').copy('+')
+    copy_to_unnamedplus(vim.v.event.regcontents)
+    local copy_to_unnamed = require('vim.ui.clipboard.osc52').copy('*')
+    copy_to_unnamed(vim.v.event.regcontents)
+    end
+})
+EOF
 endif
 " Determining the highlight group that the word under the cursor belongs to
 
