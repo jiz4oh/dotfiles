@@ -61,6 +61,7 @@ patch:
   app_options/org.telegram.desktop/inline: true # telegram 官网跨平台版
 
   app_options/net.kovidgoyal.kitty/inline: true
+  app_options/com.electron.1zilc.fishing-funds/inline: true
 
   # https://github.com/LEOYoon-Tsaw/Squirrel-Designer/issues/9#issuecomment-1577555819
   preset_color_schemes/flat_light:
