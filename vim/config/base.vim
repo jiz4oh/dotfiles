@@ -662,16 +662,21 @@ if has('nvim-0.10')
   noremap <leader>y "+y
   map <leader>Y "+Y
 
+if exists('$SSH_TTY')
 lua<<EOF
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
-    local copy_to_unnamedplus = require('vim.ui.clipboard.osc52').copy('+')
-    copy_to_unnamedplus(vim.v.event.regcontents)
-    local copy_to_unnamed = require('vim.ui.clipboard.osc52').copy('*')
-    copy_to_unnamed(vim.v.event.regcontents)
+    local regs = { '', '+', '*' }
+    if vim.v.event.operator == 'y' and vim.tbl_contains(regs, vim.v.event.regname) then
+      local copy_to_unnamedplus = require('vim.ui.clipboard.osc52').copy('+')
+      copy_to_unnamedplus(vim.v.event.regcontents)
+      local copy_to_unnamed = require('vim.ui.clipboard.osc52').copy('*')
+      copy_to_unnamed(vim.v.event.regcontents)
     end
+  end
 })
 EOF
+end
 endif
 " Determining the highlight group that the word under the cursor belongs to
 
