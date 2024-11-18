@@ -18,13 +18,7 @@ patch:
       states: [ "▼" ]
 
   ### 双拼使用自定义词典 custom_phrase_double_pinyin.txt
-  custom_phrase:
-    dictionary: ""
-    user_dict: custom_phrase_double_pinyin
-    db_class: stabledb
-    enable_completion: false
-    enable_sentence: false
-    initial_quality: 99
+  custom_phrase/user_dict: custom_phrase_double_pinyin
 
   translator/dictionary: pinyin_flypy
   translator/preedit_format: {}            # 保留原始的输入字符，不转化为全拼形式
