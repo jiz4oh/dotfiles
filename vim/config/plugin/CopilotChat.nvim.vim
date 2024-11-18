@@ -23,7 +23,10 @@ call personal#op#map('<leader>ar', 'CopilotChatReview')
 nnoremap <leader>ac :CopilotChatToggle<cr>
 nnoremap <leader>aF :CopilotChatFixDiagnostic<cr>
 
-autocmd FileType gitcommit nnoremap <buffer> cc :CopilotChatCommitStaged<cr>
+augroup copilotchat-nvim_augroup
+  autocmd!
+  autocmd FileType gitcommit nnoremap <buffer> cc :CopilotChatCommit<cr>
+augroup END
 
 lua<<EOF
 require("CopilotChat.integrations.cmp").setup()
