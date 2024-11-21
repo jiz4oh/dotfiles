@@ -29,9 +29,9 @@ augroup copilotchat-nvim_augroup
 augroup END
 
 lua<<EOF
-require("CopilotChat.integrations.cmp").setup()
 require("CopilotChat").setup {
   model = vim.g.copilot_model, -- call CopilotChatModels to check
+  chat_autocomplete = true,
   mappings = {
     complete = {
       insert = '',
