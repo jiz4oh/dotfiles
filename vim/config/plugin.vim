@@ -49,7 +49,8 @@ Plug 'tracyone/fzf-funky'
 Plug 'preservim/nerdtree', { 'on': ['NERDTree', 'NERDTreeVCS', 'NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'for': 'NERDTree' }
 Plug 'PhilRunninger/nerdtree-visual-selection', { 'for': 'NERDTree' }
-if has('nvim')
+if has('nvim-0.8')
+  Plug 'nvim-lua/plenary.nvim'
   Plug 'VidocqH/data-viewer.nvim'
 endif
 " isn't compatible with easymotion
