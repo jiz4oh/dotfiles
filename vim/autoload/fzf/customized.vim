@@ -91,7 +91,7 @@ function! fzf#customized#paths(query, fullscreen) abort
   function! container.func() closure
     let $FZF_DEFAULT_COMMAND = l:grep_cmd
     let l:actions = {
-      \ 'ctrl-l':  {_ -> select#paths(a:query, a:fullscreen) },
+      \ 'ctrl-l':  {_ -> fzf#customized#path(a:query, a:fullscreen) },
       \ 'ctrl-t': 'tab split',
       \ 'ctrl-x': 'split',
       \ 'ctrl-v': 'vsplit'
