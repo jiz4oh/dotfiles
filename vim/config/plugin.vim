@@ -216,6 +216,8 @@ if g:as_ide
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
     Plug 'neovim/nvim-lspconfig'
+    Plug 'hinell/lsp-timeout.nvim'
+
     "fzf integration
     "https://github.com/ojroques/nvim-lspfuzzy
     Plug 'ojroques/nvim-lspfuzzy'
