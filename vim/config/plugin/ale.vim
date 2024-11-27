@@ -70,6 +70,9 @@ function! s:toggle_virtualtext_cursor() abort
   if g:ale_virtualtext_cursor == 1
     if get(g:, 'ale_use_neovim_diagnostics_api')
       let g:ale_virtualtext_cursor = 0
+      if has('nvim')
+        lua vim.diagnostic.enable(false)
+      endif
     else
       let g:ale_virtualtext_cursor = 2
     end
@@ -77,6 +80,11 @@ function! s:toggle_virtualtext_cursor() abort
     let msg = 'all warnings be shown'
   else
     let g:ale_virtualtext_cursor = 1
+    if get(g:, 'ale_use_neovim_diagnostics_api')
+      if has('nvim')
+        lua vim.diagnostic.enable(true)
+      endif
+    end
     ALEDisableBuffer | ALEEnableBuffer
     let msg = 'message will be shown when a cursor is near a warning or error'
   endif
