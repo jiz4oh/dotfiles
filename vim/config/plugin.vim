@@ -137,6 +137,8 @@ if has('nvim') && !has('nvim-0.7')
 endif
 if !has('nvim-0.9')
   Plug 'sheerun/vim-polyglot'
+else
+  Plug 'bfontaine/Brewfile.vim'
 end
 Plug 'fladson/vim-kitty'
 Plug 'craigmac/vim-mermaid'
