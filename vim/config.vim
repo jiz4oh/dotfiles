@@ -109,8 +109,8 @@ let g:which_key_map['d'] = {
 let g:which_key_map['e'] = {
       \ 'name' : '+Explorer',
       \ 'e': 'open file Explorer',
-      \ 'p': 'open file explorer of Project root',
-      \ 'f': 'open file explorer and locate current buffer',
+      \ 'p': [':NERDTree', 'open file explorer of Project root'],
+      \ 'f': [':NERDTreeFind', 'open file explorer and locate current buffer'],
       \ 'd': 'open Db connector',
       \ 'q': 'open Quickfix list',
       \ 't': 'open Tagbar',

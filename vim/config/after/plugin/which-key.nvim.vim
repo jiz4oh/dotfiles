@@ -10,7 +10,11 @@ local function convert(prefix, mode, map)
         maps[#maps + 1] = { prefix..k, mode = mode, desc = v }
       elseif type(v) == 'table' then
         if v[1] ~= nil then
-          maps[#maps + 1] = { prefix..k, v[1], mode = mode, desc = v[2] }
+          if string.match(v[1], '^:.*') then
+            maps[#maps + 1] = { prefix..k, v[1] .. '<cr>', mode = mode, desc = v[2] }
+          else
+            maps[#maps + 1] = { prefix..k, v[1], mode = mode, desc = v[2] }
+          end
         else
           convert(prefix .. k, mode, v)
         end

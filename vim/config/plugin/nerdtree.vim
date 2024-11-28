@@ -129,9 +129,7 @@ function! s:nerdtree_enter() abort
   endif
 endfunction
 
-nnoremap <silent> <leader>ep :NERDTree<cr>
 " Navigation
-nmap  <silent> <leader>ef :NERDTreeFind<CR>
 nmap <Plug><ExpoloreToggle> :NERDTreeToggle<CR>
 imap <Plug><ExpoloreToggle> <c-o>:<c-u>NERDTreeToggle<CR>
 
