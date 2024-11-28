@@ -20,7 +20,7 @@ endif
 
 let g:as_ide = get(g:, 'as_ide', 0)
 
-silent! if plug#begin(get(g:, 'config_home', '~/.vim') . '/bundle')
+silent! if plug#begin()
 set updatetime=100
 if executable('mise')
   Plug 'jiz4oh/mise.vim'
@@ -30,9 +30,6 @@ elseif executable('asdf')
 end
 
 let g:with_treesitter = g:as_ide && has('nvim-0.9.2')
-if g:with_treesitter
-  Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-end
 " Plug 'tpope/vim-rbenv'
 " ============================================================================
 " NAVIGATION / MOVE / Easier READ {{{
@@ -49,10 +46,6 @@ Plug 'tracyone/fzf-funky'
 Plug 'preservim/nerdtree', { 'on': ['NERDTree', 'NERDTreeVCS', 'NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'for': 'NERDTree' }
 Plug 'PhilRunninger/nerdtree-visual-selection', { 'for': 'NERDTree' }
-if has('nvim-0.8')
-  Plug 'nvim-lua/plenary.nvim'
-  Plug 'VidocqH/data-viewer.nvim'
-endif
 " isn't compatible with easymotion
 "if has('nvim')
 "  Plug 'nvimdev/indentmini.nvim'
@@ -102,8 +95,8 @@ Plug 'qadzek/link.vim'
 " DATABASE {{{
 " ============================================================================
 Plug 'tpope/vim-dadbod'
-Plug 'kristijanhusak/vim-dadbod-ui'
-Plug 'kristijanhusak/vim-dadbod-completion'
+Plug 'kristijanhusak/vim-dadbod-ui', { 'on': ['DBUI', 'DBUIToggle'], 'for': 'dbui' }
+Plug 'kristijanhusak/vim-dadbod-completion', { 'for': ['sql', 'mysql', 'plsql'] }
 " }}}
 "
 " ============================================================================
@@ -113,20 +106,12 @@ Plug 'kristijanhusak/vim-dadbod-completion'
 Plug 'tpope/vim-dispatch'
 "Plug 'skywind3000/asyncrun.vim'
 "Plug 'skywind3000/asynctasks.vim'
-if has('nvim-0.8')
-  Plug 'stevearc/overseer.nvim'
-  Plug 'pianocomposer321/officer.nvim'
-end
 " search compiler from
 " :e $VIMRUNTIME/compiler
 " https://github.com/search?p=1&q=current_compiler++NOT+Maintainer+extension%3Avim+path%3Acompiler%2F+language%3A%22Vim+script%22&type=Code
 Plug 'drgarcia1986/python-compilers.vim'
 Plug 'jpalardy/vim-slime'
 Plug 'vim-test/vim-test'
-
-if has('nvim-0.10')
-  Plug 'andrewferrier/debugprint.nvim'
-endif
 " }}}
 
 " ============================================================================
@@ -156,10 +141,6 @@ if has('nvim') || has('patch-8.0.1453')
   Plug 'fatih/vim-go'
 endif
 
-if g:as_ide && has('nvim-0.8')
-  Plug 'nvim-lua/plenary.nvim'
-  Plug 'pmizio/typescript-tools.nvim', { 'for': ['javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx'] }
-endif
 " }}}
 
 " ============================================================================
@@ -171,9 +152,6 @@ Plug 'kana/vim-textobj-user'
 Plug 'jeremiahkellick/vim-textobj-rubyblock', { 'for': 'ruby' }
 Plug 'adriaanzon/vim-textobj-matchit'
 Plug 'whatyouhide/vim-textobj-erb', { 'for': 'eruby' }
-if g:with_treesitter
-  Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-end
 " }}}
 
 " ============================================================================
@@ -205,26 +183,9 @@ if has('nvim-0.10')
   "Plug 'rachartier/tiny-inline-diagnostic.nvim'
 endif
 
-if has('nvim-0.10')
-  Plug 'Zeioth/garbage-day.nvim'
-endif
-
 "lsp
 if g:as_ide
   if has('nvim-0.8')
-    Plug 'williamboman/mason.nvim' 
-    Plug 'williamboman/mason-lspconfig.nvim'
-    Plug 'WhoIsSethDaniel/mason-tool-installer.nvim'
-    Plug 'hrsh7th/cmp-nvim-lsp'
-    Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-    Plug 'neovim/nvim-lspconfig'
-    Plug 'hinell/lsp-timeout.nvim'
-
-    "fzf integration
-    "https://github.com/ojroques/nvim-lspfuzzy
-    Plug 'ojroques/nvim-lspfuzzy'
-    Plug 'b0o/schemastore.nvim'
-    Plug 'onsails/lspkind.nvim'
     if has('nvim-0.9.4')
       "TextChanged event is too slow
       "Plug 'maxandron/goplements.nvim'
@@ -241,38 +202,7 @@ endif
 
 "autocomplete
 if g:as_ide
-  if has('nvim')
-    Plug 'zbirenbaum/copilot.lua'
-    Plug 'zbirenbaum/copilot-cmp'
-    Plug 'hrsh7th/nvim-cmp'
-    Plug 'lukas-reineke/cmp-under-comparator'
-    Plug 'nvim-lua/plenary.nvim'
-    if has('nvim-0.10')
-      Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
-      Plug 'nvim-lua/plenary.nvim'
-      Plug 'grapp-dev/nui-components.nvim'
-      Plug 'MunifTanjim/nui.nvim'
-      Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make', 'on': ['AvanteAsk', 'AvanteChat'] }
-    endif
-    Plug 'hrsh7th/cmp-path'
-    Plug 'hrsh7th/cmp-cmdline'
-    Plug 'hrsh7th/cmp-buffer'
-    if has('nvim-0.7')
-      Plug 'L3MON4D3/LuaSnip', { 'do': 'make install_jsregexp' }
-      Plug 'saadparwaiz1/cmp_luasnip'
-      Plug 'honza/vim-snippets'
-    endif
-    if exists('$KITTY_WINDOW_ID')
-      Plug 'garyhurtz/cmp_kitty'
-    endif
-    Plug 'roobert/tailwindcss-colorizer-cmp.nvim'
-
-    if executable('ctags')
-      Plug 'quangnguyen30192/cmp-nvim-tags'
-    endif
-
-    Plug 'tzachar/cmp-tabnine', { 'do': g:is_win ? 'powershell.exe .\install.ps1' : './install.sh' }
-  elseif has('patch-9.0.0185') && executable('node')
+  if has('patch-9.0.0185') && executable('node')
     Plug 'github/copilot.vim'
   " elseif v:version >= 800
     " Plug 'lifepillar/vim-mucomplete'
@@ -306,9 +236,7 @@ Plug 'tpope/vim-surround'
 if !has('nvim-0.10.0')
   Plug 'tpope/vim-commentary'
 end
-if g:with_treesitter
-  Plug 'RRethy/nvim-treesitter-endwise'
-else
+if !g:with_treesitter
   " endwise based on vim syntax group and is not compatible with nvim-treesitter 
   Plug 'tpope/vim-endwise'
 end
@@ -330,9 +258,7 @@ if g:as_ide
 end
 Plug 'mhinz/vim-hugefile'
 Plug 'pbogut/fzf-mru.vim'
-if has('nvim-0.10')
-  Plug 'folke/which-key.nvim'
-else
+if !has('nvim-0.10')
   Plug 'liuchengxu/vim-which-key'
 end
 if exists('$SSH_TTY') && (exists('$TMUX') || !has('nvim-0.10'))
@@ -372,7 +298,9 @@ if !has('nvim') && exists('##TextYankPost')
 end
 Plug 'markonm/traces.vim'
 " replace by which-key.nvim
-"Plug 'junegunn/vim-peekaboo'
+if !has('nvim-0.10')
+  Plug 'junegunn/vim-peekaboo'
+end
 Plug 'haya14busa/vim-asterisk', { 'on': ['<Plug>(asterisk-z*)', '<Plug>(asterisk-z#)', '<Plug>(asterisk-gz*)', '<Plug>(asterisk-gz#)'] }
 Plug 'troydm/zoomwintab.vim'
 
@@ -386,14 +314,6 @@ endif
 " BEAUTIFY {{{
 " ============================================================================
 if g:as_ide
-  if has('nvim-0.9.2')
-    Plug 'stevearc/aerial.nvim'
-  endif
-
-  if has('nvim-0.5')
-    Plug 'rcarriga/nvim-notify'
-    Plug 'mrded/nvim-lsp-notify'
-  endif
   if has('nvim') || has('gui_running')
     " Plug 'vim-airline/vim-airline'
   endif
@@ -410,11 +330,31 @@ if g:as_ide
   Plug 'rafi/awesome-vim-colorschemes'
 endif
 Plug 'uguu-org/vim-matrix-screensaver'
-if has('nvim-0.8')
-  Plug 'stevearc/dressing.nvim'
-endif
 "}}}
+if has('nvim-0.8')
+  execute 'luafile '. expand('<sfile>:p:h') . '/plugin.lua'
+else
+
 call plug#end()
+
+augroup PlugLazyLoad
+  autocmd!
+
+  if exists('g:plugs_order')
+    for plugName in g:plugs_order
+      if HasInstall(plugName)
+        let spec = g:plugs[plugName]
+        "TODO plug.vim 内部判断某个插件是否 lazy，不只是判断是否有 on 或者 for
+        " if has_key(spec, 'on') || has_key(spec, 'for')
+        "   execute 'autocmd User ' . plugName . ' call SourceConfig("plugin/' . plugName . '")'
+        " else
+          call SourceConfig('plugin/' . plugName)
+        " endif
+      endif
+    endfor
+  endif
+augroup END
+end
 endif
 
 function! s:plug_gf() abort
@@ -434,7 +374,3 @@ augroup vim-plug-augroup
 
   execute 'autocmd BufEnter '. expand('<sfile>:p') . ' nnoremap <buffer><silent> gf :call <SID>plug_gf()<cr>'
 augroup END
-
-if g:as_ide
-  silent! colorscheme gruvbox-material
-endif

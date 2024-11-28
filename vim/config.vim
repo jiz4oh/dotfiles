@@ -169,7 +169,7 @@ let g:which_key_map['s'] = {
       \ 'p': 'Search in Project',
       \ ']': 'Search <cword> in Tags',
       \ 'b': 'Search lines in the current Buffer',
-      \ 'm': 'Search Marks',
+      \ "'": 'Search Marks',
       \ 's': 'Search available Sessions',
       \ }
 

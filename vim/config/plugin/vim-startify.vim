@@ -40,10 +40,18 @@ let g:startify_lists = [
         \ { 'type': 'commands',                                        'header': ['   Commands']                },
         \ ]
 
+if get(g:, 'lazy_did_setup', 0)
+  let install = 'Lazy install'
+  let update = 'Lazy update'
+else
+  let install = 'PlugInstall'
+  let update = 'PlugUpdate'
+end
+
 let g:startify_commands = [
     \ {'d': ['Databases',       'tabnew | DBUI']      },
-    \ {'u': ['Update Plugins',  'PlugUpdate']  },
-    \ {'i': ['Install Plugins', 'PlugInstall'] },
+    \ {'u': ['Update Plugins',  update]  },
+    \ {'i': ['Install Plugins', install] },
     \ ]
 
 function! LoadSession(name) abort

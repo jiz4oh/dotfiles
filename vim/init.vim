@@ -9,6 +9,8 @@ else
   let g:config_home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 end
 
+let g:plug_home = g:config_home . '/bundle'
+
 exec 'source ' . g:config_home . '/config.vim'
 
 function SourceConfig(configName) abort
@@ -53,23 +55,9 @@ if exists('g:neovide')
   endif
 endif
 
-augroup PlugLazyLoad
-  autocmd!
-
-  if exists('g:plugs_order')
-    for plugName in g:plugs_order
-      if HasInstall(plugName)
-        let spec = g:plugs[plugName]
-        "TODO plug.vim 内部判断某个插件是否 lazy，不只是判断是否有 on 或者 for
-        " if has_key(spec, 'on') || has_key(spec, 'for')
-        "   execute 'autocmd User ' . plugName . ' call SourceConfig("plugin/' . plugName . '")'
-        " else
-          call SourceConfig('plugin/' . plugName)
-        " endif
-      endif
-    endfor
-  endif
-augroup END
+if g:as_ide
+  silent! colorscheme gruvbox-material
+endif
 
 let &packpath = &runtimepath
 
