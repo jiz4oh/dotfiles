@@ -167,7 +167,7 @@ let g:which_key_map['s'] = {
       \ 'i': 'Search Include files',
       \ 'g': 'Search in Gems',
       \ 'p': 'Search in Project',
-      \ 't': 'Search <cword> in Tags',
+      \ ']': 'Search <cword> in Tags',
       \ 'b': 'Search lines in the current Buffer',
       \ 'm': 'Search Marks',
       \ 's': 'Search available Sessions',
