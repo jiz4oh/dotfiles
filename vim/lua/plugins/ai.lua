@@ -7,58 +7,65 @@ return {
 		cmd = {
 			"CopilotChat",
 			"CopilotChatModels",
+			"CopilotChatAgents",
 			"CopilotChatCommit",
 			"CopilotChatToggle",
 		},
 		keys = {
-			"<leader>af",
-			"<leader>ad",
-			"<leader>at",
-			"<leader>ao",
-			"<leader>ae",
-			"<leader>ar",
-			"<leader>ac",
-			"<leader>aF",
+			{ "<leader>a", "", desc = "+ai", mode = { "n", "v" } },
+			{
+				"<leader>ac",
+				function()
+					return require("CopilotChat").toggle()
+				end,
+				desc = "Toggle (CopilotChat)",
+				mode = { "n", "v" },
+			},
+			{
+				"<leader>ax",
+				function()
+					return require("CopilotChat").reset()
+				end,
+				desc = "Clear (CopilotChat)",
+				mode = { "n", "v" },
+			},
+			{ "<leader>af", "<cmd>CopilotChatFix<cr>", },
+			{ "<leader>ad", "<cmd>CopilotChatDocs<cr>", },
+			{ "<leader>at", "<cmd>CopilotChatTests<cr>", },
+			{ "<leader>ao", "<cmd>CopilotChatOptimize<cr>", },
+			{ "<leader>ae", "<cmd>CopilotChatExplain<cr>", },
+			{ "<leader>ar", "<cmd>CopilotChatReview<cr>", },
+			{ "cc", "<cmd>CopilotChatCommit<cr>", ft = 'gitcommit' },
 		},
 		branch = "canary",
 		dependencies = {
 			{ "zbirenbaum/copilot.lua" },
 		},
 		build = "make tiktoken", -- Only on MacOS or Linux
-		init = function()
-			vim.cmd([[
-        call personal#op#map('<leader>af', 'CopilotChatFix')
-        call personal#op#map('<leader>ad', 'CopilotChatDocs')
-        call personal#op#map('<leader>at', 'CopilotChatTests')
-        call personal#op#map('<leader>ao', 'CopilotChatOptimize')
-        call personal#op#map('<leader>ae', 'CopilotChatExplain')
-        call personal#op#map('<leader>ar', 'CopilotChatReview')
+		opts = function()
+			local user = vim.env.USER or "User"
+			user = user:sub(1, 1):upper() .. user:sub(2)
 
-        nnoremap <leader>ac :CopilotChatToggle<cr>
-        nnoremap <leader>aF :CopilotChatFixDiagnostic<cr>
-
-        augroup copilotchat-nvim_augroup
-          autocmd!
-          autocmd FileType gitcommit nnoremap <buffer> cc :CopilotChatCommit<cr>
-        augroup END
-      ]])
-		end,
-		opts = {
-			model = vim.g.copilot_model, -- call CopilotChatModels to check
-			chat_autocomplete = true,
-			mappings = {
-				complete = {
-					insert = "",
+			return {
+				auto_insert_mode = true,
+				question_header = "  " .. user .. " ",
+				answer_header = "  Copilot ",
+				model = vim.g.copilot_model, -- call CopilotChatModels to check
+				chat_autocomplete = true,
+				mappings = {
+					complete = {
+						insert = "",
+					},
 				},
-			},
-			window = {
-				layout = "float",
-				relative = "cursor",
-				width = 0.4, -- Changed from 1 to 0.4 (40% of screen width)
-				height = 0.4,
-				row = 1,
-			},
-		},
+				window = {
+					layout = "float",
+					relative = "cursor",
+					width = 0.4, -- Changed from 1 to 0.4 (40% of screen width)
+					height = 0.4,
+					row = 1,
+				},
+			}
+		end,
 	},
 	{
 		"yetone/avante.nvim",
