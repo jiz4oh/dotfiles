@@ -103,7 +103,7 @@ return {
 				end
 			end
 
-			formatter = require("lspkind").cmp_format(lspkind_ops)
+			local formatter = require("lspkind").cmp_format(lspkind_ops)
 
 			function load_luasnip()
 				local ok, luasnip = pcall(require, "luasnip")

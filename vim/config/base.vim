@@ -514,6 +514,7 @@ augroup vimrc
 
   autocmd FileType git,gitcommit        setlocal foldmethod=syntax foldlevel=1
   autocmd FileType json                 setlocal foldmethod=syntax
+  autocmd FileType lua                  setlocal foldmethod=indent
   " set '-' to be part of a word when dealing with CSS classes and IDs.
   autocmd BufReadPost,BufNewFile *.{html,svg,xml,css,scss,less,stylus,js,coffee,erb,jade,blade} setlocal iskeyword+=-
   autocmd BufReadPost,BufNewFile *.json setlocal iskeyword+=-
