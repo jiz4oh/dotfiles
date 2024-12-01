@@ -12,6 +12,9 @@
     ],
     "related": "vim/bundle/{}/plugin/{}.vim"
   },
+  "vim/lua/plugins/config/*.lua": {
+    "type": "config"
+  },
   "vim/bundle/**/plugin/*.vim": {
     "type": "plugin",
     "related": "vim/config/plugin/{dirname}.vim"

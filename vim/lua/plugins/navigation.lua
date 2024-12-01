@@ -1,25 +1,12 @@
-local plugin = {
+return {
 	{
 		"preservim/nerdtree",
-		keys = { "<Plug><ExpoloreToggle>" },
-		dependencies = {
-			{ "Xuyuanp/nerdtree-git-plugin" },
-			{ "PhilRunninger/nerdtree-visual-selection" },
-		},
 	},
 	{
 		"miversen33/netman.nvim",
-		event = "CmdlineEnter",
-		cmd = {
-      "NmloadProvider",
-      "Nmlogs",
-      "Nmdelete",
-      "Nmread",
-      "Nmwrite",
-		},
-		lazy = not (vim.fn.argc() > 0),
-		opts = {},
 	},
+	{
+		"stevearc/aerial.nvim",
+		enabled = vim.fn.has("nvim-0.9.2") == 1 and vim.g.as_ide == 1,
+  }
 }
-
-return plugin

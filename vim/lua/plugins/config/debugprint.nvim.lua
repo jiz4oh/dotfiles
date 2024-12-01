@@ -1,0 +1,3 @@
+return {
+	"andrewferrier/debugprint.nvim",
+}

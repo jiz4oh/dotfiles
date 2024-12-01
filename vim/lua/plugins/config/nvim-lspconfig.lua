@@ -1,0 +1,52 @@
+return {
+	"neovim/nvim-lspconfig",
+	enabled = vim.g.as_ide == 1,
+	event = "VeryLazy",
+	keys = {
+		{
+			"<leader>lr",
+			function()
+				vim.lsp.buf.references({ includeDeclaration = false })
+			end,
+		},
+		{ "<leader>ld", vim.lsp.buf.definition },
+		{ "<leader>lD", vim.lsp.buf.declaration },
+		{ "<leader>lt", vim.lsp.buf.type_definition },
+		{ "<leader>li", vim.lsp.buf.implementation },
+		{ "<leader>lR", vim.lsp.buf.rename },
+		{ "<leader>ls", vim.lsp.buf.document_symbol },
+		{ "<leader>lS", vim.lsp.buf.workspace_symbol },
+		{ "<leader>lK", vim.lsp.buf.hover },
+		{ "<leader>la", vim.lsp.buf.code_action },
+		{ "<leader>la", vim.lsp.buf.code_action },
+		{ "<leader>lf", vim.lsp.buf.format },
+		{ "<leader>lf", vim.lsp.buf.format, mode = "x" },
+	},
+	dependencies = {
+		"williamboman/mason.nvim",
+		"b0o/schemastore.nvim",
+		"williamboman/mason-lspconfig.nvim",
+	},
+	init = function()
+		-- do not set tagfunc, it's slowly with cmp-nvim-tags
+		TAGFUNC_ALWAYS_EMPTY = function()
+			return vim.NIL
+		end
+
+		-- if tagfunc is already registered, nvim lsp will not try to set tagfunc as vim.lsp.tagfunc.
+		vim.o.tagfunc = "v:lua.TAGFUNC_ALWAYS_EMPTY"
+	end,
+	config = function()
+		vim.api.nvim_create_autocmd("LspAttach", {
+			callback = function(args)
+				local bufnr = args.buf
+				local client = vim.lsp.get_client_by_id(args.data.client_id)
+				vim.g["vista_" .. vim.api.nvim_get_option_value("filetype", { buf = bufnr }) .. "_executive"] =
+					"nvim_lsp"
+				vim.api.nvim_buf_set_var(bufnr, "ale_disable_lsp", 1)
+
+				vim.notify_once("LSP " .. client.name .. " attached")
+			end,
+		})
+	end,
+}

@@ -21,12 +21,13 @@ require("lazy").setup({
     { import = "vim-plug" },
     -- can override specs from vim-plug
     -- https://lazy.folke.io/usage/structuring#%EF%B8%8F-importing-specs-config--opts
+    { import = "plugins.config" },
     { import = "plugins" },
   },
   defaults = {
     -- Set this to `true` to have all your plugins lazy-loaded by default.
     -- Only do this if you know what you are doing, as it can lead to unexpected behavior.
-    lazy = false, -- should plugins be lazy-loaded?
+    lazy = true, -- should plugins be lazy-loaded?
     -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
     -- have outdated releases, which may break your Neovim install.
     version = nil, -- always use the latest git commit
