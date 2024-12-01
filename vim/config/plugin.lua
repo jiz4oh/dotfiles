@@ -23,6 +23,7 @@ require("lazy").setup({
     -- https://lazy.folke.io/usage/structuring#%EF%B8%8F-importing-specs-config--opts
     { import = "plugins.config" },
     { import = "plugins" },
+    { import = "plugins.lang" },
   },
   defaults = {
     -- Set this to `true` to have all your plugins lazy-loaded by default.
