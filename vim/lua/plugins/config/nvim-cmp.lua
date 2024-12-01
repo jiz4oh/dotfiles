@@ -27,12 +27,10 @@ return {
 		"hrsh7th/cmp-cmdline",
 		"hrsh7th/cmp-path",
 		"lukas-reineke/cmp-under-comparator",
-		"saadparwaiz1/cmp_luasnip",
 		"roobert/tailwindcss-colorizer-cmp.nvim",
 		"quangnguyen30192/cmp-nvim-tags",
 		"zbirenbaum/copilot-cmp",
 		"onsails/lspkind.nvim",
-		"L3MON4D3/LuaSnip",
 	},
 	opts = function()
 		local cmp = require("cmp")
@@ -119,14 +117,6 @@ return {
 				end, { "i", "s", "c" }),
 			}),
 			sources = cmp.config.sources(default_sources),
-			snippet = {
-				expand = function(args)
-					local ok, luasnip = load_luasnip()
-					if ok then
-						luasnip.lsp_expand(args.body) -- For `luasnip` users.
-					end
-				end,
-			},
 			formatting = {
 				format = formatter,
 			},

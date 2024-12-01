@@ -18,7 +18,11 @@ return {
 		enabled = enabled,
 	},
 	{
+		"saadparwaiz1/cmp_luasnip",
+		enabled = enabled,
+	},
+	{
 		"garyhurtz/cmp_kitty",
-    enabled = enabled,
+		enabled = enabled,
 	},
 }
