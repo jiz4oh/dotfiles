@@ -1,3 +1,23 @@
+local default_sources = {
+	-- Copilot Source
+	{ name = "copilot" },
+	{ name = "vim_lsp" },
+	{ name = "nvim_lsp" },
+	{ name = "nvim_lsp_signature_help" },
+	-- { name = 'vsnip' }, -- For vsnip users.
+	{ name = "luasnip" }, -- For luasnip users.
+	-- { name = 'ultisnips' }, -- For ultisnips users.
+	-- { name = 'snippy' }, -- For snippy users.
+	{ name = "cmp_tabnine" },
+	{
+		name = "kitty",
+		option = {
+			-- this is where any configuration should be inserted
+		},
+	},
+	{ name = "buffer" },
+}
+
 return {
 	"hrsh7th/nvim-cmp",
 	version = false, -- last release is way too old
@@ -15,28 +35,8 @@ return {
 		"onsails/lspkind.nvim",
 		"L3MON4D3/LuaSnip",
 	},
-	config = function()
+	opts = function()
 		local cmp = require("cmp")
-
-		local default_sources = {
-			-- Copilot Source
-			{ name = "copilot" },
-			{ name = "vim_lsp" },
-			{ name = "nvim_lsp" },
-			{ name = "nvim_lsp_signature_help" },
-			-- { name = 'vsnip' }, -- For vsnip users.
-			{ name = "luasnip" }, -- For luasnip users.
-			-- { name = 'ultisnips' }, -- For ultisnips users.
-			-- { name = 'snippy' }, -- For snippy users.
-			{ name = "cmp_tabnine" },
-			{
-				name = "kitty",
-				option = {
-					-- this is where any configuration should be inserted
-				},
-			},
-			{ name = "buffer" },
-		}
 
 		local comparators = {
 			require("copilot_cmp.comparators").prioritize,
@@ -75,9 +75,7 @@ return {
 			return ok, luasnip
 		end
 
-		-- default config
-		-- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/default.lua
-		cmp.setup({
+		return {
 			sorting = {
 				comparators = comparators,
 			},
@@ -133,7 +131,14 @@ return {
 			formatting = {
 				format = formatter,
 			},
-		})
+		}
+	end,
+	config = function(_, opts)
+		local cmp = require("cmp")
+
+		-- default config
+		-- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/default.lua
+		cmp.setup(opts)
 
 		for _, filetypee in ipairs({ "vim", "go", "ruby" }) do
 			local sources = vim.tbl_deep_extend("force", {}, default_sources)
