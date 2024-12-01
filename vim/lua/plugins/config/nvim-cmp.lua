@@ -23,13 +23,8 @@ return {
 	version = false, -- last release is way too old
 	event = { "InsertEnter", "CmdlineEnter" },
 	dependencies = {
-		"hrsh7th/cmp-buffer",
-		"hrsh7th/cmp-cmdline",
-		"hrsh7th/cmp-path",
 		"lukas-reineke/cmp-under-comparator",
 		"roobert/tailwindcss-colorizer-cmp.nvim",
-		"quangnguyen30192/cmp-nvim-tags",
-		"zbirenbaum/copilot-cmp",
 		"onsails/lspkind.nvim",
 	},
 	opts = function()
