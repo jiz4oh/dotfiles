@@ -30,7 +30,6 @@ return {
 		"saadparwaiz1/cmp_luasnip",
 		"roobert/tailwindcss-colorizer-cmp.nvim",
 		"quangnguyen30192/cmp-nvim-tags",
-		"garyhurtz/cmp_kitty",
 		"zbirenbaum/copilot-cmp",
 		"onsails/lspkind.nvim",
 		"L3MON4D3/LuaSnip",
