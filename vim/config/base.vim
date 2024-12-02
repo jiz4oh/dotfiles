@@ -426,6 +426,9 @@ set showtabline=2
 augroup vimrc
   autocmd!
 
+  "https://roblox.github.io/lua-style-guide/#general-whitespace
+  autocmd FileType lua setlocal noexpandtab textwidth=80
+
   "https://github.com/vim/vim/issues/6445
   if exists('&winfixbuf')
     autocmd FileType tagbar,floaterm,fzf,vista_kind,aerial,notify,startuptime,toggleterm,qf setlocal winfixbuf
