@@ -10,4 +10,8 @@ return {
 		"folke/snacks.nvim",
 		enabled = vim.fn.has("nvim-0.9.4") == 1,
 	},
+	{
+		"mhinz/vim-hugefile",
+		enabled = vim.fn.has("nvim-0.9.4") == 0,
+	},
 }
