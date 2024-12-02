@@ -31,13 +31,23 @@ return {
 		local cmp = require("cmp")
 
 		local comparators = {
-			require("copilot_cmp.comparators").prioritize,
+			function(entry1, entry2)
+        local ok, plugin = pcall(require, "copilot_cmp.comparators")
+        if ok then
+          plugin.prioritize(entry1, entry2)
+        end
+      end,
 			cmp.config.compare.offset,
 			cmp.config.compare.exact,
 			cmp.config.compare.score,
 			cmp.config.compare.recently_used,
 			cmp.config.compare.locality,
-			require("cmp-under-comparator").under,
+			function(entry1, entry2)
+        local ok, plugin = pcall(require, "cmp-under-comparator")
+        if ok then
+          plugin.under(entry1, entry2)
+        end
+      end,
 			cmp.config.compare.kind,
 			cmp.config.compare.sort_text,
 			cmp.config.compare.length,
