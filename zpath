@@ -7,14 +7,22 @@ if [ "$_ZPATH_LOADED" = "1" ]; then
   return
 fi
 
-export _DOTFILES_PATH="$(dirname "$(realpath "$0")")"
+if [ -n "$ZSH_VERSION" ]; then
+  export _DOTFILES_PATH="$(dirname "$(realpath "$0")")"
+else
+  export _DOTFILES_PATH="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+fi
 export PATH="$BREW_PREFIX/bin:$PATH"
 export PATH="$BREW_PREFIX/opt:$PATH"
 if [ $(command -v brew) ]; then
   eval "$(brew shellenv)"
 fi
+
+if [ -n "$ZSH_VERSION" ]; then
 # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
-export FPATH="$BREW_PREFIX/share/zsh/site-functions:${FPATH}"
+  export FPATH="$BREW_PREFIX/share/zsh/site-functions:${FPATH}"
+fi
+
 export PATH="${XDG_DATA_HOME:-~/.local/share}/nvim/mason/bin:$PATH:$HOME/go/bin"
 export FZF_BASE=$_DOTFILES_PATH/vim/bundle/fzf
 
@@ -58,12 +66,14 @@ elif [ -d ~/.asdf ]; then
   # ruby 2.6 is not working on macos 13
   # https://bugs.ruby-lang.org/issues/18912
   source ~/.asdf/asdf.sh
-  for file in $HOME/.asdf/plugins/golang/set-env.zsh \
-              ${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc; do
-    if [ -f $file ]; then
-      source $file
-    fi
-  done
+  if [ -n "$ZSH_VERSION" ]; then
+    for file in $HOME/.asdf/plugins/golang/set-env.zsh \
+                ${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc; do
+      if [ -f $file ]; then
+        source $file
+      fi
+    done
+  fi
 fi
 
 # if [ $(command -v zellij) ]; then
