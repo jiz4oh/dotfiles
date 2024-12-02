@@ -73,7 +73,7 @@ if [ $(command -v asdf) ]; then
   }
   alias goinstall=__goinstall
 else
-  alias goinstall=go install
+  alias goinstall="go install"
 fi
 
 #{{{tmux
