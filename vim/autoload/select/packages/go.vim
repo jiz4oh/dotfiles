@@ -9,6 +9,10 @@ function! s:readdir(dir)
     \          isdirectory(a:dir .. '/' .. x) ?  a:dir .. '/' .. x : a:dir})
 endfunction
 
+function! select#packages#go#prompt() abort
+  return "Pkg"
+endfunction
+
 function! select#packages#go#packages() abort
   if exists('*go#path#Default')
     let gopath = go#path#Default()

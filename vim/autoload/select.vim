@@ -163,3 +163,13 @@ EOF
   let prompt = personal#functions#shortpath(getcwd()) . ' '
   call s:input(prompt, list, { l, _ -> fzf#helper#colon_sink(['enter',l], { 'enter': 'edit'})})
 endfunction
+
+function! select#packages(query, fullscreen)
+  try
+    call select#package#call(&filetype, a:query, a:fullscreen)
+  catch
+    let prompt = 'Select Packages of'
+    let list = select#package#filetypes()
+    call s:input(prompt, list, { l, _ -> select#package#call(l, a:query, a:fullscreen)})
+  endtry
+endfunction

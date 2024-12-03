@@ -4,7 +4,11 @@ function! s:format(path) abort
   return split(a:path, '/')[-1]
 endfunction
 
-function! select#packages#ruby#gems() abort
+function! select#packages#ruby#prompt() abort
+  return "Gem"
+endfunction
+
+function! select#packages#ruby#packages() abort
   if exists('*bundler#project') && !empty(bundler#project())
     return bundler#project().paths()
   endif
