@@ -541,9 +541,6 @@ augroup vimrc
   autocmd SessionLoadPost * call ChangeCWDTo(personal#project#find_home())
 
   function! s:GoIncludeExpr(filename) abort
-    let paths = split(a:filename, '/')
-    let dirs = []
-
     " search in current package
     let module = personal#go#module()
     if !exists('b:go_module_name')
@@ -559,8 +556,8 @@ augroup vimrc
     end
 
     if exists('b:go_module_name') && stridx(a:filename, b:go_module_name) == 0
-      let paths = split(substitute(a:filename, b:go_module_name . '/', '', ''), '/')
-      call add(dirs, module)
+      let relative_path = substitute(a:filename, b:go_module_name . '/', '', '')
+      let dir = module . '/' . relative_path
     else
       if exists('*go#path#Default')
         let gopath = go#path#Default()
@@ -571,47 +568,25 @@ augroup vimrc
         let gopath = $GOPATH
       endif
 
-      let builtin = fnamemodify(gopath, ':h') . '/go/src'
-      let dirs = [gopath . '/pkg/mod', builtin] + split(&path, ',')
-      call filter(uniq(map(dirs, 'fnamemodify(v:val, ":p")')), 'isdirectory(v:val)')
-    end
-
-    for d in dirs
-      let dir = s:find(d, paths)
-      if dir !=# d && isdirectory(dir)
-        " get first file in the directory
-        let files = filter(readdir(dir), { idx, val -> !isdirectory(dir . '/' .v:val)})
-        if !empty(files)
-          let gofiles = filter(copy(files), 'v:val =~# ".*\.go"')
-          let first = get(gofiles, 0, files[0])
-            
-          return dir . '/' . first
+      for [k, v] in items(select#packages#go#packages())
+        let mod = split(k, '@v')[0]
+        if a:filename =~# '^' . mod
+          let dir = v . '/' . substitute(a:filename, mod, '' , '')
+          break
         end
-      end
-    endfor
-  endfunction
-
-  function! s:find(dir, paths) abort
-    if empty(a:paths)
-      return a:dir
+      endfor
     end
 
-    let paths = copy(a:paths)
-
-    let path = remove(paths, 0)
-    " xxxx@v0.0.0
-    let dirs = readdir(a:dir, {n -> n =~ '^' . path})
-    if empty(dirs)
-      return a:dir
-    endif
-
-    for i in dirs
-      let dir = a:dir . '/' . i
-      let paths = paths
-      let dir = s:find(dir, paths)
-    endfor
-
-    return dir
+    if isdirectory(dir)
+      " get first file in the directory
+      let files = filter(readdir(dir), { idx, val -> !isdirectory(dir . '/' .v:val)})
+      if !empty(files)
+        let gofiles = filter(copy(files), 'v:val =~# ".*\.go"')
+        let first = get(gofiles, 0, files[0])
+          
+        return dir . '/' . first
+      end
+    end
   endfunction
 
   autocmd FileType go setlocal includeexpr=<SID>GoIncludeExpr(v:fname)

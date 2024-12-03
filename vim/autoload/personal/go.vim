@@ -8,10 +8,26 @@ function! personal#go#module() abort
   endif
 
   if l:fakeModule == l:module
-    return
+    return ''
   endif
 
   return resolve(fnamemodify(l:module, ':p:h'))
+endfunction
+
+function! personal#go#set_module_name(module) abort
+  if !exists('b:go_module_name')
+    if !empty(a:module)
+      let gomod = fnamemodify(a:module, ':p:h') . '/go.mod'
+      if filereadable(gomod)
+        let line = personal#functions#uncomment_line(readfile(gomod, '', 20))
+        if !empty(line)
+          let b:go_module_name = substitute(line, 'module ', '', '')
+        endif
+      end
+    end
+  end
+
+  return b:go_module_name
 endfunction
 
 function! personal#go#env(env) abort
