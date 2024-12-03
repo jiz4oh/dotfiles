@@ -1,14 +1,13 @@
 function! s:gem_content_search(gem, query, fullscreen) abort
-  " let l:gemdir = substitute(system("bundle show " . a:gem), '\n\+$', '', '')
-  let l:gemdir = bundler#project().paths()[a:gem]
+  let dir = s:gems[a:gem]
   if exists('*RgWithWildignore')
     let l:grep_cmd = RgWithWildignore('--color=always ' .fzf#shellescape(a:query))
   else
-    let l:grep_cmd = 'find '. l:gemdir . ''
+    let l:grep_cmd = 'find '. dir . ''
   endif
 
   let l:spec = {
-        \'dir': l:gemdir, 
+        \'dir': dir,
         \'options': [
           \'--prompt', a:gem.'> '
         \]}
@@ -21,16 +20,11 @@ function! s:gem_content_search(gem, query, fullscreen) abort
   call fzf#vim#grep(l:grep_cmd, fzf#vim#with_preview(l:spec), a:fullscreen)
 endfunction
 
+let s:gems = {}
+
 " Gem search
 function! s:gem_search(query, fullscreen) abort
-  if empty(bundler#project())
-    echo 'not in a ruby project'
-    return
-  endif
-  " call fzf#vim#grep("bundle list | sed '1d;$d' | cut -d ' ' -f 4", {'sink': {gem -> s:gem_content_search(gem, a:query, a:fullscreen)}}, a:fullscreen)
-  " let l:gems = "echo " . fzf#shellescape(join(keys(bundler#project().paths()), ' ')) . "|awk '{for(i=1;i<=NF;++i) print $i}'"
-  " call fzf#vim#grep(l:gems, {'sink': {gem -> s:gem_content_search(gem, a:query, a:fullscreen)}}, a:fullscreen)
-  let l:gems = keys(bundler#project().paths())
+  let s:gems = select#packages#ruby#gems()
 
   try
     let action = get(g:, 'fzf_action')
@@ -42,7 +36,7 @@ function! s:gem_search(query, fullscreen) abort
                   \'options': [
                     \'--prompt', 'Gem> ',
                   \],
-                  \'source': l:gems,
+                  \'source': keys(s:gems),
                   \}
 
     if !empty(a:query)
@@ -62,12 +56,7 @@ endfunction
 
 " Gems search
 function! s:gems_search(query, fullscreen) abort
-  if empty(bundler#project())
-    echo 'not in a ruby project'
-    return
-  endif
-  let l:project = bundler#project()
-  let l:gem_paths = values(bundler#project().paths())
+  let l:gem_paths = values(select#packages#ruby#gems())
 
   if exists('*RgWithWildignore')
     let l:query = empty(a:query) ? fzf#shellescape('') : '-w ' . fzf#shellescape(a:query)
@@ -88,7 +77,7 @@ function! s:gems_search(query, fullscreen) abort
                 \'sink*': { lines -> fzf#helper#colon_sink(lines, l:actions) },
                 \'options': [
                   \'--expect', join(keys(actions), ','),
-                  \'--ansi', 
+                  \'--ansi',
                   \'--prompt', 'Gems> ',
                   \'--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
                   \'--delimiter', ':', '--preview-window', '+{2}-/2'
