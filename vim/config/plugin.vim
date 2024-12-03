@@ -301,7 +301,7 @@ Plug 'markonm/traces.vim'
 if !has('nvim-0.10')
   Plug 'junegunn/vim-peekaboo'
 end
-Plug 'haya14busa/vim-asterisk', { 'on': ['<Plug>(asterisk-z*)', '<Plug>(asterisk-z#)', '<Plug>(asterisk-gz*)', '<Plug>(asterisk-gz#)'] }
+Plug 'haya14busa/vim-asterisk'
 Plug 'troydm/zoomwintab.vim'
 
 "https://github.com/tmux-plugins/vim-tmux-focus-events?tab=readme-ov-file#tmux-focus-eventsvim

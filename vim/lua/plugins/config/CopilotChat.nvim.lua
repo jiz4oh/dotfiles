@@ -37,7 +37,7 @@ return {
 		{ "<leader>ar", "<cmd>CopilotChatReview<cr>" },
 		{ "cc", "<cmd>CopilotChatCommit<cr>", ft = "gitcommit" },
 	},
-	branch = "canary",
+	branch = "main",
 	build = "make tiktoken", -- Only on MacOS or Linux
 	opts = function()
 		local user = vim.env.USER or "User"
