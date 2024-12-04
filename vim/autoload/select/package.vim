@@ -105,5 +105,9 @@ function! select#package#call(filetype, query, fullscreen)
 endfunction
 
 function! select#package#filetypes()
-  return ['ruby', 'go']
+  return [
+        \'ruby',
+        \'go',
+        \'vim',
+        \]
 endfunction

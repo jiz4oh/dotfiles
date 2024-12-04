@@ -5,7 +5,7 @@ function! s:format(path) abort
 endfunction
 
 function! select#packages#ruby#prompt() abort
-  return "Gem"
+  return 'Gem'
 endfunction
 
 function! select#packages#ruby#packages() abort

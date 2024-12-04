@@ -10,7 +10,7 @@ function! s:readdir(dir)
 endfunction
 
 function! select#packages#go#prompt() abort
-  return "Pkg"
+  return 'Pkg'
 endfunction
 
 function! select#packages#go#packages() abort
