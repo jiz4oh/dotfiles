@@ -41,7 +41,7 @@ return {
 		behaviour = {
 			auto_set_keymaps = false,
 		},
-		provider = "claude",
+		provider = type(os.getenv("ANTHROPIC_API_KEY")) == type('') and "claude" or "copilot",
 		auto_suggestions_provider = "copilot",
 		copilot = {
 			model = vim.g.copilot_model or "gpt-40-2024-08-06",
