@@ -1,12 +1,21 @@
 " returns nearest parent directory contains one of the markers
 function! personal#project#find_root()
+  let l:dir = ''
   if exists('*projectionist#path')
     let l:dir = get(l:, 'dir', projectionist#path())
   endif
   if exists('*FindRootDirectory')
     let l:dir = get(l:, 'dir', FindRootDirectory())
   endif
-  return get(l:, 'dir', '')
+
+  if empty(l:dir)
+    let l:git_root = system('git rev-parse --show-toplevel 2>/dev/null')[:-2]
+    if v:shell_error == 0
+      let l:dir = l:git_root
+    endif
+  end
+
+  return l:dir
 endfunction
 
 " returns nearest parent directory contains one of the markers

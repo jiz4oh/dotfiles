@@ -109,5 +109,6 @@ function! select#package#filetypes()
         \'ruby',
         \'go',
         \'vim',
+        \'javascript',
         \]
 endfunction
