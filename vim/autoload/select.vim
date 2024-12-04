@@ -164,12 +164,22 @@ EOF
   call s:input(prompt, list, { l, _ -> fzf#helper#colon_sink(['enter',l], { 'enter': 'edit'})})
 endfunction
 
-function! select#packages(query, fullscreen)
+function! select#packages(fullscreen, ...)
+  let opts = {
+        \ 'fullscreen': a:fullscreen,
+        \}
+  if !empty(a:000) && index(select#package#filetypes(), a:1) > -1
+    let opts['query'] = get(a:, 2, '')
+    call select#package#call(a:1, opts)
+    return
+  end
+
+  let opts['query'] = get(a:, 1, '')
   try
-    call select#package#call(&filetype, a:query, a:fullscreen)
+    call select#package#call(&filetype, opts)
   catch
     let prompt = 'Select Packages of'
     let list = select#package#filetypes()
-    call s:input(prompt, list, { l, _ -> select#package#call(l, a:query, a:fullscreen)})
+    call s:input(prompt, list, { l, _ -> select#package#call(l, opts)})
   endtry
 endfunction
