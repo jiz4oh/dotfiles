@@ -47,7 +47,7 @@ return {
 			auto_insert_mode = true,
 			question_header = "  " .. user .. " ",
 			answer_header = "  Copilot ",
-			model = vim.g.copilot_model, -- call CopilotChatModels to check
+			model = vim.g.copilot_model or "gpt-40-2024-08-06",
 			chat_autocomplete = true,
 			mappings = {
 				complete = {

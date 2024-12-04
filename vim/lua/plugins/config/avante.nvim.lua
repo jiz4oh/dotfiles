@@ -10,13 +10,6 @@ return {
 			mode = { "n", "v" },
 		},
 		{
-			"<leader>ar",
-			function()
-				require("avante.api").refresh()
-			end,
-			desc = "avante: refresh",
-		},
-		{
 			"<leader>ae",
 			function()
 				require("avante.api").edit()
@@ -24,8 +17,26 @@ return {
 			desc = "avante: edit",
 			mode = "v",
 		},
+		"<Plug>(AvanteAsk)",
+		"<Plug>(AvanteToggle)",
+		"<Plug>(AvanteChat)",
+		"<Plug>(AvanteBuild)",
+		"<Plug>(AvanteEdit)",
+		"<Plug>(AvanteRefresh)",
+		"<Plug>(AvanteFocus)",
 	},
-	cmd = { "AvanteAsk" },
+	cmd = {
+		"AvanteAsk",
+		"AvanteToggle",
+		"AvanteChat",
+		"AvanteBuild",
+		"AvanteEdit",
+		"AvanteRefresh",
+		"AvanteFocus",
+		"AvanteSwitchProvider",
+		"AvanteClear",
+		"AvanteShowRepoMap",
+	},
 	opts = {
 		behaviour = {
 			auto_set_keymaps = false,
@@ -33,7 +44,7 @@ return {
 		provider = "copilot",
 		auto_suggestions_provider = "copilot",
 		copilot = {
-			model = vim.g.copilot_model,
+			model = vim.g.copilot_model or "gpt-40-2024-08-06",
 		},
 		claude = {
 			endpoint = os.getenv("ANTHROPIC_ENDPOINT") or "https://api.anthropic.com",
