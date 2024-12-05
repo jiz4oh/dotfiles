@@ -332,6 +332,7 @@ endif
 Plug 'uguu-org/vim-matrix-screensaver'
 "}}}
 if has('nvim-0.8')
+  let g:loaded_lazy = 1
   execute 'luafile '. expand('<sfile>:p:h') . '/plugin.lua'
 else
 
