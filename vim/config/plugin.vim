@@ -261,7 +261,7 @@ Plug 'pbogut/fzf-mru.vim'
 if !has('nvim-0.10')
   Plug 'liuchengxu/vim-which-key'
 end
-if exists('$SSH_TTY') && (exists('$TMUX') || !has('nvim-0.10'))
+if exists('$SSH_TTY') && !has('nvim-0.10')
   Plug 'ojroques/vim-oscyank'
 endif
 Plug 'skywind3000/vim-dict'
