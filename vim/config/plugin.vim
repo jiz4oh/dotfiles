@@ -225,7 +225,7 @@ endif
 if executable('node')
   " Plug 'Shougo/neco-vim'
   " Plug 'neoclide/coc-neco'
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
   
 Plug 'mattn/emmet-vim'
