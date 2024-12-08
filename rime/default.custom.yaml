@@ -12,7 +12,7 @@ patch:
   ascii_composer:
     good_old_caps_lock: true
     switch_key:
-      Shift_L: inline_ascii
+      Shift_L: commit_code
       Shift_R: inline_ascii  # （默认) 在输入法的临时英文编辑区内输入字母、数字、符号、空格等，回车上屏后自动复位到中文
       # Control_L: commit_text # 已输入的 候选文字 上屏并切换至西文输入模式
       # Control_R: commit_code # 已输入的 编码字符 上屏并切换至西文输入模式
