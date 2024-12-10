@@ -14,7 +14,7 @@ brew bundle --no-upgrade
 echo "Updated homebrew"
 
 "$BASE"/scripts/install_asdf
-"$BASE"/scripts/install_rime ~/Library/Rime
+"$BASE"/rime/install ~/Library/Rime
 
 # https://github.com/artginzburg/MiddleClick-Ventura#number-of-fingers
 defaults write com.rouge41.middleClick fingers 5

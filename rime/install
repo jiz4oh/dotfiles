@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd "$(dirname "$(dirname "${BASH_SOURCE[0]}")")" || exit 1
+cd "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")" || exit 1
 BASE=$(pwd)
 RIME_DIR=${1:-~/Library/Rime}
 
@@ -10,7 +10,7 @@ if [ ! -d "$RIME_DIR" ]; then
   ln -sf "$BASE"/tmp/Rime "$RIME_DIR"
 fi
 
-for file in rime/*; do
+for file in rime/custom/*; do
   if [ ! -d "$BASE/$file" ]; then
     [ -e "$RIME_DIR/$file" ] && mv -v "$RIME_DIR/$file" bak/"$file"
     ln -sfv "$BASE/$file" "$RIME_DIR/$(basename "$file")"
