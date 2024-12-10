@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cd "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")" || exit 1
+BASE=$(pwd)
+
+if [ -z "$1" ]; then
+  echo "指定 scp 目标目录" >&2
+  exit 1
+fi
+
+# ./install_android /sdcard/Android/rime
+# ANDROID_SERIAL=xxxx ./install_android /sdcard/Android/rime
+# ./install_android /storage/emulated/0/Android/data/org.fcitx.fcitx5.android/files/data/rime/
+adb push "$BASE"/rime/custom/* $1
+adb push "$BASE"/rime/opencc/* $1/opencc
