@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
+cd "$(dirname "$(dirname "${BASH_SOURCE[0]}")")" || exit 1
 BASE=$(pwd)
 RIME_DIR=${1:-~/Library/Rime}
 

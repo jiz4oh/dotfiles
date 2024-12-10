@@ -6,7 +6,7 @@ BASE=$(pwd)
 touch bashrc-extra
 mkdir -pv bak
 
-[ $(command -v zsh) ] && $BASE/install_zsh
+[ $(command -v zsh) ] && $BASE/scripts/install_zsh
 
 # dotfiles
 for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
@@ -70,9 +70,9 @@ elif [ "${OS}" == "Linux" ]; then
 fi
 
 if [ "$release" == "Darwin" ]; then
-  "$BASE"/install_osx
+  "$BASE"/scripts/install_osx
 elif [ "$release" == "debian" ]; then
-  "$BASE"/install_debian
+  "$BASE"/scripts/install_debian
 fi
 
 "$BASE"/vim/install
