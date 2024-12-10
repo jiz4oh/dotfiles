@@ -14,11 +14,11 @@
 				"dicts": [
 					{
 						"type": "text",
-						"file": "emoji.txt"
+						"file": "wechat.txt"
 					},
 					{
 						"type": "text",
-						"file": "wechat.txt"
+						"file": "emoji.txt"
 					},
 					{
 						"type": "text",
