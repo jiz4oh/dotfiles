@@ -1,15 +1,61 @@
 #!/bin/bash
+# ./install_android /sdcard/Android/rime
+# ANDROID_SERIAL=xxxx ./install_android /sdcard/Android/rime
+# ./install_android /storage/emulated/0/Android/data/org.fcitx.fcitx5.android/files/data/rime/
 
+set -x
 cd "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")" || exit 1
 BASE=$(pwd)
+REPO_URL="https://github.com/gaboolic/rime-frost/archive/refs/heads/master.zip"
+UNZIP_DIR_NAME="rime-frost-master"
+LOCAL_ZIP="/tmp/rime.zip"
+REMOTE_DIR="/sdcard/Download"
 
 if [ -z "$1" ]; then
   echo "指定 scp 目标目录" >&2
   exit 1
 fi
 
-# ./install_android /sdcard/Android/rime
-# ANDROID_SERIAL=xxxx ./install_android /sdcard/Android/rime
-# ./install_android /storage/emulated/0/Android/data/org.fcitx.fcitx5.android/files/data/rime/
+adb shell mkdir -p $1
+adb shell mkdir -p $1/opencc
+
+install_rime_frost() {
+  zip_name=$(basename $LOCAL_ZIP)
+
+  echo "正在下载 GitHub 仓库的 ZIP 包..."
+  curl -L -o "$LOCAL_ZIP" "$REPO_URL"
+
+  # 检查是否成功下载
+  if [ $? -ne 0 ]; then
+    echo "错误: 下载 ZIP 包失败"
+    exit 1
+  fi
+
+  # 将 ZIP 文件推送到远程设备
+  echo "正在将 ZIP 包推送到设备..."
+  adb push "$LOCAL_ZIP" "$REMOTE_DIR/"
+  if [ $? -ne 0 ]; then
+    echo "错误: 推送 ZIP 包失败"
+    exit 1
+  fi
+
+  echo "正在解压 ZIP 包..."
+  adb shell "rm -rf $REMOTE_DIR/$UNZIP_DIR_NAME && cd $REMOTE_DIR && unzip -o $zip_name"
+  if [ $? -eq 0 ]; then
+    echo "ZIP 包已成功解压"
+  else
+    echo "错误: 解压 ZIP 包失败"
+    exit 1
+  fi
+
+  adb shell "cp -r $REMOTE_DIR/$UNZIP_DIR_NAME/* $1"
+
+  rm $LOCAL_ZIP
+  adb shell "rm $REMOTE_DIR/$zip_name"
+  adb shell "rm -rf $REMOTE_DIR/$UNZIP_DIR_NAME"
+}
+
+install_rime_frost $1
+
 adb push "$BASE"/rime/custom/* $1
 adb push "$BASE"/rime/opencc/* $1/opencc
