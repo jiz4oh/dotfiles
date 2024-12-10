@@ -23,3 +23,6 @@ patch:
   translator/dictionary: pinyin_flypy
   translator/preedit_format: {}            # 保留原始的输入字符，不转化为全拼形式
   radical_reverse_lookup/dictionary: pinyin_flypy
+  # https://github.com/airinghost/wechat-emoji
+  # https://github.com/amorphobia/rime-emoji-plus/blob/master/opencc/emoji_plus.txt
+  emoji/opencc_config: my_emoji.json
