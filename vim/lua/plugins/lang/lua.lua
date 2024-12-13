@@ -1,6 +1,7 @@
 return {
 	{
 		"folke/lazydev.nvim",
+		import = "plugins.config.lazydev"
 	},
 	{ -- optional cmp completion source for require statements and module annotations
 		"hrsh7th/nvim-cmp",

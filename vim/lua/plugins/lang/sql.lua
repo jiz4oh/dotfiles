@@ -13,5 +13,6 @@ return {
 				end
 			end
 		end,
+		import = "plugins.config.vim-dadbod-completion"
 	},
 }

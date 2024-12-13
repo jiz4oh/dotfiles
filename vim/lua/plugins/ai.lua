@@ -4,9 +4,11 @@ return {
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
 		enabled = enabled,
+		import = "plugins.config.CopilotChat"
 	},
 	{
 		"yetone/avante.nvim",
 		enabled = enabled,
+		import = "plugins.config.avante"
 	},
 }

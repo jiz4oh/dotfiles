@@ -21,7 +21,6 @@ require("lazy").setup({
     { import = "vim-plug" },
     -- can override specs from vim-plug
     -- https://lazy.folke.io/usage/structuring#%EF%B8%8F-importing-specs-config--opts
-    { import = "plugins.config" },
     { import = "plugins" },
     { import = "plugins.lang" },
   },
