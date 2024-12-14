@@ -1,6 +1,9 @@
 augroup vim-dispatch-autocmd
   autocmd!
   
+  autocmd BufWritePost *Library/LaunchAgents/*.plist Dispatch sh -c 'launchctl unload <afile>:p && launchctl load <afile>:p'
+  autocmd BufRead *Library/LaunchAgents/*.plist let b:dispatch = 'launchctl unload ' . expand('<afile>:p') . ' && launchctl load ' . expand('<afile>:p')
+
   autocmd BufNewFile,BufRead Dockerfile* let b:dispatch = get(b:, 'dispatch', 'docker build %:p:h -t %:p:h:t:gs/.*/\L&/:S')
   " https://docs.docker.com/compose/compose-application-model/#the-compose-file
   autocmd BufNewFile,BufRead compose.yaml,compose.yml,docker-compose.yaml,docker-compose.yml let b:dispatch = get(b:, 'dispatch', 'docker compose -f %:p up -d')
