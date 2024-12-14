@@ -32,16 +32,25 @@ if vim.g.plugs_order ~= nil then
         lazy = (not vim.tbl_isempty(as_array(config['on']))) or (not vim.tbl_isempty(as_array(config['for']))),
         cmd = cmd,
         keys = keys,
-        event = config['event'],
-        ft = config['for'],
-        branch = config['branch'],
-        tag = config['tag'],
-        commit = config['commit'],
-        dir = config['dir'],
-        name = config['as'],
-        pin = config['forzen'],
-        build = config['do'],
+        dir = vim.fn.isdirectory(config['dir']) == 1 and config['dir'],
       }
+
+			local mappings = {
+				event = 'event',
+				ft = 'for',
+				branch = 'branch',
+				tag = 'tag',
+				commit = 'commit',
+				name = 'as',
+				pin = 'forzen',
+				build = 'do',
+			}
+
+			for k,v in ipairs(mappings) do
+				if v ~= nil then
+					conf[k] = v
+				end
+			end
 
       conf['init'] = function()
         pcall(vim.cmd.source, path)
