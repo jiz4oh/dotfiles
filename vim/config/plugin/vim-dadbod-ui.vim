@@ -32,14 +32,7 @@ function! s:activate_projectionist() abort
 
   let url = ''
   for [_root, value] in projectionist#query('db')
-    if get(g:, 'loaded_lazy')
-      try
-        lua require("lazy").load({ plugins = { "vim-dadbod-ui" } })
-      catch
-      endtry
-    else
-      call plug#load('vim-dadbod-ui')
-    end
+    call MyLoad('vim-dadbod-ui')
     for v in db_ui#connections_list()
       if v['name'] ==# value
         let url = v['url']

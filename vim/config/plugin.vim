@@ -335,28 +335,38 @@ if has('nvim-0.8')
   let g:loaded_lazy = 1
   execute 'luafile '. expand('<sfile>:p:h') . '/plugin.lua'
 else
+  call plug#end()
 
-call plug#end()
+  augroup PlugLazyLoad
+    autocmd!
 
-augroup PlugLazyLoad
-  autocmd!
-
-  if exists('g:plugs_order')
-    for plugName in g:plugs_order
-      if HasInstall(plugName)
-        let spec = g:plugs[plugName]
-        "TODO plug.vim 内部判断某个插件是否 lazy，不只是判断是否有 on 或者 for
-        " if has_key(spec, 'on') || has_key(spec, 'for')
-        "   execute 'autocmd User ' . plugName . ' call SourceConfig("plugin/' . plugName . '")'
-        " else
-          call SourceConfig('plugin/' . plugName)
-        " endif
-      endif
-    endfor
-  endif
-augroup END
+    if exists('g:plugs_order')
+      for plugName in g:plugs_order
+        if HasInstall(plugName)
+          let spec = g:plugs[plugName]
+          "TODO plug.vim 内部判断某个插件是否 lazy，不只是判断是否有 on 或者 for
+          " if has_key(spec, 'on') || has_key(spec, 'for')
+          "   execute 'autocmd User ' . plugName . ' call SourceConfig("plugin/' . plugName . '")'
+          " else
+            call SourceConfig('plugin/' . plugName)
+          " endif
+        endif
+      endfor
+    endif
+  augroup END
 end
 endif
+
+function! MyLoad(name) abort
+  if get(g:, 'loaded_lazy')
+    "try
+      execute 'lua require("lazy").load({ plugins = { "' . a:name . '" } })'
+    "catch
+    "endtry
+  else
+    call plug#load(a:name)
+  end
+endfunction
 
 function! s:plug_gf() abort
   let line = getline(line('.'))

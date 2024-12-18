@@ -26,7 +26,7 @@ augroup nerd_loader
   autocmd VimEnter * silent! autocmd! FileExplorer
   autocmd BufEnter,BufNew *
         \  if isdirectory(expand('<amatch>'))
-        \|   call plug#load('nerdtree')
+        \|   call MyLoad('nerdtree')
         \|   execute 'autocmd! nerd_loader'
         \| endif
 
