@@ -19,7 +19,7 @@ alias ......='cd ../../../../..'
 alias cd.='cd ..'
 alias cd..='cd ..'
 alias l='ls -alF'
-alias ll='ls -l'
+alias ll='ls -lh'
 
 if [ -n "$KITTY_WINDOW_ID" ];then
   alias s='kitty +kitten ssh'
