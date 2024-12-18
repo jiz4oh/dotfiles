@@ -784,9 +784,14 @@ nnoremap <C-s>     :wall<cr>
 map  <silent>          <leader>ee <Plug><ExpoloreToggle>
 map  <silent><special> <F2>       <Plug><ExpoloreToggle>
 imap <silent><special> <F2>       <Plug><ExpoloreToggle>
+imap <silent><special> <F2>       <Plug><ExpoloreToggle>
+nmap <silent> <leader>ep          <Plug><ExpoloreRoot>
+nmap <silent> <leader>ef          <Plug><ExpoloreCfile>
 
 map  <Plug><ExpoloreToggle> :Lexplore<CR>
 imap <Plug><ExpoloreToggle> <c-o>:<c-u>Lexplore<CR>
+map  <Plug><ExpoloreRoot>   :Lexplore<CR>
+map  <Plug><ExpoloreCfile>  :Lexplore<CR>
 
 " remap U to <C-r> for easier redo
 nnoremap U <C-r>
