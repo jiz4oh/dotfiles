@@ -8,6 +8,8 @@ function! config#nerdtree#init() abort
   " Command to call the OpenFileOrExplorer function.
   command! -n=? -complete=file -bar -bang E    :call <SID>OpenFileOrExplorer('<args>', <bang>0)
   command! -n=? -complete=file -bar -bang Edit :call <SID>OpenFileOrExplorer('<args>', <bang>0)
+  silent! autocmd! nerd_loader
+  silent! autocmd! FileExplorer
 endfunction
 
 

@@ -23,7 +23,6 @@ let g:NERDTreeMapUpdirKeepOpen    = '<backspace>'
 
 augroup nerd_loader
   autocmd!
-  autocmd VimEnter * silent! autocmd! FileExplorer
 
   autocmd User nerdtree ++nested call config#nerdtree#init()
 if has('nvim')
@@ -40,12 +39,9 @@ vim.api.nvim_create_autocmd("User", {
 })
 EOF
 end
-
-  autocmd BufEnter,BufNew *
-        \  if isdirectory(expand('<amatch>'))
-        \|   call MyLoad('nerdtree')
-        \|   execute 'autocmd! nerd_loader'
-        \| endif
+  if !(argc() && argv()[0] =~? '^\(scp\|ftp\)://')
+    autocmd BufEnter,BufNew * call MyLoad('nerdtree')
+  endif
 augroup END
 
 " copy from https://github.com/SpaceVim/SpaceVim/blob/master/config/plugins/nerdtree.vim
