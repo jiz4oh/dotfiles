@@ -24,12 +24,33 @@ let g:NERDTreeMapUpdirKeepOpen    = '<backspace>'
 augroup nerd_loader
   autocmd!
   autocmd VimEnter * silent! autocmd! FileExplorer
-  autocmd User nerdtree call config#nerdtree#init()
+
+  autocmd User nerdtree ++nested call config#nerdtree#init()
+if has('nvim')
+lua<<EOF
+vim.api.nvim_create_autocmd("User", {
+  group = "nerd_loader",
+  pattern = "LazyLoad",
+  nested = true,
+  callback = function(event)
+    if event["data"] == "nerdtree" then
+      vim.fn["config#nerdtree#init"]()
+    end
+  end
+})
+EOF
+end
+
   autocmd BufEnter,BufNew *
         \  if isdirectory(expand('<amatch>'))
         \|   call MyLoad('nerdtree')
         \|   execute 'autocmd! nerd_loader'
         \| endif
+augroup END
+
+" copy from https://github.com/SpaceVim/SpaceVim/blob/master/config/plugins/nerdtree.vim
+augroup nerdtree_zvim
+  autocmd!
 
   if exists('&winfixbuf')
     autocmd FileType nerdtree if !(exists('b:NERDTree') && b:NERDTree.isWinTree()) | setlocal winfixbuf | endif
@@ -38,11 +59,6 @@ augroup nerd_loader
     autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
         \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
   end
-augroup END
-
-" copy from https://github.com/SpaceVim/SpaceVim/blob/master/config/plugins/nerdtree.vim
-augroup nerdtree_zvim
-  autocmd!
   " Exit Vim if NERDTree is the only window remaining in the only tab.
   autocmd BufEnter *
         \ if (winnr('$') == 1 && exists('b:NERDTree')

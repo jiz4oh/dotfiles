@@ -1,6 +1,11 @@
 return {
 	"preservim/nerdtree",
-	keys = { "<Plug><ExpoloreToggle>" },
+	cmd = {
+		"NERDTree",
+		"NERDTreeToggle",
+		"NERDTreeFind",
+	},
+	lazy = true,
 	dependencies = {
 		{ "Xuyuanp/nerdtree-git-plugin" },
 		{ "PhilRunninger/nerdtree-visual-selection" },
