@@ -15,6 +15,20 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.keymap.set('n', '<leader>Lp', '<cmd>Lazy profile<cr>')
+
+local firenvim_plugins = {
+  "LazyVim",
+  "lazy.nvim",
+  "nvim-treesitter",
+  "nvim-treesitter-textobjects",
+  "nvim-ts-context-commentstring",
+  "snacks.nvim",
+  "vim-repeat",
+  "yanky.nvim",
+}
+
+
 require("lazy").setup({
   spec = {
     -- import/override with your plugins
@@ -32,9 +46,14 @@ require("lazy").setup({
     -- have outdated releases, which may break your Neovim install.
     version = nil, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
-    -- default `cond` you can use to globally disable a lot of plugins
-    -- when running inside vscode for example
-    cond = nil, ---@type boolean|fun(self:LazyPlugin):boolean|nil
+		-- @type boolean|fun(self:LazyPlugin):boolean|nil
+    cond = function (plugin)
+			if vim.g.started_by_firenvim then
+				return vim.tbl_contains(firenvim_plugins, plugin.name) or plugin.firenvim
+			else
+				return true
+			end
+    end
   },
   install = { colorscheme = { "gruvbox-material" } },
   checker = {

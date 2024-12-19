@@ -1,6 +1,7 @@
 if get(s:, 'loaded', 0) != 0
 	finish
 endif
+
 let s:loaded = 1
 
 let g:disable_personal_stl = get(g:, 'disable_personal_stl', 0)

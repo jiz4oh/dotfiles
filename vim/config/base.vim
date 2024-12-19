@@ -415,9 +415,15 @@ endif
 "}}}
 
 " status line
-set laststatus=2                       "  Always show the status line - use 2 lines for the status bar
-" tabline
-set showtabline=2
+"https://jdhao.github.io/2020/01/01/firenvim_nvim_inside_browser/#custom-settings
+if exists('g:started_by_firenvim') && g:started_by_firenvim
+  set laststatus=0
+  set showtabline=0
+else
+  set laststatus=2                       "  Always show the status line - use 2 lines for the status bar
+  " tabline
+  set showtabline=2
+end
 " }}}
 
 " ============================================================================
