@@ -47,9 +47,12 @@ return {
 	"rcarriga/nvim-notify",
 	enabled = vim.fn.has("nvim-0.5") == 1,
 	init = function()
-		vim.notify = require("notify")
-		vim.g.db_ui_use_nvim_notify = 1
-		vim.g.db_ui_disable_progress_bar = 1
+		local ok, notify = pcall(require, "notify")
+		if ok then
+			vim.notify = notify
+			vim.g.db_ui_use_nvim_notify = 1
+			vim.g.db_ui_disable_progress_bar = 1
+		end
 	end,
 	event = "VeryLazy",
 	opts = {
