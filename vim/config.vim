@@ -36,6 +36,7 @@ let g:project_markers = [
       \]
 
 let g:is_iterm2 = 'iTerm.app' == $TERM_PROGRAM
+let g:apple_terminal = 'Apple_Terminal' == $TERM_PROGRAM
 
 let g:enable_nerd_font        = g:is_mac_gui || 
       \g:is_iterm2 ||

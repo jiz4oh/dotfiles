@@ -55,7 +55,7 @@ if exists('g:neovide')
   endif
 endif
 
-if g:as_ide
+if g:as_ide && !get(g:, 'apple_terminal', 0)
   silent! colorscheme gruvbox-material
 endif
 
