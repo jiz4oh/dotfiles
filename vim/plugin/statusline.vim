@@ -6,7 +6,7 @@ let s:loaded = 1
 
 let g:disable_personal_stl = get(g:, 'disable_personal_stl', 0)
 
-let s:diabled_fts =
+let s:disabled_fts =
   \ ['defx', 'denite', 'vista', 'tagbar', 'undotree', 'diff', 'peekaboo', 'sidemenu', 'qf', 'coc-explorer', 'startify', 'vim-plug']
 
 function! StatusDiagnostic() abort
@@ -63,13 +63,20 @@ let s:stl .= "%{&fileencoding?&fileencoding:&encoding}[%{&fileformat}]"
 let s:stl .= "%#ModeMsg#"
 let s:stl .= " %{&filetype} "
 let s:stl .= "%#StatusLine#"
-let s:stl .= "  %p%% ☰ %l:%v "
+
+" kitty 0.38.0 broken with unicode
+" https://github.com/kovidgoyal/kitty/issues/8162
+if exists('$KITTY_WINDOW_ID')
+  let s:stl .= " %p%% %l:%v "
+else
+  let s:stl .= "  %p%% ☰ %l:%v "
+end
 
 let s:stl_nc = ""
 let s:stl_nc .= "%f%h%w%r"
 
 function s:status_line_active() abort
-    if g:disable_personal_stl || index(s:diabled_fts, &ft) > 0
+    if g:disable_personal_stl || index(s:disabled_fts, &ft) > -1
         return
     endif
 
