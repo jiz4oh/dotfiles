@@ -66,7 +66,7 @@ let s:stl .= "%#StatusLine#"
 
 " kitty 0.38.0 broken with unicode
 " https://github.com/kovidgoyal/kitty/issues/8162
-if exists('$KITTY_WINDOW_ID')
+if $TERM ==# 'xterm-kitty'
   let s:stl .= " %p%% %l:%v "
 else
   let s:stl .= "  %p%% ☰ %l:%v "
