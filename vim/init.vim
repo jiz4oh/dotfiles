@@ -30,7 +30,6 @@ function! HasInstall(plugName) abort
 endfunction
 
 call SourceConfig('base')
-execute 'source ' . g:config_home . '/autoload/plug.vim'
 call SourceConfig('plugin')
 
 " https://github.com/neovide/neovide/discussions/1220
