@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+# https://bundler.io/guides/bundler_in_a_single_file_ruby_script.html
+ENV['LANG'] = 'zh_CN.UTF-8'
+require 'bundler/inline'
+require 'timeout'
+
+gemfile do
+  source 'https://rubygems.org'
+  gem 'json'
+  gem 'http'
+end
+
+def copy_to_clipboard(text)
+  begin
+    Timeout.timeout(5) do  # 设置5秒超时
+      IO.popen('pbcopy', 'w:UTF-8') { |f| f << text }
+      status = $?.to_i
+      status == 0
+    end
+  rescue Timeout::Error => e
+    puts "Error: Operation timed out"
+    false
+  rescue Errno::EACCES => e
+    puts "Error: Permission denied"
+    false
+  rescue SystemCallError => e
+    puts "Error: Unable to open pipe"
+    false
+  end
+end
+
+require 'http'
+url = ARGV[0]
+
+loop do
+  puts "开始监听 #{url}"
+  body = HTTP.get(url).body
+  loop do
+    res = body.readpartial
+    hash = JSON.parse(res)
+    if !hash['message'].nil?
+      puts "获取到: #{hash['message']}"
+      if copy_to_clipboard(hash['message'])
+        puts "成功复制到剪贴板: #{hash['message']}"
+      else
+        puts "复制失败"
+      end
+    end
+  end
+end
