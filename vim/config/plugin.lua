@@ -39,6 +39,7 @@ require("lazy").setup({
     { import = "plugins" },
     { import = "plugins.lang" },
   },
+  concurrency = vim.uv.available_parallelism() * 2,
   defaults = {
     -- Set this to `true` to have all your plugins lazy-loaded by default.
     -- Only do this if you know what you are doing, as it can lead to unexpected behavior.
