@@ -92,15 +92,20 @@ return {
 				},
 			}
 
-			local ok1, cmp = pcall(require, "cmp_nvim_lsp")
-			if ok1 then
-				-- https://github.com/hrsh7th/cmp-nvim-lsp/issues/38#issuecomment-1815265121
-				local capabilities = vim.tbl_deep_extend(
-					"force",
-					vim.lsp.protocol.make_client_capabilities(),
-					cmp.default_capabilities()
-				)
-				opts["capabilities"] = capabilities
+			local ok, blink = pcall(require, "blink.cmp")
+			if ok then
+				opts["capabilities"] = blink.get_lsp_capabilities({}, true)
+			else
+				local ok2, cmp = pcall(require, "cmp_nvim_lsp")
+				if ok2 then
+					-- https://github.com/hrsh7th/cmp-nvim-lsp/issues/38#issuecomment-1815265121
+					local capabilities = vim.tbl_deep_extend(
+						"force",
+						vim.lsp.protocol.make_client_capabilities(),
+						cmp.default_capabilities()
+					)
+					opts["capabilities"] = capabilities
+				end
 			end
 
 			return opts
