@@ -1,14 +1,22 @@
 #!/bin/bash
 
+set -x
 cd "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")" || exit 1
 BASE=$(pwd)
 RIME_DIR=${1:-~/Library/Rime}
+VERSION=$(cat "$BASE"/rime/upstream_version)
 
-if [ ! -d "$RIME_DIR" ]; then
-  git clone --depth 1 https://github.com/gaboolic/rime-frost "$BASE"/tmp/Rime 2>/dev/null
-
-  ln -sf "$BASE"/tmp/Rime "$RIME_DIR"
+# 保存 sync 文件夹
+if [ -d "$RIME_DIR/sync"  ]; then
+  mv -v "$RIME_DIR/sync" "$BASE"/tmp/sync
 fi
+
+# 下载仓库
+rm -rf "$BASE"/tmp/Rime
+git clone --depth 1 --branch "$VERSION" https://github.com/gaboolic/rime-frost "$BASE"/tmp/Rime
+
+rm -rf "$RIME_DIR"
+ln -sf "$BASE"/tmp/Rime "$RIME_DIR"
 
 for file in rime/custom/*; do
   if [ ! -d "$BASE/$file" ]; then
@@ -23,3 +31,10 @@ for file in rime/opencc/*; do
 done
 
 ln -sf "$BASE"/tmp/Rime/rime_frost.dict.yaml "$RIME_DIR"/pinyin_flypy.dict.yaml
+
+if [ -e "$HOME/.mybackups" ]; then
+  ln -sf "$(cat "$HOME/.mybackups")/rime" "$HOME/Library/Rime/sync"
+fi
+
+mv -v "$BASE"/tmp/sync "$RIME_DIR/sync"
+rm -rf "$BASE"/tmp/sync

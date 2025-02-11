@@ -6,7 +6,8 @@
 set -x
 cd "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")" || exit 1
 BASE=$(pwd)
-REPO_URL="https://github.com/gaboolic/rime-frost/archive/refs/heads/master.zip"
+VERSION=$(cat "$BASE"/rime/upstream_version)
+REPO_URL="https://github.com/gaboolic/rime-frost/archive/refs/tags/$VERSION.zip"
 UNZIP_DIR_NAME="rime-frost-master"
 LOCAL_ZIP="/tmp/rime.zip"
 REMOTE_DIR="/sdcard/Download"
