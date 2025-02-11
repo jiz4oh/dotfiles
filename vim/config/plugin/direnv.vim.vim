@@ -5,14 +5,14 @@ let $DIRENV_LOG_FORMAT=""
 
 augroup direnv_rc
   au!
-  autocmd VimEnter * DirenvExport
-  autocmd BufEnter * call direnv#extra_vimrc#check()
+  autocmd VimEnter * silent! DirenvExport
+  autocmd BufEnter * if get(g:, 'loaded_direnv') | call direnv#extra_vimrc#check() | endif
   " need this to avoid an error on loading
   autocmd User DirenvLoaded :
 
   if exists('##DirChanged')
-    autocmd DirChanged * DirenvExport!
+    autocmd DirChanged * silent! DirenvExport!
   else
-    autocmd BufEnter * DirenvExport
+    autocmd BufEnter * silent! DirenvExport
   endif
 augroup END
