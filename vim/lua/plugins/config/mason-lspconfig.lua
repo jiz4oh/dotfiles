@@ -1,4 +1,23 @@
+local python_root_files = {
+  'pyproject.toml',
+  'setup.py',
+  'setup.cfg',
+  'requirements.txt',
+  'Pipfile',
+  'pyrightconfig.json',
+	'libpython*.dylib',  -- add this one to search in built-in libs
+  '.git',
+}
+
 local configs = {
+	["pyright"] = {
+    root_dir = function(fname)
+			local util = require 'lspconfig.util'
+			dd("fname", fname)
+			dd("python_root_files", python_root_files)
+      return util.root_pattern(unpack(python_root_files))(fname)
+    end,
+	},
 	["harper_ls"] = {
 		settings = {
 			["harper-ls"] = {
