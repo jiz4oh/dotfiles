@@ -12,29 +12,6 @@ return {
 		"CopilotChatToggle",
 	},
 	keys = {
-		{ "<leader>a", "", desc = "+ai", mode = { "n", "v" } },
-		{
-			"<leader>ac",
-			function()
-				return require("CopilotChat").toggle()
-			end,
-			desc = "Toggle (CopilotChat)",
-			mode = { "n", "v" },
-		},
-		{
-			"<leader>ax",
-			function()
-				return require("CopilotChat").reset()
-			end,
-			desc = "Clear (CopilotChat)",
-			mode = { "n", "v" },
-		},
-		{ "<leader>af", "<cmd>CopilotChatFix<cr>" },
-		{ "<leader>ad", "<cmd>CopilotChatDocs<cr>" },
-		{ "<leader>at", "<cmd>CopilotChatTests<cr>" },
-		{ "<leader>ao", "<cmd>CopilotChatOptimize<cr>" },
-		{ "<leader>ae", "<cmd>CopilotChatExplain<cr>" },
-		{ "<leader>ar", "<cmd>CopilotChatReview<cr>" },
 		{ "cc", "<cmd>CopilotChatCommit<cr>", ft = "gitcommit" },
 	},
 	branch = "main",

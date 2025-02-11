@@ -37,9 +37,10 @@ return {
 		"AvanteClear",
 		"AvanteShowRepoMap",
 	},
+  lazy = false,
 	opts = {
 		behaviour = {
-			auto_set_keymaps = false,
+			-- auto_set_keymaps = false,
 		},
 		provider = type(os.getenv("ANTHROPIC_API_KEY")) == type('') and "claude" or "copilot",
 		auto_suggestions_provider = "copilot",
@@ -67,6 +68,7 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		"stevearc/dressing.nvim",
 		"MunifTanjim/nui.nvim",
+    "nvim-lua/plenary.nvim",
 		--- The below dependencies are optional,
 		"zbirenbaum/copilot.lua", -- for providers='copilot'
 	},
