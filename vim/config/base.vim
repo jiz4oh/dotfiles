@@ -435,8 +435,6 @@ augroup vimrc
   autocmd!
 
   autocmd BufWrite scp://*,ftp://*,sftp://* if !get(g:, 'disable_netrw', 0) | Nwrite | endif
-  "https://roblox.github.io/lua-style-guide/#general-whitespace
-  autocmd FileType lua setlocal noexpandtab textwidth=80
 
   "https://github.com/vim/vim/issues/6445
   if exists('&winfixbuf')
