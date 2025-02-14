@@ -42,7 +42,9 @@ export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
 
 export HOMEBREW_NO_AUTO_UPDATE=1
 
+if [ -d ~/Library/Application\ Support/Bitwarden ]; then
+  export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock
 # http://blog.joncairns.com/2013/12/understanding-ssh-agent-and-ssh-add/
-if [ -z "$SSH_AUTH_SOCK" ] ; then
+elif [ -z "$SSH_AUTH_SOCK" ] ; then
   eval $(ssh-agent) > /dev/null
 fi
