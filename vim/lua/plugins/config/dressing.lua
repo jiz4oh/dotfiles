@@ -15,5 +15,6 @@ return {
 				},
 			},
 		},
+    input = { enabled = false }
 	},
 }

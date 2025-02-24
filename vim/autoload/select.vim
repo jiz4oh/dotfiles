@@ -1,5 +1,15 @@
 let s:is_win = has('win32') || has('win64')
 
+lua<<EOF
+_G.__select_picker_wrapper = function(func)
+  return function(item, idx)
+    if item then
+      func(item, idx)
+    end
+  end
+end
+EOF
+
 function! s:input(prompt, list, func) abort
   let list = copy(a:list)
   call map(list, { i,v -> i + 1 . ':' . v})
@@ -78,7 +88,7 @@ endfunction
 function! select#sessions()
   if has('nvim-0.6')
 lua<<EOF
-  vim.ui.select(vim.fn['select#get_sessions'](), {prompt = 'Sessions> '}, vim.fn['select#on_choice_session'])
+  vim.ui.select(vim.fn['select#get_sessions'](), {prompt = 'Sessions> '}, __select_picker_wrapper(vim.fn['select#on_choice_session']))
 EOF
     return
   end
@@ -91,7 +101,7 @@ endfunction
 function! select#compilers()
   if has('nvim-0.6')
 lua<<EOF
-  vim.ui.select(vim.fn['select#get_compilers'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, vim.fn['select#on_choice_compiler'])
+  vim.ui.select(vim.fn['select#get_compilers'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, __select_picker_wrapper(vim.fn['select#on_choice_compiler']))
 EOF
     return
   end
@@ -104,7 +114,7 @@ endfunction
 function! select#projects()
   if has('nvim-0.6')
 lua<<EOF
-  vim.ui.select(vim.fn['select#get_projects'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, vim.fn['select#on_choice_directory'])
+  vim.ui.select(vim.fn['select#get_projects'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, __select_picker_wrapper(vim.fn['select#on_choice_directory']))
 EOF
     return
   end
@@ -117,7 +127,7 @@ endfunction
 function! select#paths(query, fullscreen)
   if has('nvim-0.6')
 lua<<EOF
-  vim.ui.select(vim.fn['select#get_paths'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, vim.fn['select#on_choice_directory'])
+  vim.ui.select(vim.fn['select#get_paths'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, __select_picker_wrapper(vim.fn['select#on_choice_directory']))
 EOF
     return
   end
@@ -152,9 +162,10 @@ lua<<EOF
     vim.fn['select#get_files'](vim.g.__select_grep_query, vim.g.__select_grep_paths),
     {
       prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '
-    }, function(item, index)
+    }, __select_picker_wrapper(function(item, index)
       vim.fn['fzf#helper#colon_sink']({'enter', item}, { enter = 'edit'})
     end)
+    )
 EOF
     return
   end

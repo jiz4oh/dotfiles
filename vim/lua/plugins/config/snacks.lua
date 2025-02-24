@@ -19,6 +19,14 @@ return {
 			desc = "Prev Reference",
 			mode = { "n" },
 		},
+		{
+			"<leader>sf",
+			function()
+				Snacks.picker()
+			end,
+			desc = "Open Snacks Pickers",
+			mode = { "n" },
+		},
 	},
 	opts = {
 		-- your configuration comes here
@@ -31,6 +39,20 @@ return {
 			enabled = true,
 			exclude = { "latex" },
 		},
+    input = {},
+    picker = {
+      ui_select = true,
+      win = {
+        -- input window
+        input = {
+          keys = {
+            -- to close the picker on ESC instead of going to normal mode,
+            -- add the following keymap to your config
+            ["/"] = "toggle_focus",
+          },
+        },
+      }
+    },
 	},
 	init = function()
 		vim.api.nvim_create_autocmd("User", {
