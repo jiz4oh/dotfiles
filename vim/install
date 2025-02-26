@@ -8,7 +8,7 @@ if type vim &>/dev/null;then
 fi
 
 if type nvim &>/dev/null;then
-  nvim --headless +PlugInstall +qall
+  nvim --headless +Lazy restore +qall
 fi
 
 rm -f ~/.config/nvim 2> /dev/null
