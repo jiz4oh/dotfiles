@@ -51,6 +51,22 @@ return {
 			desc = "Open Snacks Pickers",
 			mode = { "n" },
 		},
+		{
+			"<leader>sd",
+			function()
+				Snacks.picker.diagnostics_buffer()
+			end,
+			desc = "Open Diagnostics Picker",
+			mode = { "n" },
+		},
+		{
+			"<leader>sD",
+			function()
+				Snacks.picker.diagnostics()
+			end,
+			desc = "Open Diagnostics Picker",
+			mode = { "n" },
+		},
 	},
 	opts = {
 		-- your configuration comes here
