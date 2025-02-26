@@ -16,6 +16,7 @@ augroup vim-dispatch-autocmd
       \ endif
   autocmd FileType zeroapi let b:dispatch = get(b:, 'dispatch', 'goctl api go --api %:p:S -dir %:p:h:S --style=go_zero')
 
+  autocmd BufRead setup.py let b:dispatch = 'cd %:p:h:S && python %:p:S install'
   autocmd FileType python let b:dispatch = get(b:, 'dispatch', 'python %:p:S')
   if executable('ipython')
     autocmd FileType python let b:start = get(b:, 'start', 'ipython')

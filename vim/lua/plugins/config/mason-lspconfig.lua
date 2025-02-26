@@ -13,8 +13,6 @@ local configs = {
 	["pyright"] = {
     root_dir = function(fname)
 			local util = require 'lspconfig.util'
-			dd("fname", fname)
-			dd("python_root_files", python_root_files)
       return util.root_pattern(unpack(python_root_files))(fname)
     end,
 	},
