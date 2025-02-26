@@ -2,7 +2,10 @@ return {
 	"ojroques/nvim-lspfuzzy",
 	event = "LspAttach",
 	opts = {
-		methods = "all", -- either 'all' or a list of LSP methods (see below)
+		methods = {
+      'callHierarchy/incomingCalls',
+      'callHierarchy/outgoingCalls',
+    }, -- either 'all' or a list of LSP methods (see below)
 		jump_one = true, -- jump immediately if there is only one location
 		callback = nil, -- callback called after jumping to a location
 		save_last = false, -- save last location results for the :LspFuzzyLast command
