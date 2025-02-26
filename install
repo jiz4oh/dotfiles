@@ -24,7 +24,7 @@ done
 # dotdirs
 for dir in git_template ctags.d vim raycast \
   tmux/plugins/tpm \
-  config/rubocop config/nvim config/solargraph config/kitty config/wezterm config/mise \
+  config/rubocop config/solargraph config/kitty config/wezterm config/mise \
   terminfo; do
   rm -rf bak/$dir
   parent_dir=$(dirname "$dir")
