@@ -10,6 +10,12 @@ local python_root_files = {
 }
 
 local configs = {
+	["basedpyright"] = {
+    root_dir = function(fname)
+			local util = require 'lspconfig.util'
+      return util.root_pattern(unpack(python_root_files))(fname)
+    end,
+	},
 	["pyright"] = {
     root_dir = function(fname)
 			local util = require 'lspconfig.util'

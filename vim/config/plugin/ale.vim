@@ -26,7 +26,7 @@ let g:ale_fixers = {
       \   'css': ['stylelint'],
       \   'scss': ['stylelint'],
       \   'sass': ['stylelint'],
-      \   'python': ['ruff_format', 'autocorrect', 'black', 'isort', 'remove_trailing_lines', 'trim_whitespace'],
+      \   'python': ['pyflyby','autocorrect', 'black', 'remove_trailing_lines', 'trim_whitespace', 'ruff_format'],
       \   'ruby': ['rubyfmt', 'rubocop'],
       \   'lua': ['stylua', ],
       \   'sh': ['shfmt', ],
@@ -47,6 +47,7 @@ let g:ale_linter_aliases = {
 let g:ale_use_global_executables = 1
 let g:ale_go_gopls_options = '-remote=auto'
 let g:ale_dockerfile_hadolint_use_docker = 'yes'
+let g:ale_python_pyflyby_options = '-n'
 
 let g:ale_lint_on_text_changed           = 'always'
 let g:ale_lint_delay                     = 750
