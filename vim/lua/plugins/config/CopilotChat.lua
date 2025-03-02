@@ -12,7 +12,7 @@ return {
 		"CopilotChatToggle",
 	},
 	keys = {
-		{ "cc", "<cmd>CopilotChatCommit<cr>", ft = "gitcommit" },
+		{ "cc", "<cmd>CopilotChatCommit<cr>", ft = "gitcommit", desc = "Genearate commit message" },
 	},
 	branch = "main",
 	build = "make tiktoken", -- Only on MacOS or Linux

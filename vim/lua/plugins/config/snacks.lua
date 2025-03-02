@@ -1,21 +1,21 @@
 local lsp_handlers = {
 	["textDocument/declaration"] = function(err, result, ctx, config)
-		Snacks.picker.lsp_declarations({unique_lines = true})
+		Snacks.picker.lsp_declarations({ unique_lines = true })
 	end,
 	["textDocument/definition"] = function(err, result, ctx, config)
-		Snacks.picker.lsp_definitions({unique_lines = true})
+		Snacks.picker.lsp_definitions({ unique_lines = true })
 	end,
 	["textDocument/documentSymbol"] = function(err, result, ctx, config)
 		Snacks.picker.lsp_symbols()
 	end,
 	["textDocument/implementation"] = function(err, result, ctx, config)
-		Snacks.picker.lsp_implementations({unique_lines = true})
+		Snacks.picker.lsp_implementations({ unique_lines = true })
 	end,
 	["textDocument/references"] = function(err, result, ctx, config)
-		Snacks.picker.lsp_references({unique_lines = true, include_declaration = false})
+		Snacks.picker.lsp_references({ unique_lines = true, include_declaration = false })
 	end,
 	["textDocument/typeDefinition"] = function(err, result, ctx, config)
-		Snacks.picker.lsp_type_definitions({unique_lines = true})
+		Snacks.picker.lsp_type_definitions({ unique_lines = true })
 	end,
 	["workspace/symbol"] = function(err, result, ctx, config)
 		Snacks.picker.lsp_workspace_symbols()
@@ -45,6 +45,18 @@ return {
 		},
 		{
 			"<leader>sf",
+			function()
+				Snacks.picker.smart({
+					matcher = {
+						cwd_bonus = false,
+					},
+				})
+			end,
+			desc = "Open Snacks Smart Picker",
+			mode = { "n" },
+		},
+		{
+			"<leader>sP",
 			function()
 				Snacks.picker()
 			end,
@@ -80,8 +92,25 @@ return {
 			exclude = { "latex" },
 		},
 		input = {},
+		indent = { enabled = true },
 		picker = {
 			ui_select = true,
+			layout = {
+				layout = {
+					backdrop = false,
+					width = 0.9,
+					min_width = 80,
+					height = 0.8,
+					min_height = 30,
+					box = "vertical",
+					border = "rounded",
+					title = "{title} {live} {flags}",
+					title_pos = "center",
+					{ win = "input", height = 1, border = "bottom" },
+					{ win = "list", border = "none" },
+					{ win = "preview", title = "{preview}", height = 0.6, border = "top" },
+				},
+			},
 			win = {
 				-- input window
 				input = {

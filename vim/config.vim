@@ -166,7 +166,6 @@ let g:which_key_map['s'] = {
       \ '/': 'Search search history',
       \ ':': 'Search command history',
       \ 'i': 'Search Include files',
-      \ 'g': 'Search in Gems',
       \ 'p': 'Search in Project',
       \ ']': 'Search <cword> in Tags',
       \ 'b': 'Search lines in the current Buffer',
@@ -232,7 +231,5 @@ let g:which_key_map_visual['g'] = {
 let g:which_key_map_visual['s'] = {
       \ 'name' : '+Search',
       \ ' ': 'Search selected with ripgrep',
-      \ 'g': 'Search selected in Gems',
       \ 'p': 'Search selected in Project',
-      \ 'w': 'Search selected in cWd',
       \ }
