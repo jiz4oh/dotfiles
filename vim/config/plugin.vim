@@ -29,6 +29,17 @@ elseif executable('asdf')
   Plug 'jiz4oh/asdf.vim'
 end
 
+function! MyLoad(name) abort
+  if get(g:, 'loaded_lazy')
+    "try
+      execute 'lua require("lazy").load({ plugins = { "' . a:name . '" } })'
+    "catch
+    "endtry
+  else
+    call plug#load(a:name)
+  end
+endfunction
+
 let g:with_treesitter = g:as_ide && has('nvim-0.9.2')
 " Plug 'tpope/vim-rbenv'
 " ============================================================================
@@ -228,7 +239,7 @@ if executable('node')
   " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
   
-Plug 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim', { 'on': 'EmmetInstall', 'for': ['html', 'css', 'eruby', 'xml'] }
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-surround'
 " neovim 0.10.0 has native commentary like comment support
@@ -356,17 +367,6 @@ else
   augroup END
 end
 endif
-
-function! MyLoad(name) abort
-  if get(g:, 'loaded_lazy')
-    "try
-      execute 'lua require("lazy").load({ plugins = { "' . a:name . '" } })'
-    "catch
-    "endtry
-  else
-    call plug#load(a:name)
-  end
-endfunction
 
 function! s:plug_gf() abort
   let line = getline(line('.'))
