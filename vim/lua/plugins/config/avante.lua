@@ -37,12 +37,56 @@ return {
 		"AvanteClear",
 		"AvanteShowRepoMap",
 	},
-  lazy = false,
+	lazy = false,
 	opts = {
 		behaviour = {
 			-- auto_set_keymaps = false,
+			enable_cursor_planning_mode = true,
 		},
-		provider = type(os.getenv("ANTHROPIC_API_KEY")) == type('') and "claude" or "copilot",
+		cursor_applying_provider = type(os.getenv("OPENROUTER_API_KEY")) == type("") and nil or "groq", -- In this example, use Groq for applying, but you can also use any provider you want.
+		provider = type(os.getenv("OPENROUTER_API_KEY")) == type("") and "openrouter_claude" or "copilot",
+		vendors = {
+			groq = { -- define groq provider
+				__inherited_from = "openai",
+				api_key_name = "ONEHUB_API_KEY",
+				endpoint = os.getenv("ONEHUB_BASE_URL"),
+				model = "llama-3.3-70b-versatile",
+				max_tokens = 32768, -- remember to increase this value, otherwise it will stop generating halfway
+			},
+			openrouter = {
+				__inherited_from = "openai",
+				endpoint = "https://openrouter.ai/api/v1",
+				api_key_name = "OPENROUTER_API_KEY",
+				model = "deepseek/deepseek-r1",
+			},
+			openrouter_claude = {
+				__inherited_from = "openai",
+				endpoint = "https://openrouter.ai/api/v1",
+				api_key_name = "OPENROUTER_API_KEY",
+				use_xml_format = true,
+				model = "anthropic/claude-3.7-sonnet",
+				parse_messages = function(opts)
+					require("avante.providers").claude.parse_messages(opts)
+				end,
+				parse_curl_args = function(provider, prompt_opts)
+					local args = require("avante.providers").openai.parse_curl_args(provider, prompt_opts)
+					return vim.tbl_deep_extend("force", args, {
+						body = {
+							system = {
+								{
+									type = "text",
+									text = prompt_opts.system_prompt,
+									cache_control = { type = "ephemeral" },
+								},
+							},
+						},
+					})
+				end,
+			},
+		},
+		file_selector = {
+			provider = "snacks",
+		},
 		auto_suggestions_provider = "copilot",
 		copilot = {
 			model = vim.g.copilot_model or "gpt-40-2024-08-06",
@@ -67,7 +111,7 @@ return {
 	dependencies = {
 		"nvim-treesitter/nvim-treesitter",
 		"MunifTanjim/nui.nvim",
-    "nvim-lua/plenary.nvim",
+		"nvim-lua/plenary.nvim",
 		--- The below dependencies are optional,
 		"zbirenbaum/copilot.lua", -- for providers='copilot'
 	},
