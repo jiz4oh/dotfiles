@@ -260,6 +260,7 @@ Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 " ============================================================================
 " Utils {{{
 " ============================================================================
+Plug 'lambdalisue/vim-suda'
 Plug 'tpope/vim-eunuch'
 " Plug 'jiz4oh/vim-terminal-help'
 Plug 'voldikss/vim-floaterm'
