@@ -30,3 +30,11 @@ hs.hotkey.bind({ "cmd" }, "F12", function()
 
 	app:mainWindow():moveToUnit("[100,100,0,0]")
 end)
+
+hs.loadSpoon("SpoonInstall")
+spoon.SpoonInstall:andUse("EmmyLua")
+spoon.SpoonInstall:andUse("ReloadConfiguration", { start = true })
+
+hs.spoons.use("ime", {
+	hotkeys = "default",
+})

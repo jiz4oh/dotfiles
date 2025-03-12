@@ -6,3 +6,5 @@ bak/
 Brewfile.lock.json
 tmux/plugins
 tmp/
+/hammerspoon/Spoons/*
+!/hammerspoon/Spoons/SpoonInstall.spoon/
