@@ -151,6 +151,7 @@ Plug 'tpope/vim-rails'
 if has('nvim') || has('patch-8.0.1453')
   Plug 'fatih/vim-go'
 endif
+Plug 'mityu/vim-applescript'
 
 " }}}
 

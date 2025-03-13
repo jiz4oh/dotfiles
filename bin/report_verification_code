@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+require 'uri'
+require 'net/http'
+
+ENV["LANG"] = "zh_CN.UTF-8"
+
+BARK_URL = ENV["BARK_URL"] || `cat ~/.bark_url 2>/dev/null` || "https://api.day.app"
+BARK_API_KEY = ENV["BARK_API_KEY"] || `cat ~/.bark_token 2>/dev/null`
+
+def report_bark(code)
+  code = code.encode("UTF-8", invalid: :replace, undef: :replace, replace: "?")
+
+  # 构建请求数据
+  uri = URI(BARK_URL + "/" + BARK_API_KEY)
+  res = nil
+  retry_count = 0
+  while retry_count < 3
+    begin
+      # 创建 HTTP 请求
+      params = {title: "验证码", body: code, autoCopy: true}
+      uri.query = URI.encode_www_form(params)
+
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.open_timeout = 5
+      http.read_timeout = 10
+      res = http.get(uri)
+      if res.is_a?(Net::HTTPSuccess)
+        puts res.body 
+        break
+      end
+    rescue
+      retry_count += 1
+      sleep(0.1 * 2 ** retry_count)
+    end
+  end
+
+  return res
+end
+
+if __FILE__ == $0
+  code = ARGV[0]
+  report_bark(code)
+end
