@@ -58,29 +58,35 @@ return {
 				endpoint = "https://openrouter.ai/api/v1",
 				api_key_name = "OPENROUTER_API_KEY",
 				model = "deepseek/deepseek-r1",
+				disable_tools = true,
 			},
 			openrouter_claude = {
 				__inherited_from = "openai",
 				endpoint = "https://openrouter.ai/api/v1",
 				api_key_name = "OPENROUTER_API_KEY",
 				use_xml_format = true,
+				support_prompt_caching = true,
 				model = "anthropic/claude-3.7-sonnet",
-				parse_messages = function(opts)
-					require("avante.providers").claude.parse_messages(opts)
+				parse_response = function(provider, ctx, data_stream, _, opts)
+					return require("avante.providers").openai.parse_response(provider, ctx, data_stream, _, opts)
 				end,
 				parse_curl_args = function(provider, prompt_opts)
 					local args = require("avante.providers").openai.parse_curl_args(provider, prompt_opts)
-					return vim.tbl_deep_extend("force", args, {
+					local messages = require("avante.providers").claude.parse_messages(provider, prompt_opts)
+					table.insert(messages, 1, {
+						type = "text",
+						text = prompt_opts.system_prompt,
+						cache_control = { type = "ephemeral" },
+					})
+
+					args = vim.tbl_deep_extend("force", args, {
+						include_reasoning = true,
 						body = {
-							system = {
-								{
-									type = "text",
-									text = prompt_opts.system_prompt,
-									cache_control = { type = "ephemeral" },
-								},
-							},
+							messages = messages,
 						},
 					})
+
+					return args
 				end,
 			},
 		},
