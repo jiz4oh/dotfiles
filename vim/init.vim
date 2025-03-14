@@ -30,6 +30,9 @@ function! HasInstall(plugName) abort
 endfunction
 
 call SourceConfig('base')
+if has('nvim')
+  exec 'luafile ' . g:config_home . '/config/base.lua'
+end
 call SourceConfig('plugin')
 
 " https://github.com/neovide/neovide/discussions/1220
