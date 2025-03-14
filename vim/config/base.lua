@@ -61,7 +61,7 @@ if vim.fn.has("nvim-0.6") == 1 then
 
 	vim.keymap.set("n", "yd", function()
 		local diagnostics = get_diagnostics()
-		if #diagnostics ~= nil then
+		if diagnostics ~= nil then
 			vim.fn.setreg("+", diagnostics)
 			vim.notify("Diagnostic copied to clipboard", vim.log.levels.INFO)
 		else
