@@ -44,6 +44,14 @@ return {
 					"nvim_lsp"
 				vim.api.nvim_buf_set_var(bufnr, "ale_disable_lsp", 1)
 
+				if client.name == "ruff" then
+          local ale_linters = vim.b.ale_linters or {}
+					ale_linters['python'] = vim.tbl_filter(function(v)
+						return v ~= "ruff"
+					end, vim.g.ale_linters.python)
+          vim.b.ale_linters = ale_linters
+				end
+
 				vim.notify_once("LSP " .. client.name .. " attached")
 			end,
 		})
