@@ -15,7 +15,7 @@ if vim.fn.has("nvim-0.10") == 1 then
 	vim.keymap.set({ "n", "v", "o" }, "<leader>y", '"+y', { noremap = true })
 	vim.keymap.set({ "n", "v", "o" }, "<leader>Y", '"+Y', { remap = true })
 
-	if vim.fn.exists("$SSH_TTY") then
+	if vim.fn.exists("$SSH_TTY") == 1 then
 		vim.api.nvim_create_autocmd("TextYankPost", {
 			callback = function()
 				local regs = { "", "+", "*" }
