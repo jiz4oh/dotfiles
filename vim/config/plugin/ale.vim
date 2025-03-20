@@ -44,11 +44,15 @@ let g:ale_linter_aliases = {
       \ 'javascript.tsx': ['javascript', 'jsx'],
       \ }
 
+"{{{ linter options
 let g:ale_use_global_executables = 1
 let g:ale_go_gopls_options = '-remote=auto'
 let g:ale_dockerfile_hadolint_use_docker = 'yes'
 let g:ale_python_pyflyby_options = '-n'
+let g:ale_lua_stylua_options = '--search-parent-directories'
+"}}}
 
+"{{{ ale options
 let g:ale_lint_on_text_changed           = 'always'
 let g:ale_lint_delay                     = 750
 
@@ -63,6 +67,7 @@ let g:ale_echo_msg_format                = '[%severity%] [%linter%] %s'
 
 let g:ale_virtualtext_cursor             = 1
 let g:ale_virtualtext_prefix             = '  ◉ '
+"}}}
 
 highlight! link ALEVirtualTextError Comment
 highlight! link ALEVirtualTextWarning Comment
