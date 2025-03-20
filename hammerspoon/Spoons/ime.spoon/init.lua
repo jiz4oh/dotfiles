@@ -14,44 +14,44 @@ obj.defaultHotkeys = {
 }
 
 local sources = {
-	cn = "im.rime.inputmethod.Squirrel.Hans",
-	en = "com.apple.keylayout.ABC",
+  cn = "im.rime.inputmethod.Squirrel.Hans",
+  en = "com.apple.keylayout.ABC",
 }
 local current = "im.rime.inputmethod.Squirrel.Hans"
 
 local function switch(id)
-	current = id
-	hs.keycodes.currentSourceID(id)
+  current = id
+  hs.keycodes.currentSourceID(id)
 end
 
 -- 有时候 macos 莫名其妙会切换到 ABC 输入法，锁定输入法，强制只能通过这种方式切换输入法
 local function forceIME()
-	if hs.keycodes.currentSourceID() ~= current then
-		switch(current)
-	end
+  if hs.keycodes.currentSourceID() ~= current then
+    switch(current)
+  end
 end
 
 function obj:bindHotkeys(mapping)
   local def = {}
   for k, value in pairs(sources) do
     def[k] = function()
-			switch(value)
-		end
+      switch(value)
+    end
   end
 
-	hs.spoons.bindHotkeysToSpec(def, mapping)
+  hs.spoons.bindHotkeysToSpec(def, mapping)
 end
 
 function obj:bindEvent()
-	hs.keycodes.inputSourceChanged(forceIME)
+  hs.keycodes.inputSourceChanged(forceIME)
 
-	hs.urlevent.bind("switch_ime", function(_, params)
-		switch(sources[params["lang"]] or sources.cn)
-	end)
+  hs.urlevent.bind("switch_ime", function(_, params)
+    switch(sources[params["lang"]] or sources.cn)
+  end)
 end
 
 function obj:init()
-	self:bindEvent()
+  self:bindEvent()
 end
 
 return obj

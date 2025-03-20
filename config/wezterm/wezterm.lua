@@ -34,14 +34,14 @@ config.mouse_bindings = {
 
   -- and make CMD-Click open hyperlinks
   {
-    event = { Up = { streak = 1, button = 'Left' } },
-    mods = 'SUPER',
+    event = { Up = { streak = 1, button = "Left" } },
+    mods = "SUPER",
     action = act.OpenLinkAtMouseCursor,
   },
-    -- Disable the 'Down' event of CMD-Click to avoid weird program behaviors
+  -- Disable the 'Down' event of CMD-Click to avoid weird program behaviors
   {
-    event = { Down = { streak = 1, button = 'Left' } },
-    mods = 'SUPER',
+    event = { Down = { streak = 1, button = "Left" } },
+    mods = "SUPER",
     action = act.Nop,
   },
   -- NOTE that binding only the 'Up' event can give unexpected behaviors.
@@ -51,23 +51,23 @@ config.mouse_bindings = {
 config.keys = {
   -- https://ansidev.xyz/posts/2023-05-18-wezterm-cheatsheet
   {
-    key = 't',
-    mods = 'CMD|SHIFT',
+    key = "t",
+    mods = "CMD|SHIFT",
     action = act.ShowTabNavigator,
   },
   {
-    key = ',',
-    mods = 'CMD',
-    action = act.SpawnCommandInNewTab {
-      cwd = os.getenv('WEZTERM_CONFIG_DIR'),
+    key = ",",
+    mods = "CMD",
+    action = act.SpawnCommandInNewTab({
+      cwd = os.getenv("WEZTERM_CONFIG_DIR"),
       set_environment_variables = {
-        TERM = 'screen-256color',
+        TERM = "screen-256color",
       },
       args = {
         editor,
-        os.getenv('WEZTERM_CONFIG_FILE'),
+        os.getenv("WEZTERM_CONFIG_FILE"),
       },
-    },
+    }),
   },
   { key = "P", mods = "SUPER", action = act.ActivateCommandPalette },
   { key = "P", mods = "SHIFT|SUPER", action = act.ActivateCommandPalette },
@@ -81,21 +81,20 @@ config.keys = {
   { key = "c", mods = "LEADER", action = act.ActivateCopyMode },
   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/QuickSelectArgs.html?h=quick
   {
-    key = 'o',
-    mods = 'LEADER',
-    action = wezterm.action.QuickSelectArgs {
-      label = 'open url',
+    key = "o",
+    mods = "LEADER",
+    action = wezterm.action.QuickSelectArgs({
+      label = "open url",
       patterns = {
-        '\\b\\w+://\\S+[)/a-zA-Z0-9-]+'
+        "\\b\\w+://\\S+[)/a-zA-Z0-9-]+",
       },
       action = wezterm.action_callback(function(window, pane)
         local url = window:get_selection_text_for_pane(pane)
-        wezterm.log_info('opening: ' .. url)
+        wezterm.log_info("opening: " .. url)
         wezterm.open_with(url)
       end),
-    },
+    }),
   },
-
 
   -- https://wezfurlong.org/wezterm/config/keys.html#configuring-key-assignments
   -- {{{default keys
@@ -118,7 +117,11 @@ config.keys = {
 
   { key = "&", mods = "CTRL", action = act.ActivateTab(6) },
   { key = "&", mods = "SHIFT|CTRL", action = act.ActivateTab(6) },
-  { key = "'", mods = "SHIFT|ALT|CTRL", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  {
+    key = "'",
+    mods = "SHIFT|ALT|CTRL",
+    action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
+  },
   { key = "(", mods = "CTRL", action = act.ActivateTab(-1) },
   { key = "(", mods = "SHIFT|CTRL", action = act.ActivateTab(-1) },
   { key = ")", mods = "CTRL", action = act.ResetFontSize },
@@ -142,7 +145,11 @@ config.keys = {
   { key = "4", mods = "SHIFT|CTRL", action = act.ActivateTab(3) },
   { key = "4", mods = "SUPER", action = act.ActivateTab(3) },
   { key = "5", mods = "SHIFT|CTRL", action = act.ActivateTab(4) },
-  { key = "5", mods = "SHIFT|ALT|CTRL", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  {
+    key = "5",
+    mods = "SHIFT|ALT|CTRL",
+    action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+  },
   { key = "5", mods = "SUPER", action = act.ActivateTab(4) },
   { key = "6", mods = "SHIFT|CTRL", action = act.ActivateTab(5) },
   { key = "6", mods = "SUPER", action = act.ActivateTab(5) },
@@ -389,45 +396,45 @@ config.colors = {
 }
 
 local function is_found(str, pattern)
-   return string.find(str, pattern) ~= nil
+  return string.find(str, pattern) ~= nil
 end
 
 local function platform()
-   return {
-      is_win = is_found(wezterm.target_triple, 'windows'),
-      is_linux = is_found(wezterm.target_triple, 'linux'),
-      is_mac = is_found(wezterm.target_triple, 'apple'),
-   }
+  return {
+    is_win = is_found(wezterm.target_triple, "windows"),
+    is_linux = is_found(wezterm.target_triple, "linux"),
+    is_mac = is_found(wezterm.target_triple, "apple"),
+  }
 end
 
 local platform = platform()
 
 if platform.is_win then
-   config.default_prog = { 'pwsh' }
-   config.launch_menu = {
-      { label = 'PowerShell Core', args = { 'pwsh' } },
-      { label = 'PowerShell Desktop', args = { 'powershell' } },
-      { label = 'Command Prompt', args = { 'cmd' } },
-      { label = 'Nushell', args = { 'nu' } },
-   }
+  config.default_prog = { "pwsh" }
+  config.launch_menu = {
+    { label = "PowerShell Core", args = { "pwsh" } },
+    { label = "PowerShell Desktop", args = { "powershell" } },
+    { label = "Command Prompt", args = { "cmd" } },
+    { label = "Nushell", args = { "nu" } },
+  }
 elseif platform.is_mac then
-   config.default_prog = { 'zsh' }
-   config.launch_menu = {
-      { label = 'Bash', args = { 'bash' } },
-      { label = 'Fish', args = { '/opt/homebrew/bin/fish' } },
-      { label = 'Nushell', args = { '/opt/homebrew/bin/nu' } },
-      { label = 'Zsh', args = { 'zsh' } },
-   }
+  config.default_prog = { "zsh" }
+  config.launch_menu = {
+    { label = "Bash", args = { "bash" } },
+    { label = "Fish", args = { "/opt/homebrew/bin/fish" } },
+    { label = "Nushell", args = { "/opt/homebrew/bin/nu" } },
+    { label = "Zsh", args = { "zsh" } },
+  }
 elseif platform.is_linux then
-   config.default_prog = { 'fish' }
-   config.launch_menu = {
-      { label = 'Bash', args = { 'bash' } },
-      { label = 'Fish', args = { 'fish' } },
-      { label = 'Zsh', args = { 'zsh' } },
-   }
+  config.default_prog = { "fish" }
+  config.launch_menu = {
+    { label = "Bash", args = { "bash" } },
+    { label = "Fish", args = { "fish" } },
+    { label = "Zsh", args = { "zsh" } },
+  }
 else
-   config.default_prog = {}
-   config.launch_menu = {}
+  config.default_prog = {}
+  config.launch_menu = {}
 end
 ---}}}
 

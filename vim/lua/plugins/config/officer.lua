@@ -1,6 +1,6 @@
 return {
-	"pianocomposer321/officer.nvim",
-	opts = {
-		create_mappings = true,
-	},
+  "pianocomposer321/officer.nvim",
+  opts = {
+    create_mappings = true,
+  },
 }

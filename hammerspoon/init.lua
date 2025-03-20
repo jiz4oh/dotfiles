@@ -5,8 +5,8 @@ spoon.SpoonInstall:andUse("EmmyLua")
 spoon.SpoonInstall:andUse("ReloadConfiguration", { start = true })
 
 hs.spoons.use("ime", {
-	hotkeys = "default",
+  hotkeys = "default",
 })
 hs.spoons.use("window", {
-	hotkeys = "default",
+  hotkeys = "default",
 })

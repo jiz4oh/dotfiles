@@ -1,6 +1,6 @@
 return {
-	"adriaanzon/vim-textobj-matchit",
-	dependencies = {
-		"kana/vim-textobj-user",
-	},
+  "adriaanzon/vim-textobj-matchit",
+  dependencies = {
+    "kana/vim-textobj-user",
+  },
 }

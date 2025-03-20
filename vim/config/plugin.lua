@@ -2,7 +2,8 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  local out =
+    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
@@ -15,7 +16,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-vim.keymap.set('n', '<leader>Lp', '<cmd>Lazy profile<cr>')
+vim.keymap.set("n", "<leader>Lp", "<cmd>Lazy profile<cr>")
 
 local firenvim_plugins = {
   "LazyVim",
@@ -28,9 +29,8 @@ local firenvim_plugins = {
   "yanky.nvim",
 }
 
-
 require("lazy").setup({
-	root = vim.g["plug_home"] or (vim.fn.stdpath("data") .. "/lazy"),
+  root = vim.g["plug_home"] or (vim.fn.stdpath("data") .. "/lazy"),
   spec = {
     -- import/override with your plugins
     { import = "vim-plug" },
@@ -48,19 +48,19 @@ require("lazy").setup({
     -- have outdated releases, which may break your Neovim install.
     version = nil, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
-		-- @type boolean|fun(self:LazyPlugin):boolean|nil
-    cond = function (plugin)
-			if vim.g.started_by_firenvim then
-				return vim.tbl_contains(firenvim_plugins, plugin.name) or plugin.firenvim
-			else
-				return true
-			end
-    end
+    -- @type boolean|fun(self:LazyPlugin):boolean|nil
+    cond = function(plugin)
+      if vim.g.started_by_firenvim then
+        return vim.tbl_contains(firenvim_plugins, plugin.name) or plugin.firenvim
+      else
+        return true
+      end
+    end,
   },
-	install = {
-		missing = false,
-		colorscheme = { "gruvbox-material" }
-	},
+  install = {
+    missing = false,
+    colorscheme = { "gruvbox-material" },
+  },
   checker = {
     enabled = false, -- check for plugin updates periodically
     notify = false, -- notify on update

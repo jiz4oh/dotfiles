@@ -1,12 +1,12 @@
 local plugins = {}
 
-local is_map = function (v)
+local is_map = function(v)
   return string.match(v, "^<Plug>.*")
 end
 
-local as_array = function (v)
+local as_array = function(v)
   if type(v) == "string" then
-    return {v}
+    return { v }
   elseif type(v) == "table" then
     return v
   else
@@ -21,38 +21,39 @@ if vim.g.plugs_order ~= nil then
     if config ~= nil then
       local cmd = vim.tbl_filter(function(v)
         return not is_map(v)
-      end, as_array(config['on']))
+      end, as_array(config["on"]))
       local keys = vim.tbl_filter(function(v)
         return is_map(v)
-      end, as_array(config['on']))
+      end, as_array(config["on"]))
 
-      local path = vim.g.config_home .. '/config/plugin/' .. plug .. '.vim'
+      local path = vim.g.config_home .. "/config/plugin/" .. plug .. ".vim"
       local conf = {
-        config['uri'],
-        lazy = (not vim.tbl_isempty(as_array(config['on']))) or (not vim.tbl_isempty(as_array(config['for']))),
+        config["uri"],
+        lazy = (not vim.tbl_isempty(as_array(config["on"])))
+          or (not vim.tbl_isempty(as_array(config["for"]))),
         cmd = cmd,
         keys = keys,
-        dir = vim.fn.isdirectory(config['dir']) == 1 and config['dir'],
+        dir = vim.fn.isdirectory(config["dir"]) == 1 and config["dir"],
       }
 
-			local mappings = {
-				event = 'event',
-				ft = 'for',
-				branch = 'branch',
-				tag = 'tag',
-				commit = 'commit',
-				name = 'as',
-				pin = 'forzen',
-				build = 'do',
-			}
+      local mappings = {
+        event = "event",
+        ft = "for",
+        branch = "branch",
+        tag = "tag",
+        commit = "commit",
+        name = "as",
+        pin = "forzen",
+        build = "do",
+      }
 
-			for k,v in ipairs(mappings) do
-				if v ~= nil then
-					conf[k] = v
-				end
-			end
+      for k, v in ipairs(mappings) do
+        if v ~= nil then
+          conf[k] = v
+        end
+      end
 
-      conf['init'] = function()
+      conf["init"] = function()
         pcall(vim.cmd.source, path)
       end
 
