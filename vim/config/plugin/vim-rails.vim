@@ -206,6 +206,7 @@ augroup vim-rails-augroup
   "       \ vnoremap <silent> <buffer> dr :<C-u>execute ":Runner ". shellescape(substitute(personal#functions#selected(), '#{', '\#{', 'g')) . ""<CR>
 
   autocmd FileType ruby
+        \ call MyLoad('vim-rails') |
         \ if !empty(rails#app())|call <SID>setup_zepl()|endif
 augroup END
 
