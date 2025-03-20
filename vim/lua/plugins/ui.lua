@@ -1,6 +1,10 @@
 local markview = vim.fn.has("nvim-0.10.1") == 1
 
 return {
+  {
+    import = "plugins.config.nvim-scrollview",
+    enabled = vim.fn.has("nvim-0.6") == 1
+  },
   -- {
   -- 	"rcarriga/nvim-notify",
   -- 	enabled = vim.fn.has("nvim-0.5") == 1,
