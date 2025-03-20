@@ -96,6 +96,3 @@ if executable('ripper-tags')
       \ 'ctagsargs'  : ['-f', '-']
       \ }
 endif
-
-nmap  <silent> <Plug><OutlineToggle> :TagbarToggle<CR>
-imap  <silent> <Plug><OutlineToggle> <c-o>:<c-u>TagbarToggle<CR>

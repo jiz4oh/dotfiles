@@ -21,6 +21,10 @@ return {
     enabled = false,
   },
   {
+    "preservim/tagbar",
+    enabled = false,
+  },
+  {
     "hedyhli/outline.nvim",
     keys = {
       {
