@@ -91,7 +91,8 @@ return {
 			enabled = true,
 			exclude = { "latex" },
 		},
-		input = {},
+		notifier = { enabled = true },
+		input = { enabled = true },
 		indent = { enabled = true },
 		picker = {
 			ui_select = true,
