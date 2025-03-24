@@ -16,7 +16,6 @@ return {
   },
   {
     "iamcco/markdown-preview.nvim",
-    enabled = not markview,
   },
   {
     import = "plugins.config.vim-dadbod-ui",
