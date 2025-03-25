@@ -24,6 +24,7 @@ done
 # dotdirs
 for dir in git_template ctags.d vim raycast \
   tmux/plugins/tpm \
+  prompts \
   config/rubocop config/solargraph config/kitty config/wezterm config/mise \
   hammerspoon/Spoons \
   terminfo; do
