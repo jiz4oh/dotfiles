@@ -122,6 +122,11 @@ return {
           },
         },
       },
+      sources = {
+        projects = {
+          patterns = vim.g.project_markers
+        }
+      }
     },
   },
   init = function()
