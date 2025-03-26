@@ -93,3 +93,5 @@ alias tl='tmux list-sessions'
 # gem install tmuxinator
 alias mux='tmuxinator'
 #}}}
+
+alias a=aider
