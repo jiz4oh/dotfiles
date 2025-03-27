@@ -11,6 +11,69 @@ local function get_diagnostics()
   end
 end
 
+-- :help vim.lsp.ListOpts
+-- https://github.com/neovim/neovim/issues/32384
+-- vim.lsp.on_list = function(options)
+--   if options.items == nil or #options.items == 0 then
+--     vim.notify("No items")
+--     return
+--   end
+--
+--   local bufnr = options.context.bufnr
+--   local items = options.items
+--   vim.ui.select(items, {
+--     prompt = options.title,
+--     format_item = function(v)
+--       local bufname = vim.fn.bufname(bufnr) or v.filename
+--       return bufname .. ":" .. v.lnum .. ":" .. v.col .. " " .. v.text
+--     end,
+--   }, function(item, _)
+--     if item == nil then
+--       return
+--     end
+--
+--     vim.cmd("normal! m'")
+--     vim.cmd("edit " .. item.filename)
+--     vim.api.nvim_win_set_cursor(0, { item.lnum, item.col })
+--     vim.cmd("normal! zzzv")
+--   end)
+-- end
+
+if vim.fn.has("nvim-0.7") == 1 then
+  vim.keymap.set({ "n" }, "<leader>ld", function()
+    vim.lsp.buf.definition({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lD", function()
+    vim.lsp.buf.declaration({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lt", function()
+    vim.lsp.buf.type_definition({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>li", function()
+    vim.lsp.buf.implementation({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lr", function()
+    vim.lsp.buf.references({ includeDeclaration = false }, { on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lR", function()
+    vim.lsp.buf.rename()
+  end)
+  vim.keymap.set({ "n" }, "<leader>ls", function()
+    vim.lsp.buf.document_symbol({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lS", function()
+    vim.lsp.buf.workspace_symbol(nil, { on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lK", function()
+    vim.lsp.buf.hover()
+  end)
+  vim.keymap.set({ "n" }, "<leader>la", function()
+    vim.lsp.buf.code_action()
+  end)
+  vim.keymap.set({ "n", "v" }, "<leader>lf", function()
+    vim.lsp.buf.format()
+  end)
+end
 -- https://github.com/neovim/neovim/pull/25872
 -- https://github.com/neovim/neovim/pull/26064
 -- :h clipboard-osc52

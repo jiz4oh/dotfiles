@@ -2,26 +2,6 @@ return {
   "neovim/nvim-lspconfig",
   -- https://github.com/LazyVim/LazyVim/blob/86ac9989ea15b7a69bb2bdf719a9a809db5ce526/lua/lazyvim/plugins/lsp/init.lua#L5
   event = { "BufReadPre", "BufNewFile" },
-  keys = {
-    {
-      "<leader>lr",
-      function()
-        vim.lsp.buf.references({ includeDeclaration = false })
-      end,
-    },
-    { "<leader>ld", vim.lsp.buf.definition },
-    { "<leader>lD", vim.lsp.buf.declaration },
-    { "<leader>lt", vim.lsp.buf.type_definition },
-    { "<leader>li", vim.lsp.buf.implementation },
-    { "<leader>lR", vim.lsp.buf.rename },
-    { "<leader>ls", vim.lsp.buf.document_symbol },
-    { "<leader>lS", vim.lsp.buf.workspace_symbol },
-    { "<leader>lK", vim.lsp.buf.hover },
-    { "<leader>la", vim.lsp.buf.code_action },
-    { "<leader>la", vim.lsp.buf.code_action },
-    { "<leader>lf", vim.lsp.buf.format },
-    { "<leader>lf", vim.lsp.buf.format, mode = "x" },
-  },
   dependencies = {
     "b0o/schemastore.nvim",
     "williamboman/mason-lspconfig.nvim",

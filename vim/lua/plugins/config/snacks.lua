@@ -5,9 +5,6 @@ local lsp_handlers = {
   ["textDocument/definition"] = function(err, result, ctx, config)
     Snacks.picker.lsp_definitions({ unique_lines = true })
   end,
-  ["textDocument/documentSymbol"] = function(err, result, ctx, config)
-    Snacks.picker.lsp_symbols()
-  end,
   ["textDocument/implementation"] = function(err, result, ctx, config)
     Snacks.picker.lsp_implementations({ unique_lines = true })
   end,
@@ -16,6 +13,9 @@ local lsp_handlers = {
   end,
   ["textDocument/typeDefinition"] = function(err, result, ctx, config)
     Snacks.picker.lsp_type_definitions({ unique_lines = true })
+  end,
+  ["textDocument/documentSymbol"] = function(err, result, ctx, config)
+    Snacks.picker.lsp_symbols()
   end,
   ["workspace/symbol"] = function(err, result, ctx, config)
     Snacks.picker.lsp_workspace_symbols()
@@ -124,15 +124,18 @@ return {
       },
       sources = {
         projects = {
-          patterns = vim.g.project_markers
-        }
-      }
+          patterns = vim.g.project_markers,
+        },
+      },
     },
   },
   init = function()
     vim.api.nvim_create_autocmd("User", {
       pattern = "VeryLazy",
       callback = function()
+        -- vim.lsp.on_list = function(t) 
+        -- end
+        --
         if Snacks == nil then
           return
         end
