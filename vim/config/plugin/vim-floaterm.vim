@@ -18,9 +18,9 @@ let g:floaterm_height = 0.3
 
 nnoremap <silent> <m--> :FloatermNew<cr>
 function! s:init_floaterm() abort
-  call Tnoremap('<m-->', ':FloatermNew<cr>', '<silent><buffer>')
-  call Tnoremap('<m-[>', ':FloatermPrev<cr>', '<silent><buffer>')
-  call Tnoremap('<m-]>', ':FloatermNext<cr>', '<silent><buffer>')
+  call Tnoremap('<m-->', '<cmd>FloatermNew<cr>', '<silent><buffer>')
+  call Tnoremap('<m-[>', '<cmd>FloatermPrev<cr>', '<silent><buffer>')
+  call Tnoremap('<m-]>', '<cmd>FloatermNext<cr>', '<silent><buffer>')
   nnoremap <silent><buffer> <m-[> :FloatermPrev<cr>
   nnoremap <silent><buffer> <m-]> :FloatermNext<cr>
 endfunction

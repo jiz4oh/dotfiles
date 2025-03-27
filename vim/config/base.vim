@@ -636,13 +636,8 @@ noremap gV `[v`]
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 function! Tnoremap(lhs, rhs, mods) abort
-  if has('nvim')
-    let s:cmd = 'tnoremap '. a:mods . ' ' .(a:lhs). ' '
-    execute s:cmd . '<c-\><c-n>' . a:rhs
-  elseif has('terminal') && exists(':terminal') == 2 && has('patch-8.1.1')
-    let s:cmd = 'tnoremap '. a:mods . ' ' .(a:lhs). ' '
-    let termwinkey = empty(&termwinkey) ? '<c-w>' : &termwinkey
-    execute s:cmd . termwinkey . a:rhs
+  if has('nvim-0.8') || has('patch-8.2.1978')
+    execute printf('tnoremap %s %s <C-\><C-n>%s', a:mods, a:lhs, a:rhs)
   endif
 endfunction
 
