@@ -17,5 +17,6 @@ return {
     "sam4llis/nvim-lua-gf",
     lazy = false,
     ft = { "lua", "vim" },
+    enabled = vim.fn.has("nvim-0.11") ~= 1,
   },
 }
