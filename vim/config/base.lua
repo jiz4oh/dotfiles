@@ -59,9 +59,19 @@ if vim.fn.has("nvim-0.6") == 1 then
     )
   end
 
-  vim.diagnostic.config({ float = { severity_sort = true, source = true } })
   vim.diagnostic.config({
-    virtual_text = { severity_sort = true, source = true, format = my_diagnostic_format_func },
+    underline = false,
+    float = {
+      severity_sort = true,
+      source = true,
+    },
+    virtual_text = {
+      current_line = true,
+      severity_sort = true,
+      source = true,
+      format = my_diagnostic_format_func,
+    },
+    virtual_lines = false,
   })
 
   vim.keymap.set("n", "yd", function()
