@@ -1,19 +1,4 @@
 local lsp_handlers = {
-  ["textDocument/declaration"] = function(err, result, ctx, config)
-    Snacks.picker.lsp_declarations({ unique_lines = true })
-  end,
-  ["textDocument/definition"] = function(err, result, ctx, config)
-    Snacks.picker.lsp_definitions({ unique_lines = true })
-  end,
-  ["textDocument/implementation"] = function(err, result, ctx, config)
-    Snacks.picker.lsp_implementations({ unique_lines = true })
-  end,
-  ["textDocument/references"] = function(err, result, ctx, config)
-    Snacks.picker.lsp_references({ unique_lines = true, include_declaration = false })
-  end,
-  ["textDocument/typeDefinition"] = function(err, result, ctx, config)
-    Snacks.picker.lsp_type_definitions({ unique_lines = true })
-  end,
   ["textDocument/documentSymbol"] = function(err, result, ctx, config)
     Snacks.picker.lsp_symbols()
   end,
@@ -79,6 +64,36 @@ return {
       desc = "Open Diagnostics Picker",
       mode = { "n" },
     },
+    {
+      "<leader>ld",
+      function()
+        Snacks.picker.lsp_definitions({ unique_lines = true })
+      end,
+    },
+    {
+      "<leader>lD",
+      function()
+        Snacks.picker.lsp_declarations({ unique_lines = true })
+      end,
+    },
+    {
+      "<leader>li",
+      function()
+        Snacks.picker.lsp_implementations({ unique_lines = true })
+      end,
+    },
+    {
+      "<leader>lr",
+      function()
+        Snacks.picker.lsp_references({ unique_lines = true, include_declaration = false })
+      end,
+    },
+    {
+      "<leader>lt",
+      function()
+        Snacks.picker.lsp_type_definitions({ unique_lines = true })
+      end,
+    },
   },
   opts = {
     -- your configuration comes here
@@ -133,9 +148,6 @@ return {
     vim.api.nvim_create_autocmd("User", {
       pattern = "VeryLazy",
       callback = function()
-        -- vim.lsp.on_list = function(t) 
-        -- end
-        --
         if Snacks == nil then
           return
         end
