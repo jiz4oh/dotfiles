@@ -74,3 +74,9 @@ if vim.fn.has("nvim-0.6") == 1 then
     end
   end)
 end
+
+if vim.fn.has("nvim-0.11") == 1 then
+  vim.keymap.del({ "n" }, "grn")
+  vim.keymap.del({ "n", "x" }, "gra")
+  vim.keymap.del({ "n" }, "gri")
+end
