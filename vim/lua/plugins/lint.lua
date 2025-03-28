@@ -1,8 +1,10 @@
 return {
   {
-    "jiz4oh/ale-autocorrect.vim",
+    "dense-analysis/ale",
+    event = "VeryLazy",
+    lazy = true,
     dependencies = {
-      "dense-analysis/ale",
+      "jiz4oh/ale-autocorrect.vim",
     },
   },
 }

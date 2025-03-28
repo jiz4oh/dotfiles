@@ -30,24 +30,6 @@ return {
     endwise = {
       enable = true,
     },
-    textobjects = {
-      -- syntax-aware textobjects
-      enable = true,
-      keymaps = {
-        ["iL"] = {
-          -- you can define your own textobjects directly here
-          go = "(function_definition) @function",
-        },
-        -- or you use the queries from supported languages with textobjects.scm
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["is"] = "@statement.inner",
-        ["as"] = "@statement.outer",
-        ["ad"] = "@comment.outer",
-        ["am"] = "@call.outer",
-        ["im"] = "@call.inner",
-      },
-    },
   },
   lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
   init = function(plugin)

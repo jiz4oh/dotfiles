@@ -37,7 +37,7 @@ return {
     "AvanteClear",
     "AvanteShowRepoMap",
   },
-  lazy = false,
+  event = "VeryLazy",
   opts = {
     behaviour = {
       -- auto_set_keymaps = false,

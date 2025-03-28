@@ -1,6 +1,6 @@
 return {
   "miversen33/netman.nvim",
-  event = "CmdlineEnter",
+  event = "VeryLazy",
   cmd = {
     "NmloadProvider",
     "Nmlogs",
