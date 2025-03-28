@@ -10,6 +10,21 @@ local python_root_files = {
 }
 
 local configs = {
+  ["gopls"] = {
+    settings = {
+      gopls = {
+        hints = {
+          assignVariableTypes = true,
+          compositeLiteralFields = true,
+          compositeLiteralTypes = true,
+          constantValues = true,
+          functionTypeParameters = true,
+          parameterNames = true,
+          rangeVariableTypes = true,
+        },
+      },
+    },
+  },
   ["basedpyright"] = {
     root_dir = function(fname)
       local util = require("lspconfig.util")
@@ -39,6 +54,9 @@ local configs = {
       Lua = {
         diagnostics = {
           globals = { "vim" },
+        },
+        hint = {
+          enable = true,
         },
       },
     },

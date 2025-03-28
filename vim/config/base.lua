@@ -1,3 +1,5 @@
+vim.g.ale_disable_lsp = 1
+
 local function get_diagnostics()
   local line = vim.fn.line(".") - 1
   local diagnostics = vim.diagnostic.get(0, { lnum = line })
@@ -46,10 +48,11 @@ if vim.fn.has("nvim-0.8") == 1 then
       local client = vim.lsp.get_client_by_id(args.data.client_id)
       vim.g["vista_" .. vim.api.nvim_get_option_value("filetype", { buf = bufnr }) .. "_executive"] =
         "nvim_lsp"
-      vim.api.nvim_buf_set_var(bufnr, "ale_disable_lsp", 1)
 
-      if client:supports_method("textDocument/inlayHints") then
-        vim.lsp.inlay_hint.enable()
+      if vim.fn.has("nvim-0.10") == 1 then
+        if client.supports_method("textDocument/inlayHints") and client.server_capabilities.inlayHintProvider then
+          vim.lsp.inlay_hint.enable()
+        end
       end
 
       -- remove ruff from ale_linters since it report to nvim directly

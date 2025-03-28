@@ -1,3 +1,48 @@
+local ensure_installed = {
+  "fixjson",
+  "shellcheck",
+}
+
+if vim.g.as_ide == 1 then
+  vim.tbl_extend("force", ensure_installed, {
+    -- you can pin a tool to a particular version
+
+    -- you can turn off/on auto_update per tool
+    "shfmt",
+
+    "vim-language-server",
+    "vint",
+
+    -- {{{go tools
+    "gopls",
+    "golangci-lint",
+    "goimports",
+    "golines",
+    "gomodifytags",
+    "gotests",
+    "impl",
+    "json-to-struct",
+    "staticcheck",
+    -- }}}
+
+    "lua-language-server",
+    "stylua",
+
+    "typescript-language-server",
+    "jq",
+
+    "typos_lsp",
+
+    "yaml-language-server",
+    "yamllint",
+
+    "ruff",
+
+    "rubocop",
+    "rubyfmt",
+  })
+end
+
 return {
   "WhoIsSethDaniel/mason-tool-installer.nvim",
   cmd = {
@@ -7,46 +52,7 @@ return {
   opts = {
     -- a list of all tools you want to ensure are installed upon
     -- start
-    ensure_installed = {
-      -- you can pin a tool to a particular version
-
-      -- you can turn off/on auto_update per tool
-      { "bash-language-server", auto_update = true },
-      "shellcheck",
-      "shfmt",
-
-      "vim-language-server",
-      "vint",
-
-      -- {{{go tools
-      "gopls",
-      "golangci-lint",
-      "goimports",
-      "golines",
-      "gomodifytags",
-      "gotests",
-      "impl",
-      "json-to-struct",
-      "staticcheck",
-      -- }}}
-
-      "lua-language-server",
-      "stylua",
-
-      "typescript-language-server",
-      "jq",
-      "fixjson",
-
-      "typos_lsp",
-
-      "yaml-language-server",
-      "yamllint",
-
-      "ruff",
-
-      "rubocop",
-      "rubyfmt",
-    },
+    ensure_installed = ensure_installed,
 
     -- if set to true this will check each tool for updates. If updates
     -- are available the tool will be updated. This setting does not
