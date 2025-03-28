@@ -39,6 +39,29 @@ end
 --   end)
 -- end
 
+if vim.fn.has("nvim-0.8") == 1 then
+  vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+      local bufnr = args.buf
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      vim.g["vista_" .. vim.api.nvim_get_option_value("filetype", { buf = bufnr }) .. "_executive"] =
+        "nvim_lsp"
+      vim.api.nvim_buf_set_var(bufnr, "ale_disable_lsp", 1)
+
+      if client:supports_method("textDocument/inlayHints") then
+        vim.lsp.inlay_hint.enable()
+      end
+
+      -- remove ruff from ale_linters since it report to nvim directly
+      local ale_linters_ignore = vim.b.ale_linters_ignore or {}
+      table.insert(ale_linters_ignore, "ruff")
+      vim.b.ale_linters_ignore = ale_linters_ignore
+
+      vim.notify_once("LSP " .. client.name .. " attached")
+    end,
+  })
+end
+
 if vim.fn.has("nvim-0.7") == 1 then
   vim.keymap.set({ "n" }, "<leader>ld", function()
     vim.lsp.buf.definition({ on_list = vim.lsp.on_list })

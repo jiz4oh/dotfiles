@@ -15,25 +15,4 @@ return {
     -- if tagfunc is already registered, nvim lsp will not try to set tagfunc as vim.lsp.tagfunc.
     vim.o.tagfunc = "v:lua.TAGFUNC_ALWAYS_EMPTY"
   end,
-  config = function()
-    vim.api.nvim_create_autocmd("LspAttach", {
-      callback = function(args)
-        local bufnr = args.buf
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        vim.g["vista_" .. vim.api.nvim_get_option_value("filetype", { buf = bufnr }) .. "_executive"] =
-          "nvim_lsp"
-        vim.api.nvim_buf_set_var(bufnr, "ale_disable_lsp", 1)
-
-        if client.name == "ruff" then
-          local ale_linters = vim.b.ale_linters or {}
-          ale_linters["python"] = vim.tbl_filter(function(v)
-            return v ~= "ruff"
-          end, vim.g.ale_linters.python)
-          vim.b.ale_linters = ale_linters
-        end
-
-        vim.notify_once("LSP " .. client.name .. " attached")
-      end,
-    })
-  end,
 }
