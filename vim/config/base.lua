@@ -158,16 +158,6 @@ if vim.fn.has("nvim-0.10") == 1 then
         end
       end,
     })
-
-    vim.keymap.set("n", "<leader>yd", function()
-      local diagnostics = get_diagnostics()
-      if diagnostics ~= nil then
-        require("vim.ui.clipboard.osc52").copy("+")({ diagnostics })
-        vim.notify("Diagnostic copied to clipboard", vim.log.levels.INFO)
-      else
-        vim.notify("No diagnostics on current line", vim.log.levels.WARN)
-      end
-    end)
   end
 end
 
@@ -205,7 +195,11 @@ if vim.fn.has("nvim-0.6") == 1 then
   vim.keymap.set("n", "yd", function()
     local diagnostics = get_diagnostics()
     if diagnostics ~= nil then
-      vim.fn.setreg("+", diagnostics)
+      vim.fn.setreg("+", diagnostics) -- Set register for non-SSH or if OSC52 fails
+      if vim.fn.has("nvim-0.10") == 1 and vim.fn.exists("$SSH_TTY") == 1 then
+        -- Explicitly use OSC52 when in SSH, similar to the TextYankPost handler
+        require("vim.ui.clipboard.osc52").copy("+")({ diagnostics })
+      end
       vim.notify("Diagnostic copied to clipboard", vim.log.levels.INFO)
     else
       vim.notify("No diagnostics on current line", vim.log.levels.WARN)
