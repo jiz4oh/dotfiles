@@ -1,6 +1,19 @@
+local lazy = true
+
+local patterns = { "ssh", "scp", "sftp", "docker" }
+if vim.fn.argc() > 0 then
+  for _, file in ipairs(vim.fn.argv()) do
+    for _, pattern in ipairs(patterns) do
+      if file:match(pattern .. "://") then
+        lazy = false
+        break
+      end
+    end
+  end
+end
+
 return {
   "miversen33/netman.nvim",
-  event = "VeryLazy",
   cmd = {
     "NmloadProvider",
     "Nmlogs",
@@ -11,6 +24,6 @@ return {
   init = function()
     vim.g.disable_netrw = 1
   end,
-  lazy = not (vim.fn.argc() > 0),
+  lazy = lazy,
   opts = {},
 }

@@ -122,7 +122,7 @@ Plug 'tpope/vim-dispatch'
 " https://github.com/search?p=1&q=current_compiler++NOT+Maintainer+extension%3Avim+path%3Acompiler%2F+language%3A%22Vim+script%22&type=Code
 Plug 'drgarcia1986/python-compilers.vim'
 Plug 'jpalardy/vim-slime', { 'on': ['<Plug>SlimeRegionSend', '<Plug>SlimeMotionSend', '<Plug>SlimeLineSend'] }
-Plug 'vim-test/vim-test'
+Plug 'vim-test/vim-test', { 'on': ['TestNearest', 'TestFile', 'TestSuite', 'TestLast', 'TestVisit'] }
 " }}}
 
 " ============================================================================
