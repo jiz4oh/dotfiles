@@ -781,9 +781,9 @@ nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
 " Show last search in quickfix (http://travisjeffery.com/b/2011/10/m-x-occur-for-vim/)
 nmap g/ :vimgrep /<C-R>//j %<CR>\|:cw<CR>
 
-"Keep search pattern at the center of the screen."
-nnoremap <silent> n nzz
-nnoremap <silent> N Nzz
+"Keep search pattern at the center of the screen and unfold automatically."
+nnoremap <silent> n nzvzz
+nnoremap <silent> N Nzvzz
 
 " Utility maps for repeatable quickly change/delete current word
 nnoremap c*   *``cgn
