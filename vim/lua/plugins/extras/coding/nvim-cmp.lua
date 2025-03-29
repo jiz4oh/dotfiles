@@ -27,14 +27,7 @@ return {
     import = "plugins.config.cmp_luasnip",
   },
   {
-    "saadparwaiz1/cmp_luasnip",
-    import = "plugins.config.cmp_luasnip",
-  },
-  {
     "garyhurtz/cmp_kitty",
     import = "plugins.config.cmp_kitty",
-  },
-  {
-    import = "plugins.config.cmp_luasnip",
   },
 }

@@ -1,5 +1,7 @@
 local enabled = vim.g.as_ide == 1
 
+local blink = vim.fn.has("nvim-0.11") == 1
+
 return {
   {
     "L3MON4D3/LuaSnip",
@@ -7,7 +9,11 @@ return {
     import = "plugins.config.LuaSnip",
   },
   {
-    enabled = enabled,
+    enabled = enabled and not blink,
     import = "plugins.extras.coding.nvim-cmp",
+  },
+  {
+    enabled = enabled and blink,
+    import = "plugins.extras.coding.blink",
   },
 }

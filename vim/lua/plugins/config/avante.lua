@@ -126,6 +126,8 @@ return {
     "MunifTanjim/nui.nvim",
     "nvim-lua/plenary.nvim",
     --- The below dependencies are optional,
-    "zbirenbaum/copilot.lua", -- for providers='copilot'
+    {
+      import = "plugins.config.copilot",
+    },
   },
 }
