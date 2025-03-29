@@ -46,14 +46,47 @@ if vim.fn.has("nvim-0.8") == 1 then
     callback = function(args)
       local bufnr = args.buf
       local client = vim.lsp.get_client_by_id(args.data.client_id)
-      vim.g["vista_" .. vim.api.nvim_get_option_value("filetype", { buf = bufnr }) .. "_executive"] =
-        "nvim_lsp"
+      if client == nil then
+        return
+      end
 
       if vim.fn.has("nvim-0.10") == 1 then
-        if client.supports_method("textDocument/inlayHints") and client.server_capabilities.inlayHintProvider then
+        if
+          client.supports_method("textDocument/inlayHints")
+          and client.server_capabilities.inlayHintProvider
+        then
           vim.lsp.inlay_hint.enable()
         end
       end
+
+      if
+        client.supports_method("textDocument/hover")
+        and client.server_capabilities.hoverProvider
+      then
+        -- no K mapping here, so keywordprg can be overrode by others like scriptease.vim
+        vim.o.keywordprg = "v:lua.vim.lsp.buf.hover({'border': 'rounded')"
+      end
+
+      if
+        client.supports_method("textDocument/definition")
+        and client.server_capabilities.definitionProvider
+      then
+        vim.keymap.set({ "n" }, "gd", function()
+          vim.lsp.buf.definition({ on_list = vim.lsp.on_list })
+        end, { buffer = true })
+      end
+
+      if
+        client.supports_method("textDocument/declaration")
+        and client.server_capabilities.declarationProvider
+      then
+        vim.keymap.set({ "n" }, "gD", function()
+          vim.lsp.buf.declaration({ on_list = vim.lsp.on_list })
+        end, { buffer = true })
+      end
+
+      vim.g["vista_" .. vim.api.nvim_get_option_value("filetype", { buf = bufnr }) .. "_executive"] =
+        "nvim_lsp"
 
       -- remove ruff from ale_linters since it report to nvim directly
       local ale_linters_ignore = vim.b.ale_linters_ignore or {}
@@ -91,9 +124,10 @@ if vim.fn.has("nvim-0.7") == 1 then
     vim.lsp.buf.workspace_symbol(nil, { on_list = vim.lsp.on_list })
   end)
   vim.keymap.set({ "n" }, "<leader>lK", function()
-    vim.lsp.buf.hover()
+    vim.lsp.buf.hover({ border = "rounded" })
   end)
-  vim.keymap.set({ "n" }, "<leader>la", function()
+
+  vim.keymap.set({ "n", "v" }, "<leader>la", function()
     vim.lsp.buf.code_action()
   end)
   vim.keymap.set({ "n", "v" }, "<leader>lf", function()
