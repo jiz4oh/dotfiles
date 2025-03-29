@@ -6,6 +6,7 @@
     "type": "config",
     "alternate": [
       "vim/bundle/{}/plugin/{}.vim",
+      "vim/bundle/{}/plugin/{vimplugin}.vim",
       "vim/bundle/{}/README.md",
       "vim/bundle/{}/README.mkd",
       "vim/bundle/{}/README.markdown"
@@ -16,10 +17,35 @@
     "type": "lua"
   },
   "vim/lua/plugins/config/*.lua": {
-    "type": "config"
+    "type": "config",
+    "alternate": [
+      "vim/bundle/{}/lua/{}/init.lua",
+      "vim/bundle/{}/README.md",
+      "vim/bundle/{}/README.mkd",
+      "vim/bundle/{}/README.markdown",
+      "vim/bundle/{}.vim/lua/{}/init.lua",
+      "vim/bundle/{}.vim/README.md",
+      "vim/bundle/{}.vim/README.mkd",
+      "vim/bundle/{}.vim/README.markdown",
+      "vim/bundle/{}.nvim/lua/{}/init.lua",
+      "vim/bundle/{}.nvim/README.md",
+      "vim/bundle/{}.nvim/README.mkd",
+      "vim/bundle/{}.nvim/README.markdown",
+      "vim/bundle/{}.lua/lua/{}/init.lua",
+      "vim/bundle/{}.lua/README.md",
+      "vim/bundle/{}.lua/README.mkd",
+      "vim/bundle/{}.lua/README.markdown"
+    ],
+    "related": [
+      "lua/{}/init.lua"
+    ]
   },
   "vim/bundle/**/plugin/*.vim": {
     "type": "plugin",
     "related": "vim/config/plugin/{dirname}.vim"
+  },
+  "vim/bundle/**/lua/*/init.lua": {
+    "type": "plugin",
+    "alternate": "vim/lua/plugins/config/{basename}.lua"
   }
 }

@@ -59,6 +59,15 @@ function! g:projectionist_transformations.gotest(input, o) abort
   return substitute(a:input, '_test', '', 'g')
 endfunction
 
+function! g:projectionist_transformations.vimplugin(input, o) abort
+  let input = a:input
+  let input = substitute(input, 'vim-', '', 'g')
+  let input = substitute(input, '.nvim', '', 'g')
+  let input = substitute(input, '.lua', '', 'g')
+  let input = substitute(input, '.vim', '', 'g')
+  return input
+endfunction
+
 let g:projects = []
 
 function! s:activate() abort
