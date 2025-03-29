@@ -1,5 +1,10 @@
 vim.g.ale_disable_lsp = 1
 
+-- conflict with fzf
+-- if vim.fn.has("nvim-0.11") == 1 then
+--   vim.o.winborder = "rounded"
+-- end
+
 local function get_diagnostics()
   local line = vim.fn.line(".") - 1
   local diagnostics = vim.diagnostic.get(0, { lnum = line })
