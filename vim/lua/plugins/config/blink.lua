@@ -34,6 +34,9 @@ return {
     },
 
     cmdline = {
+      keymap = {
+        ['<Tab>'] = { 'show', 'accept', }
+      },
       -- https://cmp.saghen.dev/modes/cmdline.html#show-menu-automatically
       completion = {
         menu = {

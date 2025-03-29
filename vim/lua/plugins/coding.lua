@@ -14,6 +14,6 @@ return {
   },
   {
     enabled = enabled and blink,
-    import = "plugins.extras.coding.blink",
+    import = "plugins.config.blink",
   },
 }
