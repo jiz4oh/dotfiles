@@ -86,12 +86,24 @@ return {
         ["<M-p>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
         ["<C-Space>"] = cmp.mapping.complete(),
         ["<C-e>"] = cmp.mapping.abort(),
-        ["<CR>"] = cmp.mapping.confirm({ select = false }),
+        -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#safely-select-entries-with-cr
+        ["<CR>"] = cmp.mapping({
+          i = function(fallback)
+            if cmp.visible() and cmp.get_active_entry() then
+              cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+            else
+              fallback()
+            end
+          end,
+          s = cmp.mapping.confirm({ select = true }),
+          c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
+        }),
         ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+        -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#confirm-candidate-on-tab-immediately-when-theres-only-one-completion-entry
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            if vim.fn.pumvisible() == 1 then
-              cmp.complete()
+            if #cmp.get_entries() == 1 then
+              cmp.confirm({ select = true })
             else
               cmp.select_next_item()
             end
@@ -99,21 +111,24 @@ return {
             local ok, luasnip = load_luasnip()
             if ok and luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
+            elseif vim.F.has_words_before() then
+              cmp.complete()
+              if #cmp.get_entries() == 1 then
+                cmp.confirm({ select = true })
+              else
+                fallback()
+              end
             else
               fallback()
             end
           end
-        end, { "i", "s", "c" }),
+        end, { "i", "s" }),
         ["<S-Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            if vim.fn.pumvisible() == 1 then
-              cmp.complete()
-            else
-              cmp.select_prev_item()
-            end
+            cmp.select_prev_item()
           else
             local ok, luasnip = load_luasnip()
-            if ok and luasnip.jumpable(-1) then
+            if ok and luasnip.locally_jumpable(-1) then
               luasnip.jump(-1)
             else
               fallback()
