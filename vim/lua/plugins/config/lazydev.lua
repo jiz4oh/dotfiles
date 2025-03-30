@@ -1,5 +1,6 @@
 return {
   "folke/lazydev.nvim",
+  enabled = vim.fn.has('nvim-0.10') == 1,
   ft = "lua", -- only load on lua files
   opts = {
     library = {
