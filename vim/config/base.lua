@@ -71,6 +71,15 @@ if vim.fn.has("nvim-0.8") == 1 then
         end
       end
 
+      if vim.fn.has("nvim-0.11") == 1 then
+        -- Prefer LSP folding if client supports it
+        if client and client:supports_method("textDocument/foldingRange") then
+          local win = vim.api.nvim_get_current_win()
+          vim.wo[win][0].foldmethod = "expr"
+          vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
+        end
+      end
+
       if
         client.supports_method("textDocument/hover")
         and client.server_capabilities.hoverProvider
