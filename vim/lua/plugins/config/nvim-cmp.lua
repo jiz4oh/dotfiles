@@ -145,6 +145,15 @@ return {
   config = function(_, opts)
     local cmp = require("cmp")
 
+    -- https://github.com/zbirenbaum/copilot.lua?tab=readme-ov-file#suggestion
+    cmp.event:on("menu_opened", function()
+      vim.b.copilot_suggestion_hidden = true
+    end)
+
+    cmp.event:on("menu_closed", function()
+      vim.b.copilot_suggestion_hidden = false
+    end)
+
     -- default config
     -- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/default.lua
     cmp.setup(opts)

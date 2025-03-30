@@ -17,6 +17,26 @@ return {
 
   -- use a release tag to download pre-built binaries
   version = "1.*",
+  init = function()
+    -- https://cmp.saghen.dev/recipes#hide-copilot-on-suggestion
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "BlinkCmpMenuOpen",
+      callback = function()
+        local ok, copilot = pcall(require, "copilot.suggestion")
+        if ok then
+          copilot.dismiss()
+        end
+        vim.b.copilot_suggestion_hidden = true
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "BlinkCmpMenuClose",
+      callback = function()
+        vim.b.copilot_suggestion_hidden = false
+      end,
+    })
+  end,
   -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
   -- build = 'cargo build --release',
   -- If you use nix, you can build from source using latest nightly rust with:
