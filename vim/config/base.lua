@@ -25,6 +25,14 @@ local function get_diagnostics()
   end
 end
 
+local function lsp_supports_method(client, method)
+  if vim.fn.has("nvim-0.11") == 1 then
+    return client and client:supports_method(method)
+  else
+    return client and client.supports_method(method)
+  end
+end
+
 -- :help vim.lsp.ListOpts
 -- https://github.com/neovim/neovim/issues/32384
 -- vim.lsp.on_list = function(options)
@@ -64,7 +72,7 @@ if vim.fn.has("nvim-0.8") == 1 then
 
       if vim.fn.has("nvim-0.10") == 1 then
         if
-          client.supports_method("textDocument/inlayHints")
+          lsp_supports_method(client, "textDocument/inlayHints")
           and client.server_capabilities.inlayHintProvider
         then
           vim.lsp.inlay_hint.enable()
@@ -73,7 +81,7 @@ if vim.fn.has("nvim-0.8") == 1 then
 
       if vim.fn.has("nvim-0.11") == 1 then
         -- Prefer LSP folding if client supports it
-        if client and client:supports_method("textDocument/foldingRange") then
+        if lsp_supports_method(client, "textDocument/foldingRange") then
           local win = vim.api.nvim_get_current_win()
           vim.wo[win][0].foldmethod = "expr"
           vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
@@ -81,7 +89,7 @@ if vim.fn.has("nvim-0.8") == 1 then
       end
 
       if
-        client.supports_method("textDocument/hover")
+        lsp_supports_method(client, "textDocument/hover")
         and client.server_capabilities.hoverProvider
       then
         -- no K mapping here, so keywordprg can be overrode by others like scriptease.vim
@@ -89,7 +97,7 @@ if vim.fn.has("nvim-0.8") == 1 then
       end
 
       if
-        client.supports_method("textDocument/definition")
+        lsp_supports_method(client, "textDocument/definition")
         and client.server_capabilities.definitionProvider
       then
         vim.keymap.set({ "n" }, "gd", function()
@@ -98,7 +106,7 @@ if vim.fn.has("nvim-0.8") == 1 then
       end
 
       if
-        client.supports_method("textDocument/declaration")
+        lsp_supports_method(client, "textDocument/declaration")
         and client.server_capabilities.declarationProvider
       then
         vim.keymap.set({ "n" }, "gD", function()
