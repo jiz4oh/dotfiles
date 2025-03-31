@@ -64,6 +64,28 @@ end
 --   end)
 -- end
 
+if vim.fn.has("nvim-0.5") == 1 then
+  local original_display_fn = vim.lsp.codelens.display
+  local lens_sign = "🔎 "
+  vim.lsp.codelens.display = function(lenses, bufnr, client_id)
+    if not vim.api.nvim_buf_is_loaded(bufnr) then
+      return
+    end
+
+    if not lenses or not next(lenses) then
+      return
+    end
+
+    for _, lens in pairs(lenses) do
+      if lens.command then
+        local text = lens_sign .. lens.command.title:gsub(lens_sign, "")
+        lens.command.title = text
+      end
+    end
+    original_display_fn(lenses, bufnr, client_id)
+  end
+end
+
 if vim.fn.has("nvim-0.8") == 1 then
   local lsp_group = vim.api.nvim_create_augroup("LspGroup", { clear = true })
 
@@ -103,6 +125,7 @@ if vim.fn.has("nvim-0.8") == 1 then
         table.insert(notify, "refresh codelens")
         vim.lsp.codelens.refresh({ bufnr = 0 })
         vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+          group = lsp_group,
           buffer = 0,
           callback = function(event)
             vim.lsp.codelens.refresh({ bufnr = event.buf })
