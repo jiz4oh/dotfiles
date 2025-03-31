@@ -70,11 +70,14 @@ if vim.fn.has("nvim-0.8") == 1 then
         return
       end
 
+      local notify = { "LSP " .. client.name .. " attached" }
+
       if vim.fn.has("nvim-0.10") == 1 then
         if
           lsp_supports_method(client, "textDocument/inlayHints")
           and client.server_capabilities.inlayHintProvider
         then
+          table.insert(notify, "enable LSP inlay hints")
           vim.lsp.inlay_hint.enable()
         end
       end
@@ -82,6 +85,7 @@ if vim.fn.has("nvim-0.8") == 1 then
       if vim.fn.has("nvim-0.11") == 1 then
         -- Prefer LSP folding if client supports it
         if lsp_supports_method(client, "textDocument/foldingRange") then
+          table.insert(notify, "enable LSP folding")
           local win = vim.api.nvim_get_current_win()
           vim.wo[win][0].foldmethod = "expr"
           vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
@@ -122,7 +126,7 @@ if vim.fn.has("nvim-0.8") == 1 then
       table.insert(ale_linters_ignore, "ruff")
       vim.b.ale_linters_ignore = ale_linters_ignore
 
-      vim.notify_once("LSP " .. client.name .. " attached")
+      vim.notify_once(table.concat(notify, ", "), vim.log.levels.INFO)
     end,
   })
 end
