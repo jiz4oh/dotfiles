@@ -3,7 +3,7 @@ return {
   lazy = true,
   event = { "InsertEnter", "CmdlineEnter" },
   dependencies = {
-    "zbirenbaum/copilot.lua",
+    import = "plugins.config.copilot",
     "hrsh7th/nvim-cmp",
   },
   config = function()
