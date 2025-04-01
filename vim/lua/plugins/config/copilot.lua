@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "zbirenbaum/copilot.lua",
   enabled = vim.fn.has("nvim-0.10") == 1,

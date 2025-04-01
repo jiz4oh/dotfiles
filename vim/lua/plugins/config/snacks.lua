@@ -7,6 +7,7 @@ local lsp_handlers = {
   end,
 }
 
+---@type LazyPluginSpec
 return {
   "folke/snacks.nvim",
   priority = 1000,
@@ -95,6 +96,7 @@ return {
       end,
     },
   },
+  ---@type snacks.plugins.Config
   opts = {
     -- your configuration comes here
     -- or leave it empty to use the default settings

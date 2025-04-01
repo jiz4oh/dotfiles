@@ -12,6 +12,7 @@ if vim.fn.argc() > 0 then
   end
 end
 
+---@type LazyPluginSpec
 return {
   "miversen33/netman.nvim",
   cmd = {

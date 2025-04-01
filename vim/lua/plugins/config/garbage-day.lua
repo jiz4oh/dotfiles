@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "zeioth/garbage-day.nvim",
   event = "LspAttach",

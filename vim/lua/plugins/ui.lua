@@ -1,5 +1,6 @@
 local markview = vim.fn.has("nvim-0.10.1") == 1
 
+---@type LazySpec[]
 return {
   {
     import = "plugins.config.nvim-scrollview",

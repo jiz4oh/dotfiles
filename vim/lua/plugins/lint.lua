@@ -1,3 +1,4 @@
+---@type LazySpec[]
 return {
   {
     "dense-analysis/ale",

@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "CopilotC-Nvim/CopilotChat.nvim",
   dependencies = {

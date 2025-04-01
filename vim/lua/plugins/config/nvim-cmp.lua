@@ -18,6 +18,7 @@ local default_sources = {
   { name = "buffer" },
 }
 
+---@type LazyPluginSpec
 return {
   "hrsh7th/nvim-cmp",
   version = false, -- last release is way too old

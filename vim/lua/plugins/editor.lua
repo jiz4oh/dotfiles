@@ -1,3 +1,4 @@
+---@type LazySpec[]
 return {
   {
     "VidocqH/data-viewer.nvim",

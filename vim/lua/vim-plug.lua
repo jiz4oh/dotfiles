@@ -1,3 +1,4 @@
+---@type LazySpec[]
 local plugins = {}
 
 local is_map = function(v)
@@ -27,13 +28,14 @@ if vim.g.plugs_order ~= nil then
       end, as_array(config["on"]))
 
       local path = vim.g.config_home .. "/config/plugin/" .. plug .. ".vim"
+      ---@type LazySpec
       local conf = {
         config["uri"],
         lazy = (not vim.tbl_isempty(as_array(config["on"])))
           or (not vim.tbl_isempty(as_array(config["for"]))),
         cmd = cmd,
         keys = keys,
-        dir = vim.fn.isdirectory(config["dir"]) == 1 and config["dir"],
+        dir = vim.fn.isdirectory(config["dir"]) == 1 and config["dir"] or nil,
       }
 
       local mappings = {

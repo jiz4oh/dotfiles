@@ -1,5 +1,6 @@
 local lsp_enabled = vim.lsp ~= nil and vim.g.as_ide == 1
 
+---@type LazySpec[]
 return {
   {
     "mrded/nvim-lsp-notify",

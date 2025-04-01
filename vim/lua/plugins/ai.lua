@@ -1,5 +1,6 @@
 local enabled = vim.g.as_ide == 1 and vim.fn.has("nvim-0.10") == 1
 
+---@type LazySpec[]
 return {
   {
     "CopilotC-Nvim/CopilotChat.nvim",

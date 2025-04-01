@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "pianocomposer321/officer.nvim",
   opts = {

@@ -48,6 +48,7 @@ local function update_spinner(client_id, token)
   end
 end
 
+---@type LazyPluginSpec
 return {
   "rcarriga/nvim-notify",
   enabled = vim.fn.has("nvim-0.5") == 1,

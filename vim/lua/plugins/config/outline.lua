@@ -15,6 +15,7 @@ local ctags = {
   },
 }
 
+---@type LazyPluginSpec
 return {
   {
     "liuchengxu/vista.vim",

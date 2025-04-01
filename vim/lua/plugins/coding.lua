@@ -2,6 +2,7 @@ local enabled = vim.g.as_ide == 1
 
 local blink = vim.fn.has("nvim-0.11") == 1
 
+---@type LazySpec[]
 return {
   {
     "L3MON4D3/LuaSnip",

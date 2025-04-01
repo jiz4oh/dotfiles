@@ -1,7 +1,9 @@
+---@type LazySpec
 return {
   "folke/lazydev.nvim",
   enabled = vim.fn.has('nvim-0.10') == 1,
   ft = "lua", -- only load on lua files
+  ---@type lazydev.Config
   opts = {
     library = {
       { path = "~/.hammerspoon/Spoons/EmmyLua.spoon/annotations" },

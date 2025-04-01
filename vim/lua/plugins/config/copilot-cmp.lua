@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "zbirenbaum/copilot-cmp",
   lazy = true,

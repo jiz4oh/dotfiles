@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "quangnguyen30192/cmp-nvim-tags",
   event = { "InsertEnter", "CmdlineEnter" },

@@ -43,6 +43,7 @@ if vim.g.as_ide == 1 then
   })
 end
 
+---@type LazyPluginSpec
 return {
   "WhoIsSethDaniel/mason-tool-installer.nvim",
   cmd = {

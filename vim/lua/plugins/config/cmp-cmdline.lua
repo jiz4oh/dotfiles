@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "jiz4oh/cmp-cmdline",
   event = "CmdlineEnter",

@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "ojroques/nvim-lspfuzzy",
   event = "LspAttach",

@@ -31,6 +31,7 @@ local firenvim_plugins = {
 
 require("lazy").setup({
   root = vim.g["plug_home"] or (vim.fn.stdpath("data") .. "/lazy/bundle"),
+  ---@type LazySpec[]
   spec = {
     -- import/override with your plugins
     { import = "vim-plug" },

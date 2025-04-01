@@ -99,6 +99,7 @@ local configs = {
   end,
 }
 
+---@type LazyPluginSpec
 return {
   "williamboman/mason-lspconfig.nvim",
   dependencies = "williamboman/mason.nvim",

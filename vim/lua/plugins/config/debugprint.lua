@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "andrewferrier/debugprint.nvim",
   keys = {

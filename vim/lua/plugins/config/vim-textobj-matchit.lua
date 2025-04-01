@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "adriaanzon/vim-textobj-matchit",
   dependencies = {

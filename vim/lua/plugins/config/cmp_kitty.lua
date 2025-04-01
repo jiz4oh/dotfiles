@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "garyhurtz/cmp_kitty",
   cond = vim.env.KITTY_WINDOW_ID ~= nil,

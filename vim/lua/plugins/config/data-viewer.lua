@@ -1,3 +1,4 @@
+---@type LazyPluginSpec
 return {
   "VidocqH/data-viewer.nvim",
   ft = { "csv", "tsv" },
