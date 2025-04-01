@@ -18,6 +18,32 @@ return {
       desc = "avante: edit",
       mode = "v",
     },
+    {
+      "<leader>aC",
+      ":AvanteClear<cr>",
+      desc = "avante: clear history",
+      mode = "n",
+    },
+    {
+      "<leader>aR",
+      function()
+        require("avante").toggle.suggestion()
+      end,
+      desc = "avante: display repo map",
+      mode = "n",
+      noremap = true,
+      silent = true,
+    },
+    {
+      "<leader>a?",
+      function()
+        require("avante.api").select_model()
+      end,
+      desc = "avante: display repo map",
+      mode = "n",
+      noremap = true,
+      silent = true,
+    },
     "<Plug>(AvanteAsk)",
     "<Plug>(AvanteToggle)",
     "<Plug>(AvanteChat)",
@@ -38,21 +64,28 @@ return {
     "AvanteClear",
     "AvanteShowRepoMap",
   },
-  event = "VeryLazy",
+  ---@type avante.Config
   opts = {
     behaviour = {
       -- auto_set_keymaps = false,
       enable_cursor_planning_mode = true,
     },
     cursor_applying_provider = type(os.getenv("OPENROUTER_API_KEY")) == type("") and nil or "groq", -- In this example, use Groq for applying, but you can also use any provider you want.
-    provider = type(os.getenv("OPENROUTER_API_KEY")) == type("") and "openrouter_claude"
-      or "copilot",
+    provider = "onehub_gemini",
+    ---@type {[string]: AvanteProvider}
     vendors = {
       groq = { -- define groq provider
         __inherited_from = "openai",
         api_key_name = "ONEHUB_API_KEY",
         endpoint = os.getenv("ONEHUB_BASE_URL"),
         model = "llama-3.3-70b-versatile",
+        max_tokens = 32768, -- remember to increase this value, otherwise it will stop generating halfway
+      },
+      onehub_gemini = { -- define groq provider
+        __inherited_from = "openai",
+        api_key_name = "ONEHUB_API_KEY",
+        endpoint = os.getenv("ONEHUB_BASE_URL"),
+        model = "gemini-2.5-pro-exp-03-25",
         max_tokens = 32768, -- remember to increase this value, otherwise it will stop generating halfway
       },
       openrouter = {
