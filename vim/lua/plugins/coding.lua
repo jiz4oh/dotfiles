@@ -1,6 +1,6 @@
 local enabled = vim.g.as_ide == 1
 
-local blink = vim.fn.has("nvim-0.11") == 1
+vim.g.complete_engine = vim.g.complete_engine or vim.fn.has("nvim-0.11") == 1 and 'blink' or 'cmp'
 
 ---@type LazySpec[]
 return {
@@ -10,11 +10,11 @@ return {
     import = "plugins.config.LuaSnip",
   },
   {
-    enabled = enabled and not blink,
+    enabled = enabled and vim.g.complete_engine == 'cmp',
     import = "plugins.extras.coding.nvim-cmp",
   },
   {
-    enabled = enabled and blink,
+    enabled = enabled and vim.g.complete_engine == 'blink',
     import = "plugins.config.blink",
   },
 }
