@@ -167,6 +167,15 @@ return {
       })
     end
 
+    for _, file_type in ipairs({ "sql", "mysql", "plsql" }) do
+      cmp.setup.filetype(file_type, {
+        sources = cmp.config.sources({
+          { name = "copilot" },
+          { name = "vim-dadbod-completion" },
+        }),
+      })
+    end
+
     for _, cmd_type in ipairs({ "/", "?", "@" }) do
       cmp.setup.cmdline(cmd_type, {
         mapping = cmp.mapping.preset.cmdline(),

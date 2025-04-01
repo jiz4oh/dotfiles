@@ -11,9 +11,6 @@ return {
         import = "plugins.config.copilot",
       },
     },
-    {
-      "kristijanhusak/vim-dadbod-completion",
-    },
   },
 
   -- use a release tag to download pre-built binaries

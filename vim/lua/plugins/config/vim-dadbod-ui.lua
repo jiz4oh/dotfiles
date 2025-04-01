@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
 return {
   "kristijanhusak/vim-dadbod-ui",
-  dependencies = { "tpope/vim-dadbod" },
+  dependencies = { "tpope/vim-dadbod", lazy = true },
 }
