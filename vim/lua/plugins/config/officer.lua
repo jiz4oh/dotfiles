@@ -4,4 +4,7 @@ return {
   opts = {
     create_mappings = true,
   },
+  dependencies = {
+    import = "plugins.config.overseer",
+  },
 }

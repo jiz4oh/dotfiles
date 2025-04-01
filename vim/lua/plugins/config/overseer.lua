@@ -24,7 +24,4 @@ return {
     require("overseer").setup(opts)
     require("overseer").load_template("myplugin.sh")
   end,
-  dependencies = {
-    "pianocomposer321/officer.nvim",
-  },
 }
