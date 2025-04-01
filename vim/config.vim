@@ -48,6 +48,9 @@ let g:as_ide                  = g:is_win || g:is_darwin || g:has_linux_desktop
 " https://github.com/kovidgoyal/kitty/issues/957
 let g:alt_compatible = 'xterm-kitty' == $TERM || exists('$KITTY_WINDOW_ID')
 
+let g:complete_engine = "blink"
+
+"{{{ which key
 let g:which_key_map = {}
 
 let g:which_key_map['/'] = 'clear highlight'
@@ -233,3 +236,4 @@ let g:which_key_map_visual['s'] = {
       \ ' ': 'Search selected with ripgrep',
       \ 'p': 'Search selected in Project',
       \ }
+"}}}

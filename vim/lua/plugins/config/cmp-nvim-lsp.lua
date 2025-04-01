@@ -2,9 +2,9 @@
 return {
   "hrsh7th/cmp-nvim-lsp",
   event = "InsertEnter",
-  -- dependencies = {
-  --   "hrsh7th/nvim-cmp",
-  -- },
+  dependencies = {
+    "hrsh7th/nvim-cmp",
+  },
   config = function()
     pcall(
       vim.lsp.config,

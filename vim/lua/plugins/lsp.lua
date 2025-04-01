@@ -8,12 +8,12 @@ return {
   },
   {
     "hrsh7th/cmp-nvim-lsp",
-    enabled = lsp_enabled,
+    enabled = lsp_enabled and vim.g.complete_engine == "cmp",
     import = "plugins.config.cmp-nvim-lsp",
   },
   {
     "hrsh7th/cmp-nvim-lsp-signature-help",
-    enabled = lsp_enabled,
+    enabled = lsp_enabled and vim.g.complete_engine == "cmp",
     import = "plugins.config.cmp-nvim-lsp-signature-help",
   },
   {
