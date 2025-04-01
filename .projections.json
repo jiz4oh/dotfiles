@@ -17,7 +17,15 @@
     "type": "lua"
   },
   "vim/lua/plugins/config/*.lua": {
-    "type": "config",
+    "type": "luaconfig",
+    "template":  [
+      "---@type LazyPluginSpec",
+      "return {",
+      "  \"\",",
+      "  opts = {",
+      "  },",
+      "}"
+    ],
     "alternate": [
       "vim/bundle/{}/lua/{}/init.lua",
       "vim/bundle/{}/README.md",
