@@ -49,17 +49,25 @@ return {
     keymap = { preset = "default" },
 
     completion = {
+      -- https://cmp.saghen.dev/recipes#border
+      menu = {
+        border = "single",
+      },
       documentation = {
-        auto_show = false,
+        window = { border = "single" },
+        auto_show = true,
       },
     },
 
     cmdline = {
-      keymap = {
-        ['<Tab>'] = { 'show', 'accept', }
-      },
       -- https://cmp.saghen.dev/modes/cmdline.html#show-menu-automatically
       completion = {
+        list = {
+          selection = {
+            preselect = false,
+            auto_insert = true,
+          },
+        },
         menu = {
           auto_show = function(ctx)
             return vim.fn.getcmdtype() == ":"
