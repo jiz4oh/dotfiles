@@ -66,6 +66,13 @@ return {
       mode = { "n" },
     },
     {
+      "<leader>un",
+      function()
+        Snacks.notifier.hide()
+      end,
+      desc = "Dismiss All Notifications",
+    },
+    {
       "<leader>ld",
       function()
         Snacks.picker.lsp_definitions({ unique_lines = true })
@@ -95,6 +102,9 @@ return {
         Snacks.picker.lsp_type_definitions({ unique_lines = true })
       end,
     },
+  },
+  cmd = {
+    "Notification",
   },
   ---@type snacks.plugins.Config
   opts = {
@@ -161,6 +171,9 @@ return {
           Snacks.debug.backtrace()
         end
         vim.print = _G.dd -- Override print to use snacks for `:=` command
+        vim.api.nvim_create_user_command("Notification", function()
+          Snacks.picker.notifications()
+        end, { desc = "Notification History" })
 
         -- Create some toggle mappings
         Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
