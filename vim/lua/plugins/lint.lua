@@ -1,11 +1,11 @@
 ---@type LazySpec[]
 return {
   {
-    "dense-analysis/ale",
+    "jiz4oh/ale-autocorrect.vim",
     event = "VeryLazy",
     lazy = true,
     dependencies = {
-      "jiz4oh/ale-autocorrect.vim",
+      "dense-analysis/ale",
     },
   },
 }
