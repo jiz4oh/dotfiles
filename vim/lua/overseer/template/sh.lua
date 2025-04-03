@@ -16,6 +16,21 @@ return {
           return {
             cmd = { files.join(opts.dir, filename) },
             args = params.args,
+            components = {
+              -- { "on_output_quickfix", set_diagnostics = true },
+              -- "on_result_diagnostics",
+              -- https://github.com/stevearc/overseer.nvim/blob/master/doc/components.md#open_output
+              {
+                "open_output",
+                on_start = "if_no_on_output_quickfix",
+                on_complete = "failure",
+              },
+              -- https://github.com/stevearc/overseer.nvim/blob/master/doc/components.md#unique
+              {
+                "unique",
+              },
+              "default",
+            },
           }
         end,
       })

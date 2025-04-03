@@ -8,9 +8,9 @@ return {
   cmd = {
     "OverseerToggle",
     "OverseerRun",
+    "OverseerRestartLast",
   },
-  opts = {},
-  config = function(_, opts)
+  init = function()
     vim.api.nvim_create_user_command("OverseerRestartLast", function()
       local overseer = require("overseer")
       local tasks = overseer.list_tasks({ recent_first = true })
@@ -20,8 +20,13 @@ return {
         overseer.run_action(tasks[1], "restart")
       end
     end, {})
-
+  end,
+  ---@type overseer.Config
+  opts = {},
+  config = function(_, opts)
     require("overseer").setup(opts)
-    require("overseer").load_template("myplugin.sh")
+    -- reference: https://github.com/search?q=path%3Alua%2Foverseer%2Ftemplate+language%3ALua+builder&type=code
+    -- $_DOTFILES_PATH/vim/lua/overseer/template/user.lua
+    require("overseer").load_template("user")
   end,
 }

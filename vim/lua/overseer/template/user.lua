@@ -1,0 +1,5 @@
+return {
+  "sh",
+  "rails",
+  "dispatch",
+}
