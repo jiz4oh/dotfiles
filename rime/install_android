@@ -1,62 +1,113 @@
 #!/bin/bash
 # ./install_android /sdcard/Android/rime
 # ANDROID_SERIAL=xxxx ./install_android /sdcard/Android/rime
-# ./install_android /storage/emulated/0/Android/data/org.fcitx.fcitx5.android/files/data/rime/
+# Example Usage:
+# ./install_android /sdcard/Android/data/org.fcitx.fcitx5.android/files/data/rime/
+# ANDROID_SERIAL=xxxx ./install_android /sdcard/Android/data/org.fcitx.fcitx5.android/files/data/rime/
 
-set -x
-cd "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")" || exit 1
-BASE=$(pwd)
-VERSION=$(cat "$BASE"/rime/upstream_version)
-REPO_URL="https://github.com/gaboolic/rime-frost/archive/refs/tags/$VERSION.zip"
-UNZIP_DIR_NAME="rime-frost-master"
-LOCAL_ZIP="/tmp/rime.zip"
-REMOTE_DIR="/sdcard/Download"
+# Exit immediately if a command exits with a non-zero status.
+# Print commands and their arguments as they are executed.
+set -ex
 
+# --- Configuration ---
+# Check if target directory is provided
 if [ -z "$1" ]; then
-  echo "指定 scp 目标目录" >&2
+  echo "错误: 请提供目标安装目录作为第一个参数。" >&2
+  echo "用法: $0 <目标目录>" >&2
   exit 1
 fi
+TARGET_DIR="$1"
 
-adb shell mkdir -p $1
-adb shell mkdir -p $1/opencc
+# Determine script's base directory and project root
+SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+BASE=$(dirname "$SCRIPT_DIR")
+cd "$BASE" || exit 1 # Ensure we are in the project root
 
-install_rime_frost() {
-  zip_name=$(basename $LOCAL_ZIP)
+# Read version and construct URLs/names
+VERSION=$(cat "$BASE"/rime/upstream_version)
+REPO_URL="https://github.com/gaboolic/rime-frost/archive/refs/tags/$VERSION.zip"
+UNZIP_DIR_NAME="rime-frost-$VERSION"
+REMOTE_TMP_DIR="/sdcard/Download" # Temporary directory on the Android device
 
-  echo "正在下载 GitHub 仓库的 ZIP 包..."
-  curl -L -o "$LOCAL_ZIP" "$REPO_URL"
+# Create a local temporary directory for downloads
+LOCAL_TMP_DIR=$(mktemp -d)
+# Ensure the temporary directory is cleaned up on script exit
+trap 'rm -rf -- "$LOCAL_TMP_DIR"' EXIT
+LOCAL_ZIP="$LOCAL_TMP_DIR/rime-frost-$VERSION.zip"
+ZIP_BASENAME=$(basename "$LOCAL_ZIP")
+REMOTE_ZIP_PATH="$REMOTE_TMP_DIR/$ZIP_BASENAME"
+REMOTE_UNZIP_PATH="$REMOTE_TMP_DIR/$UNZIP_DIR_NAME"
 
-  # 检查是否成功下载
+# --- Helper Functions ---
+adb_shell() {
+  echo "Executing on device: adb shell $@"
+  adb shell "$@"
   if [ $? -ne 0 ]; then
-    echo "错误: 下载 ZIP 包失败"
+    echo "错误: adb shell 命令执行失败: $@" >&2
     exit 1
   fi
-
-  # 将 ZIP 文件推送到远程设备
-  echo "正在将 ZIP 包推送到设备..."
-  adb push "$LOCAL_ZIP" "$REMOTE_DIR/"
-  if [ $? -ne 0 ]; then
-    echo "错误: 推送 ZIP 包失败"
-    exit 1
-  fi
-
-  echo "正在解压 ZIP 包..."
-  adb shell "rm -rf $REMOTE_DIR/$UNZIP_DIR_NAME && cd $REMOTE_DIR && unzip -o $zip_name"
-  if [ $? -eq 0 ]; then
-    echo "ZIP 包已成功解压"
-  else
-    echo "错误: 解压 ZIP 包失败"
-    exit 1
-  fi
-
-  adb shell "cp -r $REMOTE_DIR/$UNZIP_DIR_NAME/* $1"
-
-  rm $LOCAL_ZIP
-  adb shell "rm $REMOTE_DIR/$zip_name"
-  adb shell "rm -rf $REMOTE_DIR/$UNZIP_DIR_NAME"
 }
 
-install_rime_frost $1
+adb_push() {
+  echo "Pushing to device: adb push $@"
+  adb push "$@"
+  if [ $? -ne 0 ]; then
+    echo "错误: adb push 命令执行失败: $@" >&2
+    exit 1
+  fi
+}
 
-adb push "$BASE"/rime/custom/* $1
-adb push "$BASE"/rime/opencc/* $1/opencc
+# --- Main Logic ---
+
+# Ensure target directories exist on the device
+adb_shell "mkdir -p '$TARGET_DIR'"
+adb_shell "mkdir -p '$TARGET_DIR/opencc'"
+adb_shell "mkdir -p '$REMOTE_TMP_DIR'" # Ensure remote temp dir exists
+
+# 1. Download rime-frost release zip
+echo "正在下载 Rime Frost v$VERSION..."
+curl -L -o "$LOCAL_ZIP" "$REPO_URL"
+if [ $? -ne 0 ]; then
+  echo "错误: 下载 Rime Frost ZIP 包失败 ($REPO_URL)" >&2
+  exit 1
+fi
+echo "下载完成: $LOCAL_ZIP"
+
+# 2. Push zip to device
+echo "正在将 ZIP 包推送到设备: $REMOTE_ZIP_PATH"
+adb_push "$LOCAL_ZIP" "$REMOTE_ZIP_PATH"
+
+# 3. Extract zip on device
+echo "正在设备上解压 ZIP 包..."
+# Clean up previous extraction attempts first
+adb_shell "rm -rf '$REMOTE_UNZIP_PATH'"
+# Unzip, overwriting existing files (-o), quiet mode (-q) might be useful too
+adb_shell "cd '$REMOTE_TMP_DIR' && unzip -o '$ZIP_BASENAME'"
+echo "解压完成。"
+
+# 4. Copy extracted files to target directory
+echo "正在将解压后的文件复制到目标目录: $TARGET_DIR"
+# Use -T to treat destination as a normal file if source is single file (safer)
+# Use -a for archive mode (preserves permissions, etc.), though -r might suffice
+adb_shell "cp -a '$REMOTE_UNZIP_PATH'/* '$TARGET_DIR/'"
+echo "文件复制完成。"
+
+# 5. Push custom configuration files
+echo "正在推送自定义配置文件..."
+adb_push "$BASE"/rime/custom/* "$TARGET_DIR/"
+echo "自定义配置文件推送完成。"
+
+# 6. Push custom opencc files
+echo "正在推送自定义 OpenCC 文件..."
+adb_push "$BASE"/rime/opencc/* "$TARGET_DIR/opencc/"
+echo "自定义 OpenCC 文件推送完成。"
+
+# 7. Clean up temporary files on device
+echo "正在清理设备上的临时文件..."
+adb_shell "rm '$REMOTE_ZIP_PATH'"
+adb_shell "rm -rf '$REMOTE_UNZIP_PATH'"
+echo "设备清理完成。"
+
+# Local temporary directory is cleaned up by trap
+
+echo "Rime 配置安装/更新成功！目标目录: $TARGET_DIR"

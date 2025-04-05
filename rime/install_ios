@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# -e: Exit immediately if a command exits with a non-zero status.
+# -u: Treat unset variables as an error when substituting.
+# -o pipefail: The return value of a pipeline is the status of the last command
+#              to exit with a non-zero status, or zero if no command exited
+#              with a non-zero status.
+# -x: Print commands and their arguments as they are executed (for debugging).
+set -euo pipefail -x
+
+# 获取脚本所在目录的绝对路径的上级目录作为项目根目录
+BASE_DIR=$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")
+cd "$BASE_DIR" || exit 1
+
+# 读取版本号
+VERSION=$(cat "$BASE_DIR"/rime/upstream_version)
+REPO_URL="https://github.com/gaboolic/rime-frost/archive/refs/tags/$VERSION.zip"
+UPSTREAM_ZIP_FILENAME="$VERSION.zip"
+EXTRACTED_DIR_NAME="rime-frost-$VERSION"
+FINAL_ZIP_NAME="rime_custom.zip"
+# https://ihsiao.com/apps/hamster/docs/guides/sync/
+HAMSATER_DIR="$HOME/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents"
+
+WORK_DIR="/tmp/rime"
+mkdir -p "$WORK_DIR" # 创建工作目录
+trap 'rm -rf "$WORK_DIR"' EXIT
+
+LOCAL_UPSTREAM_ZIP="$WORK_DIR/$UPSTREAM_ZIP_FILENAME"
+EXTRACTED_PATH="$WORK_DIR/$EXTRACTED_DIR_NAME"
+FINAL_ZIP_PATH="$WORK_DIR/$FINAL_ZIP_NAME" # 先在工作目录创建
+
+echo "正在下载 Rime Frost v$VERSION 源码..."
+curl -L -o "$LOCAL_UPSTREAM_ZIP" "$REPO_URL"
+
+echo "正在解压源码..."
+# 使用 ditto 解压，它能更好地处理 macOS 的文件名编码和元数据
+# https://github.com/CocoaPods/CocoaPods/issues/7711#issuecomment-386942543
+# -x: extract
+# -k: PKZip archive
+# --sequesterRsrc: Preserve resource forks (good practice when dealing with macOS files)
+ditto -x -k --sequesterRsrc --rsrc "$LOCAL_UPSTREAM_ZIP" "$WORK_DIR"
+
+echo "正在合并自定义配置..."
+# 复制自定义文件到解压后的目录
+cp "$BASE_DIR"/rime/custom/* "$EXTRACTED_PATH/"
+# 创建 opencc 目录并复制文件
+mkdir -p "$EXTRACTED_PATH/opencc"
+cp "$BASE_DIR"/rime/opencc/* "$EXTRACTED_PATH/opencc/"
+
+echo "正在清理不必要的文件..."
+# 移除隐藏文件和目录
+find "$EXTRACTED_PATH" -mindepth 1 -name '.*' -exec rm -rf {} +
+
+echo "正在创建自定义配置 ZIP 包..."
+# 进入解压后的目录，将所有内容打包
+(cd "$EXTRACTED_PATH" && zip -r "$FINAL_ZIP_PATH" .)
+
+# 将最终的 zip 包移动到 /tmp 目录
+mv "$FINAL_ZIP_PATH" "$HAMSATER_DIR"
+
+echo "自定义配置包已创建在 $HAMSATER_DIR/$FINAL_ZIP_NAME"
+echo "清理临时工作目录 $WORK_DIR..." # trap 会自动执行清理
