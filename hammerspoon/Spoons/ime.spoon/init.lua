@@ -44,6 +44,11 @@ end
 
 function obj:bindEvent()
   hs.keycodes.inputSourceChanged(forceIME)
+  hs.application.watcher
+    .new(function(app_name, event, application)
+      forceIME()
+    end)
+    :start()
 
   hs.urlevent.bind("switch_ime", function(_, params)
     switch(sources[params["lang"]] or sources.cn)

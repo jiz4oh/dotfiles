@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ln -sf "$(cat "$HOME/.mybackups")/rime" "$HOME/Library/Rime/sync"

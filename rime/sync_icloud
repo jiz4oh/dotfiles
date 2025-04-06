@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# 使用 rsync 双向同步本地目录和 iCloud Hamster 目录的脚本
+
+# --- 配置 ---
+
+# iCloud Hamster 同步目录路径 (确保结尾有斜杠 /)
+# 注意：路径中的空格和特殊字符可能需要转义，但放在引号中通常是安全的。
+ICLOUD_DIR="$HOME/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/sync/"
+
+# 获取备份所在的目录 (确保结尾有斜杠 /)
+LOCAL_DIR="$(cat "$HOME/.mybackups")/rime/"
+
+# rsync 选项:
+# -a: 归档模式 (递归、保留权限、时间戳等)
+# -v: 详细输出
+# -h: 人类可读的数字
+# -u: 更新模式 (仅当源文件比目标文件新时才复制)
+# --exclude: 排除指定的文件或模式
+RSYNC_OPTIONS="-avhu"
+EXCLUDES=(
+    "--exclude=.DS_Store"
+    "--exclude=.git"
+    "--exclude=.svn"
+    "--exclude=*.swp"
+    "--exclude=*.swo"
+    # 在这里添加其他需要排除的文件或模式
+    # 例如: "--exclude=node_modules/"
+)
+
+# --- 检查 ---
+
+echo "开始同步..."
+echo "本地目录 (Local): $LOCAL_DIR"
+echo "iCloud 目录 (iCloud): $ICLOUD_DIR"
+
+# 检查 iCloud 目录是否存在
+if [ ! -d "$ICLOUD_DIR" ]; then
+  echo "错误：iCloud 目录未找到: $ICLOUD_DIR"
+  echo "请检查路径是否正确，以及 iCloud Drive 是否正在运行和同步。"
+  exit 1
+fi
+
+# 检查本地目录是否存在 (脚本所在的目录理论上总是存在的)
+if [ ! -d "$LOCAL_DIR" ]; then
+  echo "错误：本地目录未找到: $LOCAL_DIR"
+  exit 1
+fi
+
+# 步骤 1: 将 iCloud 中较新的文件同步到本地目录
+echo ""
+echo "步骤 1: 同步 iCloud -> 本地"
+rsync $RSYNC_OPTIONS "${EXCLUDES[@]}" "$ICLOUD_DIR" "$LOCAL_DIR"
+if [ $? -ne 0 ]; then
+    echo "错误：从 iCloud 同步到本地时发生错误。"
+    # 你可以选择在这里退出脚本，或者继续执行下一步
+    # exit 1
+else
+    echo "步骤 1 完成。"
+fi
+
+# 步骤 2: 将本地目录中较新的文件同步到 iCloud
+echo ""
+echo "步骤 2: 同步 本地 -> iCloud"
+rsync $RSYNC_OPTIONS "${EXCLUDES[@]}" "$LOCAL_DIR" "$ICLOUD_DIR"
+if [ $? -ne 0 ]; then
+    echo "错误：从本地同步到 iCloud 时发生错误。"
+    exit 1
+else
+    echo "步骤 2 完成。"
+fi
+
+echo ""
+echo "同步完成。"
+exit 0

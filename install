@@ -6,6 +6,7 @@ BASE=$(pwd)
 touch bashrc-extra
 mkdir -pv bak
 
+echo $BASE > ~/.mydotfile
 [ $(command -v zsh) ] && $BASE/scripts/install_zsh
 
 # dotfiles
@@ -27,7 +28,7 @@ for dir in git_template ctags.d vim raycast \
   tmux/plugins/tpm \
   prompts \
   config/rubocop config/solargraph config/kitty config/wezterm config/mise \
-  hammerspoon/Spoons \
+  hammerspoon/Spoons hammerspoon/modules \
   terminfo; do
   rm -rf bak/$dir
   parent_dir=$(dirname "$dir")
