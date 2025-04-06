@@ -183,10 +183,14 @@ if vim.fn.has("nvim-0.8") == 1 then
       vim.g["vista_" .. vim.api.nvim_get_option_value("filetype", { buf = bufnr }) .. "_executive"] =
         "nvim_lsp"
 
-      -- remove ruff from ale_linters since it report to nvim directly
-      local ale_linters_ignore = vim.b.ale_linters_ignore or {}
-      table.insert(ale_linters_ignore, "ruff")
-      vim.b.ale_linters_ignore = ale_linters_ignore
+      if client.name == "ruff" then
+        -- remove ruff from ale_linters since it report to nvim directly
+        local ale_linters_ignore = vim.g.ale_linters_ignore or {}
+        if not vim.tbl_contains(ale_linters_ignore, "ruff") then
+          table.insert(ale_linters_ignore, "ruff")
+          vim.g.ale_linters_ignore = ale_linters_ignore
+        end
+      end
 
       vim.notify_once(table.concat(notify, ", "), vim.log.levels.INFO)
     end,
