@@ -182,6 +182,18 @@ kport () {
   kill -9 $(lsof -t -i :$1)
 }
 
+proxy () {
+    export url=${1:=127.0.0.1} && export port=${2:=37890} && export https_proxy=http://$url:$port http_proxy=http://$url:$port all_proxy=socks5://$url:$port
+    echo "Proxy on"
+}
+
+unproxy () {
+    unset http_proxy
+    unset https_proxy
+    unset all_proxy
+    echo "Proxy off"
+}
+
 # run 'zprof' to get profiling information
 zmodload zsh/zprof
 
