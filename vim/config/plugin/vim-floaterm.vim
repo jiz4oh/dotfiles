@@ -3,12 +3,14 @@ if exists('g:project_markers')
 end
 
 if executable('ranger')
-  command! Ranger FloatermNew ranger
+  command! Ranger FloatermNew --position=center --height=0.7 ranger
 endif
 
 if executable('yazi')
-  command! Yazi FloatermNew yazi
+  command! Yazi FloatermNew --position=center --height=0.7 yazi
 endif
+
+command! Aider FloatermNew --name=Aider --position=topright --width=0.4 --height=0.99999999999 aider
 
 let g:floaterm_position = 'bottom'
 let g:floaterm_autohide = '2'
