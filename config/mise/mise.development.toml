@@ -23,5 +23,7 @@ pnpm = "latest"
 "gem:solargraph-rails" = "latest"
 "gem:rails" = "latest"
 
+"ubi:universal-ctags/ctags-nightly-build" =  { version = "latest", exe = "ctags" }
+
 [settings]
 experimental = true
