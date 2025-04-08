@@ -4,7 +4,10 @@ let g:coc_global_extensions = [
       \'coc-tag',
       \'coc-syntax',
       \]
-let g:coc_node_path = expand("$ASDF_DIR") .. "/installs/nodejs/20.10.0/bin/node"
+
+if exists('g:node_path')
+  let g:coc_node_path = g:node_path
+end
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: There's always complete item selected by default, you may want to enable
