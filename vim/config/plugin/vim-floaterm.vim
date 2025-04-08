@@ -10,7 +10,7 @@ if executable('yazi')
   command! Yazi FloatermNew --position=center --height=0.7 yazi
 endif
 
-command! Aider FloatermNew --name=Aider --position=topright --width=0.4 --height=0.99999999999 aider
+command! -nargs=* Aider FloatermNew --name=Aider --position=topright --width=0.4 --height=0.99999999999 aider --no-pretty --no-auto-commits <args>
 
 let g:floaterm_position = 'bottom'
 let g:floaterm_autohide = '2'
