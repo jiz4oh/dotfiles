@@ -36,6 +36,8 @@ if [ $(uname -s) = "Darwin" ]; then
   # for ruby version > 3.0
   openssl_version=""
   export PATH="$BREW_PREFIX/opt/openssl$openssl_version/bin:$PATH"
+  # https://mise.jdx.dev/configuration/environments.html
+  export MISE_ENV=development
 fi
 
 # if [ $(command -v rbenv) ]; then
