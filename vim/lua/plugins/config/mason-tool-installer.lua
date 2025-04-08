@@ -38,7 +38,6 @@ if vim.g.as_ide == 1 then
 
     "ruff",
 
-    "rubocop",
     "rubyfmt",
   })
 end

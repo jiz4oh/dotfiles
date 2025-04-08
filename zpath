@@ -24,6 +24,8 @@ if [ -n "$ZSH_VERSION" ]; then
 fi
 
 export PATH="${XDG_DATA_HOME:-~/.local/share}/nvim/mason/bin:$PATH:$HOME/go/bin"
+# https://mise.jdx.dev/dev-tools/shims.html#how-to-add-mise-shims-to-path
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 export FZF_BASE=$_DOTFILES_PATH/vim/bundle/fzf
 
 if [ $(uname -s) = "Darwin" ]; then
@@ -58,10 +60,7 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-if [ $(command -v mise) ]; then
-  # https://mise.jdx.dev/dev-tools/shims.html#zshrc-bashrc-files
-  eval "$(mise activate zsh --shims)"
-elif [ -d ~/.asdf ]; then
+if ! command -v mise >/dev/null && [ -d ~/.asdf ]; then
   # git clone https://github.com/asdf-vm/asdf.git ~/.asdf
   # ruby 2.6 is not working on macos 13
   # https://bugs.ruby-lang.org/issues/18912

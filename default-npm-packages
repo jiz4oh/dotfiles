@@ -1,17 +1,1 @@
-prettier
-prettier-eslint-cli
-@prettier/plugin-ruby
-prettier-plugin-erb
-
-eslint-config-prettier
-eslint
-eslint-plugin-html
-eslint-plugin-prettier
-
-stylelint
-stylelint-config-standard-scss
-stylelint-prettier
-
 typescript
-typescript-language-server
-vscode-langservers-extracted

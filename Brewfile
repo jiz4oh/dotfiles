@@ -9,6 +9,7 @@ brew "fd"
 brew "git"
 brew "gnupg"
 brew "httpie"
+brew "mise"
 brew "mysql", restart_service: true
 brew "pandoc"
 brew "pipx"

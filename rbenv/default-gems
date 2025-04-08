@@ -1,6 +1,3 @@
 ripper-tags
 gem-ctags
 bundler
-rails
-solargraph
-solargraph-rails

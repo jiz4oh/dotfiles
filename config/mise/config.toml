@@ -1,10 +1,29 @@
 # https://mise.jdx.dev/configuration.html
 [tools]
 usage = "latest"
-ruby = "latest"
+ruby = ["latest", "prefix:2.7"]
 node = "lts"
 go = "latest"
 python = ["latest", "prefix:3.11"]
+pdm = "latest"
+pnpm = "latest"
+
+"npm:prettier" = "latest"
+"npm:prettier-eslint-cli" = "latest"
+"npm:prettier-plugin-erb" = "latest"
+"npm:eslint-config-prettier" = "latest"
+"npm:eslint" = "latest"
+"npm:eslint-plugin-html" = "latest"
+"npm:eslint-plugin-prettier" = "latest"
+"npm:stylelint" = "latest"
+"npm:stylelint-config-standard-scss" = "latest"
+"npm:stylelint-prettier" = "latest"
+"gem:rubocop" = "latest"
+# support ruby >= 2.4.0
+"gem:solargraph" = "0.52.0"
+"gem:solargraph-rails" = "latest"
+"gem:rails" = "latest"
 
 [settings]
 go_set_gobin = true
+experimental = true
