@@ -23,7 +23,7 @@ REPO_URL="https://github.com/gaboolic/rime-frost/archive/refs/tags/$VERSION.zip"
 UPSTREAM_ZIP_FILENAME="$VERSION.zip"
 EXTRACTED_DIR_NAME="rime-frost-$VERSION"
 # https://ihsiao.com/apps/hamster/docs/guides/sync/
-HAMSTER_DIR="$HOME/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/rime"
+HAMSTER_DIR="$HOME/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime"
 
 WORK_DIR="/tmp/rime"
 mkdir -p "$WORK_DIR" # 创建工作目录

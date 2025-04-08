@@ -1,0 +1,20 @@
+# https://github.com/imfuxiao/Hamster/wiki/hamster.yaml-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E%EF%BC%88alpha%EF%BC%89
+patch:
+  # 是否开启icloud同步
+  general/enableAppleCloud: true
+  # icloud同步过滤规则
+  general/regexOnCopyFile:
+    - ^.*SharedSupport.*$
+    - ^.*[.]userdb.*$
+    - ^.*[.]keyboard[.]yaml$
+    - ^.*build.*$
+    - ^.*[.]bin$
+    - ^.*sync.*$
+  # 中文26键显示大写字符
+  keyboard/showUppercasedCharacterOnChineseKeyboard: false
+  # 启动内嵌模式
+  keyboard/enableEmbeddedInputMode: true
+  # 逗号按钮
+  keyboard/enableCommaButton: true
+  # 显示按键气泡
+  keyboard/displayButtonBubbles: false
