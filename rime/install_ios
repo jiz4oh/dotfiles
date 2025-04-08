@@ -8,6 +8,11 @@
 # -x: Print commands and their arguments as they are executed (for debugging).
 set -euo pipefail -x
 
+# 检查所需命令是否存在
+command -v curl >/dev/null 2>&1 || { echo >&2 "错误：需要 curl 命令，但未找到。请先安装 curl。"; exit 1; }
+command -v ditto >/dev/null 2>&1 || { echo >&2 "错误：需要 ditto 命令，但未找到。此脚本可能仅适用于 macOS。"; exit 1; }
+command -v rsync >/dev/null 2>&1 || { echo >&2 "错误：需要 rsync 命令，但未找到。请先安装 rsync。"; exit 1; }
+
 # 获取脚本所在目录的绝对路径的上级目录作为项目根目录
 BASE_DIR=$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")
 cd "$BASE_DIR" || exit 1
@@ -17,9 +22,8 @@ VERSION=$(cat "$BASE_DIR"/rime/upstream_version)
 REPO_URL="https://github.com/gaboolic/rime-frost/archive/refs/tags/$VERSION.zip"
 UPSTREAM_ZIP_FILENAME="$VERSION.zip"
 EXTRACTED_DIR_NAME="rime-frost-$VERSION"
-FINAL_ZIP_NAME="rime_custom.zip"
 # https://ihsiao.com/apps/hamster/docs/guides/sync/
-HAMSATER_DIR="$HOME/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents"
+HAMSTER_DIR="$HOME/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/rime"
 
 WORK_DIR="/tmp/rime"
 mkdir -p "$WORK_DIR" # 创建工作目录
@@ -27,7 +31,6 @@ trap 'rm -rf "$WORK_DIR"' EXIT
 
 LOCAL_UPSTREAM_ZIP="$WORK_DIR/$UPSTREAM_ZIP_FILENAME"
 EXTRACTED_PATH="$WORK_DIR/$EXTRACTED_DIR_NAME"
-FINAL_ZIP_PATH="$WORK_DIR/$FINAL_ZIP_NAME" # 先在工作目录创建
 
 echo "正在下载 Rime Frost v$VERSION 源码..."
 curl -L -o "$LOCAL_UPSTREAM_ZIP" "$REPO_URL"
@@ -51,12 +54,14 @@ echo "正在清理不必要的文件..."
 # 移除隐藏文件和目录
 find "$EXTRACTED_PATH" -mindepth 1 -name '.*' -exec rm -rf {} +
 
-echo "正在创建自定义配置 ZIP 包..."
-# 进入解压后的目录，将所有内容打包
-(cd "$EXTRACTED_PATH" && zip -r "$FINAL_ZIP_PATH" .)
+echo "确保目标目录存在: $HAMSTER_DIR"
+mkdir -p "$HAMSTER_DIR"
 
-# 将最终的 zip 包移动到 /tmp 目录
-mv "$FINAL_ZIP_PATH" "$HAMSATER_DIR"
+echo "正在同步文件到 Hamster Rime 目录..."
+# 使用 rsync -av 将文件同步到目标目录
+# -a: 归档模式，保留权限、时间戳等
+# 注意源路径末尾的 / 表示复制目录内容，而不是目录本身
+rsync -a "$EXTRACTED_PATH/" "$HAMSTER_DIR/"
 
-echo "自定义配置包已创建在 $HAMSATER_DIR/$FINAL_ZIP_NAME"
+echo "配置已成功同步到 $HAMSTER_DIR"
 echo "清理临时工作目录 $WORK_DIR..." # trap 会自动执行清理
