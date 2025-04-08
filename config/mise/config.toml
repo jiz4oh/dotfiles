@@ -1,8 +1,12 @@
 # https://mise.jdx.dev/configuration.html
 [tools]
 # https://github.com/jdx/mise/blob/main/registry.toml
-usage = "latest"
+bat = "latest"
+fd = "latest"
 neovim = "latest"
+rg = "latest"
+shellcheck = "latest"
+usage = "latest"
 
 [settings]
 go_set_gobin = true

@@ -1,6 +1,5 @@
 local ensure_installed = {
   "fixjson",
-  "shellcheck",
 }
 
 if vim.g.as_ide == 1 then

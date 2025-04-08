@@ -22,6 +22,6 @@ install_ctags(){
   rm -rf $file
 }
 
-install git shellcheck curl wget bat
+install git curl wget
 
 install_ctags
