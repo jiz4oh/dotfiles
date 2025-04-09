@@ -20,6 +20,8 @@ alias cd.='cd ..'
 alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -lh'
+alias topdir="du -ah . | sort -rh | head -n 20"
+alias topfile="find . -type f -print0 | xargs -0 du -h | sort -rh | head -n 20"
 
 if [ -n "$KITTY_WINDOW_ID" ];then
   alias s='kitty +kitten ssh'
