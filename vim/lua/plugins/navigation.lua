@@ -10,7 +10,7 @@ return {
   },
   {
     "hedyhli/outline.nvim",
-    enabled = vim.fn.has("nvim-0.9") == 1 and vim.g.as_ide == 1,
+    cond = vim.g.as_ide == 1,
     import = "plugins.config.outline",
   },
 }

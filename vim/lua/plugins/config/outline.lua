@@ -30,6 +30,7 @@ return {
   {
     "hedyhli/outline.nvim",
     optional = true,
+    enabled = vim.fn.has("nvim-0.9") == 1,
     keys = {
       {
         "<Plug><OutlineToggle>",
@@ -42,7 +43,7 @@ return {
     opts = {
       -- Your setup opts here
       providers = {
-        priority = { "ripper-tags", "lsp", "markdown", "man", "treesitter", "ctags" },
+        priority = { "ripper-tags", "lsp", "markdown", "man", "ctags" },
         -- Configuration for each provider (3rd party providers are supported)
         lsp = {
           -- Lsp client names to ignore
@@ -55,6 +56,7 @@ return {
         },
       },
     },
+    opts_extends = { "providers.priority" },
     dependencies = {
       {
         "epheien/outline-ctags-provider.nvim",

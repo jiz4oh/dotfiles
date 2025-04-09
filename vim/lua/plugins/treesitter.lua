@@ -12,7 +12,6 @@ return {
   -- },
   {
     "nvim-treesitter/nvim-treesitter",
-    enabled = vim.g.with_treesitter == 1,
   },
   import = "plugins.config.nvim-treesitter",
 }
