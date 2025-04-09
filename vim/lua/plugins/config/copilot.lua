@@ -2,7 +2,7 @@
 return {
   "zbirenbaum/copilot.lua",
   optional = true,
-  enabled = vim.fn.has("nvim-0.10") == 1,
+  enabled = vim.fn.executable("node") and vim.fn.has("nvim-0.10") == 1,
   event = "InsertEnter",
   cmd = "Copilot",
   opts = {
