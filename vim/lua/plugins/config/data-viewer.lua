@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "VidocqH/data-viewer.nvim",
+  optional = true,
   ft = { "csv", "tsv" },
   opts = {
     autoDisplayWhenOpenFile = true,

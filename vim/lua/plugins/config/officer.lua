@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "pianocomposer321/officer.nvim",
+  optional = true,
   cmd = {
     "Make",
     "Run",

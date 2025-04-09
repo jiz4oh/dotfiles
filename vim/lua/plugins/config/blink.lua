@@ -1,18 +1,8 @@
 ---@type LazyPluginSpec
 return {
   "saghen/blink.cmp",
+  optional = true,
   event = { "InsertEnter", "CmdlineEnter" },
-  -- optional: provides snippets for the snippet source
-  dependencies = {
-    "rafamadriz/friendly-snippets",
-    {
-      "fang2hou/blink-copilot",
-      dependencies = {
-        import = "plugins.config.copilot",
-      },
-    },
-  },
-
   -- use a release tag to download pre-built binaries
   version = "1.*",
   init = function()
@@ -102,28 +92,16 @@ return {
       },
     },
 
-    snippets = { preset = "luasnip" },
     -- default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, via `opts_extend`
     sources = {
       default = {
-        "copilot",
         "lsp",
         "path",
         "snippets",
         "buffer",
       },
-      per_filetype = {
-        sql = { "snippets", "dadbod", "buffer" },
-      },
       providers = {
-        dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
-        copilot = {
-          name = "copilot",
-          module = "blink-copilot",
-          score_offset = 100,
-          async = true,
-        },
         -- https://cmp.saghen.dev/recipes.html#path-completion-from-cwd-instead-of-current-buffer-s-directory
         path = {
           opts = {
@@ -148,4 +126,14 @@ return {
   -- allows extending the providers array elsewhere in your config
   -- without having to redefine it
   opts_extend = { "sources.default" },
+  specs = {
+    {
+      "williamboman/mason-lspconfig.nvim",
+      opts = function(_, opts)
+        if vim.fn.has("nvim-0.11") ~= 1 then
+          opts["capabilities"] = require("blink.cmp").get_lsp_capabilities({}, true)
+        end
+      end,
+    },
+  },
 }

@@ -1,3 +1,9 @@
+local default_opts = {
+  flags = {
+    debounce_text_changes = 100,
+  },
+}
+
 local python_root_files = {
   "pyproject.toml",
   "setup.py",
@@ -102,40 +108,13 @@ local configs = {
 ---@type LazyPluginSpec
 return {
   "williamboman/mason-lspconfig.nvim",
-  dependencies = "williamboman/mason.nvim",
+  optional = true,
+  dependencies = {
+    "williamboman/mason.nvim",
+    "b0o/schemastore.nvim",
+  },
   config = function(_, opts)
-    require("mason-lspconfig").setup(opts)
-  end,
-  opts = function()
     -- lazy load cmp_nvim_lsp on demand
-    local function default_opts()
-      local opts = {
-        flags = {
-          debounce_text_changes = 100,
-        },
-      }
-
-      if vim.fn.has("nvim-0.11") ~= 1 then
-        local ok, blink = pcall(require, "blink.cmp")
-        if ok then
-          opts["capabilities"] = blink.get_lsp_capabilities({}, true)
-        else
-          local ok2, cmp = pcall(require, "cmp_nvim_lsp")
-          if ok2 then
-            -- https://github.com/hrsh7th/cmp-nvim-lsp/issues/38#issuecomment-1815265121
-            local capabilities = vim.tbl_deep_extend(
-              "force",
-              vim.lsp.protocol.make_client_capabilities(),
-              cmp.default_capabilities()
-            )
-            opts["capabilities"] = capabilities
-          end
-        end
-      end
-
-      return opts
-    end
-
     local self_managed_servers = { "tsserver", "ts_ls", "rubocop" }
     local res = {
       handlers = {
@@ -149,7 +128,7 @@ return {
             end
           end
 
-          local opts = vim.tbl_deep_extend("keep", {}, default_opts())
+          local opts = vim.tbl_deep_extend("force", default_opts, opts)
           require("lspconfig")[server_name].setup(opts)
         end,
       },
@@ -161,12 +140,12 @@ return {
         if type(v) == "function" then
           o = v()
         end
-        local opts = vim.tbl_deep_extend("keep", o, default_opts())
 
+        local opts = vim.tbl_deep_extend("force", default_opts, opts, o)
         require("lspconfig")[k].setup(opts)
       end
     end
 
-    return res
+    require("mason-lspconfig").setup(res)
   end,
 }

@@ -51,6 +51,7 @@ end
 ---@type LazyPluginSpec
 return {
   "rcarriga/nvim-notify",
+  optional = true,
   enabled = vim.fn.has("nvim-0.5") == 1,
   init = function()
     local ok, notify = pcall(require, "notify")

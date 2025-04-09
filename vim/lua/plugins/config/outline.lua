@@ -19,14 +19,17 @@ local ctags = {
 return {
   {
     "liuchengxu/vista.vim",
+    optional = true,
     enabled = false,
   },
   {
     "preservim/tagbar",
+    optional = true,
     enabled = false,
   },
   {
     "hedyhli/outline.nvim",
+    optional = true,
     keys = {
       {
         "<Plug><OutlineToggle>",
@@ -53,14 +56,9 @@ return {
       },
     },
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
       {
         "epheien/outline-ctags-provider.nvim",
         enabled = vim.fn.executable("ctags") == 1,
-      },
-      {
-        "epheien/outline-treesitter-provider.nvim",
-        enabled = vim.g.with_treesitter == 1,
       },
     },
   },

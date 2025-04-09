@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "nvim-treesitter/nvim-treesitter",
+  optional = true,
   build = ":TSUpdate",
   cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
   event = { "VeryLazy" },
@@ -45,4 +46,12 @@ return {
   config = function(_, opts)
     require("nvim-treesitter.configs").setup(opts)
   end,
+  specs = {
+    {
+      "hedyhli/outline.nvim",
+      dependencies = {
+        "epheien/outline-treesitter-provider.nvim",
+      },
+    },
+  },
 }

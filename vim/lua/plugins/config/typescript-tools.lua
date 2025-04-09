@@ -16,6 +16,7 @@ local ts_filetypes = {
 ---@type LazyPluginSpec
 return {
   "pmizio/typescript-tools.nvim",
+  optional = true,
   enabled = vim.g.as_ide == 1,
   ft = ts_filetypes,
   opts = {

@@ -15,6 +15,7 @@ end
 ---@type LazyPluginSpec
 return {
   "miversen33/netman.nvim",
+  optional = true,
   cmd = {
     "NmloadProvider",
     "Nmlogs",

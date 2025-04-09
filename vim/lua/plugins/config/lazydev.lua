@@ -1,6 +1,7 @@
 ---@type LazySpec
 return {
   "folke/lazydev.nvim",
+  optional = true,
   enabled = vim.fn.has('nvim-0.10') == 1,
   ft = "lua", -- only load on lua files
   ---@type lazydev.Config

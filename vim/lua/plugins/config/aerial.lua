@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "stevearc/aerial.nvim",
+  optional = true,
   event = "LspAttach",
   kets = {
     { "<leader>s]", "<cmd>call aerial#fzf()<CR>", buffer = 0, silent = true },

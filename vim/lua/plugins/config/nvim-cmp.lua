@@ -25,6 +25,7 @@ local default_sources = {
 ---@type LazyPluginSpec
 return {
   "hrsh7th/nvim-cmp",
+  optional = true,
   version = false, -- last release is way too old
   event = { "InsertEnter", "CmdlineEnter" },
   dependencies = {

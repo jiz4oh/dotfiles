@@ -1,10 +1,10 @@
 ---@type LazyPluginSpec
 return {
   "zbirenbaum/copilot-cmp",
+  optional = true,
   lazy = true,
   event = { "InsertEnter", "CmdlineEnter" },
   dependencies = {
-    import = "plugins.config.copilot",
     "hrsh7th/nvim-cmp",
   },
   config = function()

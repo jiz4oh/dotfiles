@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "glacambre/firenvim",
+  optional = true,
   lazy = false,
   build = ":call firenvim#install(0)",
   init = function()

@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "stevearc/overseer.nvim",
+  optional = true,
   keys = {
     { "<leader>ot", "<cmd>OverseerToggle<cr>", desc = "Open the task list" },
     { "<leader>or", "<cmd>OverseerRun<cr>", desc = "Select and start a task" },

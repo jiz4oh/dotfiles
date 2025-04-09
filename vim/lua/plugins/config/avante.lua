@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "yetone/avante.nvim",
+  optional = true,
   keys = {
     {
       "<leader>aa",
@@ -134,10 +135,6 @@ return {
     file_selector = {
       provider = "snacks",
     },
-    auto_suggestions_provider = "copilot",
-    copilot = {
-      model = vim.g.copilot_model or "gpt-40-2024-08-06",
-    },
     claude = {
       endpoint = os.getenv("ANTHROPIC_ENDPOINT") or "https://api.anthropic.com",
     },
@@ -159,9 +156,5 @@ return {
     "nvim-treesitter/nvim-treesitter",
     "MunifTanjim/nui.nvim",
     "nvim-lua/plenary.nvim",
-    --- The below dependencies are optional,
-    {
-      import = "plugins.config.copilot",
-    },
   },
 }

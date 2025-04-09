@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "stevearc/dressing.nvim",
+  optional = true,
   event = "VeryLazy",
   opts = {
     select = {

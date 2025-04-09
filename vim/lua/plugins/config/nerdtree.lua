@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "preservim/nerdtree",
+  optional = true,
   cmd = {
     "NERDTree",
     "NERDTreeToggle",

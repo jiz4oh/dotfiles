@@ -6,15 +6,13 @@ return {
     "mrded/nvim-lsp-notify",
     enabled = lsp_enabled,
   },
-  {
-    "hrsh7th/cmp-nvim-lsp",
-    enabled = lsp_enabled and vim.g.complete_engine == "cmp",
-    import = "plugins.config.cmp-nvim-lsp",
-  },
-  {
-    "hrsh7th/cmp-nvim-lsp-signature-help",
-    enabled = lsp_enabled and vim.g.complete_engine == "cmp",
-    import = "plugins.config.cmp-nvim-lsp-signature-help",
+  lsp_enabled and {
+    "hrsh7th/nvim-cmp",
+    optional = true,
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+    },
   },
   {
     "ojroques/nvim-lspfuzzy",

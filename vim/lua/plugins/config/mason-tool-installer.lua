@@ -44,6 +44,7 @@ end
 ---@type LazyPluginSpec
 return {
   "WhoIsSethDaniel/mason-tool-installer.nvim",
+  optional = true,
   cmd = {
     "MasonToolsInstall",
     "MasonToolsUpdate",

@@ -10,6 +10,7 @@ local lsp_handlers = {
 ---@type LazyPluginSpec
 return {
   "folke/snacks.nvim",
+  optional = true,
   priority = 1000,
   lazy = false,
   keys = {
