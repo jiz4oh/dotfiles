@@ -25,7 +25,7 @@ if file ~= nil then
   file:close()
 
   require("modules.crontab")
-    :new(hs.fs.pathToAbsolute(dir .. "/rime/squirrel_sync"), hs.timer.minutes(15))
+    :new(hs.fs.pathToAbsolute(dir .. "/rime/squirrel_sync"), hs.timer.hours(7))
     :start()
 
   -- random for each different machines
