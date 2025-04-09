@@ -13,7 +13,7 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lsp-signature-help",
     },
-  },
+  } or {},
   {
     "ojroques/nvim-lspfuzzy",
     enabled = lsp_enabled,
