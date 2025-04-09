@@ -154,6 +154,15 @@ return {
         projects = {
           patterns = vim.g.project_markers,
         },
+        plugin = {
+          finder = "plugin",
+          format = "text",
+          preview = "preview",
+          confirm = "copy",
+          formatters = {
+            file = { filename_only = true },
+          },
+        },
       },
     },
   },
