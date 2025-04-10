@@ -29,6 +29,7 @@ local firenvim_plugins = {
   "yanky.nvim",
 }
 
+---@type LazyConfig
 require("lazy").setup({
   root = vim.g["plug_home"] or (vim.fn.stdpath("data") .. "/lazy/bundle"),
   ---@type LazySpec[]
@@ -60,8 +61,7 @@ require("lazy").setup({
     end,
   },
   install = {
-    missing = false,
-    colorscheme = { "gruvbox-material" },
+    missing = true,
   },
   checker = {
     enabled = false, -- check for plugin updates periodically
