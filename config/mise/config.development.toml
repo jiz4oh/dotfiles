@@ -3,7 +3,7 @@ ruby = ["latest", "prefix:2.7"]
 node = "lts"
 go = "latest"
 python = ["latest", "prefix:3.11"]
-pipx = "latest"
+uv = "latest"
 pdm = "latest"
 pnpm = "latest"
 
@@ -27,3 +27,4 @@ pnpm = "latest"
 
 [settings]
 experimental = true
+python.uv_venv_auto = true
