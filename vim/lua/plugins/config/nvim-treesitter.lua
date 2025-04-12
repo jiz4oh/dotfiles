@@ -1,6 +1,4 @@
 local opts = {
-  -- vim.opt.foldmethod = 'expr'
-  -- vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
   indent = {
     enable = true,
   },
@@ -43,6 +41,18 @@ return {
     -- during startup.
     require("lazy.core.loader").add_to_rtp(plugin)
     pcall(require, "nvim-treesitter.query_predicates")
+    vim.api.nvim_create_autocmd("FileType", {
+      callback = function(args)
+        local ok, parsers = pcall(require, "nvim-treesitter.parsers")
+        if ok then
+          local filetype = vim.api.nvim_get_option_value("filetype", { buf = args.buf })
+          if parsers.has_parser(filetype) then
+            vim.wo.foldmethod = "expr"
+            vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
+          end
+        end
+      end,
+    })
   end,
   config = function(_, opts)
     require("nvim-treesitter.configs").setup(opts)
