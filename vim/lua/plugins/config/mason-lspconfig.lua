@@ -129,7 +129,11 @@ return {
           end
 
           local opts = vim.tbl_deep_extend("force", default_opts, opts)
-          require("lspconfig")[server_name].setup(opts)
+          if vim.fn.has("nvim-0.11") == 1 then
+            vim.lsp.enable(server_name)
+          else
+            require("lspconfig")[server_name].setup(opts)
+          end
         end,
       },
     }
@@ -142,7 +146,11 @@ return {
         end
 
         local opts = vim.tbl_deep_extend("force", default_opts, opts, o)
-        require("lspconfig")[k].setup(opts)
+        if vim.fn.has("nvim-0.11") == 1 then
+          vim.lsp.enable(k)
+        else
+          require("lspconfig")[k].setup(opts)
+        end
       end
     end
 
