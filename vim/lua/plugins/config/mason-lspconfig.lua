@@ -130,6 +130,7 @@ return {
 
           local opts = vim.tbl_deep_extend("force", default_opts, opts)
           if vim.fn.has("nvim-0.11") == 1 then
+            vim.lsp.config(server_name, opts)
             vim.lsp.enable(server_name)
           else
             require("lspconfig")[server_name].setup(opts)
@@ -138,18 +139,19 @@ return {
       },
     }
 
-    for k, v in pairs(configs) do
-      res.handlers[k] = function()
-        local o = v
-        if type(v) == "function" then
-          o = v()
+    for server_name, config in pairs(configs) do
+      res.handlers[server_name] = function()
+        local o = config
+        if type(config) == "function" then
+          o = config()
         end
 
         local opts = vim.tbl_deep_extend("force", default_opts, opts, o)
         if vim.fn.has("nvim-0.11") == 1 then
-          vim.lsp.enable(k)
+          vim.lsp.config(server_name, opts)
+          vim.lsp.enable(server_name)
         else
-          require("lspconfig")[k].setup(opts)
+          require("lspconfig")[server_name].setup(opts)
         end
       end
     end
