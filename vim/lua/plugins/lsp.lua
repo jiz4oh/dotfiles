@@ -32,12 +32,12 @@ return {
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    enabled = lsp_enabled,
+    enabled = lsp_enabled and vim.fn.has("nvim-0.10") == 1,
     import = "plugins.config.mason-lspconfig",
   },
   {
     "neovim/nvim-lspconfig",
-    enabled = lsp_enabled,
+    enabled = lsp_enabled and vim.fn.has("nvim-0.10") == 1,
     import = "plugins.config.nvim-lspconfig",
   },
 }

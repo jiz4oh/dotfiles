@@ -4,7 +4,7 @@ return {
   optional = true,
   -- https://github.com/LazyVim/LazyVim/blob/86ac9989ea15b7a69bb2bdf719a9a809db5ce526/lua/lazyvim/plugins/lsp/init.lua#L5
   event = { "BufReadPre", "BufNewFile" },
-  dependencies = {
+  specs = {
     "williamboman/mason-lspconfig.nvim",
   },
   init = function()

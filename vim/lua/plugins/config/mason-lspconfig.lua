@@ -32,16 +32,10 @@ local configs = {
     },
   },
   ["basedpyright"] = {
-    root_dir = function(fname)
-      local util = require("lspconfig.util")
-      return util.root_pattern(unpack(python_root_files))(fname)
-    end,
+    root_markers = python_root_files,
   },
   ["pyright"] = {
-    root_dir = function(fname)
-      local util = require("lspconfig.util")
-      return util.root_pattern(unpack(python_root_files))(fname)
-    end,
+    root_markers = python_root_files,
   },
   ["harper_ls"] = {
     settings = {
@@ -104,6 +98,21 @@ local configs = {
     return opts
   end,
 }
+
+if vim.fn.has("nvim-0.11") ~= 1 then
+  configs["basedpyright"] = {
+    root_dir = function(fname)
+      local util = require("lspconfig.util")
+      return util.root_pattern(unpack(python_root_files))(fname)
+    end,
+  }
+  configs["pyright"] = {
+    root_dir = function(fname)
+      local util = require("lspconfig.util")
+      return util.root_pattern(unpack(python_root_files))(fname)
+    end,
+  }
+end
 
 ---@type LazyPluginSpec
 return {
