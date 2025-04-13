@@ -60,7 +60,7 @@ end
 --     vim.cmd("normal! m'")
 --     vim.cmd("edit " .. item.filename)
 --     vim.api.nvim_win_set_cursor(0, { item.lnum, item.col })
---     vim.cmd("normal! zzzv")
+--     vim.cmd("normal! zvzz")
 --   end)
 -- end
 
@@ -151,6 +151,7 @@ if vim.fn.has("nvim-0.8") == 1 then
           vim.wo[win][0].foldmethod = "expr"
           vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
           vim.wo[win][0].foldlevel = 3
+          vim.cmd("normal! zvzz")
         end
       end
 

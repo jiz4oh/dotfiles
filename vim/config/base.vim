@@ -140,7 +140,7 @@ if has('vim_starting')
   set foldmethod=marker
   set foldnestmax=3
   set foldopen+=jump
-  set foldlevelstart=1
+  set foldlevel=1
   set commentstring=#\ %s
 endif
 
