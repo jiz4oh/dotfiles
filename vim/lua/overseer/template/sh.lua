@@ -1,6 +1,9 @@
 local files = require("overseer.files")
 
+---@type overseer.TemplateProvider
 return {
+  name = "Run Shell Script",
+  priority = 60,
   generator = function(opts, cb)
     local scripts = vim.tbl_filter(function(filename)
       return filename:match("%.sh$")

@@ -1,6 +1,7 @@
 ---@type overseer.TemplateDefinition
 return {
   name = "dispatch",
+  priority = 10,
   builder = function()
     local cmd, opts = unpack(vim.fn["personal#functions#parse_start"](vim.b.dispatch))
     return {

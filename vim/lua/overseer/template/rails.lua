@@ -1,3 +1,5 @@
+local TAG = require("overseer.constants").TAG
+
 local function format_name(cmd)
   return string.format("(rails) %s", cmd)
 end
@@ -12,7 +14,7 @@ return {
       if vim.fn.executable("rails") == 0 then
         return false, 'Command "rake" not found'
       end
-      if not vim.fn["rails#complete_rails"] then
+      if vim.g.loaded_rails ~= 1 then
         return false, "No Vim-Rails"
       end
       return true
@@ -23,7 +25,12 @@ return {
     local ret = {
       {
         name = format_name("new"),
-        priority = 100,
+        priority = 1000,
+        condition = {
+          callback = function(o)
+            return vim.fn["RailsDetect"](o.dir) ~= 1
+          end,
+        },
         params = {
           name = {
             name = "app_name",
@@ -39,6 +46,11 @@ return {
       },
       {
         name = format_name("runner"),
+        condition = {
+          callback = function(o)
+            return vim.fn["RailsDetect"](o.dir) == 1
+          end,
+        },
         priority = 100,
         params = {
           code = {
@@ -58,10 +70,17 @@ return {
     for _, command in ipairs({ "server", "console", "dbconsole" }) do
       table.insert(ret, {
         name = format_name(command),
+        tags = { TAG.RUN },
+        condition = {
+          callback = function(o)
+            return vim.fn["RailsDetect"](o.dir) == 1
+          end,
+        },
         priority = 60,
         builder = function()
           return {
             cmd = { "rails", command },
+            strategy = "terminal",
             components = {
               {
                 "open_output",
@@ -83,6 +102,11 @@ return {
           if line ~= "new" then
             table.insert(ret, {
               name = format_name(command .. " " .. line),
+              condition = {
+                callback = function(o)
+                  return vim.fn["RailsDetect"](o.dir) == 1
+                end,
+              },
               priority = 60,
               builder = function()
                 return {
