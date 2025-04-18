@@ -31,18 +31,6 @@ return {
       mode = { "n" },
     },
     {
-      "<leader>sf",
-      function()
-        Snacks.picker.smart({
-          matcher = {
-            cwd_bonus = false,
-          },
-        })
-      end,
-      desc = "Open Snacks Smart Picker",
-      mode = { "n" },
-    },
-    {
       "<leader>sP",
       function()
         Snacks.picker()

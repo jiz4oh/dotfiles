@@ -417,6 +417,9 @@ end
 augroup vimrc
   autocmd!
 
+  "https://github.com/xiantang/nvim-conf/blob/31f8c57c84907cdf3ce7e5127b2ebe6512b1dc07/lua/autocmd.lua#L38
+  autocmd VimLeavePre * :redir >> ~/.config/nvim/messages.txt | silent messages | redir END
+
   autocmd BufWrite scp://*,ftp://*,sftp://* if !get(g:, 'disable_netrw', 0) | Nwrite | endif
 
   "https://github.com/vim/vim/issues/6445
