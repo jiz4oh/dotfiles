@@ -13,4 +13,7 @@ return {
     "andrewferrier/debugprint.nvim",
     import = "plugins.config.debugprint",
   },
+  {
+    "milanglacier/yarepl.nvim",
+  },
 }

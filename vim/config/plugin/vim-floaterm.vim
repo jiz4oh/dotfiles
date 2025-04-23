@@ -27,7 +27,19 @@ function! s:init_floaterm() abort
   nnoremap <silent><buffer> <m-]> :FloatermNext<cr>
 endfunction
 
+function! FloatermHide(...) abort
+  if a:0 > 0
+    let bufnr = a:1
+  else
+    let bufnr = bufnr()
+  endif
+  let ft = getbufvar(bufnr, '&filetype')
+  noautocmd call setbufvar(bufnr, '&filetype', 'floaterm')
+  call floaterm#window#hide(bufnr)
+  noautocmd call setbufvar(bufnr, '&filetype', ft)
+endfunction
+
 augroup vim-floaterm-augroup
   autocmd!
-  autocmd FileType floaterm call <SID>init_floaterm()
+  autocmd FileType floaterm,REPL call <SID>init_floaterm()
 augroup END
