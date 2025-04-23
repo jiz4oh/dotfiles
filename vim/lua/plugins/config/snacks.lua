@@ -110,6 +110,7 @@ return {
     notifier = { enabled = true },
     input = { enabled = true },
     indent = { enabled = true },
+    image = { enabled = true },
     picker = {
       ui_select = true,
       layout = {
