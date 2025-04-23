@@ -2,6 +2,7 @@ local lsp_enabled = vim.lsp ~= nil and vim.g.as_ide == 1
 
 ---@type LazySpec[]
 return {
+  { "b0o/schemastore.nvim", lazy = true },
   {
     "mrded/nvim-lsp-notify",
     enabled = lsp_enabled,

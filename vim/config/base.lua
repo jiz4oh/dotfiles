@@ -64,6 +64,14 @@ end
 --   end)
 -- end
 
+if vim.fn.has("nvim-0.11") == 1 then
+  vim.lsp.config("*", {
+    flags = {
+      debounce_text_changes = 100,
+    },
+  })
+end
+
 if vim.fn.has("nvim-0.5") == 1 then
   local original_display_fn = vim.lsp.codelens.display
   local lens_sign = "🔎 "
