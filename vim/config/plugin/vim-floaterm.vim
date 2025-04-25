@@ -16,7 +16,7 @@ let g:floaterm_position = 'bottom'
 let g:floaterm_autohide = '2'
 let g:floaterm_keymap_toggle = '<m-=>'
 let g:floaterm_width = 0.999999
-let g:floaterm_height = 0.3
+let g:floaterm_height = 0.5
 
 nnoremap <silent> <m--> :FloatermNew<cr>
 function! s:init_floaterm() abort
