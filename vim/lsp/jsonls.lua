@@ -4,7 +4,9 @@ if ok1 then
   opts = {
     settings = {
       json = {
-        schemas = schemasstore.json.schemas(),
+        schemas = schemasstore.json.schemas({
+          extra = {},
+        }),
         validate = { enable = true },
       },
     },

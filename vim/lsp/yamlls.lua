@@ -11,7 +11,16 @@ if ok1 then
           -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
           url = "",
         },
-        schemas = schemasstore.yaml.schemas(),
+        schemas = schemasstore.yaml.schemas({
+          extra = {
+            {
+              description = "Configuration schema for clash meta",
+              fileMatch = { "clash.meta/*.yaml" },
+              name = "clash.meta",
+              url = "https://fastly.jsdelivr.net/gh/dongchengjie/meta-json-schema@main/schemas/meta-json-schema.json",
+            },
+          },
+        }),
       },
     },
   }
