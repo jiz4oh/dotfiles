@@ -3,8 +3,11 @@ local markview = vim.fn.has("nvim-0.10.1") == 1
 ---@type LazySpec[]
 return {
   {
+    "echasnovski/mini.icons",
+  },
+  {
     import = "plugins.config.nvim-scrollview",
-    enabled = vim.fn.has("nvim-0.6") == 1
+    enabled = vim.fn.has("nvim-0.6") == 1,
   },
   -- {
   -- 	"rcarriga/nvim-notify",
