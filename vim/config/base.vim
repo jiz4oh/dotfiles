@@ -822,6 +822,7 @@ endfunction
 
 " change cwd
 noremap <silent> <leader>cd. :call ChangeCWDTo('%:p:h')<cr>
+noremap <silent> <leader>cd- :call ChangeCWDTo(fnamemodify(getcwd(), ':p:h:h'))<cr>
 map <silent> <leader>cdp <Plug>UpwardProject
 noremap <Plug>UpwardProject :call ChangeCWDTo(personal#project#find_home())<cr>
 
