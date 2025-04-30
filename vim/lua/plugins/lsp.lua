@@ -41,4 +41,8 @@ return {
     enabled = lsp_enabled and vim.fn.has("nvim-0.10") == 1,
     import = "plugins.config.nvim-lspconfig",
   },
+  {
+    "aznhe21/actions-preview.nvim",
+    enabled = lsp_enabled,
+  },
 }
