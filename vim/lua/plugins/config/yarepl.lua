@@ -70,7 +70,7 @@ return {
       aider = {
         cmd = "aider --no-pretty --no-auto-commits",
         formatter = "bracketed_pasting_no_final_new_line",
-        source_func = "aichat",
+        source_syntax = "aichat",
       },
       aichat = false,
     },
