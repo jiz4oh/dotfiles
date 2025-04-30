@@ -11,6 +11,7 @@ return {
   },
   {
     "andrewferrier/debugprint.nvim",
+    enabled = vim.g.as_ide == 1,
     import = "plugins.config.debugprint",
   },
   {
