@@ -10,16 +10,24 @@ function _G.get_oil_winbar()
   end
 end
 
+local toggle = function(...)
+  if vim.b.oil_ready then
+    require("oil").close()
+  else
+    require("oil").open(...)
+  end
+end
+
 ---@type LazyPluginSpec
 return {
   "stevearc/oil.nvim",
   optional = true,
   keys = {
-    { "-", "<CMD>Oil<CR>", desc = "Open parent directory", mode = "n" },
-    { "_", "<CMD>execute 'Oil ' . getcwd()<CR>", desc = "Open cwd directory", mode = "n" },
-    { "<Plug><ExpoloreCfile>", "<CMD>Oil<CR>", desc = "Open parent directory", mode = "n", remap = true },
-    { "<Plug><ExpoloreToggle>", "<CMD>Oil<CR>", desc = "Open parent directory", mode = { "n", "i", "v" }, remap = true },
-    { "<Plug><ExpoloreRoot>", "<CMD>execute 'Oil ' . getcwd()<CR>", desc = "Open cwd directory", mode = "n", remap = true },
+    { "-", "<CMD>Oil<CR>", desc = "Open oil file browser on parent directory", mode = "n" },
+    { "_", "<CMD>execute 'Oil ' . getcwd()<CR>", desc = "Open oil file browser on cwd directory", mode = "n" },
+    { "<Plug><ExpoloreCfile>", "<CMD>Oil<CR>", desc = "Open oil file browser on current file", mode = "n", remap = true },
+    { "<Plug><ExpoloreToggle>", toggle, desc = "Toggle oil file browser", mode = { "n", "i", "v" }, remap = true },
+    { "<Plug><ExpoloreRoot>", "<CMD>execute 'Oil ' . getcwd()<CR>", desc = "Open oil file browser on cwd directory", mode = "n", remap = true },
   },
   specs = {
     "preservim/nerdtree",
