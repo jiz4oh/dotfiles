@@ -16,6 +16,10 @@ return {
     },
   } or {},
   {
+    "kosayoda/nvim-lightbulb",
+    enabled = lsp_enabled,
+  },
+  {
     "ojroques/nvim-lspfuzzy",
     enabled = lsp_enabled,
     import = "plugins.config.nvim-lspfuzzy",
