@@ -32,6 +32,7 @@ local function lsp_supports_method(client, method)
   if vim.fn.has("nvim-0.11") == 1 then
     return client and client:supports_method(method)
   else
+    ---@diagnostic disable-next-line: param-type-mismatch, missing-parameter
     return client and client.supports_method(method)
   end
 end
@@ -75,6 +76,7 @@ end
 if vim.fn.has("nvim-0.5") == 1 then
   local original_display_fn = vim.lsp.codelens.display
   local lens_sign = "🔎 "
+  ---@diagnostic disable-next-line: duplicate-set-field
   vim.lsp.codelens.display = function(lenses, bufnr, client_id)
     if not vim.api.nvim_buf_is_loaded(bufnr) then
       return
@@ -107,6 +109,7 @@ if vim.fn.has("nvim-0.8") == 1 then
       end
       local client = vim.lsp.get_client_by_id(args.data.client_id)
       if vim.fn.has("nvim-0.9") == 1 then
+        ---@diagnostic disable-next-line: param-type-mismatch
         if lsp_supports_method(client, "textDocument/codeLens") then
           if vim.api.nvim_buf_is_valid(bufnr) then
             if next(vim.lsp.codelens.get(bufnr)) ~= nil then
