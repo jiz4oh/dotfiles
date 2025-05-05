@@ -16,7 +16,14 @@ return {
   optional = true,
   keys = {
     { "-", "<CMD>Oil<CR>", desc = "Open parent directory", mode = "n" },
-    { "_", "<CMD>execute 'Oil ' . getcwd()<CR>", desc = "Open parent directory", mode = "n" },
+    { "_", "<CMD>execute 'Oil ' . getcwd()<CR>", desc = "Open cwd directory", mode = "n" },
+    { "<Plug><ExpoloreCfile>", "<CMD>Oil<CR>", desc = "Open parent directory", mode = "n", remap = true },
+    { "<Plug><ExpoloreToggle>", "<CMD>Oil<CR>", desc = "Open parent directory", mode = { "n", "i", "v" }, remap = true },
+    { "<Plug><ExpoloreRoot>", "<CMD>execute 'Oil ' . getcwd()<CR>", desc = "Open cwd directory", mode = "n", remap = true },
+  },
+  specs = {
+    "preservim/nerdtree",
+    enabled = false,
   },
   event = {
     "BufEnter",
@@ -34,6 +41,7 @@ return {
       winbar = "%!v:lua.get_oil_winbar()",
     },
     keymaps = {
+      ["q"] = { "actions.close", mode = "n" },
       ["K"] = {
         desc = "Toggle file detail view",
         callback = function()
