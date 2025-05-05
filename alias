@@ -37,6 +37,7 @@ if [ -n "$KITTY_WINDOW_ID" ];then
   alias s='kitty +kitten ssh'
   alias d="kitty +kitten diff"
   alias hg='kitty +kitten hyperlinked_grep'
+  alias icat="kitten icat"
 fi
 
 if [ -n "$WEZTERM_UNIX_SOCKET" ];then
