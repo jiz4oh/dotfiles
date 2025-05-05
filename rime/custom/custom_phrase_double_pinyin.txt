@@ -66,3 +66,4 @@ macOS Mojave	macos	2
  PAY	applepay	0
  WATCH	applewatch	0
  tv 4K	appletv	0
+π	pd	4
