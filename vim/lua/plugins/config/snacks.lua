@@ -31,6 +31,14 @@ return {
       mode = { "n" },
     },
     {
+      "<leader>sf",
+      function()
+        Snacks.picker.recent()
+      end,
+      desc = "Search recent files",
+      mode = { "n" },
+    },
+    {
       "<leader>sP",
       function()
         Snacks.picker()
@@ -174,6 +182,26 @@ return {
           Snacks.picker.notifications()
         end, { desc = "Notification History" })
 
+        vim.api.nvim_create_user_command("Maps", function()
+          Snacks.picker.keymaps()
+        end, { desc = "Keymaps Definitions" })
+
+        vim.api.nvim_create_user_command("Commands", function()
+          Snacks.picker.commands()
+        end, { desc = "Commands Definitions" })
+
+        vim.api.nvim_create_user_command("History", function(opts)
+          if opts.fargs[1] == ":" then
+            Snacks.picker.command_history()
+          elseif opts.fargs[1] == "/" then
+            Snacks.picker.search_history()
+          else
+            Snacks.picker.recent()
+          end
+        end, {
+          desc = "History",
+          nargs = "*", -- 接受任意参数
+        })
         -- Create some toggle mappings
         Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
         Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
