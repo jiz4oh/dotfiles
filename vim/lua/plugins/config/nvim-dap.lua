@@ -6,7 +6,9 @@ return {
   opts = {},
   -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
   config = function()
-    local dap = require("dap")
+    -- local dap = require("dap")
   end,
-  lazy = true,
+  dependencies = {
+    "theHamsta/nvim-dap-virtual-text",
+  },
 }
