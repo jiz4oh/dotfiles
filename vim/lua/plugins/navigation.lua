@@ -27,4 +27,7 @@ return {
     cond = vim.g.as_ide == 1,
     import = "plugins.config.outline",
   },
+  {
+    "echasnovski/mini.jump2d",
+  },
 }
