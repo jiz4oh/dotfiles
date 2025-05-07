@@ -4,6 +4,8 @@ local self_managed_servers = { "tsserver", "ts_ls", "rubocop" }
 return {
   "williamboman/mason-lspconfig.nvim",
   optional = true,
+  version = "v1.*",
+  enabled = vim.fn.has("nvim-0.7") == 1,
   dependencies = {
     "williamboman/mason.nvim",
   },
