@@ -40,7 +40,7 @@ augroup vim-dadbod-augroup
         \ let b:dispatch = ':DB' |
         \ call s:init()
 
-  autocmd BufRead,BufNewFile *.db,*.sqlite3 call <SID>init_sqlite()
+  autocmd BufRead,BufNewFile *.db,*.db3,*.s3db,*.sl3,*.sqlite,*.sqlite3 call <SID>init_sqlite()
 augroup END
 
 function! s:pg_dump(with_data) abort

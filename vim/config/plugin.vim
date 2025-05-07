@@ -105,7 +105,7 @@ Plug 'qadzek/link.vim'
 " ============================================================================
 " DATABASE {{{
 " ============================================================================
-Plug 'tpope/vim-dadbod'
+Plug 'tpope/vim-dadbod', { 'on': ['DB'] }
 Plug 'kristijanhusak/vim-dadbod-ui', { 'on': ['DBUI', 'DBUIToggle'], 'for': 'dbui' }
 Plug 'kristijanhusak/vim-dadbod-completion', { 'for': ['sql', 'mysql', 'plsql'] }
 " }}}
