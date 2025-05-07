@@ -4,4 +4,5 @@ return {
   "docker",
   "docker-compose",
   "dispatch",
+  "launchctl",
 }
