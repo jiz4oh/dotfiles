@@ -24,4 +24,7 @@ return {
   {
     import = "plugins.config.vim-dadbod-ui",
   },
+  {
+    "chrisgrieser/nvim-origami"
+  }
 }

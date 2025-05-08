@@ -162,7 +162,6 @@ if vim.fn.has("nvim-0.8") == 1 then
           vim.wo[win][0].foldmethod = "expr"
           vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
           vim.wo[win][0].foldlevel = 3
-          vim.cmd("normal! zvzz")
         end
       end
 
