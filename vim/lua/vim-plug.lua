@@ -49,9 +49,9 @@ if vim.g.plugs_order ~= nil then
         build = "do",
       }
 
-      for k, v in ipairs(mappings) do
-        if v ~= nil then
-          conf[k] = v
+      for k, v in pairs(mappings) do
+        if config[v] ~= nil and config[v] ~= "" then
+          conf[k] = config[v]
         end
       end
 
