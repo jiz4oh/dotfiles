@@ -3,7 +3,7 @@ local files = require("overseer.files")
 ---@type overseer.TemplateProvider
 return {
   name = "docker ",
-  priority = 35,
+  priority = 60,
   params = {
     task = {
       desc = "Docker command (e.g., build, run, ps, images)",
