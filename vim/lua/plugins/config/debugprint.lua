@@ -14,13 +14,11 @@ return {
       mode = { "n", "v" },
     },
     {
-      "ctrl-g",
-      "p",
+      "<C-G>p",
       mode = "i",
     },
     {
-      "ctrl-g",
-      "v",
+      "<C-G>v",
       mode = "i",
     },
     {
