@@ -183,8 +183,28 @@ return {
         end, { desc = "Notification History" })
 
         vim.api.nvim_create_user_command("Maps", function()
-          Snacks.picker.keymaps()
-        end, { desc = "Keymaps Definitions" })
+          Snacks.picker.keymaps({
+            modes = { "n" }
+          })
+        end, { desc = "Normal Keymaps Definitions" })
+
+        vim.api.nvim_create_user_command("Imaps", function()
+          Snacks.picker.keymaps({
+            modes = { "i" }
+          })
+        end, { desc = "Insert Keymaps Definitions" })
+
+        vim.api.nvim_create_user_command("Xmaps", function()
+          Snacks.picker.keymaps({
+            modes = { "v", "x" }
+          })
+        end, { desc = "Virtual Keymaps Definitions" })
+
+        vim.api.nvim_create_user_command("Omaps", function()
+          Snacks.picker.keymaps({
+            modes = { "o" }
+          })
+        end, { desc = "Operator Keymaps Definitions" })
 
         vim.api.nvim_create_user_command("Commands", function()
           Snacks.picker.commands()
