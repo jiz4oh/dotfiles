@@ -4,15 +4,6 @@ return {
   {
     -- "refractalize/oil-git-status.nvim", -- it doesn't display unstaged git status
     "SirZenith/oil-vcs-status",
-    dependencies = {
-      "stevearc/oil.nvim",
-      opts = {
-        win_options = {
-          signcolumn = "yes:2",
-        },
-      },
-    },
-    config = true,
   },
   {
     "preservim/nerdtree",

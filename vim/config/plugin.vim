@@ -162,7 +162,7 @@ Plug 'wellle/targets.vim'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'kana/vim-textobj-user'
 Plug 'jeremiahkellick/vim-textobj-rubyblock', { 'for': 'ruby' }
-Plug 'adriaanzon/vim-textobj-matchit'
+Plug 'adriaanzon/vim-textobj-matchit', { 'for': ['ruby', 'vim', 'tex', 'blade', 'lua'] }
 Plug 'whatyouhide/vim-textobj-erb', { 'for': 'eruby' }
 " }}}
 
