@@ -22,9 +22,12 @@ return {
     "iamcco/markdown-preview.nvim",
   },
   {
+    "brianhuster/live-preview.nvim",
+  },
+  {
     import = "plugins.config.vim-dadbod-ui",
   },
   {
-    "chrisgrieser/nvim-origami"
-  }
+    "chrisgrieser/nvim-origami",
+  },
 }
