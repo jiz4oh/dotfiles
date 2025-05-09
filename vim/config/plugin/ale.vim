@@ -50,7 +50,7 @@ let g:ale_go_gopls_options = '-remote=auto'
 let g:ale_dockerfile_hadolint_use_docker = 'yes'
 let g:ale_python_pyflyby_options = '-n'
 let g:ale_lua_stylua_options = '--search-parent-directories'
-let ale_xml_xmllint_options = '--encode UTF-8'
+let g:ale_xml_xmllint_options = '--encode UTF-8'
 "}}}
 
 "{{{ ale options
