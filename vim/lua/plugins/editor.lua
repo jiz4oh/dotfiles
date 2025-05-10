@@ -12,4 +12,7 @@ return {
   {
     "milanglacier/yarepl.nvim",
   },
+  {
+    "chrisgrieser/nvim-early-retirement",
+  },
 }
