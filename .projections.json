@@ -1,4 +1,16 @@
 {
+  "vim/lsp/*.lua": {
+    "type": "lsp"
+  },
+  "vim/ftdetect/*.vim": {
+    "type": "ftdetect"
+  },
+  "vim/compiler/*.vim": {
+    "type": "compiler"
+  },
+  "vim/plugin/*.vim": {
+    "type": "plugin"
+  },
   "vim/config/plugin.vim": {
     "type": "config"
   },
