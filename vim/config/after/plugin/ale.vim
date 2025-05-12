@@ -39,3 +39,11 @@ call ale#fix#registry#Add('typescript-tools',
       \], 
       \'add missing imports, sorts and removes unused imports, fixes all fixable errors'
       \)
+
+call ale#fix#registry#Add('xml_tidy',
+      \'ale#fixers#xml_tidy#Fix', 
+      \[
+      \'xml',
+      \], 
+      \'Fix XML files with tidy'
+      \)

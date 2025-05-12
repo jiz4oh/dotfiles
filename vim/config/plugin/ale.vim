@@ -21,7 +21,7 @@ let g:ale_fixers = {
       \   'typescript': ts_fixers,
       \   'typescript.tsx': ts_fixers,
       \   'typescriptreact': ts_fixers,
-      \   'xml': ['xmllint', ],
+      \   'xml': ['xmllint', 'xml_tidy'],
       \   'html': ['prettier-eslint'],
       \   'css': ['stylelint'],
       \   'scss': ['stylelint'],
