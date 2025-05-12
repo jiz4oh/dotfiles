@@ -49,7 +49,7 @@ Plug 'christoomey/vim-tmux-navigator'
 " https://github.com/easymotion/vim-easymotion
 Plug 'easymotion/vim-easymotion', { 'on': ['<Plug>(easymotion-prefix)', '<Plug>(easymotion-bd-jk)', '<Plug>(easymotion-overwin-line)'] }
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } |
+Plug 'junegunn/fzf', { 'do': ':call fzf#install()' } |
      \ Plug 'junegunn/fzf.vim'
 
 Plug 'tracyone/fzf-funky'
@@ -87,7 +87,7 @@ end
 " DOCUMENT / MARKDOWN {{{
 " ============================================================================
 Plug 'lervag/wiki.vim'
-" Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
+" Plug 'kkoomen/vim-doge', { 'do': ':call doge#install()' }
 
 if v:version >= 704
   Plug 'mzlogin/vim-markdown-toc', { 'on': ['GenTocGFM', 'UpdateToc'] }
