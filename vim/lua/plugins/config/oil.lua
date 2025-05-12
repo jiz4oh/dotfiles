@@ -24,10 +24,33 @@ return {
   optional = true,
   keys = {
     { "-", "<CMD>Oil<CR>", desc = "Open oil file browser on parent directory", mode = "n" },
-    { "_", "<CMD>execute 'Oil ' . getcwd()<CR>", desc = "Open oil file browser on cwd directory", mode = "n" },
-    { "<Plug><ExpoloreCfile>", "<CMD>Oil<CR>", desc = "Open oil file browser on current file", mode = "n", remap = true },
-    { "<Plug><ExpoloreToggle>", toggle, desc = "Toggle oil file browser", mode = { "n", "i", "v" }, remap = true },
-    { "<Plug><ExpoloreRoot>", "<CMD>execute 'Oil ' . getcwd()<CR>", desc = "Open oil file browser on cwd directory", mode = "n", remap = true },
+    {
+      "_",
+      "<CMD>execute 'Oil ' . getcwd()<CR>",
+      desc = "Open oil file browser on cwd directory",
+      mode = "n",
+    },
+    {
+      "<Plug><ExpoloreCfile>",
+      "<CMD>Oil<CR>",
+      desc = "Open oil file browser on current file",
+      mode = "n",
+      remap = true,
+    },
+    {
+      "<Plug><ExpoloreToggle>",
+      toggle,
+      desc = "Toggle oil file browser",
+      mode = { "n", "i", "v" },
+      remap = true,
+    },
+    {
+      "<Plug><ExpoloreRoot>",
+      "<CMD>execute 'Oil ' . getcwd()<CR>",
+      desc = "Open oil file browser on cwd directory",
+      mode = "n",
+      remap = true,
+    },
   },
   specs = {
     "preservim/nerdtree",
@@ -59,6 +82,12 @@ return {
           else
             require("oil").set_columns({ "icon" })
           end
+        end,
+      },
+      ["<m-r>"] = {
+        desc = "Discard All Changes",
+        callback = function()
+          require("oil").discard_all_changes()
         end,
       },
       ["<backspace>"] = { "actions.parent", mode = "n" },
