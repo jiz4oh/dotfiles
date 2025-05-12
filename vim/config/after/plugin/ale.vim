@@ -21,3 +21,21 @@ augroup ale_augroup
   autocmd BufRead,BufNewFile *.html.erb
       \ let b:ale_fixers = ['erblint', 'prettier-eslint']
 augroup END
+
+function! FixTypescript(buffer) abort
+  try
+    TSToolsOrganizeImports
+    TSToolsAddMissingImports
+    TSToolsFixAll
+  catch
+  endtry
+endfunction
+
+call ale#fix#registry#Add('typescript-tools',
+      \'FixTypescript', 
+      \[
+      \'typescript',
+      \'typescript.tsx',
+      \], 
+      \'add missing imports, sorts and removes unused imports, fixes all fixable errors'
+      \)
