@@ -3,13 +3,17 @@ return {
   "folke/which-key.nvim",
   optional = true,
   event = "VeryLazy",
-  config = function()
-    require("which-key").setup({
-      win = {
-        -- don't allow the popup to overlap with the cursor
-        no_overlap = false,
-      },
-    })
+  opts = {
+    win = {
+      -- don't allow the popup to overlap with the cursor
+      no_overlap = false,
+    },
+    preset = "helix",
+    -- TODO: Workaround till https://github.com/folke/which-key.nvim/issues/967
+    show_help = false,
+  },
+  config = function(_, opts)
+    require("which-key").setup(opts)
     local maps = {}
 
     local function convert(prefix, mode, map)
