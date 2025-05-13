@@ -94,7 +94,10 @@ return {
       ["<C-v>"] = { "actions.select", opts = { vertical = true } },
       ["?"] = { "actions.show_help", mode = "n" },
       ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
+      ["yy"] = { "actions.yank_entry", nowait = true },
       ["<C-g>"] = { "actions.yank_entry", nowait = true },
+      ["<C-h>"] = false,
+      ["<C-l>"] = false,
       ["<leader>:"] = {
         "actions.open_cmdline",
         opts = {
