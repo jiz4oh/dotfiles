@@ -151,10 +151,12 @@ let g:which_key_map['h'] = {
 
 let g:which_key_map['l'] = {
       \ 'name' : '+Lsp',
+      \ 'a' : 'code Actions',
       \ 'd' : 'find Definitions',
       \ 'D' : 'find Declarations',
       \ 't' : 'find Type definitions',
       \ 'i' : 'find Implementations',
+      \ 'l' : 'code Lens',
       \ 'r' : 'find References',
       \ 'R' : 'Rename',
       \ 's' : 'find Symbols on current buffer',
