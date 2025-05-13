@@ -108,7 +108,30 @@ return {
     -- your configuration comes here
     -- or leave it empty to use the default settings
     -- refer to the configuration section below
-    bigfile = { enabled = true },
+    bigfile = {
+      enabled = true,
+      setup = function(ctx)
+        if vim.fn.exists(":NoMatchParen") ~= 0 then
+          vim.cmd([[NoMatchParen]])
+        end
+        Snacks.util.wo(0, { foldmethod = "manual", statuscolumn = "", conceallevel = 0 })
+        vim.b.minianimate_disable = true
+        vim.schedule(function()
+          if vim.api.nvim_buf_is_valid(ctx.buf) then
+            vim.bo[ctx.buf].syntax = ctx.ft
+          end
+        end)
+
+        -- https://github.com/jdhao/nvim-config/blob/30b3c09dda1e84f6df254796d3b058e9e0b207d8/lua/custom-autocmd.lua#L230-L241
+        --  turning off relative number helps a lot
+        vim.wo.relativenumber = false
+        vim.wo.number = false
+
+        vim.bo.swapfile = false
+        vim.bo.bufhidden = "unload"
+        vim.bo.undolevels = -1
+      end,
+    },
     statuscolumn = { enabled = true },
     words = { enabled = true },
     quickfile = {
@@ -170,6 +193,10 @@ return {
         if Snacks == nil then
           return
         end
+
+        -- enable numbers since has bigfile plugin
+        vim.o.number = true
+
         -- Setup some globals for debugging (lazy-loaded)
         _G.dd = function(...)
           Snacks.debug.inspect(...)
@@ -184,25 +211,25 @@ return {
 
         vim.api.nvim_create_user_command("Maps", function()
           Snacks.picker.keymaps({
-            modes = { "n" }
+            modes = { "n" },
           })
         end, { desc = "Normal Keymaps Definitions" })
 
         vim.api.nvim_create_user_command("Imaps", function()
           Snacks.picker.keymaps({
-            modes = { "i" }
+            modes = { "i" },
           })
         end, { desc = "Insert Keymaps Definitions" })
 
         vim.api.nvim_create_user_command("Xmaps", function()
           Snacks.picker.keymaps({
-            modes = { "v", "x" }
+            modes = { "v", "x" },
           })
         end, { desc = "Virtual Keymaps Definitions" })
 
         vim.api.nvim_create_user_command("Omaps", function()
           Snacks.picker.keymaps({
-            modes = { "o" }
+            modes = { "o" },
           })
         end, { desc = "Operator Keymaps Definitions" })
 

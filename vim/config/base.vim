@@ -485,8 +485,8 @@ augroup vimrc
     autocmd TerminalOpen * setlocal nonumber norelativenumber
   endif
   "set relative number
-  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
-  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * set nornu
+  "autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
+  "autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * set nornu
 
   autocmd BufNewFile,BufRead *.icc                           set filetype=cpp
   autocmd BufNewFile,BufRead *.pde                           set filetype=java
