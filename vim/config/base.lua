@@ -315,6 +315,20 @@ if vim.fn.has("nvim-0.6") == 1 then
   end)
 end
 
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("custom_highlight", { clear = true }),
+  pattern = "*",
+  desc = "Define or override some highlight groups",
+  callback = function()
+    -- For floating windows border highlight
+    vim.api.nvim_set_hl(0, "FloatBorder", { fg = "Grey", bg = "None", bold = true })
+
+    local hl = vim.api.nvim_get_hl(0, { name = "NormalFloat" })
+    -- change the background color of floating window to None, so it blenders better
+    vim.api.nvim_set_hl(0, "NormalFloat", { fg = hl.fg, bg = "None" })
+  end,
+})
+
 if vim.fn.has("nvim-0.11") == 1 then
   vim.keymap.del({ "n" }, "grn")
   vim.keymap.del({ "n", "x" }, "gra")
