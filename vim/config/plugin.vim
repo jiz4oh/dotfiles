@@ -135,6 +135,7 @@ if !has('nvim-0.9')
   Plug 'sheerun/vim-polyglot'
 else
   Plug 'bfontaine/Brewfile.vim'
+  Plug 'MTDL9/vim-log-highlighting'
 end
 Plug 'fladson/vim-kitty'
 Plug 'craigmac/vim-mermaid'
