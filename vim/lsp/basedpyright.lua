@@ -1,7 +1,4 @@
 return {
-  flags = {
-    debounce_text_changes = 100,
-  },
   root_markers = {
     "pyproject.toml",
     "setup.py",
@@ -11,5 +8,12 @@ return {
     "pyrightconfig.json",
     "libpython*.dylib", -- add this one to search in built-in libs
     ".git",
+  },
+  settings = {
+    basedpyright = {
+      analysis = {
+        typeCheckingMode = "standard"  -- https://docs.basedpyright.com/latest/benefits-over-pyright/better-defaults/#typecheckingmode
+      },
+    },
   },
 }
