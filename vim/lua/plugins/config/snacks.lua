@@ -122,6 +122,9 @@ return {
           end
         end)
 
+        -- too long line with wrap freezes neovim
+        -- e.g. https://raw.githubusercontent.com/BingyanStudio/LapisCV/refs/heads/main/templates/obsidian/.obsidian/snippets/fonts.css
+        vim.wo.wrap = false
         -- https://github.com/jdhao/nvim-config/blob/30b3c09dda1e84f6df254796d3b058e9e0b207d8/lua/custom-autocmd.lua#L230-L241
         --  turning off relative number helps a lot
         vim.wo.relativenumber = false
