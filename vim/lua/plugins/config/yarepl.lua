@@ -8,7 +8,6 @@ end
 return {
   "milanglacier/yarepl.nvim",
   optional = true,
-  event = "VeryLazy",
   keys = {
     { "gzr", "<Plug>(REPLStart)", noremap = false, mode = "n", desc = "Start an REPL" },
     {

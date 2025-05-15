@@ -1,9 +1,8 @@
 vim.g.ale_disable_lsp = 1
 
--- conflict with fzf
--- if vim.fn.has("nvim-0.11") == 1 then
---   vim.o.winborder = "rounded"
--- end
+if vim.fn.has("nvim-0.11") == 1 then
+  vim.o.winborder = "rounded"
+end
 
 vim.F.has_words_before = function()
   unpack = unpack or table.unpack
