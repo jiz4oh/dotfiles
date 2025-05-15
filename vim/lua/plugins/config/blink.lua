@@ -80,6 +80,7 @@ return {
         "path",
         "snippets",
         "buffer",
+        "dictionary",
       },
       providers = {
         -- https://cmp.saghen.dev/recipes.html#path-completion-from-cwd-instead-of-current-buffer-s-directory
@@ -87,6 +88,20 @@ return {
           opts = {
             get_cwd = function(_)
               return vim.fn.getcwd()
+            end,
+          },
+        },
+        dictionary = {
+          module = "blink-cmp-dictionary",
+          name = "Dict",
+          -- Make sure this is at least 2.
+          -- 3 is recommended
+          min_keyword_length = 3,
+          max_items = 8,
+          opts = {
+            -- options for blink-cmp-dictionary
+            dictionary_files = function()
+              return vim.opt.dictionary and vim.opt.dictionary:get() or {}
             end,
           },
         },
@@ -114,6 +129,12 @@ return {
           opts["capabilities"] = require("blink.cmp").get_lsp_capabilities({}, true)
         end
       end,
+    },
+  },
+  dependencies = {
+    {
+      "Kaiser-Yang/blink-cmp-dictionary",
+      dependencies = { "nvim-lua/plenary.nvim" },
     },
   },
 }
