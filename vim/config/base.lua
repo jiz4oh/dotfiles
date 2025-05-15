@@ -70,6 +70,8 @@ if vim.fn.has("nvim-0.11") == 1 then
       debounce_text_changes = 100,
     },
   })
+
+  vim.lsp.enable('ty')
 end
 
 if vim.fn.has("nvim-0.5") == 1 then
@@ -333,3 +335,4 @@ if vim.fn.has("nvim-0.11") == 1 then
   vim.keymap.del({ "n", "x" }, "gra")
   vim.keymap.del({ "n" }, "gri")
 end
+
