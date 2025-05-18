@@ -21,6 +21,7 @@ return {
   opts = {},
   config = function()
     local dm = require("debugmaster")
+    dm.plugins.osv_integration.enabled = true
   end,
   dependencies = {
     {
