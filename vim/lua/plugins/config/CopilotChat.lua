@@ -14,7 +14,13 @@ return {
     "CopilotChatToggle",
   },
   keys = {
-    { "cc", "<cmd>CopilotChatCommit<cr>", ft = "gitcommit", desc = "Genearate commit message" },
+    { "cc", function()
+      if vim.b.git_dir then
+        local dir = string.sub(vim.b.git_dir, 1, -6)
+        vim.cmd.lcd(dir)
+      end
+      vim.cmd("CopilotChatCommit")
+    end, ft = "gitcommit", desc = "Genearate commit message" },
   },
   branch = "main",
   build = "make tiktoken", -- Only on MacOS or Linux
