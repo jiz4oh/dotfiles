@@ -80,7 +80,7 @@ return {
         "path",
         "snippets",
         "buffer",
-        "dictionary",
+        -- "dictionary", -- too slow
       },
       providers = {
         -- https://cmp.saghen.dev/recipes.html#path-completion-from-cwd-instead-of-current-buffer-s-directory
@@ -98,6 +98,7 @@ return {
           -- 3 is recommended
           min_keyword_length = 3,
           max_items = 8,
+          async = true,
           opts = {
             -- options for blink-cmp-dictionary
             dictionary_files = function()
