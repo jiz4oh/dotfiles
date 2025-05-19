@@ -28,7 +28,7 @@ return {
     {
       "<leader>aR",
       function()
-        require("avante").toggle.suggestion()
+        require("avante.repo_map").show()
       end,
       desc = "avante: display repo map",
       mode = "n",
@@ -40,7 +40,7 @@ return {
       function()
         require("avante.api").select_model()
       end,
-      desc = "avante: display repo map",
+      desc = "avante: select model",
       mode = "n",
       noremap = true,
       silent = true,
