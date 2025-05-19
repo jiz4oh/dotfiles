@@ -15,6 +15,7 @@ return {
   },
   specs = {
     "saghen/blink.cmp",
+    optional = true,
     opts = {
       sources = {
         default = { "lazydev" },

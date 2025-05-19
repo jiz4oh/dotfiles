@@ -5,7 +5,10 @@ return {
   -- https://github.com/LazyVim/LazyVim/blob/86ac9989ea15b7a69bb2bdf719a9a809db5ce526/lua/lazyvim/plugins/lsp/init.lua#L5
   event = { "BufReadPre", "BufNewFile" },
   specs = {
-    "williamboman/mason-lspconfig.nvim",
+    {
+      "williamboman/mason-lspconfig.nvim",
+      optional = true,
+    }
   },
   init = function()
     -- do not set tagfunc, it's slowly with cmp-nvim-tags

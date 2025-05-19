@@ -33,6 +33,7 @@ return {
   specs = {
     {
       "hrsh7th/nvim-cmp",
+      optional = true,
       dependencies = { -- this will only be evaluated if nvim-cmp is enabled
         "zbirenbaum/copilot-cmp",
       },
@@ -41,6 +42,7 @@ return {
     -- blink.cmp integration
     {
       "saghen/blink.cmp",
+      optional = true,
       dependencies = {
         "fang2hou/blink-copilot",
       },
@@ -60,6 +62,7 @@ return {
     },
     {
       "yetone/avante.nvim",
+      optional = true,
       opts = {
         auto_suggestions_provider = "copilot",
         copilot = {

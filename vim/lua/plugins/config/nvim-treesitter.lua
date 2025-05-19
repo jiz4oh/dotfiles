@@ -62,6 +62,7 @@ return {
   specs = {
     {
       "hedyhli/outline.nvim",
+      optional = true,
       dependencies = {
         "epheien/outline-treesitter-provider.nvim",
       },

@@ -125,6 +125,7 @@ return {
   specs = {
     {
       "williamboman/mason-lspconfig.nvim",
+      optional = true,
       opts = function(_, opts)
         if vim.fn.has("nvim-0.11") ~= 1 then
           opts["capabilities"] = require("blink.cmp").get_lsp_capabilities({}, true)

@@ -9,6 +9,7 @@ return {
   specs = {
     {
       "williamboman/mason-lspconfig.nvim",
+      optional = true,
       opts = function(_, opts)
         if vim.fn.has("nvim-0.11") ~= 1 then
           local cmp = require("cmp_nvim_lsp")
