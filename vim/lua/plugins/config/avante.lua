@@ -68,6 +68,7 @@ return {
   ---@type avante.Config
   opts = {
     behaviour = {
+      use_cwd_as_project_root = true,
       -- auto_set_keymaps = false,
       enable_cursor_planning_mode = true,
     },
