@@ -134,9 +134,9 @@ return {
     },
   },
   dependencies = {
-    {
-      "Kaiser-Yang/blink-cmp-dictionary",
-      dependencies = { "nvim-lua/plenary.nvim" },
-    },
+    -- {
+    --   "Kaiser-Yang/blink-cmp-dictionary",
+    --   dependencies = { "nvim-lua/plenary.nvim" },
+    -- },
   },
 }
