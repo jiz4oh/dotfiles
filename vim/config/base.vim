@@ -417,6 +417,36 @@ end
 augroup vimrc
   autocmd!
 
+  let s:max_line_length_threshold = 1000
+  " too long line with wrap freezes neovim
+  " e.g. https://raw.githubusercontent.com/BingyanStudio/LapisCV/refs/heads/main/templates/obsidian/.obsidian/snippets/fonts.css
+  function! CheckAndSetWrap()
+    if !empty(&buftype) || !&buflisted || get(b:, '_checked', 0)
+      return
+    end
+    let file = expand('%:p')
+    if empty(file)
+      let file = tempname()
+      exec 'write !cat > '. file
+    endif
+    let b:_checked = 1
+
+    try
+        let max_length_output = system('wc -L ' . shellescape(file))
+        let l:max_length = str2nr(matchstr(max_length_output, '^\s*\zs\d\+'))
+
+        if l:max_length > s:max_line_length_threshold
+            setlocal nowrap
+        endif
+    catch /Vim\%(.\)*:E484/
+        echoerr "wc 命令未找到"
+    catch
+        echoerr "获取最大行长时发生错误: " . v:exception
+    endtry
+  endfunction
+
+  autocmd BufReadPost,BufWritePost,FileType * call CheckAndSetWrap()
+
   "https://github.com/xiantang/nvim-conf/blob/31f8c57c84907cdf3ce7e5127b2ebe6512b1dc07/lua/autocmd.lua#L38
   autocmd VimLeavePre * :redir >> ~/.config/nvim/messages.txt | silent messages | redir END
 
