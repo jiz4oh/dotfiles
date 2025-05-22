@@ -5,6 +5,7 @@ return {
   "williamboman/mason-lspconfig.nvim",
   optional = true,
   version = "v1.*",
+  event = { "FileType" },
   enabled = vim.fn.has("nvim-0.7") == 1,
   dependencies = {
     "williamboman/mason.nvim",
