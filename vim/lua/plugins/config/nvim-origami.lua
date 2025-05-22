@@ -5,7 +5,7 @@ return {
   event = "VeryLazy",
   opts = {
     autoFold = {
-      enabled = true,
+      enabled = false, -- https://github.com/neovim/neovim/issues/34042
     },
   },
 }
