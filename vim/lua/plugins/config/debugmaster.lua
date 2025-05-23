@@ -22,6 +22,8 @@ return {
   config = function()
     local dm = require("debugmaster")
     dm.plugins.osv_integration.enabled = true
+    dm.keys.get("u").key = "<leader>du" -- conflict with undo
+    dm.keys.get("U").key = "<leader>dU"
   end,
   dependencies = {
     {
