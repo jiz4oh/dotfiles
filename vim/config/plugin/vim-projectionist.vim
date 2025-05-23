@@ -2,6 +2,7 @@ let g:projectionist_transformations = {}
 let vscode_tasks = {
     \   'type': 'tasks',
     \   'template': [
+    \     '//https://code.visualstudio.com/docs/debugtest/tasks',
     \     '{',
     \     '  "$schema": "https://json.schemastore.org/task.json",',
     \     '  "version": "2.0.0",',

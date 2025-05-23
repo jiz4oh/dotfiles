@@ -524,6 +524,7 @@ augroup vimrc
   autocmd BufNewFile,BufRead Dockerfile*                     set filetype=dockerfile
   autocmd BufNewFile,BufRead *.wxml                          set filetype=xml
   autocmd BufNewFile,BufRead *.wxss                          set filetype=css
+  autocmd BufNewFile,BufRead **/.vscode/*.json               set filetype=jsonc
 
   " autocmd BufNewFile,BufRead *.md,*.mkd,*.markdown           set filetype=markdown.mkd
   autocmd FileType ruby setlocal regexpengine=1
