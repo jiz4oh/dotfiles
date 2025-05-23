@@ -3,58 +3,49 @@ return {
   "jbyuki/one-small-step-for-vimkind",
   ft = { "lua" },
   optional = true,
-  opts = {
-    adapters = {
-      nlua = function(callback, conf)
-        local dap = require("dap")
-        local adapter = {
-          type = "server",
-          host = conf.host or "127.0.0.1",
-          port = conf.port or 8086,
-        }
-        if conf.start_neovim then
-          local dap_run = dap.run
-          dap.run = function(c)
-            adapter.port = c.port
-            adapter.host = c.host
-          end
-          require("osv").run_this()
-          dap.run = dap_run
-        end
-        callback(adapter)
-      end,
-    },
-    configurations = {
-      lua = {
-        {
-          type = "nlua",
-          request = "attach",
-          name = "Run this file",
-          start_neovim = true,
-          console = "integratedTerminal",
+  dependencies = {
+    {
+      "mfussenegger/nvim-dap",
+      opts = {
+        adapters = {
+          nlua = function(callback, conf)
+            local dap = require("dap")
+            local adapter = {
+              type = "server",
+              host = conf.host or "127.0.0.1",
+              port = conf.port or 8086,
+            }
+            if conf.start_neovim then
+              local dap_run = dap.run
+              dap.run = function(c)
+                adapter.port = c.port
+                adapter.host = c.host
+              end
+              require("osv").run_this()
+              dap.run = dap_run
+            end
+            callback(adapter)
+          end,
         },
-        {
-          type = "nlua",
-          request = "attach",
-          name = "Attach to running Neovim instance (port = 8086)",
-          port = 8086,
-          console = "integratedTerminal",
+        configurations = {
+          lua = {
+            {
+              type = "nlua",
+              request = "attach",
+              name = "Run this file",
+              start_neovim = true,
+              console = "integratedTerminal",
+            },
+            {
+              type = "nlua",
+              request = "attach",
+              name = "Attach to running Neovim instance (port = 8086)",
+              port = 8086,
+              console = "integratedTerminal",
+            },
+          },
         },
       },
     },
-  },
-  -- stylua: ignore
-  config = function(_, opts)
-    local dap = require("dap")
-    for k,v in pairs(opts) do
-      if type(v) == type({}) then
-        dap[k] = vim.tbl_deep_extend("force", dap[k] or {}, v)
-      else
-        dap[k] = v
-      end
-    end
-  end,
-  dependencies = {
-    "mfussenegger/nvim-dap",
   },
 }
