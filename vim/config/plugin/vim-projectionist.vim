@@ -1,14 +1,52 @@
 let g:projectionist_transformations = {}
+let vscode_tasks = {
+    \   'type': 'tasks',
+    \   'template': [
+    \     '{',
+    \     '  "$schema": "https://json.schemastore.org/task.json",',
+    \     '  "version": "2.0.0",',
+    \     '  "inputs": [',
+    \     '  ],',
+    \     '  "tasks": [',
+    \     '     {',
+    \     '       "label": "",',
+    \     '       "type": "shell",',
+    \     '       "command": "",',
+    \     '       "detail": "",',
+    \     '       "presentation": {',
+    \     '         "revealProblems": "onProblem"',
+    \     '       },',
+    \     '       "problemMatcher": {',
+    \     '         "name": "",',
+    \     '         "owner": "",',
+    \     '         "severity": "",',
+    \     '         "pattern": {',
+    \     '           "vim_regexp": "",',
+    \     '           "message": 1,',
+    \     '           "file": 2',
+    \     '         }',
+    \     '       },',
+    \     '       "options": {',
+    \     '         "cwd": "${fileWorkspaceFolder}"',
+    \     '       }',
+    \     '     }',
+    \     '  ]',
+    \     '}',
+    \   ],
+    \ }
 
 "https://gist.github.com/jiz4oh/d763f906c65e302b0162a3c05723138b
 let g:projectionist_heuristics = {
       \ '.git/': {
       \   '.git/hooks/*': {'type': 'githook'},
-      \   '.github/workflows/*': {'type': 'githubworkflow'}
+      \   '.github/workflows/*': {'type': 'githubworkflow'},
+      \   '.vscode/tasks.json': vscode_tasks,
       \ },
       \ '.hg/|.svn/|.bzr/': {
+      \   '.vscode/tasks.json': vscode_tasks,
       \ },
       \ 'package.json': {
+      \   '.vscode/tasks.json': vscode_tasks,
       \   '*.js': {
       \      'console': 'node'
       \   },
@@ -23,8 +61,10 @@ let g:projectionist_heuristics = {
       \   },
       \ },
       \ 'Gemfile|Rakefile|*.gemspec': {
+      \   '.vscode/tasks.json': vscode_tasks,
       \ },
       \ 'requirements.txt|requirements.in|pyproject.toml': {
+      \   '.vscode/tasks.json': vscode_tasks,
       \   '*.py': {
       \      'console': 'python',
       \   },
@@ -36,6 +76,7 @@ let g:projectionist_heuristics = {
       \   },
       \ },
       \ 'go.mod': {
+      \   '.vscode/tasks.json': vscode_tasks,
       \   '*.go': {
       \      'dispatch': 'go run %:p:S',
       \      'start': 'air',
