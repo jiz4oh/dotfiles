@@ -7,6 +7,29 @@ local lsp_handlers = {
   end,
 }
 
+_G.fix_padding = function()
+  vim.g._fix_padding = true
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
+  if not normal.bg then
+    return
+  end
+  io.write(string.format("\027]11;#%06x\027\\", normal.bg))
+end
+
+_G.revert_fix_padding = function()
+  vim.g._fix_padding = false
+  io.write("\027]111\027\\")
+end
+
+-- fix padding on terminal
+vim.api.nvim_create_autocmd({ "UIEnter", "ColorScheme" }, {
+  callback = fix_padding,
+})
+
+vim.api.nvim_create_autocmd("UILeave", {
+  callback = revert_fix_padding,
+})
+
 ---@type LazyPluginSpec
 return {
   "folke/snacks.nvim",
@@ -266,6 +289,20 @@ return {
           .option("background", { off = "light", on = "dark", name = "Dark Background" })
           :map("<leader>ub")
         Snacks.toggle.inlay_hints():map("<leader>uh")
+        Snacks.toggle.new({
+          id = "padding",
+          name = "Padding",
+          get = function()
+            return vim.g._fix_padding
+          end,
+          set = function(state)
+            if state then
+              fix_padding()
+            else
+              revert_fix_padding()
+            end
+          end,
+        }):map("<leader>up")
 
         for _, m in ipairs(vim.tbl_keys(lsp_handlers)) do
           vim.lsp.handlers[m] = lsp_handlers[m]
