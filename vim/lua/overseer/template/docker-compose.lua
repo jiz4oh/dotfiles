@@ -9,10 +9,12 @@ return {
   params = function()
     local stdout = vim.system({ "docker", "compose", "ls", "--format", "json" }):wait().stdout
     local projects = {}
+    ---@diagnostic disable-next-line: param-type-mismatch
     for _, v in ipairs(vim.json.decode(stdout)) do
       table.insert(projects, v.Name)
     end
 
+    ---@diagnostic disable-next-line: undefined-field
     local all_files = files.list_files(vim.loop.cwd())
     local filtered = vim.tbl_filter(function(filename)
       local matched = pattern:match_str(filename)
@@ -78,13 +80,6 @@ return {
         optional = true,
         order = 4,
       },
-      detached = {
-        type = "boolean",
-        desc = "Run as detached?",
-        default = true,
-        order = 5,
-      },
-      cwd = { optional = true },
     }
   end,
   builder = function(params)
@@ -102,10 +97,6 @@ return {
 
     if params.cmd then
       table.insert(args, params.cmd)
-    end
-
-    if params.detached and (params.cmd == "up" or params.cmd == "start") then
-      table.insert(args, "-d")
     end
 
     for _, v in ipairs(params.args or {}) do

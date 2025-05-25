@@ -83,7 +83,7 @@ return {
         -- "dictionary", -- too slow
       },
       per_filetype = {
-        OverseerForm = { "omni", "path", "buffer" },
+        OverseerForm = { "omni", "path" },
       },
       providers = {
         -- https://cmp.saghen.dev/recipes.html#path-completion-from-cwd-instead-of-current-buffer-s-directory
