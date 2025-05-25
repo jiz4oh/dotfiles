@@ -102,11 +102,11 @@ return {
           local fs = require("oil.fs")
           local bufname = vim.api.nvim_buf_get_name(0)
           local scheme, path = require("oil.util").parse_url(bufname)
-          if not scheme then
+          if not scheme or not path then
             return
           end
           local adapter = config.get_adapter_by_scheme(scheme)
-          if not adapter or not path or adapter.name ~= "files" then
+          if not adapter or adapter.name ~= "files" then
             return
           end
           local path = fs.posix_to_os_path(path)
@@ -118,6 +118,7 @@ return {
       },
       ["<C-h>"] = false,
       ["<C-l>"] = false,
+      ["<leader>!"] = { "actions.open_terminal", mode = "n" },
       ["<leader>:"] = {
         "actions.open_cmdline",
         opts = {
