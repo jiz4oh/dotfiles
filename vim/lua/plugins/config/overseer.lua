@@ -60,6 +60,7 @@ return {
     task_list = {
       max_height = { 40, 0.7 },
     },
+    default_template_prompt = "missing", -- https://github.com/stevearc/overseer.nvim/issues/18
     component_aliases = {
       start = {
         {
