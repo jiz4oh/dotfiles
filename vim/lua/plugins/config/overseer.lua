@@ -16,6 +16,13 @@ return {
     { "<leader>oi", "<cmd>OverseerInfo<cr>", desc = "Overseer Info" },
     { "<leader>ob", "<cmd>OverseerBuild<cr>", desc = "Task builder" },
     { "<leader>oc", "<cmd>OverseerClearCache<cr>", desc = "Clear cache" },
+    {
+      "<leader>od",
+      function()
+        require("overseer").debug_parser()
+      end,
+      desc = "Open a tab with windows laid out for debugging a parser",
+    },
   },
   cmd = {
     "OverseerOpen",
