@@ -1,5 +1,3 @@
-local files = require("overseer.files")
-
 local cmds = {
   "start",
   "stop",
@@ -22,7 +20,7 @@ local cmds = {
   "commit",
 }
 
----@type overseer.TemplateProvider
+---@type overseer.TemplateDefinition
 return {
   name = "docker ",
   priority = 60,

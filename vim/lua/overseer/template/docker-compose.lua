@@ -1,9 +1,8 @@
 local files = require("overseer.files")
-local TAG = require("overseer.constants").TAG
 
 local pattern = vim.regex([[^\(docker-\)\?compose\(\.[a-zA-Z0-9_-]\+\)*\.ya\?ml$]]) -- Equivalent without very magic
 
----@type overseer.TemplateProvider
+---@type overseer.TemplateDefinition
 return {
   name = "docker compose ",
   priority = 60,
