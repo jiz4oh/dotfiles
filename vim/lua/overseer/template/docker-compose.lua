@@ -125,81 +125,101 @@ return {
         -- Add a space for better readability
         name = "docker compose ",
         priority = 40,
-        params = {
-          task = {
-            desc = "Action",
-            type = "string",
-            -- type = "enum",
-            -- choices = {
-            --   "build",
-            --   "create",
-            --   "down",
-            --   "images",
-            --   "kill",
-            --   "pause",
-            --   "ps",
-            --   "pull",
-            --   "rm",
-            --   "start",
-            --   "stop",
-            --   "top",
-            --   "unpause",
-            --   "up",
-            -- },
-            order = 1,
-          },
-          detached = {
-            type = "boolean",
-            desc = "Run as detached?",
-            default = true,
-            order = 2,
-          },
-          file = {
-            type = "string",
-            desc = "Name of docker-compose file. Empty means " .. default,
-            subtype = {
+        params = function() -- https://github.com/stevearc/overseer.nvim/issues/86
+          local stdout = vim.system({ "docker", "compose", "ls", "--format", "json" }):wait().stdout
+          local projects = {}
+          for _, v in ipairs(vim.json.decode(stdout)) do
+            table.insert(projects, v.Name)
+          end
+          return {
+            cmd = {
+              desc = "Action",
               type = "enum",
-              choices = f,
+              choices = {
+                "build",
+                "logs",
+                "create",
+                "down",
+                "images",
+                "kill",
+                "pause",
+                "ps",
+                "ls",
+                "pull",
+                "rm",
+                "start",
+                "stop",
+                "top",
+                "unpause",
+                "up",
+              },
+              order = 1,
             },
-            default = default,
-            optional = true,
-            order = 3,
-          },
-          extra_params = {
-            type = "string",
-            desc = "Add extra parameter(s)",
-            optional = true,
-            order = 4,
-          },
-        },
+            args = {
+              type = "list",
+              delimiter = " ",
+              order = 2,
+              optional = true,
+            },
+            project = {
+              desc = "Which project to use",
+              type = "enum",
+              order = 3,
+              choices = projects,
+              optional = true,
+            },
+            file = {
+              desc = "Name of docker-compose file",
+              type = "enum",
+              choices = {
+                "compose.yaml",
+                "compose.yml",
+                "docker-compose.yaml",
+                "docker-compose.yml",
+              },
+              optional = true,
+              order = 4,
+            },
+            detached = {
+              type = "boolean",
+              desc = "Run as detached?",
+              default = true,
+              order = 5,
+            },
+            cwd = { optional = true },
+          }
+        end,
         builder = function(params)
-          local args = { "compose" }
+          local args = {}
 
-          table.insert(args, "-f")
+          if params.project then
+            table.insert(args, "-p")
+            table.insert(args, params.project)
+          end
+
           if params.file then
+            table.insert(args, "-f")
             table.insert(args, params.file)
-          else
-            table.insert(args, default)
           end
 
-          if params.task then
-            table.insert(args, params.task)
+          if params.cmd then
+            table.insert(args, params.cmd)
           end
 
-          if params.detached and (params.task == "up" or params.task == "start") then
+          if params.detached and (params.cmd == "up" or params.cmd == "start") then
             table.insert(args, "-d")
           end
 
-          if params.extra_params then
-            table.insert(args, params.extra_params)
+          for _, v in ipairs(params.args or {}) do
+            table.insert(args, v)
           end
 
           ---@type overseer.TaskDefinition
           local task_def = {
-            cmd = "docker",
+            cmd = { "docker", "compose" },
             args = args,
             components = {
-              "dispatch"
+              "dispatch",
             },
           }
 
