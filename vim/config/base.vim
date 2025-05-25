@@ -791,6 +791,7 @@ map  <Plug><ExpoloreCfile>  :Lexplore<CR>
 nnoremap U <C-r>
 " y$ -> Y Make Y behave like other capitals
 map Y y$
+nnoremap y<C-g> :let @" = expand("%")<cr>
 
 " Better x
 nnoremap x "_x
