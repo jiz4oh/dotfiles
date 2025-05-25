@@ -11,6 +11,18 @@
   "vim/plugin/*.vim": {
     "type": "plugin"
   },
+  "vim/lua/overseer/template/*.lua": {
+    "type": "overseertemplate",
+    "template":  [
+      "---@type overseer.TemplateDefinition | overseer.TemplateProvider",
+      "return {",
+      "  name = \"\",",
+      "  module = nil,",
+      "  condition = {",
+      "  },",
+      "}"
+    ]
+  },
   "vim/config/plugin.vim": {
     "type": "config"
   },
