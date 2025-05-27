@@ -23,8 +23,6 @@ pnpm = "latest"
 "gem:solargraph-rails" = "latest"
 "gem:rails" = "latest"
 
-"ubi:universal-ctags/ctags-nightly-build" =  { version = "2025.05.20+b28ac7c239d0d60edf5b51130ecbf4641fb3c1cd", exe = "ctags" }
-
 [settings]
 experimental = true
 python.uv_venv_auto = true
