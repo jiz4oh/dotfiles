@@ -13,7 +13,11 @@ local function make_fFtT_keymap(key, extra_opts)
       end
     else
       local pattern = vim.pesc(input)
-      opts.spotter = MiniJump2d.gen_pattern_spotter(pattern)
+      if MiniJump2d.gen_spotter then
+        opts.spotter = MiniJump2d.gen_spotter.pattern(pattern)
+      else
+        opts.spotter = MiniJump2d.gen_pattern_spotter(pattern)
+      end
     end
   end
 
