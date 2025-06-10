@@ -133,6 +133,11 @@ if vim.fn.has("nvim-0.8") == 1 then
 
       local notify = { "LSP " .. client.name .. " attached" }
 
+      if client.name == "clangd" then
+        table.insert(notify, "disable semantic tokens")
+        client.server_capabilities.semanticTokensProvider = nil
+      end
+
       if lsp_supports_method(client, "textDocument/codeLens") then
         table.insert(notify, "refresh codelens")
         vim.lsp.codelens.refresh({ bufnr = 0 })
