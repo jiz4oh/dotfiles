@@ -1,22 +1,41 @@
 let s:is_win = has('win32') || has('win64')
 
+if has('nvim')
 lua<<EOF
-_G.__select_picker_wrapper = function(func)
-  return function(item, idx)
+vim.ui = vim.ui or {}
+vim.ui.__select_wrapper = function(list, id, prompt)
+  vim.ui.select(list, {prompt = prompt}, function(item, idx)
     if item then
-      func(item, idx)
+      vim.fn['select#call_func'](id, item, idx - 1)
     end
-  end
+  end)
 end
 EOF
+end
 
-function! s:input(prompt, list, func) abort
-  let list = copy(a:list)
-  call map(list, { i,v -> i + 1 . ':' . v})
-  call insert(list, a:prompt, 0)
-  let idx = inputlist(list)
-  if idx > 0 && idx <= len(a:list)
-    call a:func(a:list[idx - 1], idx - 1)
+let s:funcs = {}
+function! select#call_func(id, item, idx)
+  if empty(get(s:funcs, a:id))
+    return
+  end
+
+  call s:funcs[a:id](a:item, a:idx)
+  call remove(s:funcs, a:id)
+endfunction
+
+function! select#input(prompt, list, func) abort
+  if has('nvim-0.6')
+    let id = id(a:func)
+    let s:funcs[id] = a:func
+    call v:lua.vim.ui.__select_wrapper(a:list, id, a:prompt)
+  else
+    let list = copy(a:list)
+    call map(list, { i,v -> i + 1 . ':' . v})
+    call insert(list, a:prompt, 0)
+    let idx = inputlist(list)
+    if idx > 0 && idx <= len(a:list)
+      call a:func(a:list[idx - 1], idx - 1)
+    end
   end
 endfunction
 
@@ -86,55 +105,27 @@ function! select#on_choice_session(item, idx)
 endfunction
 
 function! select#sessions()
-  if has('nvim-0.6')
-lua<<EOF
-  vim.ui.select(vim.fn['select#get_sessions'](), {prompt = 'Sessions> '}, __select_picker_wrapper(vim.fn['select#on_choice_session']))
-EOF
-    return
-  end
-
   let list = select#get_sessions()
   let prompt = 'Sessions> '
-  call s:input(prompt, list, function('select#on_choice_session'))
+  call select#input(prompt, list, function('select#on_choice_session'))
 endfunction
 
 function! select#compilers()
-  if has('nvim-0.6')
-lua<<EOF
-  vim.ui.select(vim.fn['select#get_compilers'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, __select_picker_wrapper(vim.fn['select#on_choice_compiler']))
-EOF
-    return
-  end
-
   let list = select#get_compilers()
   let prompt = 'Compilers> '
-  call s:input(prompt, list, function('select#on_choice_compiler'))
+  call select#input(prompt, list, function('select#on_choice_compiler'))
 endfunction
 
 function! select#projects()
-  if has('nvim-0.6')
-lua<<EOF
-  vim.ui.select(vim.fn['select#get_projects'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, __select_picker_wrapper(vim.fn['select#on_choice_directory']))
-EOF
-    return
-  end
-
   let list = select#get_projects()
   let prompt = personal#functions#shortpath(getcwd()) . ' '
-  call s:input(prompt, list, function('select#on_choice_directory'))
+  call select#input(prompt, list, function('select#on_choice_directory'))
 endfunction
 
 function! select#paths(query, fullscreen)
-  if has('nvim-0.6')
-lua<<EOF
-  vim.ui.select(vim.fn['select#get_paths'](), {prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '}, __select_picker_wrapper(vim.fn['select#on_choice_directory']))
-EOF
-    return
-  end
-
   let list = select#get_paths()
   let prompt = personal#functions#shortpath(getcwd()) . ' '
-  call s:input(prompt, list, function('select#on_choice_directory'))
+  call select#input(prompt, list, function('select#on_choice_directory'))
 endfunction
 
 function! select#grep(query, ...)
@@ -148,31 +139,14 @@ function! select#grep(query, ...)
   end
 
   if empty(a:0)
-    let l:paths = getcwd()
+    let l:paths = [getcwd()]
   else
     let l:paths = a:000
   endif
 
-  let g:__select_grep_query = a:query
-  let g:__select_grep_paths = a:000
-
-  if has('nvim-0.6')
-lua<<EOF
-  vim.ui.select(
-    vim.fn['select#get_files'](vim.g.__select_grep_query, vim.g.__select_grep_paths),
-    {
-      prompt = vim.fn['personal#functions#shortpath'](vim.fn.getcwd()) ..' '
-    }, __select_picker_wrapper(function(item, index)
-      vim.fn['fzf#helper#colon_sink']({'enter', item}, { enter = 'edit'})
-    end)
-    )
-EOF
-    return
-  end
-
   let list = select#get_files(a:query, l:paths)
   let prompt = personal#functions#shortpath(getcwd()) . ' '
-  call s:input(prompt, list, { l, _ -> fzf#helper#colon_sink(['enter',l], { 'enter': 'edit'})})
+  call select#input(prompt, list, { l, _ -> fzf#helper#colon_sink(['enter',l], { 'enter': 'edit'})})
 endfunction
 
 function! select#packages(fullscreen, ...)
@@ -191,6 +165,6 @@ function! select#packages(fullscreen, ...)
   catch
     let prompt = 'Select Packages of'
     let list = select#package#filetypes()
-    call s:input(prompt, list, { l, _ -> select#package#call(l, opts)})
+    call select#input(prompt, list, { l, _ -> select#package#call(l, opts)})
   endtry
 endfunction
