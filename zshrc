@@ -100,8 +100,13 @@ fzf
 tailscale
 )
 
-[ -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ] && plugins+=zsh-autosuggestions
-[ -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting ] && plugins+=zsh-syntax-highlighting
+for plugin in fzf-tab \
+  zsh-autosuggestions \
+  zsh-syntax-highlighting; do
+  if [ -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/$plugin ]; then
+    plugins+="$plugin"
+  fi
+done
 
 source $ZSH/oh-my-zsh.sh
 

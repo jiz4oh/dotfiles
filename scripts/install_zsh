@@ -16,6 +16,9 @@ dir=\${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 dir=\${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 [ ! -d \$dir ] && git clone https://github.com/zsh-users/zsh-syntax-highlighting \$dir
 
+dir=\${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
+[ ! -d \$dir ] && git clone https://github.com/Aloxaf/fzf-tab \$dir
+
 dir=\${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
 [ ! -d \$dir ] && git clone --depth=1 https://github.com/romkatv/powerlevel10k \$dir
 return 0
