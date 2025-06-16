@@ -11,6 +11,9 @@
   "vim/plugin/*.vim": {
     "type": "plugin"
   },
+  "vim/lua/overseer/template/user.lua": {
+    "type": "overseertemplate"
+  },
   "vim/lua/overseer/template/*.lua": {
     "type": "overseertemplate",
     "template":  [
@@ -39,6 +42,12 @@
   },
   "vim/lua/*.lua": {
     "type": "lua"
+  },
+  "vim/config/base.lua": {
+    "type": "lua"
+  },
+  "vim/config/plugin.lua": {
+    "type": "luaconfig"
   },
   "vim/lua/plugins/config/*.lua": {
     "type": "luaconfig",
