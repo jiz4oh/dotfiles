@@ -4,6 +4,7 @@ let g:fileheader_delimiter_map = {
 
 let g:fileheader_templates_map = {
   \ 'markdown': [
+    \ 'author: {{author}}',
     \ 'date: {{created_date}}',
     \ 'updated: {{modified_date}}',
     \ ]
