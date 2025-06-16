@@ -8,12 +8,13 @@ function! personal#project#find_root()
     let l:dir = get(l:, 'dir', FindRootDirectory())
   endif
 
+  let parent = substitute(expand('%:p:h'), 'oil://', '', '')
   if has('nvim-0.10') && exists('g:project_markers')
-    return v:lua.vim.fs.root(0, g:project_markers)
+    return v:lua.vim.fs.root(parent, g:project_markers)
   end
 
   if empty(l:dir)
-    let l:git_root = system('git rev-parse --show-toplevel 2>/dev/null')[:-2]
+    let l:git_root = system('cd ' . parent . ' && git rev-parse --show-toplevel 2>/dev/null')[:-2]
     if v:shell_error == 0
       let l:dir = l:git_root
     endif
