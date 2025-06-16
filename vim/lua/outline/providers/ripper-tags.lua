@@ -34,7 +34,7 @@ local M = {
 }
 
 function M.supports_buffer(bufnr, conf) ---@diagnostic disable-line
-  return vim.api.nvim_get_option_value("filetype", { buf = bufnr }) == "ruby",
+  return vim.fn.executable('ripper-tags') == 1 and vim.api.nvim_get_option_value("filetype", { buf = bufnr }) == "ruby",
     { ft = "ruby", buf = bufnr }
 end
 
