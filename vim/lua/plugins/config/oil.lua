@@ -118,7 +118,38 @@ return {
       },
       ["<C-h>"] = false,
       ["<C-l>"] = false,
-      ["<leader>!"] = { "actions.open_terminal", mode = "n" },
+      ["<leader>!"] = {
+        function()
+          local config = require("oil.config")
+          local bufname = vim.api.nvim_buf_get_name(0)
+          local adapter = config.get_adapter_by_scheme(bufname)
+
+          require("oil.actions").open_terminal.callback()
+          local term_id = vim.bo.channel
+          vim.cmd.startinsert()
+          if adapter.name == "ssh" then
+            local url = require("oil.adapters.ssh").parse_url(bufname)
+            local cmd = require("oil.adapters.ssh.connection").create_ssh_command(url)
+            -- 判断是否是 qnap
+            table.insert(cmd, "uname -a | grep -qi qnap >/dev/null 2>&1")
+            local code = -1
+            vim
+              .system(cmd, {}, function(obj)
+                code = obj.code
+              end)
+              :wait()
+            if code == 0 then
+              vim.defer_fn(function()
+                vim.api.nvim_chan_send(term_id, "q\ny\n")
+                vim.defer_fn(function()
+                  vim.api.nvim_chan_send(term_id, string.format("cd %s\n", url.path))
+                end, 100)
+              end, 300)
+            end
+          end
+        end,
+        mode = "n",
+      },
       ["<leader>:"] = {
         "actions.open_cmdline",
         opts = {
