@@ -833,14 +833,15 @@ nnoremap dg# g*``dgN
 nnoremap <silent><leader>/ :nohls<CR>
 
 function! ChangeCWDTo(dir) abort
-  if expand(getcwd()) == expand(a:dir)
+  let dir = substitute(expand(a:dir), 'oil://', '', '')
+  if expand(getcwd()) == dir
     return
   end
 
   if exists(':tcd')
-    execute 'tcd ' . expand(a:dir)
+    execute 'tcd ' . dir
   else
-    execute 'cd ' . expand(a:dir)
+    execute 'cd ' . dir
   end
   let msg = 'cwd: ' . getcwd()
   if has('nvim')
