@@ -18,7 +18,7 @@
 # Main model:
 
 ## Specify the model to use for the main chat
-model: gemini
+model: r1
 
 ########################
 # API Keys and settings:
@@ -77,9 +77,9 @@ model: gemini
 ## Specify multiple values like this:
 alias:
   - "sonnet:openrouter/anthropic/claude-3-7-sonnet-20250219"
-  - "r1:openrouter/deepseek/deepseek-r1-zero:free"
-  - "deepseek:openrouter/deepseek/deepseek-v3-base:free"
-  - "flash:openai/gemini-2.0-flash-001"
+  - "r1:openrouter/deepseek/deepseek-r1-0528"
+  - "v3:openrouter/deepseek/deepseek-chat-v3-0324"
+  - "flash:openrouter/deepseek/deepseek-prover-v2:free"
   - "gemini:openai/gemini-2.5-pro-exp-03-25"
 
 ## Set the reasoning_effort API parameter (default: not set)
@@ -96,7 +96,7 @@ alias:
 
 ## Specify what edit format the LLM should use (default depends on model)
 #https://aider.chat/docs/more/edit-formats.html#diff-fenced
-edit-format: diff-fenced # for gemini specified
+# edit-format: diff-fenced # for gemini specified
 
 ## Use architect edit format for the main chat
 #architect: false
@@ -105,7 +105,7 @@ edit-format: diff-fenced # for gemini specified
 #auto-accept-architect: true
 
 ## Specify the model to use for commit messages and chat history summarization (default depends on --model)
-weak-model: flash
+weak-model: v3
 
 ## Specify the model to use for editor tasks (default depends on --model)
 #editor-model: xxx
