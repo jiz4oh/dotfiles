@@ -141,7 +141,6 @@ if has('vim_starting')
   set foldnestmax=3
   set foldopen+=jump
   set foldlevel=1
-  set commentstring=#\ %s
 endif
 
 " encoding
