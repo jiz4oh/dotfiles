@@ -165,7 +165,13 @@ return {
       exclude = { "latex" },
     },
     notifier = { enabled = true },
-    input = { enabled = true },
+    input = {
+      enabled = true,
+      win = {
+        relative = "cursor",
+        row = 1
+      }
+    },
     indent = { enabled = true },
     image = { enabled = true },
     picker = {
