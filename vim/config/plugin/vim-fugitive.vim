@@ -1,7 +1,8 @@
 nnoremap g<space>   :Git<space>
 nmap     <leader>gg :Git<cr>gg)
 nmap     <leader>eg :Git<cr>gg)
-nnoremap <leader>gd :Gdiffsplit<cr>
+nnoremap <leader>gdd :Gdiffsplit<cr>
+nnoremap <leader>gdb :DiffBranch<space>
 nnoremap <leader>gb :Git blame<cr>
 vnoremap <leader>gb :Git blame<cr>
 nnoremap <leader>gx :GBrowse<cr>
@@ -65,12 +66,23 @@ function s:diff_current_quickfix_entry() abort
   let qf = getqflist({'context': 0, 'idx': 0})
   if get(qf, 'idx') && type(get(qf, 'context')) == type({}) && type(get(qf.context, 'items')) == type([])
     let diff = get(qf.context.items[qf.idx - 1], 'diff', [])
-    echom string(reverse(range(len(diff))))
     for i in reverse(range(len(diff)))
-      exe (i ? 'leftabove' : 'rightbelow') 'vert diffsplit' fnameescape(diff[i].filename)
+      exe 'leftabove vert diffsplit' fnameescape(diff[i].filename)
       call s:add_mappings()
     endfor
   endif
+endfunction
+
+command! -nargs=1 -complete=customlist,fugitive#ReadComplete DiffBranch call s:diff_git_branch(<q-args>)
+
+function! s:diff_git_branch(branch) abort
+  execute 'Git difftool --name-status ' . a:branch . ' @'
+  call s:diff_current_quickfix_entry()
+  " Bind <CR> for current quickfix window to properly set up diff split layout after selecting an item
+  " There's probably a better way to map this without changing the window
+  copen
+  nnoremap <buffer> <CR> <CR><BAR>:call <sid>diff_current_quickfix_entry()<CR>
+  wincmd p
 endfunction
 
 function! s:add_mappings() abort
