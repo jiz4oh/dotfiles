@@ -76,7 +76,7 @@ endfunction
 command! -nargs=1 -complete=customlist,fugitive#ReadComplete DiffBranch call s:diff_git_branch(<q-args>)
 
 function! s:diff_git_branch(branch) abort
-  execute 'Git difftool --name-status ' . a:branch . ' @'
+  execute 'Git difftool --name-status @ ' . a:branch 
   call s:diff_current_quickfix_entry()
   " Bind <CR> for current quickfix window to properly set up diff split layout after selecting an item
   " There's probably a better way to map this without changing the window
