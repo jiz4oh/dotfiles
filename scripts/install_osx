@@ -41,6 +41,14 @@ setup_macos_defaults() {
   # Finder 使用 list 视图
   defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 
+  # Finder 使用绝对时间
+  # https://gist.github.com/rxliuli/629da07479b70d6235088828cdb1bd8f
+  defaults write com.apple.finder RelativeDates -bool false
+  defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add "1" "yyyy-MM-dd HH:mm"
+  defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add "2" "yyyy-MM-dd HH:mm:ss"
+  defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add "3" "yyyy-MM-dd HH:mm:ss"
+  defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add "4" "yyyy-MM-dd HH:mm:ss"
+
   killall Finder
   # }}}
 
