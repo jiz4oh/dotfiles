@@ -444,6 +444,17 @@ augroup vimrc
     endtry
   endfunction
 
+  " Sqlite3
+  autocmd BufRead,BufNewFile *.sqlite,*.sqlite3,*.db,*.db3 set readonly
+  " Lock Files
+  autocmd BufRead,BufNewFile package-lock.json,yarn.lock,pnpm-lock.yaml,composer.lock,Gemfile.lock,poetry.lock set readonly
+  " Git internal files
+  autocmd BufRead,BufNewFile .git/* set readonly
+  " Compiled/Binary files
+  autocmd BufRead,BufNewFile *.pyc,*.class,*.o,*.so,*.a,*.dll,*.exe set readonly
+  " Archives and Media files
+  autocmd BufRead,BufNewFile *.zip,*.gz,*.tar,*.rar,*.7z,*.jpg,*.jpeg,*.png,*.gif,*.pdf,*.mp3,*.mp4 set readonly
+
   autocmd BufReadPost,BufWritePost,FileType * call CheckAndSetWrap()
 
   "https://github.com/xiantang/nvim-conf/blob/31f8c57c84907cdf3ce7e5127b2ebe6512b1dc07/lua/autocmd.lua#L38
