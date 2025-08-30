@@ -2,6 +2,7 @@
 [tools]
 # https://github.com/jdx/mise/blob/main/registry.toml
 bat = "latest"
+dust = "latest"
 fd = "latest"
 neovim = "latest"
 rg = "latest"

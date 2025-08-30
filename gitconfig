@@ -56,6 +56,7 @@
 	verbose = true
 [diff]
 	algorithm = histogram
+	tool = nvimdiff
 [branch]
 	sort = -committerdate
 [fetch]
