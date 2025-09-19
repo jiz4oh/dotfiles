@@ -99,6 +99,7 @@ extract
 safe-paste
 fzf
 tailscale
+rsync
 )
 
 for plugin in fzf-tab \
