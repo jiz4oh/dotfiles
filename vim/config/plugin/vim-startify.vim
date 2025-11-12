@@ -113,6 +113,7 @@ augroup vim-startify-augroup
   autocmd!
 
   autocmd VimLeave * call <sid>save_bookmarks()
+  autocmd filetype startify setlocal foldlevel=99
 augroup END
 
 command! -nargs=? StartifyAddBookmark call <sid>add_bookmark(<q-args>)
