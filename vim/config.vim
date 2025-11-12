@@ -13,7 +13,7 @@ let ruby_operators        = 1
 let ruby_pseudo_operators = 1
 let ruby_no_expensive     = 1
 
-let g:copilot_model = 'claude-3.5-sonnet'
+let g:copilot_model = 'claude-haiku-4.5'
 let g:node_path = $HOME . '/.local/share/mise/installs/node/22.14.0/bin/node'
 
 if has('nvim')
