@@ -9,18 +9,14 @@ return {
   cache_key = function(opts)
     return vim.fn.getcwd()
   end,
-  condition = {
-    callback = function(opts)
-      if vim.fn.executable("rails") == 0 then
-        return false, 'Command "rake" not found'
-      end
-      if vim.g.loaded_rails ~= 1 then
-        return false, "No Vim-Rails"
-      end
-      return true
-    end,
-  },
   generator = function(opts, cb)
+    if vim.fn.executable("rails") == 0 then
+      return {}
+    end
+    if vim.g.loaded_rails ~= 1 then
+      return {}
+    end
+
     ---@type overseer.TemplateDefinition[]
     local ret = {
       {

@@ -8,7 +8,6 @@ end
 ---@type overseer.TemplateFileProvider
 return {
   name = "Run Launchctl",
-  priority = 70,
   generator = function(opts, cb)
     local f = vim.tbl_filter(function(filename)
       return filename:match("%.plist$")
@@ -26,7 +25,7 @@ return {
         priority = priority,
         name = format_name("Reload " .. filename),
         builder = function(params)
-          local path = files.join(opts.dir, filename)
+          local path = vim.fs.joinpath(opts.dir, filename)
           ---@type overseer.TaskDefinition
           local spec = {
             components = {
@@ -57,7 +56,7 @@ return {
         name = format_name("Unload " .. filename),
         priority = priority,
         builder = function(params)
-          local path = files.join(opts.dir, filename)
+          local path = vim.fs.joinpath(opts.dir, filename)
           ---@type overseer.TaskDefinition
           local spec = {
             components = {

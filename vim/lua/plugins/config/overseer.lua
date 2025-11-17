@@ -2,42 +2,22 @@
 return {
   "stevearc/overseer.nvim",
   optional = true,
+  enabled = vim.fn.has("nvim-0.11") == 1,
   keys = {
     { "<leader>ot", "<cmd>OverseerToggle<cr>", desc = "Open the task list" },
     { "<leader>or", "<cmd>OverseerRun<cr>", desc = "Select and start a task" },
     { "<leader>ol", "<cmd>OverseerRestartLast<cr>", desc = "Restart last task" },
     { "<leader>of", "<cmd>OverseerFloatLast<cr>", desc = "Open last task in float window" },
     { "<leader>oa", "<cmd>OverseerTaskAction<cr>", desc = "Select a task to run an action on" },
-    {
-      "<leader>oq",
-      "<cmd>OverseerQuickAction<cr>",
-      desc = "Run an action on the most recent task, or the task under the cursor",
-    },
-    { "<leader>oi", "<cmd>OverseerInfo<cr>", desc = "Overseer Info" },
-    { "<leader>ob", "<cmd>OverseerBuild<cr>", desc = "Task builder" },
-    { "<leader>oc", "<cmd>OverseerClearCache<cr>", desc = "Clear cache" },
-    {
-      "<leader>od",
-      function()
-        require("overseer").debug_parser()
-      end,
-      desc = "Open a tab with windows laid out for debugging a parser",
-    },
+    { "<leader>ox", "<cmd>OverseerShell<cr>", desc = "Run command on shell" },
   },
   cmd = {
     "OverseerOpen",
     "OverseerClose",
     "OverseerToggle",
-    "OverseerSaveBundle",
-    "OverseerLoadBundle",
-    "OverseerDeleteBundle",
-    "OverseerRunCmd",
+    "OverseerShell",
     "OverseerRun",
-    "OverseerInfo",
-    "OverseerBuild",
-    "OverseerQuickAction",
     "OverseerTaskAction",
-    "OverseerClearCache",
   },
   init = function()
     vim.api.nvim_create_user_command("OverseerRestartLast", function()
@@ -88,7 +68,6 @@ return {
     require("overseer").setup(opts)
     -- reference: https://github.com/search?q=path%3Alua%2Foverseer%2Ftemplate+language%3ALua+builder&type=code
     -- $_DOTFILES_PATH/vim/lua/overseer/template/user.lua
-    require("overseer").load_template("user")
   end,
   specs = {
     {

@@ -5,7 +5,6 @@ local pattern = vim.regex([[^\(docker-\)\?compose\(\.[a-zA-Z0-9_-]\+\)*\.ya\?ml$
 ---@type overseer.TemplateDefinition
 return {
   name = "docker compose ",
-  priority = 60,
   params = function()
     local stdout = vim.system({ "docker", "compose", "ls", "--format", "json" }):wait().stdout
     local projects = {}

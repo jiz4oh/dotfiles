@@ -23,7 +23,6 @@ local cmds = {
 ---@type overseer.TemplateDefinition
 return {
   name = "docker ",
-  priority = 60,
   params = function() -- https://github.com/stevearc/overseer.nvim/issues/86
     local stdout = vim.system({ "docker", "ps", "--format", "{{lower .Names}}" }):wait().stdout
     local containers = vim.split(stdout or "", "\n", { trimempty = true })

@@ -3,7 +3,6 @@ local files = require("overseer.files")
 ---@type overseer.TemplateProvider
 return {
   name = "Run Shell Script",
-  priority = 60,
   generator = function(opts, cb)
     local scripts = vim.tbl_filter(function(filename)
       return filename:match("%.sh$")
@@ -17,7 +16,7 @@ return {
         },
         builder = function(params)
           return {
-            cmd = { files.join(opts.dir, filename) },
+            cmd = { vim.fs.joinpath(opts.dir, filename) },
             args = params.args,
             components = {
               -- { "on_output_quickfix", set_diagnostics = true },
