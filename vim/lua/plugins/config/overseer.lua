@@ -64,11 +64,6 @@ return {
       },
     },
   },
-  config = function(_, opts)
-    require("overseer").setup(opts)
-    -- reference: https://github.com/search?q=path%3Alua%2Foverseer%2Ftemplate+language%3ALua+builder&type=code
-    -- $_DOTFILES_PATH/vim/lua/overseer/template/user.lua
-  end,
   specs = {
     {
       "folke/which-key.nvim",
