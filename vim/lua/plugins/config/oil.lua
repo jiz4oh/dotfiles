@@ -118,7 +118,7 @@ return {
       },
       ["<C-h>"] = false,
       ["<C-l>"] = false,
-      ["<leader>!"] = {
+      ["<m-->"] = {
         function()
           local config = require("oil.config")
           local bufname = vim.api.nvim_buf_get_name(0)
