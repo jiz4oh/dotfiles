@@ -140,7 +140,7 @@ if has('vim_starting')
   set foldmethod=marker
   set foldnestmax=3
   set foldopen+=jump
-  set foldlevel=1
+  set foldlevelstart=3
 endif
 
 " encoding
@@ -550,7 +550,7 @@ augroup vimrc
   autocmd FileType xdefaults                           setlocal commentstring=!%s
 
   autocmd FileType git,gitcommit        setlocal foldmethod=syntax foldlevel=1
-  autocmd FileType json                 setlocal foldmethod=syntax
+  autocmd FileType json                 setlocal foldmethod=syntax foldlevel=1
   autocmd FileType lua                  setlocal foldmethod=indent
   " set '-' to be part of a word when dealing with CSS classes and IDs.
   autocmd BufReadPost,BufNewFile *.{html,svg,xml,css,scss,less,stylus,js,coffee,erb,jade,blade} setlocal iskeyword+=-
