@@ -30,6 +30,7 @@ end
 ---@type LazyPluginSpec
 return {
   "coder/claudecode.nvim",
+  optional = true,
   opts = {
     -- Server Configuration
     port_range = { min = 10000, max = 65535 },
