@@ -3,7 +3,6 @@ return {
   "CopilotC-Nvim/CopilotChat.nvim",
   optional = true,
   dependencies = {
-    { "zbirenbaum/copilot.lua" },
     { "nvim-lua/plenary.nvim" },
   },
   cmd = {

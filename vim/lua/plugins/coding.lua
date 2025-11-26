@@ -21,7 +21,9 @@ return {
     enabled = vim.g.complete_engine == "blink",
     dependencies = {
       "L3MON4D3/LuaSnip",
-      "zbirenbaum/copilot.lua",
     },
+  },
+  {
+    "fang2hou/blink-copilot",
   },
 }
