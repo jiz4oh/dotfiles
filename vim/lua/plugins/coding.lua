@@ -26,4 +26,8 @@ return {
   {
     "fang2hou/blink-copilot",
   },
+  {
+    "esmuellert/vscode-diff.nvim",
+    dependencies = { "MunifTanjim/nui.nvim" },
+  },
 }
