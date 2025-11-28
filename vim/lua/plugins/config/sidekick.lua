@@ -7,9 +7,13 @@ local mux = {
 return {
   "folke/sidekick.nvim",
   optional = true,
+  ---@class sidekick.Config
   opts = {
     cli = {
       mux = mux,
+      win = {
+        layout = "float"
+      },
     },
   },
   keys = {
