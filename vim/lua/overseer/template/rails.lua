@@ -13,40 +13,36 @@ return {
     if vim.fn.executable("rails") == 0 then
       return {}
     end
+
     if vim.g.loaded_rails ~= 1 then
       return {}
+    end
+
+    if vim.fn["RailsDetect"](opts.dir) ~= 1 then
+      local ret = {
+        {
+          name = format_name("new"),
+          params = {
+            name = {
+              name = "app_name",
+              desc = "Name of the new Rails application",
+              optional = false,
+            },
+          },
+          builder = function(params)
+            return {
+              cmd = { "rails", "new", params.name },
+            }
+          end,
+        },
+      }
+      return cb(ret)
     end
 
     ---@type overseer.TemplateDefinition[]
     local ret = {
       {
-        name = format_name("new"),
-        priority = 1000,
-        condition = {
-          callback = function(o)
-            return vim.fn["RailsDetect"](o.dir) ~= 1
-          end,
-        },
-        params = {
-          name = {
-            name = "app_name",
-            desc = "Name of the new Rails application",
-            optional = false,
-          },
-        },
-        builder = function(params)
-          return {
-            cmd = { "rails", "new", params.name },
-          }
-        end,
-      },
-      {
         name = format_name("runner"),
-        condition = {
-          callback = function(o)
-            return vim.fn["RailsDetect"](o.dir) == 1
-          end,
-        },
         priority = 100,
         params = {
           code = {
@@ -67,12 +63,6 @@ return {
       table.insert(ret, {
         name = format_name(command),
         tags = { TAG.RUN },
-        condition = {
-          callback = function(o)
-            return vim.fn["RailsDetect"](o.dir) == 1
-          end,
-        },
-        priority = 60,
         builder = function()
           return {
             cmd = { "rails", command },
@@ -98,12 +88,6 @@ return {
           if line ~= "new" then
             table.insert(ret, {
               name = format_name(command .. " " .. line),
-              condition = {
-                callback = function(o)
-                  return vim.fn["RailsDetect"](o.dir) == 1
-                end,
-              },
-              priority = 60,
               builder = function()
                 return {
                   cmd = { "rails", command, line },
