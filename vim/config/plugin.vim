@@ -293,6 +293,7 @@ Plug 'junegunn/vader.vim'
 if !has('nvim')
   Plug 'rhysd/vim-healthcheck'
 endif
+Plug 'lfv89/vim-interestingwords'
 " Plug 'romainl/vim-qf'
 " }}}
 
