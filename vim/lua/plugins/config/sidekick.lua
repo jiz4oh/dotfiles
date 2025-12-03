@@ -12,7 +12,7 @@ return {
     cli = {
       mux = mux,
       win = {
-        layout = "float"
+        layout = "float",
       },
     },
   },
@@ -43,6 +43,14 @@ return {
       end,
       mode = { "n", "x" },
       desc = "Sidekick Select Prompt",
+    },
+    {
+      "<leader>ac",
+      function()
+        require("sidekick.nes").clear()
+      end,
+      mode = { "n", "x" },
+      desc = "Clear the current Next Edit Suggestion.",
     },
   },
   specs = {
