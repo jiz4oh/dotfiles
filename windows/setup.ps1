@@ -3,7 +3,24 @@
     Windows Environment Initialization Master Script
     Execution Order: Registry Tweaks -> Winget Install -> Scoop Install
 #>
+Write-Host "Configuring PowerShell Profile for UTF-8..." -ForegroundColor Cyan
 
+$utf8Settings = @"
+
+# --- Auto-configured by Dotfiles ---
+`$OutputEncoding = [System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+[System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
+"@
+
+# 检查 Profile 文件是否存在，不存在则创建
+if (!(Test-Path $PROFILE)) {
+    New-Item -Type File -Path $PROFILE -Force | Out-Null
+}
+
+# 将配置追加到 Profile 文件末尾
+Add-Content -Path $PROFILE -Value $utf8Settings
+
+Write-Host "PowerShell Profile updated to support UTF-8." -ForegroundColor Green
 # Get current script directory
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
