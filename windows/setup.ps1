@@ -1,7 +1,11 @@
 <#
 .SYNOPSIS
     Windows Environment Initialization Master Script
-    Execution Order: Registry Tweaks -> Winget Install -> Scoop Install
+    Execution Order: 
+    1. Registry Tweaks (Elevated)
+    2. Winget Install (Elevated)
+    3. Scoop Install (User)
+    4. Link Dotfiles (User)
     
     NOTE: Please run this script as a STANDARD USER (Not Administrator).
     It will automatically ask for Admin permissions for the steps that need it.
@@ -108,6 +112,24 @@ if ($isAdmin) {
     } else {
         Write-Host "Error: Scoop installer not found at $scoopInstaller" -ForegroundColor Red
     }
+}
+
+# ==============================================================================
+# 6. Link Configuration Files - User Mode
+# ==============================================================================
+Write-Host "`n[4/4] Linking Configuration Files..." -ForegroundColor Cyan
+
+if ($isAdmin) {
+    Write-Host "WARNING: Linking files as Administrator may cause path issues ($HOME)." -ForegroundColor Yellow
+}
+
+# Call the standalone linking script
+$linkScript = Join-Path $scriptPath "link.ps1"
+
+if (Test-Path $linkScript) {
+    & $linkScript
+} else {
+    Write-Host "Error: Linking script not found at $linkScript" -ForegroundColor Red
 }
 
 # ==============================================================================
