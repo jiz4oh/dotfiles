@@ -1,21 +1,21 @@
 # ==========================================
-# Scoop 安装器 (支持自动调用 Scoopfile)
+# Scoop Installer (Supports auto-invoking Scoopfile)
 # ==========================================
 
-Write-Host "⏳ [1/4] 设置执行策略..." -ForegroundColor Cyan
+Write-Host "[1/4] Setting execution policy..." -ForegroundColor Cyan
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
-Write-Host "⬇️ [2/4] 安装 Scoop..." -ForegroundColor Cyan
+Write-Host "[2/4] Installing Scoop..." -ForegroundColor Cyan
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 
-# 检查 Scoop 是否安装成功
+# Check if Scoop installed successfully
 if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
-    Write-Host "❌ Scoop 安装似乎遇到了问题，尝试刷新环境变量..." -ForegroundColor Yellow
-    # 尝试在当前会话中刷新 Path，以便后续命令能找到 scoop
+    Write-Host "Scoop installation might have issues, attempting to refresh environment variables..." -ForegroundColor Yellow
+    # Attempt to refresh Path in current session so subsequent commands can find scoop
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","User") + ";" + [System.Environment]::GetEnvironmentVariable("Path","Machine")
 }
 
-Write-Host "🚀 [3/4] 安装必备加速组件 (Git & Aria2)..." -ForegroundColor Cyan
+Write-Host "[3/4] Installing essential components (Git & Aria2)..." -ForegroundColor Cyan
 scoop install git
 scoop install aria2
 scoop config aria2-warning-enabled false
@@ -24,21 +24,21 @@ scoop config aria2-split 16
 scoop config aria2-min-split-size 1M
 
 # ==========================================
-# 自动调用 Scoopfile
+# Auto-invoke Scoopfile
 # ==========================================
-Write-Host "📜 [4/4] 检查 Scoopfile..." -ForegroundColor Cyan
+Write-Host "[4/4] Checking for Scoopfile..." -ForegroundColor Cyan
 
-# 获取当前脚本所在的目录
+# Get current script directory
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $scoopfilePath = Join-Path $scriptPath "Scoopfile.ps1"
 
 if (Test-Path $scoopfilePath) {
-    Write-Host "✅ 发现 Scoopfile，正在导入你的软件清单..." -ForegroundColor Green
-    # 调用 Scoopfile
+    Write-Host "Scoopfile found, importing software list..." -ForegroundColor Green
+    # Invoke Scoopfile
     & $scoopfilePath
 } else {
-    Write-Host "⚠️ 未找到 Scoopfile.ps1，仅完成了基础安装。" -ForegroundColor Yellow
-    Write-Host "你可以创建一个 Scoopfile.ps1 来批量管理软件。" -ForegroundColor Gray
+    Write-Host "Scoopfile.ps1 not found, only base installation completed." -ForegroundColor Yellow
+    Write-Host "You can create a Scoopfile.ps1 to manage software in batches." -ForegroundColor Gray
 }
 
-Write-Host "`n🎉 全部完成！" -ForegroundColor Green
+Write-Host "`nAll completed!" -ForegroundColor Green
