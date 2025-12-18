@@ -23,38 +23,41 @@ foreach ($bucket in $buckets) {
 # 2. Software List
 # -------------------------------------------------------------------------
 $apps = @(
-    # --- Core Dev Tools ---
-    "git",
-    "mise",            # Version management
-    "yarn",
-    "python",          # Recommended, many tools depend on it
-    "gsudo",
-    
-    # --- CLI Power Tools ---
-    "bat",
-    "curl",
-    "wget",
-    "httpie",
-    "jq",              # Recommended: JSON processor
-    "ripgrep",         # Recommended: Faster grep
-    "fzf",             # Recommended: Fuzzy finder
-    "tree",
-    "universal-ctags",
-    "gnupg",
-    "translate-shell",
-    
-    # --- Mobile Dev ---
-    "adb",             # (scoop install android-platform-tools)
-    "scrcpy",
-    
-    # --- Portable GUI Tools (Best managed by Scoop) ---
-    "pixpin",          # Screenshot tool
-    "telegram",        # Portable version, easy updates
-    "obsidian",        # Notes
-    "localsend",       # LAN transfer
-    
-    # --- Fonts ---
-    "hack-nf"
+  # --- Core Dev Tools ---
+  "git",
+  "mise",            # Version management
+  "yarn",
+  "python",          # Recommended, many tools depend on it
+  "gsudo",
+  
+  # --- CLI Power Tools ---
+  "bat",
+  "curl",
+  "wget",
+  "httpie",
+  "jq",              # Recommended: JSON processor
+  "ripgrep",         # Recommended: Faster grep
+  "fzf",             # Recommended: Fuzzy finder
+  "tree",
+  "universal-ctags",
+  "gnupg",
+  "translate-shell",
+  
+  # --- Mobile Dev ---
+  "adb",             # (scoop install android-platform-tools)
+  "scrcpy",
+  
+  # --- Portable GUI Tools (Best managed by Scoop) ---
+  "pixpin",          # Screenshot tool
+  "telegram",        # Portable version, easy updates
+  "obsidian",        # Notes
+  "localsend",       # LAN transfer
+  "screentogif",
+  "carnac",
+  "autohotkey",
+  
+  # --- Fonts ---
+  "hack-nf"
 )
 
 # -------------------------------------------------------------------------
