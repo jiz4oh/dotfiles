@@ -4,10 +4,10 @@
     Recommended to run as [Administrator].
 #>
 
-# Check for Administrator privileges (Required for databases and input methods)
+# Check for Administrator privileges
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Host "Warning: It is recommended to run this script as Administrator to ensure successful installation." -ForegroundColor Yellow
+    Write-Host "Warning: It is recommended to run this script as Administrator." -ForegroundColor Yellow
     Write-Host "         (Right-click script -> Select 'Run with PowerShell' as Administrator)" -ForegroundColor Gray
     Start-Sleep -Seconds 3
 }
@@ -15,20 +15,21 @@ if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Adm
 Write-Host "Starting Winget batch installation..." -ForegroundColor Cyan
 
 # -------------------------------------------------------------------------
-# Software List (ID List)
+# Software List
 # -------------------------------------------------------------------------
 $apps = @(
     # --- 1. Input Methods ---
     "Rime.Weasel",            # Rime (Weasel) Input Method
     
-    # --- 2. Databases (with Services) ---
-    # "PostgreSQL.PostgreSQL",  # PostgreSQL
+    # --- 2. Databases ---
+    # "PostgreSQL.PostgreSQL",
     
-    # --- 3. System Integration & Common Tools ---
+    # --- 3. System Integration & Tools ---
     "Bitwarden.Bitwarden",
-    "Microsoft.OneDrive",     # Usually pre-installed; installs if missing
+    "Microsoft.OneDrive",     
     "Padagon.QuickLook",
-    "Microsoft.PowerToys"
+    "Microsoft.PowerToys",
+    "Microsoft.PowerShell",
 )
 
 # -------------------------------------------------------------------------
@@ -36,12 +37,6 @@ $apps = @(
 # -------------------------------------------------------------------------
 foreach ($app in $apps) {
     Write-Host "`nProcessing: $app" -ForegroundColor Cyan
-    
-    # Check if installed (Winget list is slow, so we attempt install directly using native checks)
-    # Parameters:
-    # -e / --exact : Exact ID match to avoid installing the wrong package
-    # --accept-package-agreements : Automatically accept license agreements
-    # --accept-source-agreements : Automatically accept source agreements
     
     winget install --id $app -e --accept-package-agreements --accept-source-agreements
     
@@ -55,7 +50,7 @@ foreach ($app in $apps) {
 Write-Host "`n-------------------------------------------------------"
 Write-Host "All tasks completed!" -ForegroundColor Green
 Write-Host "Tips:" -ForegroundColor Yellow
-Write-Host "   1. Rime (Weasel) may require a logout or reboot to take effect."
-Write-Host "   2. For MySQL/PGSQL, please check service status manually (Win+R -> services.msc)."
+Write-Host "   1. Rime may require a reboot."
+Write-Host "   2. PowerShell 7 (if installed) requires a restart of the terminal."
 Write-Host "-------------------------------------------------------"
 Pause
