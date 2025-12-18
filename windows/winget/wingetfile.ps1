@@ -27,7 +27,7 @@ $apps = @(
     # --- 3. System Integration & Tools ---
     "Bitwarden.Bitwarden",
     "Microsoft.OneDrive",     
-    "Padagon.QuickLook",
+    "9NV4BS3L1H4S", # QuickLook Microsoft Store Version
     "Microsoft.PowerToys",
     "Microsoft.PowerShell"
 )
