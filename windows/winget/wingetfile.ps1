@@ -29,7 +29,7 @@ $apps = @(
     "Microsoft.OneDrive",     
     "Padagon.QuickLook",
     "Microsoft.PowerToys",
-    "Microsoft.PowerShell",
+    "Microsoft.PowerShell"
 )
 
 # -------------------------------------------------------------------------
