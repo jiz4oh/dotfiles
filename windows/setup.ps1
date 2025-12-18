@@ -2,9 +2,28 @@
 .SYNOPSIS
     Windows Environment Initialization Master Script
     Execution Order: Registry Tweaks -> Winget Install -> Scoop Install
+    
+    NOTE: Please run this script as a STANDARD USER (Not Administrator).
+    It will automatically ask for Admin permissions for the steps that need it.
 #>
-Write-Host "Configuring PowerShell Profile for UTF-8..." -ForegroundColor Cyan
 
+# Get current script directory
+$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
+
+Write-Host "Starting Windows environment initialization..." -ForegroundColor Cyan
+
+# ==============================================================================
+# 0. Configure PowerShell Profile for UTF-8 (Optional)
+# ==============================================================================
+Write-Host "`n[0/3] Checking PowerShell Profile encoding settings..." -ForegroundColor Cyan
+
+# Check if Profile exists, create if not
+if (!(Test-Path $PROFILE)) {
+    New-Item -Type File -Path $PROFILE -Force | Out-Null
+    Write-Host "Created new PowerShell profile." -ForegroundColor Gray
+}
+
+# The settings to add
 $utf8Settings = @"
 
 # --- Auto-configured by Dotfiles ---
@@ -12,53 +31,89 @@ $utf8Settings = @"
 [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
 "@
 
-# 检查 Profile 文件是否存在，不存在则创建
-if (!(Test-Path $PROFILE)) {
-    New-Item -Type File -Path $PROFILE -Force | Out-Null
-}
-
-# 将配置追加到 Profile 文件末尾
-Add-Content -Path $PROFILE -Value $utf8Settings
-
-Write-Host "PowerShell Profile updated to support UTF-8." -ForegroundColor Green
-# Get current script directory
-$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
-
-Write-Host "Starting Windows environment initialization..." -ForegroundColor Cyan
-
-# 1. Apply Registry Tweaks (Caps -> Ctrl)
-Write-Host "`n[1/3] Modifying key mapping (Caps -> Ctrl)..." -ForegroundColor Yellow
-$regPath = Join-Path $scriptPath "registry\CapsToCtrl.reg"
-if (Test-Path $regPath) {
-    # Silently import registry file
-    Start-Process reg -ArgumentList "import `"$regPath`"" -Wait -NoNewWindow
-    Write-Host "Registry tweaks imported (Requires reboot to take effect)" -ForegroundColor Green
+# Check if settings already exist to avoid duplicate entries
+$profileContent = Get-Content -Path $PROFILE -Raw -ErrorAction SilentlyContinue
+if ($profileContent -notmatch "Auto-configured by Dotfiles") {
+    Add-Content -Path $PROFILE -Value $utf8Settings
+    Write-Host "UTF-8 settings appended to Profile." -ForegroundColor Green
 } else {
-    Write-Host "Registry file not found" -ForegroundColor Red
+    Write-Host "UTF-8 settings already exist in Profile. Skipping." -ForegroundColor Gray
 }
 
-# 2. Execute Winget Installation (Requires Admin Privileges)
-Write-Host "`n[2/3] Installing Winget system-level software..." -ForegroundColor Yellow
+# ==============================================================================
+# 1. Check Current Permissions
+# ==============================================================================
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+$isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+if ($isAdmin) {
+    Write-Host "WARNING: You are running this script as Administrator." -ForegroundColor Yellow
+    Write-Host "Scoop installation will be SKIPPED because it does not support Admin privileges." -ForegroundColor Yellow
+    Start-Sleep -Seconds 2
+}
+
+# ==============================================================================
+# 2. Apply Registry Tweaks (Caps -> Ctrl) - Requires Admin
+# ==============================================================================
+Write-Host "`n[1/3] Modifying key mapping (Caps -> Ctrl)..." -ForegroundColor Cyan
+$regPath = Join-Path $scriptPath "registry\CapsToCtrl.reg"
+
+if (Test-Path $regPath) {
+    if ($isAdmin) {
+        # Already Admin, run directly
+        Start-Process reg -ArgumentList "import `"$regPath`"" -Wait -NoNewWindow
+        Write-Host "Registry tweaks imported." -ForegroundColor Green
+    } else {
+        # Not Admin, request elevation
+        Write-Host "Requesting Admin permission for Registry import..." -ForegroundColor Magenta
+        Start-Process reg -ArgumentList "import `"$regPath`"" -Verb RunAs -Wait
+        Write-Host "Elevation command sent." -ForegroundColor Green
+    }
+} else {
+    Write-Host "Error: Registry file not found at $regPath" -ForegroundColor Red
+}
+
+# ==============================================================================
+# 3. Execute Winget Installation - Requires Admin
+# ==============================================================================
+Write-Host "`n[2/3] Installing Winget system-level software..." -ForegroundColor Cyan
 $wingetScript = Join-Path $scriptPath "winget\wingetfile.ps1"
+
 if (Test-Path $wingetScript) {
-    # Check if running as Admin
-    $isUserAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-    
-    if ($isUserAdmin) {
+    if ($isAdmin) {
+        # Already Admin, run directly
         & $wingetScript
     } else {
-        Write-Host "Non-Admin detected. Requesting elevation to run Winget script..." -ForegroundColor Magenta
+        # Not Admin, request elevation to run the winget script in a new window
+        Write-Host "Requesting Admin permission for Winget..." -ForegroundColor Magenta
         Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File `"$wingetScript`"" -Verb RunAs -Wait
+        Write-Host "Winget step completed." -ForegroundColor Green
+    }
+} else {
+    Write-Host "Error: Winget script not found at $wingetScript" -ForegroundColor Red
+}
+
+# ==============================================================================
+# 4. Execute Scoop Installation - REQUIRES NON-ADMIN
+# ==============================================================================
+Write-Host "`n[3/3] Installing Scoop and development tools..." -ForegroundColor Cyan
+
+if ($isAdmin) {
+    Write-Host "SKIPPED: Scoop cannot be installed as Administrator." -ForegroundColor Red
+    Write-Host "Please run '.\scoop\install_scoop.ps1' manually in a non-admin terminal." -ForegroundColor Gray
+} else {
+    $scoopInstaller = Join-Path $scriptPath "scoop\install_scoop.ps1"
+    if (Test-Path $scoopInstaller) {
+        & $scoopInstaller
+    } else {
+        Write-Host "Error: Scoop installer not found at $scoopInstaller" -ForegroundColor Red
     }
 }
 
-# 3. Execute Scoop Installation (User Level)
-Write-Host "`n[3/3] Installing Scoop and development tools..." -ForegroundColor Yellow
-$scoopInstaller = Join-Path $scriptPath "scoop\install_scoop.ps1"
-# install_scoop.ps1 should contain logic to call scoopfile.ps1
-if (Test-Path $scoopInstaller) {
-    & $scoopInstaller
-}
-
-Write-Host "`nAll steps completed! Please reboot to apply registry changes." -ForegroundColor Green
-Pause
+# ==============================================================================
+# End
+# ==============================================================================
+Write-Host "`nAll steps completed." -ForegroundColor Green
+Write-Host "Note: Registry changes require a reboot to take effect." -ForegroundColor Gray
+Write-Host "`n----------------------------------------"
+Read-Host "Press Enter to exit"
