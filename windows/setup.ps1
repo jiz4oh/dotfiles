@@ -19,7 +19,7 @@ Write-Host "Starting Windows environment initialization..." -ForegroundColor Cya
 # ==============================================================================
 # 0. Configure PowerShell Profile for UTF-8 (Optional)
 # ==============================================================================
-Write-Host "`n[0/3] Checking PowerShell Profile encoding settings..." -ForegroundColor Cyan
+Write-Host "`n[0/4] Checking PowerShell Profile encoding settings..." -ForegroundColor Cyan
 
 # Check if Profile exists, create if not
 if (!(Test-Path $PROFILE)) {
@@ -59,7 +59,7 @@ if ($isAdmin) {
 # ==============================================================================
 # 2. Apply Registry Tweaks (Caps -> Ctrl) - Requires Admin
 # ==============================================================================
-Write-Host "`n[1/3] Modifying key mapping (Caps -> Ctrl)..." -ForegroundColor Cyan
+Write-Host "`n[1/4] Modifying key mapping (Caps -> Ctrl)..." -ForegroundColor Cyan
 $regPath = Join-Path $scriptPath "registry\CapsToCtrl.reg"
 
 if (Test-Path $regPath) {
@@ -80,7 +80,7 @@ if (Test-Path $regPath) {
 # ==============================================================================
 # 3. Execute Winget Installation - Requires Admin
 # ==============================================================================
-Write-Host "`n[2/3] Installing Winget system-level software..." -ForegroundColor Cyan
+Write-Host "`n[2/4] Installing Winget system-level software..." -ForegroundColor Cyan
 $wingetScript = Join-Path $scriptPath "winget\wingetfile.ps1"
 
 if (Test-Path $wingetScript) {
@@ -100,36 +100,22 @@ if (Test-Path $wingetScript) {
 # ==============================================================================
 # 4. Execute Scoop Installation - REQUIRES NON-ADMIN
 # ==============================================================================
-Write-Host "`n[3/3] Installing Scoop and development tools..." -ForegroundColor Cyan
+Write-Host "`n[3/4] Installing Scoop and development tools..." -ForegroundColor Cyan
 
-# Check if the current user IS the built-in Administrator account by checking the well-known SID (ends in -500).
-$isActualAdmin = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value.EndsWith("-500")
+# We no longer skip if Admin. The install_scoop.ps1 now handles Admin logic.
+if ($isAdmin) {
+    Write-Host "Notice: Installing Scoop in Administrator mode." -ForegroundColor Yellow
+}
 
-# $isAdmin is true if the session is elevated (either as Admin user or standard user who used "Run as Admin")
-if ($isActualAdmin) {
-    Write-Host "Running as the built-in Administrator account. Proceeding with Scoop installation." -ForegroundColor Green
-    $scoopInstaller = Join-Path $scriptPath "scoop\install_scoop.ps1"
-    if (Test-Path $scoopInstaller) {
-        & $scoopInstaller
-    } else {
-        Write-Host "Error: Scoop installer not found at $scoopInstaller" -ForegroundColor Red
-    }
-} elseif ($isAdmin -and !$isActualAdmin) {
-    # This case handles a standard user in an elevated prompt.
-    Write-Host "SKIPPED: Running as a standard user in an elevated terminal." -ForegroundColor Yellow
-    Write-Host "Scoop installation is skipped as per your request to avoid installing it for the wrong user profile." -ForegroundColor Gray
+$scoopInstaller = Join-Path $scriptPath "scoop\install_scoop.ps1"
+if (Test-Path $scoopInstaller) {
+    & $scoopInstaller
 } else {
-    # This handles a standard user in a non-elevated prompt (the ideal case for Scoop).
-    $scoopInstaller = Join-Path $scriptPath "scoop\install_scoop.ps1"
-    if (Test-Path $scoopInstaller) {
-        & $scoopInstaller
-    } else {
-        Write-Host "Error: Scoop installer not found at $scoopInstaller" -ForegroundColor Red
-    }
+    Write-Host "Error: Scoop installer not found at $scoopInstaller" -ForegroundColor Red
 }
 
 # ==============================================================================
-# 6. Link Configuration Files - User Mode
+# 5. Link Configuration Files - User Mode
 # ==============================================================================
 Write-Host "`n[4/4] Linking Configuration Files..." -ForegroundColor Cyan
 

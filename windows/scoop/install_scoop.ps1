@@ -1,44 +1,94 @@
-# ==========================================
-# Scoop Installer (Supports auto-invoking Scoopfile)
-# ==========================================
+<#
+.SYNOPSIS
+    Scoop Installer (Compatible with both User and Admin modes)
+    Supports auto-invoking Scoopfile.ps1
+#>
 
-Write-Host "[1/4] Setting execution policy..." -ForegroundColor Cyan
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+$ErrorActionPreference = "Stop"
 
-Write-Host "[2/4] Installing Scoop..." -ForegroundColor Cyan
-Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+Write-Host "Starting Scoop Installation..." -ForegroundColor Cyan
 
-# Check if Scoop installed successfully
-if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
-    Write-Host "Scoop installation might have issues, attempting to refresh environment variables..." -ForegroundColor Yellow
-    # Attempt to refresh Path in current session so subsequent commands can find scoop
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","User") + ";" + [System.Environment]::GetEnvironmentVariable("Path","Machine")
+# ==============================================================================
+# 1. Check Permissions
+# ==============================================================================
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+$isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+# ==============================================================================
+# 2. Download Official Installer
+# ==============================================================================
+# We download to a file instead of using IEX so we can pass arguments (like -RunAsAdmin)
+$installerUrl = "https://get.scoop.sh"
+$installerPath = "$env:TEMP\scoop_installer.ps1"
+
+Write-Host "[1/5] Downloading Scoop installer..." -ForegroundColor Gray
+try {
+    Invoke-RestMethod -Uri $installerUrl -OutFile $installerPath
+} catch {
+    Write-Host "Error downloading Scoop installer. Check internet connection." -ForegroundColor Red
+    exit 1
 }
 
-Write-Host "[3/4] Installing essential components (Git & Aria2)..." -ForegroundColor Cyan
-scoop install git
-scoop install aria2
-scoop config aria2-warning-enabled false
-scoop config aria2-max-connection-per-server 16
-scoop config aria2-split 16
-scoop config aria2-min-split-size 1M
+# ==============================================================================
+# 3. Install Scoop
+# ==============================================================================
+Write-Host "[2/5] Executing installer..." -ForegroundColor Cyan
 
-# ==========================================
-# Auto-invoke Scoopfile
-# ==========================================
-Write-Host "[4/4] Checking for Scoopfile..." -ForegroundColor Cyan
+if ($isAdmin) {
+    Write-Host "NOTICE: Running as Administrator. Installing with global privileges." -ForegroundColor Yellow
+    # Execute with -RunAsAdmin flag
+    & $installerPath -RunAsAdmin
+} else {
+    Write-Host "Running as Standard User." -ForegroundColor Gray
+    # Execute normally
+    & $installerPath
+}
 
-# Get current script directory
+# Cleanup temp file
+if (Test-Path $installerPath) { Remove-Item $installerPath -Force }
+
+# ==============================================================================
+# 4. Refresh Environment Variables
+# ==============================================================================
+# Critical: Refresh Path so 'scoop' command works immediately in this session
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
+if (Get-Command scoop -ErrorAction SilentlyContinue) {
+    Write-Host "Scoop installed successfully." -ForegroundColor Green
+} else {
+    Write-Host "Error: Scoop command not found after installation." -ForegroundColor Red
+    Write-Host "You may need to restart your terminal." -ForegroundColor Yellow
+    exit 1
+}
+
+# ==============================================================================
+# 5. Install Essentials (Git & Aria2)
+# ==============================================================================
+Write-Host "[3/5] Installing essential components..." -ForegroundColor Cyan
+
+# Install Aria2 (Download accelerator)
+if (!(scoop list aria2)) { 
+    Write-Host "Installing Aria2..." -ForegroundColor Gray
+    scoop install aria2 
+    scoop config aria2-warning-enabled false
+    scoop config aria2-max-connection-per-server 16
+    scoop config aria2-split 16
+    scoop config aria2-min-split-size 1M
+}
+
+# ==============================================================================
+# 6. Auto-invoke Scoopfile
+# ==============================================================================
+Write-Host "[4/5] Checking for Scoopfile.ps1..." -ForegroundColor Cyan
+
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $scoopfilePath = Join-Path $scriptPath "Scoopfile.ps1"
 
 if (Test-Path $scoopfilePath) {
-    Write-Host "Scoopfile found, importing software list..." -ForegroundColor Green
-    # Invoke Scoopfile
+    Write-Host "Scoopfile found. Invoking software list..." -ForegroundColor Green
     & $scoopfilePath
 } else {
-    Write-Host "Scoopfile.ps1 not found, only base installation completed." -ForegroundColor Yellow
-    Write-Host "You can create a Scoopfile.ps1 to manage software in batches." -ForegroundColor Gray
+    Write-Host "Scoopfile.ps1 not found. Skipping batch installation." -ForegroundColor Yellow
 }
 
 Write-Host "`nAll completed!" -ForegroundColor Green
