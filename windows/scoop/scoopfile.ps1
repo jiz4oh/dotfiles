@@ -28,6 +28,7 @@ $apps = @(
     "mise",            # Version management
     "yarn",
     "python",          # Recommended, many tools depend on it
+    "gsudo",
     
     # --- CLI Power Tools ---
     "bat",
