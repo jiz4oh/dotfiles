@@ -1,7 +1,11 @@
 <#
 .SYNOPSIS
-    Scoop Installer (Compatible with both User and Admin modes)
-    Supports auto-invoking Scoopfile.ps1
+    Scoop Installer with Smart Privilege Detection
+    
+    Logic:
+    1. Built-in Admin (SID -500) -> Installs with -RunAsAdmin
+    2. Standard User (Non-Elevated) -> Installs normally
+    3. Standard User (Elevated) -> ABORTS (Prevents profile mixing)
 #>
 
 $ErrorActionPreference = "Stop"
@@ -9,15 +13,26 @@ $ErrorActionPreference = "Stop"
 Write-Host "Starting Scoop Installation..." -ForegroundColor Cyan
 
 # ==============================================================================
-# 1. Check Permissions
+# 1. User Identity & Privilege Check
 # ==============================================================================
-$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
-$isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+$identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$principal = New-Object Security.Principal.WindowsPrincipal($identity)
+$isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+$isBuiltInAdmin = $identity.User.Value.EndsWith("-500")
+
+if ($isAdmin -and -not $isBuiltInAdmin) {
+    Write-Host "----------------------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "SKIPPED: You are running as a Standard User with Elevated Privileges." -ForegroundColor Yellow
+    Write-Host "Reason: Installing Scoop in this mode will install it to the Administrator's" -ForegroundColor Gray
+    Write-Host "        profile instead of yours. This causes path and permission errors." -ForegroundColor Gray
+    Write-Host "Action: Please run this script in a NON-ADMIN terminal." -ForegroundColor White
+    Write-Host "----------------------------------------------------------------" -ForegroundColor Yellow
+    exit 0
+}
 
 # ==============================================================================
 # 2. Download Official Installer
 # ==============================================================================
-# We download to a file instead of using IEX so we can pass arguments (like -RunAsAdmin)
 $installerUrl = "https://get.scoop.sh"
 $installerPath = "$env:TEMP\scoop_installer.ps1"
 
@@ -34,35 +49,30 @@ try {
 # ==============================================================================
 Write-Host "[2/5] Executing installer..." -ForegroundColor Cyan
 
-if ($isAdmin) {
-    Write-Host "NOTICE: Running as Administrator. Installing with global privileges." -ForegroundColor Yellow
-    # Execute with -RunAsAdmin flag
+if ($isBuiltInAdmin) {
+    Write-Host "NOTICE: Running as Built-in Administrator. Installing with global privileges." -ForegroundColor Yellow
     & $installerPath -RunAsAdmin
 } else {
     Write-Host "Running as Standard User." -ForegroundColor Gray
-    # Execute normally
     & $installerPath
 }
 
-# Cleanup temp file
 if (Test-Path $installerPath) { Remove-Item $installerPath -Force }
 
 # ==============================================================================
 # 4. Refresh Environment Variables
 # ==============================================================================
-# Critical: Refresh Path so 'scoop' command works immediately in this session
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
 if (Get-Command scoop -ErrorAction SilentlyContinue) {
     Write-Host "Scoop installed successfully." -ForegroundColor Green
 } else {
     Write-Host "Error: Scoop command not found after installation." -ForegroundColor Red
-    Write-Host "You may need to restart your terminal." -ForegroundColor Yellow
     exit 1
 }
 
 # ==============================================================================
-# 5. Install Essentials (Git & Aria2)
+# 5. Install Essentials
 # ==============================================================================
 Write-Host "[3/5] Installing essential components..." -ForegroundColor Cyan
 
@@ -91,4 +101,4 @@ if (Test-Path $scoopfilePath) {
     Write-Host "Scoopfile.ps1 not found. Skipping batch installation." -ForegroundColor Yellow
 }
 
-Write-Host "`nAll completed!" -ForegroundColor Green
+Write-Host "`nScoop setup completed!" -ForegroundColor Green
