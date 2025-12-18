@@ -21,15 +21,6 @@ _G.revert_fix_padding = function()
   io.write("\027]111\027\\")
 end
 
--- fix padding on terminal
-vim.api.nvim_create_autocmd({ "UIEnter", "ColorScheme" }, {
-  callback = fix_padding,
-})
-
-vim.api.nvim_create_autocmd("UILeave", {
-  callback = revert_fix_padding,
-})
-
 ---@type LazyPluginSpec
 return {
   "folke/snacks.nvim",
