@@ -18,13 +18,14 @@ Write-Host "Starting Winget batch installation..." -ForegroundColor Cyan
 # Software List
 # -------------------------------------------------------------------------
 $apps = @(
-    # --- 1. Input Methods ---
+    # --- Input Methods ---
     "Rime.Weasel",            # Rime (Weasel) Input Method
     
-    # --- 2. Databases ---
+    # --- Databases ---
     # "PostgreSQL.PostgreSQL",
     
-    # --- 3. System Integration & Tools ---
+    # --- System Integration & Tools ---
+    "Tailscale.Tailscale",
     "Bitwarden.Bitwarden",
     "Microsoft.OneDrive",     
     "9NV4BS3L1H4S", # QuickLook Microsoft Store Version
