@@ -40,7 +40,7 @@ foreach ($app in $apps) {
     
     winget install --id $app -e --accept-package-agreements --accept-source-agreements
     
-    if ($LASTEXITCODE -eq 0) {
+    if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq -1978335189) {
         Write-Host "Success: $app processing complete" -ForegroundColor Green
     } else {
         Write-Host "Notice: $app return code: $LASTEXITCODE (Ignore if already installed)" -ForegroundColor Yellow
