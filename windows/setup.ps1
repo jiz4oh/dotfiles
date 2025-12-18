@@ -102,10 +102,24 @@ if (Test-Path $wingetScript) {
 # ==============================================================================
 Write-Host "`n[3/3] Installing Scoop and development tools..." -ForegroundColor Cyan
 
-if ($isAdmin) {
-    Write-Host "SKIPPED: Scoop cannot be installed as Administrator." -ForegroundColor Red
-    Write-Host "Please run '.\scoop\install_scoop.ps1' manually in a non-admin terminal." -ForegroundColor Gray
+# Check if the current user IS the built-in Administrator account by checking the well-known SID (ends in -500).
+$isActualAdmin = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value.EndsWith("-500")
+
+# $isAdmin is true if the session is elevated (either as Admin user or standard user who used "Run as Admin")
+if ($isActualAdmin) {
+    Write-Host "Running as the built-in Administrator account. Proceeding with Scoop installation." -ForegroundColor Green
+    $scoopInstaller = Join-Path $scriptPath "scoop\install_scoop.ps1"
+    if (Test-Path $scoopInstaller) {
+        & $scoopInstaller
+    } else {
+        Write-Host "Error: Scoop installer not found at $scoopInstaller" -ForegroundColor Red
+    }
+} elseif ($isAdmin -and !$isActualAdmin) {
+    # This case handles a standard user in an elevated prompt.
+    Write-Host "SKIPPED: Running as a standard user in an elevated terminal." -ForegroundColor Yellow
+    Write-Host "Scoop installation is skipped as per your request to avoid installing it for the wrong user profile." -ForegroundColor Gray
 } else {
+    # This handles a standard user in a non-elevated prompt (the ideal case for Scoop).
     $scoopInstaller = Join-Path $scriptPath "scoop\install_scoop.ps1"
     if (Test-Path $scoopInstaller) {
         & $scoopInstaller
