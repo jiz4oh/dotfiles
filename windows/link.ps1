@@ -78,6 +78,7 @@ Write-Host "Repository Root detected at: $RepoRoot" -ForegroundColor Gray
 
 # --- Git Config ---
 Link-File -Source "$RepoRoot\gitconfig" -Dest "$HOME\.gitconfig"
+Link-File -Source "$RepoRoot\git_template" -Dest "$HOME\.git_template"
 Link-File -Source "$RepoRoot\gitignore" -Dest "$HOME\.gitignore"
 
 # --- PowerShell Profile ---
