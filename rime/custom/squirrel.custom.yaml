@@ -13,9 +13,9 @@ patch:
   app_options/com.apple.finder/ascii_mode: true
 
   app_options/com.runningwithcrayons.Alfred/ascii_mode: true
-  app_options/com.postmanlabs.mac/ascii_mode: true # postman
+  app_options/com.postmanlabs.mac/ascii_mode: true  # postman
 
-  app_options/com.fatcatsoftware.pledpro/ascii_mode: true # PlistEdit
+  app_options/com.fatcatsoftware.pledpro/ascii_mode: true  # PlistEdit
   app_options/md.obsidian/ascii_mode: true
   app_options/com.sublimetext.3/ascii_mode: true
   app_options/com.qvacua.VimR/ascii_mode: true
@@ -29,9 +29,9 @@ patch:
   app_options/com.github.wez.wezterm/ascii_mode: true
 
   # 在以下 app 中默认使用中文输入
-  app_options/com.tdesktop.Telegram/ascii_mode: false # telegram 官网跨平台版
-  app_options/ru.keepcoder.Telegram/ascii_mode: false # telegram appstore 版
-  app_options/org.telegram.desktop/ascii_mode: false # telegram lite
+  app_options/com.tdesktop.Telegram/ascii_mode: false  # telegram 官网跨平台版
+  app_options/ru.keepcoder.Telegram/ascii_mode: false  # telegram appstore 版
+  app_options/org.telegram.desktop/ascii_mode: false  # telegram lite
 
   app_options/com.microsoft.Word/ascii_mode: false
   app_options/com.microsoft.Excel/ascii_mode: false
@@ -56,9 +56,10 @@ patch:
   app_options/com.github.wez.wezterm/vim_mode: true
 
   # 修复以下 app 中的输入框
-  app_options/ru.keepcoder.Telegram/inline: true # telegram appstore 版
-  app_options/com.tdesktop.Telegram/inline: true # telegram 官网跨平台版
-  app_options/org.telegram.desktop/inline: true # telegram 官网跨平台版
+  app_options/ru.keepcoder.Telegram/inline: true  # telegram appstore 版
+  app_options/com.tdesktop.Telegram/inline: true  # telegram 官网跨平台版
+  app_options/org.telegram.desktop/inline: true  # telegram 官网跨平台版
+  app_options/com.microsoft.edgemac/inline: true  # telegram web 版
 
   app_options/net.kovidgoyal.kitty/inline: true
   app_options/com.electron.1zilc.fishing-funds/inline: true
