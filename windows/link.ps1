@@ -80,13 +80,16 @@ Write-Host "Repository Root detected at: $RepoRoot" -ForegroundColor Gray
 Link-File -Source "$RepoRoot\gitconfig" -Dest "$HOME\.gitconfig"
 Link-File -Source "$RepoRoot\git_template" -Dest "$HOME\.git_template"
 Link-File -Source "$RepoRoot\gitignore" -Dest "$HOME\.gitignore"
+# ---
 
 # --- PowerShell Profile ---
 # Current User, Current Host
-Link-File -Source "$RepoRoot\config\powershell\profile.ps1" -Dest "$HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
+Link-File -Source "$RepoRoot\windows\config\powershell\profile.ps1" -Dest "$HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
+# ---
 
-# --- Windows Terminal ---
 $TerminalPath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 Link-File -Source "$RepoRoot\config\terminal\settings.json" -Dest $TerminalPath
+
+Link-File -Source "$RepoRoot\windows\config\FlowLauncher\Settings.json" -Dest "$env:LOCALAPPDATA\FlowLauncher\Settings.json"
 
 Write-Host "Configuration linking completed." -ForegroundColor Green

@@ -10,7 +10,7 @@ Write-Host "Reading Scoopfile manifest..." -ForegroundColor Cyan
 # 1. Configure Buckets (Software Sources)
 # -------------------------------------------------------------------------
 $buckets = @(
-    "extras",      # GUI Software (Firefox, Telegram, Obsidian, etc.)
+    "extras",      # GUI Software
     "versions",    # Multi-version support (PostgreSQL 14)
     "nerd-fonts"   # Fonts (Hack Nerd Font)
 )
@@ -48,13 +48,12 @@ $apps = @(
   "scrcpy",
   
   # --- Portable GUI Tools (Best managed by Scoop) ---
-  "pixpin",          # Screenshot tool
-  "telegram",        # Portable version, easy updates
   "obsidian",        # Notes
   "localsend",       # LAN transfer
   "screentogif",
   "carnac",
   "autohotkey",
+  "flow-launcher",
   
   # --- Fonts ---
   "hack-nf"
