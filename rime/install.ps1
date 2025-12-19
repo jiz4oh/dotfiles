@@ -55,8 +55,20 @@ if (Test-Path $WeaselUserDataDir) {
     $CurrentBackupPath = Join-Path $BackupDir "Rime_backup_$timestamp"
     
     Write-Host "[INFO] Backing up existing Rime configuration to $CurrentBackupPath" -ForegroundColor Cyan
-    Copy-Item -Path $WeaselUserDataDir -Destination $CurrentBackupPath -Recurse -Force
-    Write-Host "[OK] Backup completed successfully." -ForegroundColor Green
+    # Use robocopy to handle files locked by the running Weasel process.
+    # /E -> copy subdirectories, including empty ones.
+    # /B -> copy files in Backup mode, which can copy files in use.
+    # /R:1 -> retry once on error. /W:1 -> wait 1 second between retries.
+    # robocopy's output can be verbose, so we pipe it to Out-Null unless it fails.
+    $robocopyResult = robocopy $WeaselUserDataDir $CurrentBackupPath /E /B /R:1 /W:1
+    if ($LASTEXITCODE -ge 4) {
+        Write-Host "[ERROR] Robocopy failed with exit code $LASTEXITCODE. Backup may be incomplete." -ForegroundColor Red
+        Write-Host "Please ensure you have adequate permissions (try running as Administrator)."
+        # Optional: uncomment to see the full log
+        # Write-Host $robocopyResult
+    } else {
+        Write-Host "[OK] Backup completed successfully." -ForegroundColor Green
+    }
 } else {
     Write-Host "[INFO] No existing Rime configuration found to back up." -ForegroundColor Yellow
 }
@@ -69,15 +81,28 @@ Write-Host "[INFO] Checking rime-frost repository..."
 if (-not (Test-Path (Join-Path $FrostLocalDir ".git"))) {
     Write-Host "[INFO] rime-frost not found locally. Cloning repository..." -ForegroundColor Yellow
     git clone --depth 1 --branch "$FrostVersion" $FrostRepoUrl $FrostLocalDir
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[ERROR] git clone failed. The rime-frost repository could not be downloaded." -ForegroundColor Red
+        Write-Host "        Hint: This is often a network issue. Please check your connection, VPN, or firewall and try again." -ForegroundColor Gray
+        exit 1
+    }
     Write-Host "[OK] rime-frost cloned successfully." -ForegroundColor Green
 } else {
     Write-Host "[INFO] rime-frost found. Fetching updates..."
     Push-Location $FrostLocalDir
     try {
         git fetch --all
-        # A simple pull might be enough, but checkout ensures we are on the right version
         git checkout "$FrostVersion"
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "[ERROR] git checkout of version $FrostVersion failed." -ForegroundColor Red
+            exit 1
+        }
         git pull origin "$FrostVersion"
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "[ERROR] git pull failed. Could not update the rime-frost repository." -ForegroundColor Red
+            Write-Host "        Hint: This is often a network issue. Please check your connection, VPN, or firewall and try again." -ForegroundColor Gray
+            exit 1
+        }
     }
     finally {
         Pop-Location
