@@ -6,8 +6,8 @@ patch:
     - schema: rime_frost_double_pinyin_flypy
   switcher/hotkeys:
     # 切换选项菜单的快捷键
-    - "Alt+Shift+grave"
     - "Control+grave"
+    - "Control+backslash"
   menu/page_size: 8
   ascii_composer:
     good_old_caps_lock: true
