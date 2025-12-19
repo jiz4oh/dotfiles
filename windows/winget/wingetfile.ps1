@@ -25,6 +25,8 @@ $apps = @(
   # "PostgreSQL.PostgreSQL",
   
   # --- System Integration & Tools ---
+  "raycast",
+  "Rustdesk.Rustdesk",
   "Tailscale.Tailscale",
   "Bitwarden.Bitwarden",
   "Microsoft.OneDrive",     
