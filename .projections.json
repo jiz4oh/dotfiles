@@ -17,6 +17,7 @@
   "vim/lua/overseer/template/*.lua": {
     "type": "overseertemplate",
     "template":  [
+      "---@module \"overseer\"",
       "---@type overseer.TemplateDefinition | overseer.TemplateProvider",
       "return {",
       "  name = \"\",",
@@ -52,6 +53,7 @@
   "vim/lua/plugins/config/*.lua": {
     "type": "luaconfig",
     "template":  [
+      "---@module \"lazy\"",
       "---@type LazyPluginSpec",
       "return {",
       "  \"\",",
