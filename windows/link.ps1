@@ -92,4 +92,6 @@ Link-File -Source "$RepoRoot\config\terminal\settings.json" -Dest $TerminalPath
 
 Link-File -Source "$RepoRoot\windows\config\FlowLauncher\Settings.json" -Dest "$env:LOCALAPPDATA\FlowLauncher\Settings.json"
 
+Link-File -Source "$RepoRoot\windows\config\wslconfig" -Dest "$HOME\.wslconfig"
+
 Write-Host "Configuration linking completed." -ForegroundColor Green
