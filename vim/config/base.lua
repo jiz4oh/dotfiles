@@ -148,15 +148,15 @@ if vim.fn.has("nvim-0.8") == 1 then
         })
       end
 
-      if vim.fn.has("nvim-0.10") == 1 then
-        if
-          lsp_supports_method(client, "textDocument/inlayHints")
-          and client.server_capabilities.inlayHintProvider
-        then
-          table.insert(notify, "enable LSP inlay hints")
-          vim.lsp.inlay_hint.enable()
-        end
-      end
+      -- if vim.fn.has("nvim-0.10") == 1 then
+      --   if
+      --     lsp_supports_method(client, "textDocument/inlayHints")
+      --     and client.server_capabilities.inlayHintProvider
+      --   then
+      --     table.insert(notify, "enable LSP inlay hints")
+      --     vim.lsp.inlay_hint.enable()
+      --   end
+      -- end
 
       if vim.fn.has("nvim-0.11") == 1 then
         -- Prefer LSP folding if client supports it
