@@ -115,6 +115,7 @@ return {
         buffer = true,
         mode = "n",
         nowait = true,
+        desc = "Copy current directory",
       },
       ["<C-h>"] = false,
       ["<C-l>"] = false,
