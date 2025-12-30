@@ -29,5 +29,6 @@ return {
   },
   {
     "chrisgrieser/nvim-origami",
+    enabled = vim.fn.has("nvim-0.11") == 1,
   },
 }
