@@ -25,7 +25,7 @@
 [push]
 	default = upstream
   autoSetupRemote = true
-	followtags = true
+	followTags = true
 [rebase]
 	autosquash = true
 [include]
