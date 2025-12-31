@@ -19,7 +19,7 @@ for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
   default-*-packages; do
   dir=$(dirname $rc)
   [ "$dir" != '.' ] && mkdir -pv bak/."$dir" && mkdir -pv ~/."$dir"
-  mv -v ~/."$rc" bak/."$rc" >/dev/null 2>&1
+  mv -fv ~/."$rc" bak/."$rc" >/dev/null 2>&1
   ln -sfv "$BASE/$rc" ~/."$rc"
 done
 
