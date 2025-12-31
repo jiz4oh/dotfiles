@@ -42,6 +42,7 @@ $apps = @(
   "universal-ctags",
   "gnupg",
   "translate-shell",
+  "win32yank",
   
   # --- Mobile Dev ---
   "adb",             # (scoop install android-platform-tools)
