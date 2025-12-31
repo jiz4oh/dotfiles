@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 <#
 .SYNOPSIS
     Configuration Linking Manifest
