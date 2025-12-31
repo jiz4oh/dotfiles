@@ -96,27 +96,6 @@ return {
       ["<C-x>"] = { "actions.select", opts = { horizontal = true } },
       ["<C-s>"] = { "<cmd>update<cr>" },
       ["y."] = { "actions.yank_entry", buffer = true, mode = "n", nowait = true },
-      ["y<C-g>"] = {
-        function()
-          local config = require("oil.config")
-          local fs = require("oil.fs")
-          local bufname = vim.api.nvim_buf_get_name(0)
-          local scheme, path = require("oil.util").parse_url(bufname)
-          if not scheme or not path then
-            return
-          end
-          local adapter = config.get_adapter_by_scheme(scheme)
-          if not adapter or adapter.name ~= "files" then
-            return
-          end
-          local path = fs.posix_to_os_path(path)
-          vim.fn.setreg(vim.v.register, path)
-        end,
-        buffer = true,
-        mode = "n",
-        nowait = true,
-        desc = "Copy current directory",
-      },
       ["<C-h>"] = false,
       ["<C-l>"] = false,
       ["<m-->"] = {
