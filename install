@@ -7,7 +7,12 @@ touch bashrc-extra
 mkdir -pv bak
 
 echo $BASE > ~/.mydotfile
-[ $(command -v zsh) ] && $BASE/scripts/install_zsh
+if command -v zsh >/dev/null; then
+    echo "Configuring Zsh..."
+    "$BASE"/scripts/install_zsh
+else
+    echo "Warning: Zsh is not installed. Skipping Oh-My-Zsh setup."
+fi
 
 # dotfiles
 for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
