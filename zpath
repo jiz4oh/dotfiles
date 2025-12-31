@@ -99,4 +99,28 @@ export PATH=~/.local/bin:$PATH
 export PATH=~/bin:$_DOTFILES_PATH/bin:$PATH
 # or asdf reshim every time
 # export PATH="$PATH:$(go env GOPATH)/bin" 2>/dev/null
+
+# ====================================================
+# WSL SSH Fix: 自动导入 Windows PATH
+# ====================================================
+
+# 1. 检查是否在 WSL 中且找不到 powershell.exe (说明 Windows Path 没加载)
+if grep -qEi "(Microsoft|WSL)" /proc/version && ! command -v powershell.exe >/dev/null; then
+    
+    # 2. 使用绝对路径调用 cmd.exe 获取 Windows 的原生 PATH
+    #    注意：这里使用了 /mnt/c/Windows/System32/cmd.exe 的绝对路径，
+    #    即使当前没有 PATH 也能找到它。
+    WIN_PATH=$(/mnt/c/Windows/System32/cmd.exe /c "echo %PATH%" 2>/dev/null)
+
+    # 3. 将 Windows 格式转换成 WSL 格式
+    #    - tr -d '\r': 去掉 Windows 的回车符
+    #    - sed 's/\\/\//g': 反斜杠换正斜杠
+    #    - sed 's/\([A-Za-z]\):/\/mnt\/\L\1/g': 把 C: 变成 /mnt/c (利用 \L 转小写)
+    #    - tr '; ' ':' : 把分号换成冒号
+    WSL_WIN_PATH=$(printf '%s' "$WIN_PATH" | tr -d '\r\n' | sed -e 's/\\/\//g' -e 's/\([A-Za-z]\):/\/mnt\/\L\1/g' | tr ';' ':')
+
+    # 4. 将转换后的路径追加到当前 PATH (建议放在末尾，避免 Windows 命令覆盖 Linux 命令)
+    export PATH="$PATH:$WSL_WIN_PATH"
+fi
+
 export _ZPATH_LOADED=1
