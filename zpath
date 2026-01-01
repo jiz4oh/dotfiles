@@ -105,7 +105,7 @@ export PATH=~/bin:$_DOTFILES_PATH/bin:$PATH
 # ====================================================
 
 # 1. 检查是否在 WSL 中且找不到 powershell.exe (说明 Windows Path 没加载)
-if grep -qEi "(Microsoft|WSL)" /proc/version && ! command -v powershell.exe >/dev/null; then
+if [ -f /proc/version ] && grep -qEi "(Microsoft|WSL)" /proc/version && ! command -v powershell.exe >/dev/null; then
     
     # 2. 使用绝对路径调用 cmd.exe 获取 Windows 的原生 PATH
     #    注意：这里使用了 /mnt/c/Windows/System32/cmd.exe 的绝对路径，
