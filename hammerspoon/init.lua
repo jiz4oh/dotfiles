@@ -24,9 +24,10 @@ if file ~= nil then
   local dir = file:read()
   file:close()
 
-  require("modules.crontab")
-    :new(hs.fs.pathToAbsolute(dir .. "/rime/squirrel_sync"), hs.timer.hours(7))
-    :start()
+  hs.timer.doAt("5:21", function()
+    local path = hs.fs.pathToAbsolute(dir .. "/rime/squirrel_sync")
+    hs.task.new(path, nil):start()
+  end)
 
   -- random for each different machines
   require("modules.crontab")
