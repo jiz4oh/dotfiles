@@ -56,10 +56,29 @@ if ($isAdmin) {
     Start-Sleep -Seconds 2
 }
 
+
 # ==============================================================================
-# 2. Apply Registry Tweaks (Caps -> Ctrl) - Requires Admin
+# 2. Link Configuration Files - User Mode
 # ==============================================================================
-Write-Host "`n[1/4] Modifying key mapping (Caps -> Ctrl)..." -ForegroundColor Cyan
+Write-Host "`n[1/4] Linking Configuration Files..." -ForegroundColor Cyan
+
+if ($isAdmin) {
+    Write-Host "WARNING: Linking files as Administrator may cause path issues ($HOME)." -ForegroundColor Yellow
+}
+
+# Call the standalone linking script
+$linkScript = Join-Path $scriptPath "link.ps1"
+
+if (Test-Path $linkScript) {
+    & $linkScript
+} else {
+    Write-Host "Error: Linking script not found at $linkScript" -ForegroundColor Red
+}
+
+# ==============================================================================
+# 3. Apply Registry Tweaks (Caps -> Ctrl) - Requires Admin
+# ==============================================================================
+Write-Host "`n[2/4] Modifying key mapping (Caps -> Ctrl)..." -ForegroundColor Cyan
 $regPath = Join-Path $scriptPath "registry\CapsToCtrl.reg"
 
 if (Test-Path $regPath) {
@@ -75,26 +94,6 @@ if (Test-Path $regPath) {
     }
 } else {
     Write-Host "Error: Registry file not found at $regPath" -ForegroundColor Red
-}
-
-# ==============================================================================
-# 3. Execute Winget Installation - Requires Admin
-# ==============================================================================
-Write-Host "`n[2/4] Installing Winget system-level software..." -ForegroundColor Cyan
-$wingetScript = Join-Path $scriptPath "winget\wingetfile.ps1"
-
-if (Test-Path $wingetScript) {
-    if ($isAdmin) {
-        # Already Admin, run directly
-        & $wingetScript
-    } else {
-        # Not Admin, request elevation to run the winget script in a new window
-        Write-Host "Requesting Admin permission for Winget..." -ForegroundColor Magenta
-        Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File `"$wingetScript`"" -Verb RunAs -Wait
-        Write-Host "Winget step completed." -ForegroundColor Green
-    }
-} else {
-    Write-Host "Error: Winget script not found at $wingetScript" -ForegroundColor Red
 }
 
 # ==============================================================================
@@ -115,21 +114,23 @@ if (Test-Path $scoopInstaller) {
 }
 
 # ==============================================================================
-# 5. Link Configuration Files - User Mode
+# 3. Execute Winget Installation - Requires Admin
 # ==============================================================================
-Write-Host "`n[4/4] Linking Configuration Files..." -ForegroundColor Cyan
+Write-Host "`n[4/4] Installing Winget system-level software..." -ForegroundColor Cyan
+$wingetScript = Join-Path $scriptPath "winget\wingetfile.ps1"
 
-if ($isAdmin) {
-    Write-Host "WARNING: Linking files as Administrator may cause path issues ($HOME)." -ForegroundColor Yellow
-}
-
-# Call the standalone linking script
-$linkScript = Join-Path $scriptPath "link.ps1"
-
-if (Test-Path $linkScript) {
-    & $linkScript
+if (Test-Path $wingetScript) {
+    if ($isAdmin) {
+        # Already Admin, run directly
+        & $wingetScript
+    } else {
+        # Not Admin, request elevation to run the winget script in a new window
+        Write-Host "Requesting Admin permission for Winget..." -ForegroundColor Magenta
+        Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File `"$wingetScript`"" -Verb RunAs -Wait
+        Write-Host "Winget step completed." -ForegroundColor Green
+    }
 } else {
-    Write-Host "Error: Linking script not found at $linkScript" -ForegroundColor Red
+    Write-Host "Error: Winget script not found at $wingetScript" -ForegroundColor Red
 }
 
 # ==============================================================================

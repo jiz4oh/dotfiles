@@ -85,7 +85,7 @@ Link-File -Source "$RepoRoot\gitignore" -Dest "$HOME\.gitignore"
 
 # --- PowerShell Profile ---
 # Current User, Current Host
-Link-File -Source "$RepoRoot\windows\config\powershell\profile.ps1" -Dest "$HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
+Link-File -Source "$RepoRoot\windows\config\powershell\profile.ps1" -Dest "$PROFILE"
 # ---
 
 $TerminalPath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
