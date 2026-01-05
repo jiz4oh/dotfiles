@@ -810,7 +810,7 @@ nnoremap x "_x
 nnoremap s "_s
 
 " Substitute.
-xnoremap s :s//g<Left><Left>
+"xnoremap s :s//g<Left><Left>
 
 " Swap implementations of ` and ' jump to markers
 " By default, ' jumps to the marked line, ` jumps to the marked line and
