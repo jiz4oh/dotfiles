@@ -7,6 +7,7 @@ augroup vim-dispatch-autocmd
 
   autocmd BufNewFile,BufRead *.applescript let b:dispatch = get(b:, 'dispatch', 'osascript %:p:S')
   autocmd BufNewFile,BufRead Dockerfile* let b:dispatch = get(b:, 'dispatch', 'docker build %:p:h -t %:p:h:t:gs/.*/\L&/:S')
+  autocmd BufNewFile,BufRead Brewfile let b:dispatch = get(b:, 'dispatch', 'brew bundle --file=%:p')
   " https://docs.docker.com/compose/compose-application-model/#the-compose-file
   autocmd BufNewFile,BufRead compose.yaml,compose.yml,docker-compose.yaml,docker-compose.yml let b:dispatch = get(b:, 'dispatch', 'docker compose -f %:p up -d')
   autocmd BufReadPost *
