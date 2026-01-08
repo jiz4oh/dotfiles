@@ -102,7 +102,7 @@ setup_macos_defaults() {
   echo "macOS defaults have been updated!"
 }
 
-ln -sf "$BASE/raycast/scripts/extra-code-from-mail.applescript "~/Library/Application Scripts/com.apple.mail/"
+ln -sf "$BASE"/raycast/scripts/extra-code-from-mail.applescript "~/Library/Application Scripts/com.apple.mail/"
 setup_macos_defaults
 
 echo "Updating homebrew"
