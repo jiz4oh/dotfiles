@@ -21,6 +21,7 @@ for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
   aider.conf.yml \
   prettierignore yamllint.yaml vintrc.yaml \
   rbenv/default-gems snipaste/config.ini hammerspoon/init.lua config/direnv/direnv.toml\
+  oh-my-zsh/custom/* \
   default-*-packages; do
   dir=$(dirname $rc)
   [ "$dir" != '.' ] && mkdir -pv bak/."$dir" && mkdir -pv ~/."$dir"
