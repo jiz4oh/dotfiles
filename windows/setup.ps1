@@ -58,23 +58,31 @@ if ($isAdmin) {
 
 
 # ==============================================================================
-# 2. Link Configuration Files - User Mode
+# 2. Link Configuration Files - User Mode (Elevated for Symlinks)
 # ==============================================================================
 Write-Host "`n[1/4] Linking Configuration Files..." -ForegroundColor Cyan
 
-if ($isAdmin) {
-    Write-Host "WARNING: Linking files as Administrator may cause path issues ($HOME)." -ForegroundColor Yellow
-}
-
-# Call the standalone linking script
 $linkScript = Join-Path $scriptPath "link.ps1"
 
 if (Test-Path $linkScript) {
-    & $linkScript
+    if ($isAdmin) {
+        # 如果已经是管理员，直接运行
+        & $linkScript
+        Write-Host "Links created (Admin Mode)." -ForegroundColor Green
+    } else {
+        # 如果不是管理员，申请提权运行 link.ps1
+        # 注意：Windows 默认创建软链接需要管理员权限
+        Write-Host "Requesting Admin permission to create Symbolic Links..." -ForegroundColor Magenta
+        
+        # 使用 Start-Process 提权运行，并保持工作目录一致
+        # 传入 -WorkingDirectory 很重要，防止 link.ps1 找不到相对路径的文件
+        Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$linkScript`"" -Verb RunAs -Wait -WorkingDirectory $scriptPath
+        
+        Write-Host "Linking step completed." -ForegroundColor Green
+    }
 } else {
     Write-Host "Error: Linking script not found at $linkScript" -ForegroundColor Red
 }
-
 # ==============================================================================
 # 3. Apply Registry Tweaks (Caps -> Ctrl) - Requires Admin
 # ==============================================================================
