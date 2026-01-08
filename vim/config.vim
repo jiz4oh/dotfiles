@@ -16,6 +16,16 @@ let ruby_no_expensive     = 1
 let g:copilot_model = 'gemini-3-flash-preview'
 let g:node_path = $HOME . '/.local/share/mise/installs/node/22.14.0/bin/node'
 
+if !exists('g:python_executable')
+  if executable('python3')
+    let g:python_executable = 'python3'
+  elseif executable('python')
+    let g:python_executable = 'python'
+  else
+    echoerr "Error: No python executable found (python3 or python)."
+  endif
+endif
+
 if has('nvim')
   let session_dir = has('nvim-0.3.1')
         \ ? stdpath('data').'/session'
