@@ -22,6 +22,6 @@ install_ctags(){
   rm -rf $file
 }
 
-install git curl wget
+install git curl wget python-is-python3
 
 install_ctags
