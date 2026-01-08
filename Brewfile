@@ -20,6 +20,7 @@ brew "universal-ctags", args: ["HEAD"]
 brew "wget"
 brew "yarn"
 brew "zsh"
+cask "alt-tab"
 cask "android-platform-tools"
 cask "bitwarden"
 cask "firefox"
