@@ -24,6 +24,7 @@ EXCLUDES=(
     "--exclude=.svn"
     "--exclude=*.swp"
     "--exclude=*.swo"
+    "--exclude=*.icloud"
     # 在这里添加其他需要排除的文件或模式
     # 例如: "--exclude=node_modules/"
 )
