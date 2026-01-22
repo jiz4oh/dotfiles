@@ -648,6 +648,9 @@ if !has('nvim-0.9')
   command! Inspect echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
 endif
 
+command! AddBOM set bomb | update
+command! RemoveBOM set nobomb | update
+
 command! -nargs=1 Echo echom <q-args>
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
