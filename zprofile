@@ -3,3 +3,7 @@
 
 # Added by OrbStack: command-line tools and integration
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+
+if [ $(command -v tirith) ]; then
+  eval "$(tirith init --shell zsh)"
+fi
