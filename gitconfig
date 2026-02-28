@@ -1,6 +1,6 @@
 [user]
 	name = jiz4oh
-	email = me@jiz4oh.com
+	email = git@jiz4oh.com
 	signingkey = 78FB89DFD72A3154
 [credential]
 	helper = osxkeychain
