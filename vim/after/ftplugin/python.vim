@@ -7,6 +7,7 @@ else
 endif
 
 let path = filter(path, '!empty(v:val)')
+let path = filter(path, 'v:val =~ "^/"')
 let path = map(path, 'v:val . "/tags"')
 let path = join(path, ',')
 
