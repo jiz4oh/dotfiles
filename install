@@ -34,6 +34,7 @@ for dir in git_template ctags.d vim raycast \
   tmux/plugins/tpm \
   prompts \
   config/rubocop config/solargraph config/kitty config/wezterm config/mise \
+  agents \
   hammerspoon/Spoons hammerspoon/modules \
   terminfo; do
   rm -rf bak/$dir
@@ -44,6 +45,16 @@ for dir in git_template ctags.d vim raycast \
   mkdir -pv ~/.$parent_dir
   ln -svf "$BASE/$dir"/ ~/.$dir
 done
+
+# claude skills (reuse agent skills)
+mkdir -pv ~/.claude bak/.claude
+if [ -e ~/.claude/skills ] || [ -L ~/.claude/skills ]; then
+  if [ "$(readlink ~/.claude/skills 2>/dev/null)" != "$HOME/.agents/skills" ]; then
+    rm -rf bak/.claude/skills
+    mv -v ~/.claude/skills bak/.claude/skills >/dev/null 2>&1
+  fi
+fi
+ln -sfnv ~/.agents/skills ~/.claude/skills
 
 # git-prompt
 if [ ! -e ~/.git-prompt.sh ]; then
