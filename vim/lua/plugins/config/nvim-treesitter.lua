@@ -28,6 +28,7 @@ return {
       m.update({ with_sync = true })
     end
   end,
+  branch = "master",
   cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
   enabled = vim.fn.has("nvim-0.10") == 1,
   event = { "VeryLazy" },
