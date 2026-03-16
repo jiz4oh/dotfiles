@@ -6,6 +6,7 @@ python = ["latest", "prefix:3.11"]
 uv = "latest"
 pdm = "latest"
 pnpm = "latest"
+codex = "latest"
 
 "npm:prettier" = "latest"
 "npm:prettier-eslint-cli" = "latest"
