@@ -1,9 +1,10 @@
 local ensure_installed = {
   "fixjson",
+  "harper-ls",
 }
 
 if vim.g.as_ide == 1 then
-  vim.tbl_extend("force", ensure_installed, {
+  ensure_installed = vim.list_extend(ensure_installed, {
     -- you can pin a tool to a particular version
 
     -- you can turn off/on auto_update per tool
@@ -45,6 +46,7 @@ end
 return {
   "WhoIsSethDaniel/mason-tool-installer.nvim",
   optional = true,
+  event = { "VeryLazy" },
   cmd = {
     "MasonToolsInstall",
     "MasonToolsUpdate",
