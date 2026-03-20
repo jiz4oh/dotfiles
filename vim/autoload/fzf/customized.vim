@@ -84,7 +84,13 @@ function! fzf#customized#paths(query, fullscreen) abort
     let l:query = empty(a:query) ? fzf#shellescape('') : '-w ' . fzf#shellescape(a:query)
     let l:grep_cmd = RgWithWildignore('--color=always ' .l:query . ' ' . join(l:paths, ' '))
   else
-    let l:grep_cmd = 'find '. l:paths . ' -type f'
+    let l:path_args = join(map(copy(l:paths), 'shellescape(v:val)'), ' ')
+    if empty(a:query)
+      " Keep the same file:line(:col):text shape used by colon_sink.
+      let l:grep_cmd = 'find '. l:path_args . ' -type f | sed -e "s/$/:1:/"'
+    else
+      let l:grep_cmd = 'find '. l:path_args . ' -type f -print0 | xargs -0 grep --line-number --with-filename --color=always -- ' . fzf#shellescape(a:query) . ' 2>/dev/null'
+    endif
   endif
 
   let container = {}
