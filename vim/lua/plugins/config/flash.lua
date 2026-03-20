@@ -8,7 +8,7 @@ return {
     modes = {
       search = {
         -- 默认在执行 / 或 ? 搜索时开启 Flash
-        enabled = true,
+        enabled = false,
         trigger = "/",
       },
       char = {
