@@ -73,6 +73,10 @@ else
   endfunction
 endif
 
+" 在预设路径集合中检索文件内容。
+" - 有 rg 时：优先使用 RgWithWildignore（速度更快，遵循忽略规则）。
+" - 无 rg 时：退化为 find/grep，并保持 file:line(:col):text 输出格式，
+"   以兼容 fzf#helper#colon_sink 的解析逻辑。
 function! fzf#customized#paths(query, fullscreen) abort
   if !empty(a:query)
     let @/ = a:query
@@ -86,9 +90,10 @@ function! fzf#customized#paths(query, fullscreen) abort
   else
     let l:path_args = join(map(copy(l:paths), 'shellescape(v:val)'), ' ')
     if empty(a:query)
-      " Keep the same file:line(:col):text shape used by colon_sink.
+      " 查询为空时仅列出文件；补上 :1: 让输出形状与 colon_sink 兼容。
       let l:grep_cmd = 'find '. l:path_args . ' -type f | sed -e "s/$/:1:/"'
     else
+      " 查询非空时用 grep 输出文件名与行号；忽略二进制/权限报错噪声。
       let l:grep_cmd = 'find '. l:path_args . ' -type f -print0 | xargs -0 grep --line-number --with-filename --color=always -- ' . fzf#shellescape(a:query) . ' 2>/dev/null'
     endif
   endif
@@ -125,7 +130,8 @@ function! fzf#customized#paths(query, fullscreen) abort
   call fzf#helper#reserve_cmd(container.func)()
 endfunction
 
-" pick up from 'path'
+" 在路径列表中先选择目录，再进入 grep 结果视图。
+" enter: 进入目录搜索；ctrl-l: 切回 paths 视图。
 function! fzf#customized#path(query, fullscreen) abort
   let l:paths = select#get_paths()
 
