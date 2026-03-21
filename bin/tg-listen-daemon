@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+TG_BIN="$HOME/.local/share/mise/shims/tg"
+LOG_DIR="$HOME/Library/Logs/tg-cli"
+mkdir -p "$LOG_DIR"
+cd "$HOME"
+
+echo "[$(date '+%F %T')] tg refresh start" >> "$LOG_DIR/daemon.log"
+"$TG_BIN" refresh --yaml >> "$LOG_DIR/refresh.log" 2>&1 || true
+echo "[$(date '+%F %T')] tg listen start" >> "$LOG_DIR/daemon.log"
+exec "$TG_BIN" listen --persist >> "$LOG_DIR/listen.log" 2>&1

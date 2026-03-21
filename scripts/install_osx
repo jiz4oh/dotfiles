@@ -111,3 +111,6 @@ echo "Updated homebrew"
 
 "$BASE"/scripts/install_asdf
 "$BASE"/rime/install ~/Library/Rime
+
+mkdir -pv ~/Library/LaunchAgents
+ln -sfv "$BASE/macos/Library/LaunchAgents/com.minis.tg.listen.plist" ~/Library/LaunchAgents/com.minis.tg.listen.plist
