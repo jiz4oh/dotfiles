@@ -16,10 +16,12 @@
 #export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 [ -f $HOME/.zpath ] && source $HOME/.zpath
-if [ $(command -v mise) ]; then
-  # https://mise.jdx.dev/dev-tools/shims.html#zshrc-bashrc-files
-  eval "$(mise activate zsh)"
-fi
+# mise: shims-only mode for consistent behavior across interactive/non-interactive shells
+# Keep shims on PATH; do not use `mise activate zsh` on this host.
+# if [ $(command -v mise) ]; then
+#   # https://mise.jdx.dev/dev-tools/shims.html#zshrc-bashrc-files
+#   eval "$(mise activate zsh)"
+# fi
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
