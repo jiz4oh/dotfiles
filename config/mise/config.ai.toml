@@ -1,0 +1,8 @@
+[tools]
+codex = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
+"npm:@google/gemini-cli" = "latest"
+"pipx:xiaohongshu-cli" = "latest"
+"pipx:twitter-cli" = "latest"
+"pipx:kabi-tg-cli" = "latest"
+

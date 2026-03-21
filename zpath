@@ -37,7 +37,7 @@ if [ $(uname -s) = "Darwin" ]; then
   openssl_version=""
   export PATH="$BREW_PREFIX/opt/openssl$openssl_version/bin:$PATH"
   # https://mise.jdx.dev/configuration/environments.html
-  export MISE_ENV=development
+  export MISE_ENV=development,ai
 fi
 
 # if [ $(command -v rbenv) ]; then

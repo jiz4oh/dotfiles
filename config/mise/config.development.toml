@@ -6,7 +6,6 @@ python = ["latest", "prefix:3.11"]
 uv = "latest"
 pdm = "latest"
 pnpm = "latest"
-codex = "latest"
 
 "npm:prettier" = "latest"
 "npm:prettier-eslint-cli" = "latest"
@@ -18,8 +17,6 @@ codex = "latest"
 "npm:stylelint" = "latest"
 "npm:stylelint-config-standard-scss" = "latest"
 "npm:stylelint-prettier" = "latest"
-"npm:@anthropic-ai/claude-code" = "latest"
-"npm:@google/gemini-cli" = "latest"
 "npm:wrangler" = "latest"
 "gem:rubocop" = "latest"
 # support ruby >= 2.4.0
