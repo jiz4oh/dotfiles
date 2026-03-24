@@ -1,20 +1,20 @@
 vim.g.ale_disable_lsp = 1
 
 if vim.fn.has("wsl") == 1 then
-  if vim.fn.executable('win32yank.exe') == 1 then
+  if vim.fn.executable("win32yank.exe") == 1 then
     vim.g.clipboard = {
-      name = 'WslClipboard',
+      name = "WslClipboard",
       copy = {
-        ['+'] = 'win32yank.exe -i --crlf',
-        ['*'] = 'win32yank.exe -i --crlf',
+        ["+"] = "win32yank.exe -i --crlf",
+        ["*"] = "win32yank.exe -i --crlf",
       },
       paste = {
-        ['+'] = 'win32yank.exe -o --lf',
-        ['*'] = 'win32yank.exe -o --lf',
+        ["+"] = "win32yank.exe -o --lf",
+        ["*"] = "win32yank.exe -o --lf",
       },
       cache_enabled = 0,
     }
-    
+
     vim.opt.clipboard = "unnamedplus"
   end
 end
@@ -89,6 +89,7 @@ if vim.fn.has("nvim-0.11") == 1 then
       debounce_text_changes = 100,
     },
   })
+  vim.lsp.enable("ruby_lsp")
 end
 
 if vim.fn.has("nvim-0.5") == 1 then
@@ -153,6 +154,39 @@ if vim.fn.has("nvim-0.8") == 1 then
       if client.name == "clangd" then
         table.insert(notify, "disable semantic tokens")
         client.server_capabilities.semanticTokensProvider = nil
+      end
+
+      -- https://shopify.github.io/ruby-lsp/editors.html#additional-setup-optional
+      if client.name == "ruby_lsp" then
+        vim.api.nvim_buf_create_user_command(bufnr, "ShowRubyDeps", function(opts)
+          local params = vim.lsp.util.make_text_document_params()
+          local showAll = opts.args == "all"
+
+          client.request("rubyLsp/workspace/dependencies", params, function(error, result)
+            if error then
+              print("Error showing deps: " .. error)
+              return
+            end
+
+            local qf_list = {}
+            for _, item in ipairs(result) do
+              if showAll or item.dependency then
+                table.insert(qf_list, {
+                  text = string.format("%s (%s) - %s", item.name, item.version, item.dependency),
+                  filename = item.path,
+                })
+              end
+            end
+
+            vim.fn.setqflist(qf_list)
+            vim.cmd("copen")
+          end, bufnr)
+        end, {
+          nargs = "?",
+          complete = function()
+            return { "all" }
+          end,
+        })
       end
 
       if lsp_supports_method(client, "textDocument/codeLens") then
@@ -356,4 +390,3 @@ if vim.fn.has("nvim-0.11") == 1 then
   vim.keymap.del({ "n", "x" }, "gra")
   vim.keymap.del({ "n" }, "gri")
 end
-

@@ -1,4 +1,4 @@
-local self_managed_servers = { "tsserver", "ts_ls", "rubocop" }
+local self_managed_servers = { "tsserver", "ts_ls", "rubocop", "ruby_lsp" }
 
 ---@type LazyPluginSpec
 return {
@@ -11,7 +11,7 @@ return {
   },
   opts = {
     automatic_enable = {
-        exclude = self_managed_servers,
+      exclude = self_managed_servers,
     },
   },
 }
