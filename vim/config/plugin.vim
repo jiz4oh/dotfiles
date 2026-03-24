@@ -295,6 +295,7 @@ if !has('nvim')
 endif
 Plug 'lfv89/vim-interestingwords'
 " Plug 'romainl/vim-qf'
+Plug 'jiz4oh/eol.vim'
 " }}}
 
 " ============================================================================
