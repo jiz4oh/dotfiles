@@ -1,14 +1,13 @@
+.obsidian/
+
 .aider*
 
 tags.lock
 tags.temp
 
 *tmp/
-/tmp
 /temp
-/node_modules
 
-.byebug_history
 .pry_history
 .envrc
 .mise.local.toml
