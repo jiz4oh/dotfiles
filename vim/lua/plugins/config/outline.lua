@@ -40,6 +40,7 @@ return {
       },
     },
     cmd = { "Outline", "OutlineOpen" },
+    ---@type outline.SetupOpts
     opts = {
       -- Your setup opts here
       providers = {
@@ -47,7 +48,7 @@ return {
         -- Configuration for each provider (3rd party providers are supported)
         lsp = {
           -- Lsp client names to ignore
-          blacklist_clients = {},
+          blacklist_clients = { "vim-language-server" },
         },
         ctags = ctags,
         markdown = {
@@ -55,6 +56,9 @@ return {
           filetypes = { "markdown" },
         },
       },
+      preview_window = {
+        auto_preview = true,
+      }
     },
     opts_extends = { "providers.priority" },
     dependencies = {
