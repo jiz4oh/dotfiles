@@ -21,6 +21,8 @@ alias cd..='cd ..'
 alias l='ls -alF'
 alias ll='ls -lh'
 
+alias gdd='git difftool -d'
+
 if [ $(command -v dust) ]; then
   alias topdir="dust -n 20 -D -r"
 else

@@ -34,6 +34,9 @@ if has('nvim')
   exec 'luafile ' . g:config_home . '/config/base.lua'
 end
 call SourceConfig('plugin')
+if exists(':packadd')
+  silent! packadd nvim.difftool
+end
 
 " https://github.com/neovide/neovide/discussions/1220
 if exists('g:neovide')
