@@ -385,3 +385,7 @@ if vim.fn.has("nvim-0.11") == 1 then
   vim.keymap.del({ "n", "x" }, "gra")
   vim.keymap.del({ "n" }, "gri")
 end
+
+if vim.fn.has("nvim-0.12") == 1 then
+  vim.api.nvim_create_user_command("LspInfo", "checkhealth vim.lsp", { desc = "Lsp Info"})
+end
