@@ -1,4 +1,4 @@
   augroup link_mail
     autocmd!
-    autocmd Filetype markdown let b:link_heading = ''
+    autocmd FileType markdown let b:link_heading = ''
   augroup END
