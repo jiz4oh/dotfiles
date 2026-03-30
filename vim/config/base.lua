@@ -127,12 +127,12 @@ if vim.fn.has("nvim-0.8") == 1 then
         return
       end
       local client = vim.lsp.get_client_by_id(args.data.client_id)
-      if vim.fn.has("nvim-0.9") == 1 then
+        if vim.fn.has("nvim-0.12") == 1 then
         ---@diagnostic disable-next-line: param-type-mismatch
         if lsp_supports_method(client, "textDocument/codeLens") then
           if vim.api.nvim_buf_is_valid(bufnr) then
-            if next(vim.lsp.codelens.get(bufnr)) ~= nil then
-              vim.lsp.codelens.clear(client_id, bufnr)
+            if next(vim.lsp.codelens.get({bufnr = bufnr})) ~= nil then
+              vim.lsp.codelens.enable(false, { client_id = client_id, bufnr = bufnr })
             end
           end
         end
@@ -190,15 +190,10 @@ if vim.fn.has("nvim-0.8") == 1 then
       end
 
       if lsp_supports_method(client, "textDocument/codeLens") then
-        table.insert(notify, "refresh codelens")
-        vim.lsp.codelens.refresh({ bufnr = 0 })
-        vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-          group = lsp_group,
-          buffer = 0,
-          callback = function(event)
-            vim.lsp.codelens.refresh({ bufnr = event.buf })
-          end,
-        })
+        if vim.fn.has("nvim-0.12") == 1 then
+          table.insert(notify, "enable codelens")
+          vim.lsp.codelens.enable(true, { bufnr = 0 })
+        end
       end
 
       -- if vim.fn.has("nvim-0.10") == 1 then
