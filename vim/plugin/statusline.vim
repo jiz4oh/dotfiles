@@ -76,7 +76,7 @@ let s:stl_nc = ""
 let s:stl_nc .= "%f%h%w%r"
 
 function s:status_line_active() abort
-    if g:disable_personal_stl || index(s:disabled_fts, &ft) > -1
+    if g:disable_personal_stl || index(s:disabled_fts, &ft) > -1 || win_gettype(win_getid()) == "popup"
         return
     endif
 
