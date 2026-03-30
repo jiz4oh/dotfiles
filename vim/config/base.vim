@@ -843,7 +843,7 @@ nnoremap dg* g*``dgn
 nnoremap dg# g*``dgN
 
 " remove highlight
-nnoremap <silent><leader>/ :nohls<CR>
+nnoremap <silent><leader>/ :nohlsearch <Bar> silent! call UncolorAllWords()<CR>
 
 function! ChangeCWDTo(dir) abort
   let dir = substitute(expand(a:dir), 'oil://', '', '')
