@@ -52,7 +52,7 @@ Plug 'easymotion/vim-easymotion', { 'on': ['<Plug>(easymotion-prefix)', '<Plug>(
 Plug 'junegunn/fzf', { 'do': ':call fzf#install()' } |
      \ Plug 'junegunn/fzf.vim'
 
-Plug 'tracyone/fzf-funky'
+Plug 'tracyone/fzf-funky', {'on': 'FzfFunky'}
 
 Plug 'preservim/nerdtree', { 'on': ['NERDTree', 'NERDTreeVCS', 'NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'for': 'NERDTree' }
