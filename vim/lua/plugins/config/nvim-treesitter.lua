@@ -7,9 +7,6 @@ local opts = {
     disable = { "git", "gitcommit", "json" },
     additional_vim_regex_highlighting = { "embedded_template", "ruby" },
   },
-  endwise = {
-    enable = true,
-  },
 }
 
 if vim.g.with_treesitter == 1 then
@@ -18,22 +15,74 @@ if vim.g.with_treesitter == 1 then
   })
 end
 
----@type LazyPluginSpec
-return {
-  "nvim-treesitter/nvim-treesitter",
-  optional = true,
+if vim.fn.has("nvim-0.12") == 1 then
   build = function()
     local ok, m = pcall(require, "nvim-treesitter.install")
     if ok then
       m.update({ with_sync = true })
     end
-  end,
-  branch = "master",
+  end
+else
+  build = ":TSUpdate"
+  branch = "master"
+end
+
+local set_treesitter = function(event)
+  if vim.fn.has("nvim-0.12") ~= 1 then
+    local ok, parsers = pcall(require, "nvim-treesitter.parsers")
+    if ok then
+      local filetype = vim.api.nvim_get_option_value("filetype", { buf = event.buf })
+      if parsers.has_parser(filetype) then
+        vim.wo.foldmethod = "expr"
+        vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+        vim.cmd("normal! zvzz")
+      end
+    end
+  else
+    local function start_treesitter(buf, lang)
+      if not vim.treesitter.language.add(lang) then
+        return
+      end
+      vim.wo.foldmethod = "expr"
+      vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+      vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      vim.treesitter.start(buf, lang)
+    end
+
+    local function ensure_parser(buf, lang)
+      if vim.tbl_contains(require("nvim-treesitter").get_installed("parsers"), lang) then
+        start_treesitter(buf, lang)
+      else
+        require("nvim-treesitter").install(lang):await(function()
+          start_treesitter(buf, lang)
+        end)
+      end
+    end
+
+    local buf = event.buf
+    local ft = event.match
+    local lang = vim.treesitter.language.get_lang(ft)
+    if not lang then
+      return
+    end
+
+    if not vim.tbl_contains(require("nvim-treesitter").get_available(), lang) then
+      return
+    end
+    ensure_parser(buf, lang)
+  end
+end
+
+---@type LazyPluginSpec
+return {
+  "nvim-treesitter/nvim-treesitter",
+  optional = true,
+  build = build,
+  branch = branch,
   cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
   enabled = vim.fn.has("nvim-0.10") == 1,
-  event = { "VeryLazy" },
+  lazy = false,
   opts = opts,
-  lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
   init = function(plugin)
     -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
     -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
@@ -43,21 +92,15 @@ return {
     require("lazy.core.loader").add_to_rtp(plugin)
     pcall(require, "nvim-treesitter.query_predicates")
     vim.api.nvim_create_autocmd("FileType", {
-      callback = function(args)
-        local ok, parsers = pcall(require, "nvim-treesitter.parsers")
-        if ok then
-          local filetype = vim.api.nvim_get_option_value("filetype", { buf = args.buf })
-          if parsers.has_parser(filetype) then
-            vim.wo.foldmethod = "expr"
-            vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
-            vim.cmd("normal! zvzz")
-          end
-        end
-      end,
+      pattern = "*",
+      group = vim.api.nvim_create_augroup("ts_setup", {}),
+      callback = set_treesitter,
     })
   end,
   config = function(_, opts)
-    require("nvim-treesitter.configs").setup(opts)
+    if vim.fn.has("nvim-0.12") ~= 1 then
+      require("nvim-treesitter.configs").setup(opts)
+    end
   end,
   specs = {
     {
