@@ -1,3 +1,4 @@
 ripper-tags
 gem-ctags
 bundler
+pry
