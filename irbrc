@@ -5,6 +5,15 @@
   end
 end
 
+begin
+  AwesomePrint.irb!
+  AwesomePrint.defaults = {
+    index: false,
+    indent: 2,
+    ruby19_syntax: true, # 使用 a: 1 语法
+  }
+end
+
 (Pry.start; exit) if defined?(Pry)
 
 IRB.conf[:AUTO_INDENT] = true
