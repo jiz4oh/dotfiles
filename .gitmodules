@@ -13,3 +13,6 @@
 [submodule "agents/skill-sources/superpowers"]
 	path = agents/skill-sources/superpowers
 	url = https://github.com/obra/superpowers
+[submodule "agents/skill-sources/git-commit-helper"]
+	path = agents/skill-sources/git-commit-helper
+	url = https://github.com/alirezarezvani/claude-code-tresor
