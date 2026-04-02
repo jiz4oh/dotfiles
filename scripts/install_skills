@@ -1,0 +1,144 @@
+#!/bin/bash
+
+set -euo pipefail
+
+BASE=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+REGISTRY_FILE="$BASE/agents/skills.registry.tsv"
+SOURCES_ROOT="agents/skill-sources"
+SKILLS_ROOT="agents/skills"
+managed_skills=()
+
+cd "$BASE"
+
+if ! command -v git >/dev/null 2>&1; then
+  echo "Warning: git is not installed. Skipping skill submodules."
+  exit 0
+fi
+
+if [ ! -f "$REGISTRY_FILE" ]; then
+  exit 0
+fi
+
+find_module_name_by_path() {
+  local target_path="$1"
+  git config -f .gitmodules --get-regexp '^submodule\..*\.path$' 2>/dev/null \
+    | awk -v target="$target_path" '
+      $2 == target {
+        key = $1
+        sub(/^submodule\./, "", key)
+        sub(/\.path$/, "", key)
+        print key
+        exit
+      }
+    '
+}
+
+ensure_source_submodule() {
+  local source_id="$1"
+  local repo_url="$2"
+  local branch="$3"
+  local source_path="$SOURCES_ROOT/$source_id"
+  local module_name
+  local current_url
+
+  module_name="$(find_module_name_by_path "$source_path")"
+
+  if [ -n "$module_name" ]; then
+    current_url="$(git config -f .gitmodules --get "submodule.$module_name.url" || true)"
+    if [ "$current_url" != "$repo_url" ]; then
+      git submodule set-url "$source_path" "$repo_url"
+    fi
+    if [ -n "$branch" ]; then
+      git config -f .gitmodules "submodule.$module_name.branch" "$branch"
+    else
+      git config -f .gitmodules --unset "submodule.$module_name.branch" >/dev/null 2>&1 || true
+    fi
+    git submodule sync -- "$source_path"
+    git submodule update --init --recursive --jobs 8 -- "$source_path"
+    return 0
+  fi
+
+  if [ -e "$source_path" ]; then
+    echo "Error: $source_path exists and is not a registered submodule."
+    exit 1
+  fi
+
+  mkdir -p "$SOURCES_ROOT"
+  if [ -n "$branch" ]; then
+    git submodule add -b "$branch" "$repo_url" "$source_path"
+  else
+    git submodule add "$repo_url" "$source_path"
+  fi
+  git submodule update --init --recursive --jobs 8 -- "$source_path"
+}
+
+link_skill() {
+  local source_id="$1"
+  local source_subdir="$2"
+  local skill_name="$3"
+  local source_abs="$BASE/$SOURCES_ROOT/$source_id"
+  local link_target_rel
+  local expected_path
+  local link_path="$BASE/$SKILLS_ROOT/$skill_name"
+
+  if [ "$source_subdir" = "." ]; then
+    expected_path="$source_abs"
+    link_target_rel="../skill-sources/$source_id"
+  else
+    expected_path="$source_abs/$source_subdir"
+    link_target_rel="../skill-sources/$source_id/$source_subdir"
+  fi
+
+  if [ ! -d "$expected_path" ]; then
+    echo "Error: skill source path not found: $expected_path"
+    exit 1
+  fi
+
+  mkdir -p "$SKILLS_ROOT"
+  if [ -e "$link_path" ] && [ ! -L "$link_path" ]; then
+    echo "Error: $SKILLS_ROOT/$skill_name already exists and is not a symlink."
+    exit 1
+  fi
+
+  if [ -L "$link_path" ] && [ "$(readlink "$link_path")" = "$link_target_rel" ]; then
+    return 0
+  fi
+
+  ln -sfn "$link_target_rel" "$link_path"
+}
+
+while IFS=$'\t' read -r source_id repo_url branch source_subdir skill_name; do
+  [ -z "$source_id" ] && continue
+  case "$source_id" in
+    \#*) continue ;;
+  esac
+
+  [ -z "$repo_url" ] && { echo "Error: missing repo_url for source_id=$source_id"; exit 1; }
+  [ -z "$source_subdir" ] && source_subdir="."
+  [ -z "$skill_name" ] && { echo "Error: missing skill_name for source_id=$source_id"; exit 1; }
+  [ "$branch" = "-" ] && branch=""
+  [ "$source_subdir" = "-" ] && source_subdir="."
+
+  ensure_source_submodule "$source_id" "$repo_url" "$branch"
+  link_skill "$source_id" "$source_subdir" "$skill_name"
+  managed_skills+=("$skill_name")
+done < "$REGISTRY_FILE"
+
+if [ -d "$SKILLS_ROOT" ]; then
+  while IFS= read -r link_path; do
+    link_name="$(basename "$link_path")"
+    keep=0
+    for managed_name in "${managed_skills[@]}"; do
+      if [ "$managed_name" = "$link_name" ]; then
+        keep=1
+        break
+      fi
+    done
+
+    [ "$keep" -eq 1 ] && continue
+    link_target="$(readlink "$link_path" || true)"
+    case "$link_target" in
+      ../skill-sources/*) rm -f "$link_path" ;;
+    esac
+  done < <(find "$SKILLS_ROOT" -mindepth 1 -maxdepth 1 -type l 2>/dev/null || true)
+fi

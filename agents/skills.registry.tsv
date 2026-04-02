@@ -1,0 +1,10 @@
+# source_id	repo_url	branch	source_subdir	skill_name
+# branch 用 - 表示默认分支
+# source_subdir 用 . 表示仓库根目录
+notebooklm-skill	https://github.com/PleasePrompto/notebooklm-skill	-	.	notellm
+ordinary-claude-skills	https://github.com/Microck/ordinary-claude-skills	-	skills_all/markitdown	markitdown
+superpowers	https://github.com/obra/superpowers	-	skills/brainstorming	brainstorming
+superpowers	https://github.com/obra/superpowers	-	skills/writing-skills	writing-skills
+superpowers	https://github.com/obra/superpowers	-	skills/writing-plans	writing-plans
+superpowers	https://github.com/obra/superpowers	-	skills/executing-plans	executing-plans
+superpowers	https://github.com/obra/superpowers	-	skills/dispatching-parallel-agents	dispatching-parallel-agents

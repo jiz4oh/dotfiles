@@ -4,3 +4,12 @@
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
+[submodule "agents/skill-sources/notebooklm-skill"]
+	path = agents/skill-sources/notebooklm-skill
+	url = https://github.com/PleasePrompto/notebooklm-skill
+[submodule "agents/skill-sources/ordinary-claude-skills"]
+	path = agents/skill-sources/ordinary-claude-skills
+	url = https://github.com/Microck/ordinary-claude-skills
+[submodule "agents/skill-sources/superpowers"]
+	path = agents/skill-sources/superpowers
+	url = https://github.com/obra/superpowers

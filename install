@@ -99,6 +99,7 @@ fi
 
 if [ "$release" == "Darwin" ]; then
   "$BASE"/scripts/install_osx
+  "$BASE"/scripts/install_skills
 elif [ "$release" == "debian" ]; then
   "$BASE"/scripts/install_debian
 fi

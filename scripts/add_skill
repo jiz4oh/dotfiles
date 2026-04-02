@@ -1,0 +1,90 @@
+#!/bin/bash
+
+set -euo pipefail
+
+BASE=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+REGISTRY_FILE="$BASE/agents/skills.registry.tsv"
+
+usage() {
+  echo "Usage:"
+  echo "  $0 <skill-name> <repo-url> [branch]"
+  echo "  $0 <source-id> <repo-url> <source-subdir> <skill-name> [branch]"
+  exit 1
+}
+
+if [ "$#" -lt 2 ] || [ "$#" -gt 5 ]; then
+  usage
+fi
+
+if [ "$#" -le 3 ]; then
+  skill_name="$1"
+  source_id="$1"
+  repo_url="$2"
+  source_subdir="."
+  branch="${3:-}"
+else
+  source_id="$1"
+  repo_url="$2"
+  source_subdir="$3"
+  skill_name="$4"
+  branch="${5:-}"
+fi
+
+[ -z "$source_id" ] && usage
+[ -z "$repo_url" ] && usage
+[ -z "$source_subdir" ] && usage
+[ -z "$skill_name" ] && usage
+[ -z "$branch" ] && branch="-"
+
+mkdir -p "$BASE/agents"
+if [ ! -f "$REGISTRY_FILE" ]; then
+  cat > "$REGISTRY_FILE" <<'EOF'
+# source_id	repo_url	branch	source_subdir	skill_name
+# branch 用 - 表示默认分支
+# source_subdir 用 . 表示仓库根目录
+EOF
+fi
+
+tmp_file="$(mktemp)"
+awk -F '\t' -v OFS='\t' \
+  -v source_id="$source_id" \
+  -v repo_url="$repo_url" \
+  -v branch="$branch" \
+  -v source_subdir="$source_subdir" \
+  -v skill_name="$skill_name" '
+  BEGIN {
+    updated = 0
+    new_line = source_id OFS repo_url OFS branch OFS source_subdir OFS skill_name
+  }
+  /^#/ || NF == 0 {
+    print $0
+    next
+  }
+  NF >= 5 && $5 == skill_name {
+    if (!updated) {
+      print new_line
+      updated = 1
+    }
+    next
+  }
+  {
+    print $0
+  }
+  END {
+    if (!updated) {
+      print new_line
+    }
+  }
+' "$REGISTRY_FILE" > "$tmp_file"
+
+mv "$tmp_file" "$REGISTRY_FILE"
+
+cd "$BASE"
+if [ "${SKIP_INSTALL:-0}" = "1" ]; then
+  echo "Registry updated: $skill_name"
+  exit 0
+fi
+
+"$BASE/scripts/install_skills"
+
+echo "Skill registered: $skill_name"
