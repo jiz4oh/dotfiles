@@ -12,6 +12,6 @@ return {
   -- },
   {
     "nvim-treesitter/nvim-treesitter",
+    import = "plugins.config.nvim-treesitter",
   },
-  import = "plugins.config.nvim-treesitter",
 }

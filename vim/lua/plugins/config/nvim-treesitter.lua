@@ -22,6 +22,7 @@ if vim.fn.has("nvim-0.12") == 1 then
       m.update({ with_sync = true })
     end
   end
+  branch = "main"
 else
   build = ":TSUpdate"
   branch = "master"
@@ -66,6 +67,10 @@ local set_treesitter = function(event)
       return
     end
 
+    if not require("nvim-treesitter").get_available then
+      return
+    end
+
     if not vim.tbl_contains(require("nvim-treesitter").get_available(), lang) then
       return
     end
@@ -80,7 +85,7 @@ return {
   build = build,
   branch = branch,
   cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
-  enabled = vim.fn.has("nvim-0.10") == 1,
+  enabled = vim.g.with_treesitter == 1,
   lazy = false,
   opts = opts,
   init = function(plugin)

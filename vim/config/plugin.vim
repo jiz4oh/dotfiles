@@ -40,7 +40,7 @@ function! MyLoad(name) abort
   end
 endfunction
 
-let g:with_treesitter = g:as_ide && has('nvim-0.9.2')
+let g:with_treesitter = g:as_ide && has('nvim-0.12') && executable('tree-sitter')
 " Plug 'tpope/vim-rbenv'
 " ============================================================================
 " NAVIGATION / MOVE / Easier READ {{{
