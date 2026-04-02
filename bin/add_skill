@@ -2,7 +2,18 @@
 
 set -euo pipefail
 
-BASE=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  TARGET="$(readlink "$SOURCE")"
+  if [[ "$TARGET" == /* ]]; then
+    SOURCE="$TARGET"
+  else
+    SOURCE="$DIR/$TARGET"
+  fi
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+BASE="$(cd "$SCRIPT_DIR/.." && pwd)"
 REGISTRY_FILE="$BASE/agents/skills.registry.tsv"
 
 usage() {
