@@ -18,6 +18,7 @@ brew "scrcpy"
 brew "tmux"
 brew "translate-shell"
 brew "tree"
+brew "tree-sitter-cli"
 brew "universal-ctags", args: ["HEAD"]
 brew "wget"
 brew "zsh"
