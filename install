@@ -6,6 +6,12 @@ BASE=$(pwd)
 touch bashrc-extra
 mkdir -pv bak
 
+# keep all submodules in sync on every install
+if command -v git >/dev/null && [ -d "$BASE/.git" ]; then
+  git -C "$BASE" submodule sync --recursive >/dev/null 2>&1 || true
+  git -C "$BASE" submodule update --init --recursive >/dev/null 2>&1 || true
+fi
+
 echo $BASE > ~/.mydotfile
 if command -v zsh >/dev/null; then
     echo "Configuring Zsh..."
@@ -67,6 +73,8 @@ mkdir -p ~/bin
 for bin in $BASE/bin/*; do
   ln -svf "$bin" ~/bin
 done
+
+"$BASE"/scripts/install_tmux
 
 OS=$(uname -s)
 if [ "${OS}" == "Darwin" ]; then
