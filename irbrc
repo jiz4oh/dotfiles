@@ -12,6 +12,7 @@ begin
     indent: 2,
     ruby19_syntax: true, # 使用 a: 1 语法
   }
+rescue
 end
 
 (Pry.start; exit) if defined?(Pry)
