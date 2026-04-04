@@ -4,8 +4,7 @@ cd "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")" || exit 1
 BASE=$(pwd)
 
 # Homebrew
-[ -z "$(which brew)" ] &&
-  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+[ -z "$(which brew)" ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 BREW_PREFIX=${BREW_PREFIX:-$(brew --prefix)}
 
