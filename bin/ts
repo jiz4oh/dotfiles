@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# 假设你的代码都放在 ~/projects 下，这里搜索所有子目录
+session_dir=$(fd -t d -d 2 . ~/Projects ~/.config ~/scripts | fzf)
+
+if [[ -z "$session_dir" ]]; then
+    return 0
+fi
+
+# 获取文件夹名称作为 session 名称
+session_name=$(echo "$session_dir" | awk -F/ '{print $(NF-1)"_"$NF}' | tr . _)
+
+# 如果 session 不存在，就在后台创建它，并把工作目录设为该文件夹
+if ! tmux has-session -t "$session_name" 2>/dev/null; then
+    tmux new-session -ds "$session_name" -c "$session_dir"
+fi
+
+# 如果已经在 tmux 里了，就切换过去；如果不在，就 attach 进去
+if [[ -z "$TMUX" ]]; then
+    tmux attach-session -t "$session_name"
+else
+    tmux switch-client -t "$session_name"
+fi
