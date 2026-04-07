@@ -18,8 +18,9 @@ before doing any new task work:
 1. locate the relevant handoff file
 2. read it fully
 3. extract the current task state from it
-4. treat it as the primary source of prior-session context
-5. continue from the handoff instead of asking the user to repeat background unnecessarily
+4. delete that handoff file immediately after it has been read successfully
+5. treat it as the primary source of prior-session context
+6. continue from the handoff instead of asking the user to repeat background unnecessarily
 
 ## how to interpret the handoff
 
@@ -48,6 +49,8 @@ use these sections to reconstruct:
 ## response pattern after reading
 
 after reading the handoff, do not dump the whole document back to the user.
+
+once the handoff has been read into context, remove the file so it is not reused accidentally in a later session.
 
 instead:
 
