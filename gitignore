@@ -1,3 +1,7 @@
+.codex/
+.claude/
+.gemini/
+.omx/
 .obsidian/
 
 .aider*
