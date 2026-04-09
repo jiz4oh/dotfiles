@@ -9,14 +9,16 @@ endif
   "\| PlugInstall --sync | source $MYVIMRC
 "\| endif
 
-if exists(':packadd')
-  silent! packadd! matchit
-  " if has("patch-8.1.0311")
-  "   silent! packadd! cfilter
-  " endif
-else
-  runtime macros/matchit.vim
-endif
+if !g:as_ide
+  if exists(':packadd')
+    silent! packadd! matchit
+    " if has("patch-8.1.0311")
+    "   silent! packadd! cfilter
+    " endif
+  else
+    runtime macros/matchit.vim
+  endif
+end
 
 let g:as_ide = get(g:, 'as_ide', 0)
 
@@ -57,6 +59,9 @@ Plug 'tracyone/fzf-funky', {'on': 'FzfFunky'}
 Plug 'preservim/nerdtree', { 'on': ['NERDTree', 'NERDTreeVCS', 'NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'for': 'NERDTree' }
 Plug 'PhilRunninger/nerdtree-visual-selection', { 'for': 'NERDTree' }
+if g:as_ide
+  Plug 'andymass/vim-matchup'
+end
 " isn't compatible with easymotion
 "if has('nvim')
 "  Plug 'nvimdev/indentmini.nvim'
