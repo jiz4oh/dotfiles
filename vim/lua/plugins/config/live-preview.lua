@@ -55,7 +55,7 @@ return {
     ]])
   end,
   config = function(_, opts)
-    if is_ssh_session() then
+    if vim.F.is_ssh_session() then
       opts.address = tailscale_ip() or "0.0.0.0"
     else
       opts.address = "127.0.0.1"

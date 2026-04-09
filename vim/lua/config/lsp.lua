@@ -1,0 +1,237 @@
+vim.g.ale_disable_lsp = 1
+
+local function lsp_supports_method(client, method)
+  if vim.fn.has("nvim-0.11") == 1 then
+    return client and client:supports_method(method)
+  else
+    ---@diagnostic disable-next-line: param-type-mismatch, missing-parameter
+    return client and client.supports_method(method)
+  end
+end
+
+if vim.fn.has("nvim-0.11") == 1 then
+  vim.lsp.config("*", {
+    flags = {
+      debounce_text_changes = 100,
+    },
+  })
+  vim.lsp.enable("ruby_lsp")
+end
+
+if vim.fn.has("nvim-0.5") == 1 then
+  local original_display_fn = vim.lsp.codelens.display
+  local lens_sign = "🔎 "
+  ---@diagnostic disable-next-line: duplicate-set-field
+  vim.lsp.codelens.display = function(lenses, bufnr, client_id)
+    if not vim.api.nvim_buf_is_loaded(bufnr) then
+      return
+    end
+
+    if not lenses or not next(lenses) then
+      return
+    end
+
+    for _, lens in pairs(lenses) do
+      if lens.command then
+        local text = lens_sign .. lens.command.title:gsub(lens_sign, "")
+        lens.command.title = text
+      end
+    end
+    original_display_fn(lenses, bufnr, client_id)
+  end
+end
+
+if vim.fn.has("nvim-0.8") == 1 then
+  local lsp_group = vim.api.nvim_create_augroup("LspGroup", { clear = true })
+
+  vim.api.nvim_create_autocmd("LspDetach", {
+    group = lsp_group,
+    callback = function(args)
+      local bufnr = args.buf
+      local client_id = args.data.client_id
+      if client_id == nil then
+        return
+      end
+
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if vim.fn.has("nvim-0.12") == 1 then
+        ---@diagnostic disable-next-line: param-type-mismatch
+        if lsp_supports_method(client, "textDocument/codeLens") then
+          if vim.api.nvim_buf_is_valid(bufnr) then
+            if next(vim.lsp.codelens.get({ bufnr = bufnr })) ~= nil then
+              vim.lsp.codelens.enable(false, { client_id = client_id, bufnr = bufnr })
+            end
+          end
+        end
+      end
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = lsp_group,
+    callback = function(args)
+      local bufnr = args.buf
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if client == nil then
+        return
+      end
+
+      local notify = { "LSP " .. client.name .. " attached" }
+
+      if client.name == "clangd" then
+        table.insert(notify, "disable semantic tokens")
+        client.server_capabilities.semanticTokensProvider = nil
+      end
+
+      -- https://shopify.github.io/ruby-lsp/editors.html#additional-setup-optional
+      if client.name == "ruby_lsp" then
+        vim.api.nvim_buf_create_user_command(bufnr, "ShowRubyDeps", function(opts)
+          local params = vim.lsp.util.make_text_document_params()
+          local showAll = opts.args == "all"
+
+          client.request("rubyLsp/workspace/dependencies", params, function(error, result)
+            if error then
+              print("Error showing deps: " .. error)
+              return
+            end
+
+            local qf_list = {}
+            for _, item in ipairs(result) do
+              if showAll or item.dependency then
+                table.insert(qf_list, {
+                  text = string.format("%s (%s) - %s", item.name, item.version, item.dependency),
+                  filename = item.path,
+                })
+              end
+            end
+
+            vim.fn.setqflist(qf_list)
+            vim.cmd("copen")
+          end, bufnr)
+        end, {
+          nargs = "?",
+          complete = function()
+            return { "all" }
+          end,
+        })
+      end
+
+      if lsp_supports_method(client, "textDocument/codeLens") then
+        if vim.fn.has("nvim-0.12") == 1 then
+          table.insert(notify, "enable codelens")
+          vim.lsp.codelens.enable(true, { bufnr = 0 })
+        end
+      end
+
+      -- if vim.fn.has("nvim-0.10") == 1 then
+      --   if
+      --     lsp_supports_method(client, "textDocument/inlayHints")
+      --     and client.server_capabilities.inlayHintProvider
+      --   then
+      --     table.insert(notify, "enable LSP inlay hints")
+      --     vim.lsp.inlay_hint.enable()
+      --   end
+      -- end
+
+      if vim.fn.has("nvim-0.11") == 1 then
+        -- Prefer LSP folding if client supports it
+        if lsp_supports_method(client, "textDocument/foldingRange") then
+          table.insert(notify, "enable LSP folding")
+          local win = vim.api.nvim_get_current_win()
+          vim.wo[win][0].foldmethod = "expr"
+          vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
+        end
+      end
+
+      if
+        lsp_supports_method(client, "textDocument/hover")
+        and client.server_capabilities.hoverProvider
+      then
+        -- no K mapping here, so keywordprg can be overrode by others like scriptease.vim
+        vim.o.keywordprg = "v:lua.vim.lsp.buf.hover({'border': 'rounded')"
+      end
+
+      if
+        lsp_supports_method(client, "textDocument/definition")
+        and client.server_capabilities.definitionProvider
+      then
+        vim.keymap.set({ "n" }, "gd", function()
+          vim.lsp.buf.definition({ on_list = vim.lsp.on_list })
+        end, { buffer = true })
+      end
+
+      if
+        lsp_supports_method(client, "textDocument/declaration")
+        and client.server_capabilities.declarationProvider
+      then
+        vim.keymap.set({ "n" }, "gD", function()
+          vim.lsp.buf.declaration({ on_list = vim.lsp.on_list })
+        end, { buffer = true })
+      end
+
+      vim.g["vista_" .. vim.api.nvim_get_option_value("filetype", { buf = bufnr }) .. "_executive"] =
+        "nvim_lsp"
+
+      if client.name == "ruff" then
+        -- remove ruff from ale_linters since it report to nvim directly
+        local ale_linters_ignore = vim.g.ale_linters_ignore or {}
+        if not vim.tbl_contains(ale_linters_ignore, "ruff") then
+          table.insert(ale_linters_ignore, "ruff")
+          vim.g.ale_linters_ignore = ale_linters_ignore
+        end
+      end
+
+      vim.notify_once(table.concat(notify, ", "), vim.log.levels.INFO)
+    end,
+  })
+end
+
+if vim.fn.has("nvim-0.7") == 1 then
+  vim.keymap.set({ "n" }, "<leader>ld", function()
+    vim.lsp.buf.definition({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lD", function()
+    vim.lsp.buf.declaration({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lt", function()
+    vim.lsp.buf.type_definition({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>li", function()
+    vim.lsp.buf.implementation({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lr", function()
+    vim.lsp.buf.references({ includeDeclaration = false }, { on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>ll", function()
+    vim.lsp.codelens.run()
+  end)
+  vim.keymap.set({ "n" }, "<leader>lR", function()
+    vim.lsp.buf.rename()
+  end)
+  vim.keymap.set({ "n" }, "<leader>ls", function()
+    vim.lsp.buf.document_symbol({ on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lS", function()
+    vim.lsp.buf.workspace_symbol(nil, { on_list = vim.lsp.on_list })
+  end)
+  vim.keymap.set({ "n" }, "<leader>lK", function()
+    vim.lsp.buf.hover({ border = "rounded" })
+  end)
+
+  vim.keymap.set({ "n", "v" }, "<leader>la", function()
+    vim.lsp.buf.code_action()
+  end)
+  vim.keymap.set({ "n", "v" }, "<leader>lf", function()
+    vim.lsp.buf.format()
+  end)
+end
+
+if vim.fn.has("nvim-0.11") == 1 then
+  vim.keymap.del({ "n" }, "grn")
+  vim.keymap.del({ "n", "x" }, "gra")
+  vim.keymap.del({ "n" }, "gri")
+end
+
+if vim.fn.has("nvim-0.12") == 1 then
+  vim.api.nvim_create_user_command("LspInfo", "checkhealth vim.lsp", { desc = "Lsp Info" })
+end
