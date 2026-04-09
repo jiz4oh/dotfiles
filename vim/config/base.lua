@@ -320,6 +320,49 @@ if vim.fn.has("nvim-0.10") == 1 then
   end
 end
 
+local builtin_ui_open = vim.ui.open
+
+function is_ssh_session()
+  return (vim.env.SSH_TTY ~= nil and vim.env.SSH_TTY ~= "")
+    or (vim.env.SSH_CONNECTION ~= nil and vim.env.SSH_CONNECTION ~= "")
+    or (vim.env.SSH_CLIENT ~= nil and vim.env.SSH_CLIENT ~= "")
+end
+
+local function normalize_open_target(path)
+  if path:match("%w+:") then
+    return path
+  end
+
+  return vim.fs.normalize(vim.fn.expand(path))
+end
+
+local function copy_text_via_osc52(text)
+  local osc52 = require("vim.ui.clipboard.osc52")
+  osc52.copy("+")({ text })
+  osc52.copy("*")({ text })
+end
+
+vim.ui.open = function(path, opt)
+  vim.validate("path", path, "string")
+
+  if not is_ssh_session() then
+    return builtin_ui_open(path, opt)
+  end
+
+  local target = normalize_open_target(path)
+  local ok = pcall(copy_text_via_osc52, target)
+  if ok then
+    vim.notify(("Remote session: copied to clipboard: %s"):format(target), vim.log.levels.INFO)
+    return builtin_ui_open(path, opt)
+  end
+
+  vim.notify(
+    ("Remote session detected, but clipboard copy failed: %s"):format(target),
+    vim.log.levels.WARN
+  )
+  return nil, "vim.ui.open: remote session detected but clipboard bridge is unavailable"
+end
+
 if vim.fn.has("nvim-0.6") == 1 then
   local diagnostics_fmt = {
     [vim.diagnostic.severity.ERROR] = "E",
