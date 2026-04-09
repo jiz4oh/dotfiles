@@ -1,12 +1,12 @@
 _ARCH=$(arch)
 unset _ZPATH_LOADED
 
-export OPENAI_BASE_URL="http://ai.brill-ling.ts.net/v1"
-# fallback compibility
-export OPENAI_API_BASE=$OPENAI_BASE_URL
-export OPENAI_API_KEY="-"
-export ANTHROPIC_BASE_URL="http://ai.brill-ling.ts.net"
-export ANTHROPIC_AUTH_TOKEN="-"
+# export OPENAI_BASE_URL="http://ai.brill-ling.ts.net/v1"
+# # fallback compibility
+# export OPENAI_API_BASE=$OPENAI_BASE_URL
+# export OPENAI_API_KEY="-"
+# export ANTHROPIC_BASE_URL="http://ai.brill-ling.ts.net"
+# export ANTHROPIC_AUTH_TOKEN="-"
 
 case $(uname -s) in
   "Darwin")
