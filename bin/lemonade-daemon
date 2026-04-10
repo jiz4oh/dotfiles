@@ -4,6 +4,7 @@ set -eu
 
 PATH="$HOME/bin:$HOME/.local/share/mise/shims:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 export PATH
+export MISE_ENV=development
 
 port="${LEMONADE_PORT:-2489}"
 allow="${LEMONADE_ALLOW:-100.64.0.0/10,192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,127.0.0.1/32}"
