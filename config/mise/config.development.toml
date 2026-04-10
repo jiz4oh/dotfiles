@@ -2,6 +2,7 @@
 ruby = ["latest", "prefix:2.7"]
 node = "lts"
 go = "latest"
+"go:github.com/lemonade-command/lemonade" = "latest"
 python = ["latest", "prefix:3.11"]
 uv = "latest"
 pdm = "latest"
