@@ -113,3 +113,4 @@ echo "Updated homebrew"
 
 mkdir -pv ~/Library/LaunchAgents
 ln -sfv "$BASE/macos/Library/LaunchAgents/com.minis.tg.listen.plist" ~/Library/LaunchAgents/com.minis.tg.listen.plist
+ln -sfv "$BASE/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" ~/Library/LaunchAgents/com.jiz4oh.lemonade.plist

@@ -28,11 +28,26 @@ local function copy_text_via_osc52(text)
   osc52.copy("*")({ text })
 end
 
+local function open_via_lemonade(target)
+  if vim.fn.executable("lemonade") ~= 1 then
+    return nil, "vim.ui.open: lemonade is not available"
+  end
+
+  vim.fn.jobstart({ "lemonade", target }, { detach = true })
+  return true, nil
+end
+
 vim.ui.open = function(path, opt)
   vim.validate("path", path, "string")
 
   if not vim.F.is_ssh_session() then
     return builtin_ui_open(path, opt)
+  end
+
+  local ok, err = open_via_lemonade(target)
+  if ok then
+    vim.notify(("Remote session: opened by lemonade: %s"):format(target), vim.log.levels.INFO)
+    return nil, nil
   end
 
   local target = normalize_open_target(path)
