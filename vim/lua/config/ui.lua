@@ -32,8 +32,24 @@ local function open_via_lemonade(target)
   if vim.fn.executable("lemonade") ~= 1 then
     return nil, "vim.ui.open: lemonade is not available"
   end
+  local on_exit = function(obj)
+    vim.schedule(function()
+      if obj.code ~= 0 then
+        vim.notify(string.format("lemonade occur error %d: %s", obj.code, obj.stderr))
+        return
+      end
+    end)
+  end
 
-  vim.fn.jobstart({ "lemonade", "open", target }, { detach = true })
+  vim.system(
+    { 
+      "lemonade",
+      "open",
+      target 
+    }, 
+    { detach = true },
+    on_exit = on_exit
+  )
   return true, nil
 end
 
