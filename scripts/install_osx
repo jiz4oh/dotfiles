@@ -8,6 +8,11 @@ BASE=$(pwd)
 
 BREW_PREFIX=${BREW_PREFIX:-$(brew --prefix)}
 
+ln -sf "$BASE"/raycast/scripts/extra-code-from-mail.applescript "~/Library/Application Scripts/com.apple.mail/extra-code-from-mail.applescript"
+mkdir -pv ~/Library/LaunchAgents
+ln -sfv "$BASE/macos/Library/LaunchAgents/com.minis.tg.listen.plist" ~/Library/LaunchAgents/com.minis.tg.listen.plist
+ln -sfv "$BASE/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" ~/Library/LaunchAgents/com.jiz4oh.lemonade.plist
+
 # https://x.com/beihuo/status/1899249930289733723
 # https://macos-defaults.com/
 setup_macos_defaults() {
@@ -101,9 +106,6 @@ setup_macos_defaults() {
   echo "macOS defaults have been updated!"
 }
 
-ln -sf "$BASE"/raycast/scripts/extra-code-from-mail.applescript "~/Library/Application Scripts/com.apple.mail/"
-setup_macos_defaults
-
 echo "Updating homebrew"
 brew bundle --no-upgrade
 echo "Updated homebrew"
@@ -111,6 +113,4 @@ echo "Updated homebrew"
 "$BASE"/scripts/install_asdf
 "$BASE"/rime/install ~/Library/Rime
 
-mkdir -pv ~/Library/LaunchAgents
-ln -sfv "$BASE/macos/Library/LaunchAgents/com.minis.tg.listen.plist" ~/Library/LaunchAgents/com.minis.tg.listen.plist
-ln -sfv "$BASE/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" ~/Library/LaunchAgents/com.jiz4oh.lemonade.plist
+setup_macos_defaults

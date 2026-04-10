@@ -1,6 +1,6 @@
 # Client defaults.
 # The target host is injected by the shell wrapper or read from ~/.config/lemonade.host.
 port = 2489
-host = 100.100.169.26
+host = '100.100.169.26'
 trans-loopback = true
 trans-localfile = true
