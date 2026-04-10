@@ -1,3 +1,4 @@
+alias tping='tailscale ping --until-direct=false --c 0'
 # proxychains
 alias pc='proxychains4'
 
