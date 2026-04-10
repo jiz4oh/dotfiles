@@ -38,3 +38,5 @@ if file ~= nil then
     )
     :start()
 end
+
+require("modules.mute")
