@@ -41,15 +41,7 @@ local function open_via_lemonade(target)
     end)
   end
 
-  vim.system(
-    { 
-      "lemonade",
-      "open",
-      target 
-    }, 
-    { detach = true },
-    on_exit = on_exit
-  )
+  vim.system({  "lemonade", "open", target },  { detach = true }, on_exit)
   return true, nil
 end
 
