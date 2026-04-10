@@ -33,7 +33,7 @@ local function open_via_lemonade(target)
     return nil, "vim.ui.open: lemonade is not available"
   end
 
-  vim.fn.jobstart({ "lemonade", target }, { detach = true })
+  vim.fn.jobstart({ "lemonade", "open", target }, { detach = true })
   return true, nil
 end
 
@@ -44,13 +44,13 @@ vim.ui.open = function(path, opt)
     return builtin_ui_open(path, opt)
   end
 
+  local target = normalize_open_target(path)
   local ok, err = open_via_lemonade(target)
   if ok then
     vim.notify(("Remote session: opened by lemonade: %s"):format(target), vim.log.levels.INFO)
     return nil, nil
   end
 
-  local target = normalize_open_target(path)
   local ok = pcall(copy_text_via_osc52, target)
   if ok then
     vim.notify(("Remote session: copied to clipboard: %s"):format(target), vim.log.levels.INFO)
