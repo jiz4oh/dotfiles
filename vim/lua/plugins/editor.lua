@@ -1,6 +1,9 @@
 ---@type LazySpec[]
 return {
   {
+    "andymass/vim-matchup",
+  },
+  {
     "VidocqH/data-viewer.nvim",
     enabled = vim.fn.has("nvim-0.8") == 1,
     import = "plugins.config.data-viewer",
