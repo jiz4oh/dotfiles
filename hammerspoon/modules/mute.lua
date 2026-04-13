@@ -5,6 +5,7 @@ local muteOnSSIDs = {
 }
 
 local mutedBuiltInByWifiAutomation = false
+local hasShownLocationPermissionWarning = false
 
 local function notify(text)
   hs.notify
@@ -13,6 +14,35 @@ local function notify(text)
       informativeText = text,
     })
     :send()
+end
+
+local function hasLocationAccess()
+  if not hs.location.servicesEnabled() then
+    return false, "系统定位服务未开启"
+  end
+
+  local status = hs.location.authorizationStatus()
+  if status == "authorized" then
+    return true, nil
+  end
+
+  return false, "Hammerspoon 缺少定位权限"
+end
+
+local function ensureLocationAccess()
+  local ok, reason = hasLocationAccess()
+  if ok then
+    hasShownLocationPermissionWarning = false
+    return true
+  end
+
+  if not hasShownLocationPermissionWarning then
+    hasShownLocationPermissionWarning = true
+    hs.location.get()
+    notify(reason .. "，请到 Privacy & Security > Location Services 为 Hammerspoon 开启权限")
+  end
+
+  return false
 end
 
 local function shouldMuteForSSID(ssid)
@@ -35,6 +65,10 @@ local function getBuiltInOutput()
 end
 
 local function updateMuteForWifi()
+  if not ensureLocationAccess() then
+    return
+  end
+
   local ssid = hs.wifi.currentNetwork()
   local builtIn = getBuiltInOutput()
 
