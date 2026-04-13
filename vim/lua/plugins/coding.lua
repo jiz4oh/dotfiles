@@ -5,6 +5,10 @@ vim.g.complete_engine = vim.g.complete_engine or vim.fn.has("nvim-0.11") == 1 an
 ---@type LazySpec[]
 return {
   {
+    "lewis6991/gitsigns.nvim",
+    import = "plugins.config.gitsigns",
+  },
+  {
     "hrsh7th/nvim-cmp",
     enabled = vim.g.complete_engine == "cmp",
     dependencies = {
