@@ -1,4 +1,5 @@
 require("config.opts")
+require("config.error_logger")
 require("config.clipboard")
 require("config.diagnostics")
 require("config.lsp")
