@@ -30,7 +30,7 @@ return {
           vim.cmd.normal({ "]c", bang = true })
           return
         end
-        require("gitsigns").nav_hunk("next")
+        require("gitsigns").nav_hunk("next", { target = "all" })
       end,
       desc = "Next Hunk",
     },
@@ -41,9 +41,25 @@ return {
           vim.cmd.normal({ "[c", bang = true })
           return
         end
-        require("gitsigns").nav_hunk("prev")
+        require("gitsigns").nav_hunk("prev", { target = "all" })
       end,
       desc = "Previous Hunk",
+    },
+    {
+      "]C",
+      function()
+        require("gitsigns").nav_hunk("next", { target = "unstaged" })
+      end,
+      desc = "Next unstaged Hunk",
+      nowait = true,
+    },
+    {
+      "[C",
+      function()
+        require("gitsigns").nav_hunk("prev", { target = "unstaged" })
+      end,
+      desc = "Previous unstaged Hunk",
+      nowait = true,
     },
     {
       "<leader>hp",
