@@ -15,7 +15,8 @@ return {
   {
     "milanglacier/yarepl.nvim",
   },
-  {
-    "chrisgrieser/nvim-early-retirement",
-  },
+  -- conflict with LivePreview
+  -- {
+  --   "chrisgrieser/nvim-early-retirement",
+  -- },
 }
