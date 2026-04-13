@@ -91,7 +91,9 @@ end
 " ============================================================================
 " DOCUMENT / MARKDOWN {{{
 " ============================================================================
-Plug 'lervag/wiki.vim'
+if exists('g:notes_root')
+  Plug 'lervag/wiki.vim'
+end
 " Plug 'kkoomen/vim-doge', { 'do': ':call doge#install()' }
 
 if v:version >= 704

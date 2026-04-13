@@ -23,7 +23,7 @@ let g:wiki_link_creation = {
       \}
 
 let g:wiki_journal = {
-      \ 'name': 'journal',
+      \ 'name': 'Daily',
       \ 'frequency': 'daily',
       \ 'date_format': {
       \   'daily' : '%Y/%m/%d',

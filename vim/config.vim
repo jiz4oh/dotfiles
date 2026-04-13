@@ -4,7 +4,10 @@ let g:is_win            = has('win32') || has('win64')
 " https://unix.stackexchange.com/a/78220
 let g:has_linux_desktop = !empty($XDG_CURRENT_DESKTOP)
 
-let g:notes_root              = $HOME . '/Notes'
+let notes              = "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes"
+if exists(notes)
+  let g:notes_root = resolve(expand(notes))
+end
 
 " needs to be defined before vim-polyglot is loaded
 let g:polyglot_disabled = ['sensible', 'autoindent', 'mermaid']
