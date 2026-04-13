@@ -11,3 +11,4 @@ tmp/
 !/hammerspoon/Spoons/ime.spoon/
 !/hammerspoon/Spoons/window.spoon/
 .omx/
+agents/skills/paseo*
