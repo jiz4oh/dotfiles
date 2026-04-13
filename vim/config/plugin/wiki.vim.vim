@@ -3,7 +3,7 @@ let g:wiki_global_load        = 0
 
 let g:wiki_link_creation = {
       \ 'md': {
-      \   'link_type': 'md',
+      \   'link_type': 'wiki',
       \   'url_extension': '.md',
       \   'url_transform': { x ->
       \     substitute(tolower(x), '\s\+', '-', 'g') },
