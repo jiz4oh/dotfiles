@@ -6,6 +6,7 @@ local muteOnSSIDs = {
 
 local mutedBuiltInByWifiAutomation = false
 local hasShownLocationPermissionWarning = false
+local hasShownAudioDiagnostics = false
 
 local function notify(text)
   hs.notify
@@ -49,6 +50,32 @@ local function shouldMuteForSSID(ssid)
   return ssid ~= nil and muteOnSSIDs[ssid] == true
 end
 
+local function deviceSummary(dev)
+  if not dev then
+    return "nil"
+  end
+
+  return table.concat({
+    "name=" .. tostring(dev:name()),
+    "uid=" .. tostring(dev:uid()),
+    "transport=" .. tostring(dev:transportType()),
+    "muted=" .. tostring(dev:muted()),
+  }, " | ")
+end
+
+local function logAudioDiagnostics()
+  local outputs = hs.audiodevice.allOutputDevices()
+  hs.printf("[mute] default output: %s", deviceSummary(hs.audiodevice.defaultOutputDevice()))
+  for index, dev in ipairs(outputs) do
+    hs.printf("[mute] output[%d]: %s", index, deviceSummary(dev))
+  end
+
+  if not hasShownAudioDiagnostics then
+    hasShownAudioDiagnostics = true
+    notify("已输出音频设备诊断日志，请在 Hammerspoon Console 查看")
+  end
+end
+
 local function getBuiltInOutput()
   local current = hs.audiodevice.defaultOutputDevice()
   if current and current:transportType() == "Built-in" then
@@ -73,6 +100,8 @@ local function updateMuteForWifi()
   local builtIn = getBuiltInOutput()
 
   if not builtIn then
+    notify("未找到内建输出设备，请查看 Hammerspoon Console 中的音频诊断日志")
+    logAudioDiagnostics()
     return
   end
 
