@@ -159,7 +159,6 @@ let g:which_key_map['h'] = {
       \ 'p' : 'Preview Hunk',
       \ 's' : 'Stage Hunk',
       \ 'u' : 'Undo Hunk',
-      \ 'f' : 'Fold all unchange lines',
       \ }
 
 let g:which_key_map['l'] = {
@@ -245,6 +244,12 @@ let g:which_key_map_visual['g'] = {
       \ 'b': 'run git-Blame on the current file',
       \ 'l': 'open git Log of selected lines',
       \ 'x': 'open the selected lines in your browser',
+      \ }
+
+let g:which_key_map_visual['h'] = {
+      \ 'name' : '+Hunk',
+      \ 's' : 'Stage Hunk',
+      \ 'u' : 'Undo Hunk',
       \ }
 
 let g:which_key_map_visual['s'] = {
