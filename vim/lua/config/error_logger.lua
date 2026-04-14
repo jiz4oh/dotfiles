@@ -1,7 +1,7 @@
 local logfile = vim.fn.stdpath("state") .. "/errors.log"
 local orig_schedule = vim.schedule
 local orig_schedule_wrap = vim.schedule_wrap
-local unpack_fn = unpack or table.unpack
+local unpack_fn = table.unpack or unpack
 
 vim.g.async_error_logfile = logfile
 
@@ -40,9 +40,10 @@ end
 
 vim.schedule_wrap = function(callback)
   return orig_schedule_wrap(function(...)
+    local argc = select("#", ...)
     local args = { ... }
     local ok, trace = xpcall(function()
-      callback(unpack_fn(args))
+      callback(unpack_fn(args, 1, argc))
     end, function(err)
       return handle_async_error("vim.schedule_wrap callback failed", err)
     end)
