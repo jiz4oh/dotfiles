@@ -6,7 +6,15 @@
     "type": "install"
   },
   "vim/lsp/*.lua": {
-    "type": "lsp"
+    "type": "lsp",
+    "template":  [
+      "---@type vim.lsp.Config",
+      "return {",
+      "  ---@type lspconfig.settings.{}",
+      "  settings = {",
+      "  },",
+      "}"
+    ]
   },
   "vim/ftdetect/*.vim": {
     "type": "ftdetect"
