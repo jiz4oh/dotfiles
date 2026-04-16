@@ -5,6 +5,7 @@ local state = {
   popup_win = nil,
   target_buf = nil,
   target_win = nil,
+  backend = nil,
   temp_output = nil,
   job = nil,
   spinner_timer = nil,
@@ -14,8 +15,13 @@ local state = {
 }
 
 local config = {
-  model = "gpt-5.4-mini",
-  command = "codex",
+  model = {
+    codex = "gpt-5.4-mini",
+    opencode = "openai/gpt-5.4-mini",
+  },
+  backend = nil,
+  command = nil,
+  preferred_commands = { "opencode", "codex" },
   max_title_width = 50,
   body_width = 72,
   reasoning_effort = "low",
@@ -25,7 +31,7 @@ local config = {
 }
 
 local function notify(msg, level)
-  vim.notify(msg, level or vim.log.levels.INFO, { title = "CodexCommit" })
+  vim.notify(msg, level or vim.log.levels.INFO, { title = "AICommit" })
 end
 
 local function buf_is_valid(buf)
@@ -82,6 +88,7 @@ local function destroy_popup()
 
   state.popup_buf = nil
   state.popup_win = nil
+  state.backend = nil
 end
 
 local function hide_popup()
@@ -114,9 +121,10 @@ local function update_spinner_line()
   local frame = config.spinner_frames[state.spinner_index]
   state.spinner_index = (state.spinner_index % #config.spinner_frames) + 1
 
+  local backend = state.backend or "ai"
   vim.bo[state.popup_buf].modifiable = true
   vim.api.nvim_buf_set_lines(state.popup_buf, 0, 1, false, {
-    string.format("Generating commit message... %s", frame),
+    string.format("Generating %s commit message... %s", backend, frame),
   })
   vim.bo[state.popup_buf].modifiable = false
 end
@@ -142,7 +150,7 @@ local function render_timeout()
   set_popup_lines({
     string.format("Timed out after %.1fs.", config.timeout_ms / 1000),
     "",
-    "Codex generation was cancelled.",
+    "Commit message generation was cancelled.",
     "Try again or reduce the staged diff size.",
     "",
     "Keys:",
@@ -184,7 +192,7 @@ local function create_popup_window()
     relative = "editor",
     style = "minimal",
     border = "rounded",
-    title = " Codex Commit ",
+    title = " AI Commit ",
     title_pos = "center",
     width = width,
     height = height,
@@ -199,21 +207,22 @@ local function create_popup_window()
   vim.keymap.set("n", "q", hide_popup, { buffer = state.popup_buf, silent = true })
 end
 
-local function open_popup(target_buf, target_win)
+local function open_popup(target_buf, target_win, backend)
   destroy_popup()
 
   state.target_buf = target_buf
   state.target_win = target_win
+  state.backend = backend
   state.popup_buf = vim.api.nvim_create_buf(false, true)
   vim.bo[state.popup_buf].buftype = "nofile"
   vim.bo[state.popup_buf].bufhidden = "hide"
   vim.bo[state.popup_buf].swapfile = false
   vim.bo[state.popup_buf].filetype = "gitcommit"
 
-  create_popup_window(target_buf, target_win)
+  create_popup_window()
 
   set_popup_lines({
-    "Generating commit message...",
+    string.format("Generating %s commit message...", state.backend or "ai"),
     "",
     "Keys:",
     "  <C-y> apply to current gitcommit buffer",
@@ -334,6 +343,180 @@ local function render_result(raw)
   end
 end
 
+local function infer_backend(command)
+  local name = vim.fs.basename(command)
+  if name == "opencode" then
+    return "opencode"
+  end
+  if name == "codex" then
+    return "codex"
+  end
+  return nil
+end
+
+local function resolve_cli()
+  if config.command then
+    if vim.fn.executable(config.command) ~= 1 then
+      return nil, string.format("Configured AI CLI '%s' is not available in PATH", config.command)
+    end
+
+    local backend = config.backend or infer_backend(config.command)
+    if not backend then
+      return nil, "Unable to infer AI CLI backend; set setup({ backend = 'opencode' | 'codex' })"
+    end
+
+    return { command = config.command, backend = backend }, nil
+  end
+
+  for _, command in ipairs(config.preferred_commands) do
+    if vim.fn.executable(command) == 1 then
+      local backend = infer_backend(command)
+      if backend then
+        return { command = command, backend = backend }, nil
+      end
+    end
+  end
+
+  return nil, "No supported AI CLI found in PATH (tried: opencode, codex)"
+end
+
+local function normalize_reasoning_effort(backend)
+  local effort = config.reasoning_effort
+  if not effort or effort == "" then
+    return nil
+  end
+
+  local maps = {
+    codex = {
+      minimal = "low",
+      low = "low",
+      medium = "medium",
+      high = "high",
+      max = "high",
+    },
+    opencode = {
+      low = "minimal",
+      minimal = "minimal",
+      medium = "medium",
+      high = "high",
+      max = "max",
+    },
+  }
+
+  return (maps[backend] and maps[backend][effort]) or effort
+end
+
+local function resolve_model(backend)
+  if type(config.model) == "table" then
+    return config.model[backend]
+  end
+
+  if type(config.model) == "string" and config.model ~= "" then
+    return config.model
+  end
+
+  return nil
+end
+
+local function build_cli_invocation(cli, prompt)
+  if cli.backend == "codex" then
+    state.temp_output = vim.fn.tempname()
+
+    local command = {
+      cli.command,
+      "exec",
+      "--ephemeral",
+      "--skip-git-repo-check",
+      "--color",
+      "never",
+      "-s",
+      "read-only",
+    }
+    local effort = normalize_reasoning_effort("codex")
+    if effort then
+      vim.list_extend(command, { "-c", string.format('model_reasoning_effort="%s"', effort) })
+    end
+    local model = resolve_model("codex")
+    if model then
+      vim.list_extend(command, { "-m", model })
+    end
+    vim.list_extend(command, { "-o", state.temp_output, "-" })
+
+    return command, {
+      text = true,
+      stdin = prompt,
+    }
+  end
+
+  if cli.backend == "opencode" then
+    local command = {
+      cli.command,
+      "run",
+      "--format",
+      "json",
+      "--pure",
+    }
+    local model = resolve_model("opencode")
+    if model then
+      vim.list_extend(command, { "-m", model })
+    end
+
+    local effort = normalize_reasoning_effort("opencode")
+    if effort then
+      vim.list_extend(command, { "--variant", effort })
+    end
+
+    return command, {
+      text = true,
+      stdin = prompt,
+      env = vim.tbl_extend("force", vim.fn.environ(), {
+        OPENCODE_CONFIG_CONTENT = '{"permission":{"edit":"deny","bash":"deny"}}',
+      }),
+    }
+  end
+
+  return nil, nil
+end
+
+local function parse_opencode_json_output(raw)
+  local lines = vim.split(raw or "", "\n", { plain = true, trimempty = true })
+  local chunks = {}
+
+  for _, line in ipairs(lines) do
+    local ok, decoded = pcall(vim.json.decode, line)
+    if ok and type(decoded) == "table" and decoded.type == "text" then
+      local part = decoded.part
+      if type(part) == "table" and type(part.text) == "string" and part.text ~= "" then
+        table.insert(chunks, part.text)
+      end
+    end
+  end
+
+  return table.concat(chunks, "\n")
+end
+
+local function read_cli_output(cli, obj)
+  if cli.backend == "codex" then
+    local output = {}
+    if state.temp_output and vim.fn.filereadable(state.temp_output) == 1 then
+      output = vim.fn.readfile(state.temp_output)
+    end
+    cleanup_tempfile()
+    return table.concat(output, "\n")
+  end
+
+  cleanup_tempfile()
+
+  if cli.backend == "opencode" then
+    local parsed = parse_opencode_json_output(obj.stdout or "")
+    if parsed ~= "" then
+      return parsed
+    end
+  end
+
+  return obj.stdout or ""
+end
+
 function M.reopen_popup()
   if not buf_is_valid(state.popup_buf) then
     notify("No existing commit popup", vim.log.levels.WARN)
@@ -346,10 +529,10 @@ function M.reopen_popup()
   end
 
   local target_buf = buf_is_valid(state.target_buf) and state.target_buf
-    or vim.api.nvim_get_current_buf()
+      or vim.api.nvim_get_current_buf()
   local target_win = win_is_valid(state.target_win) and state.target_win
-    or vim.api.nvim_get_current_win()
-  create_popup_window(target_buf, target_win)
+      or vim.api.nvim_get_current_win()
+  create_popup_window()
 end
 
 function M.generate()
@@ -361,8 +544,9 @@ function M.generate()
     return
   end
 
-  if vim.fn.executable(config.command) ~= 1 then
-    notify("codex CLI is not available in PATH", vim.log.levels.ERROR)
+  local cli, cli_err = resolve_cli()
+  if not cli then
+    notify(cli_err, vim.log.levels.ERROR)
     return
   end
 
@@ -373,32 +557,20 @@ function M.generate()
     return
   end
 
-  open_popup(target_buf, target_win)
+  state.backend = cli.backend
+  open_popup(target_buf, target_win, cli.backend)
 
-  state.temp_output = vim.fn.tempname()
   local prompt = build_prompt(diff)
+  local command, opts = build_cli_invocation(cli, prompt)
+  if not command or not opts then
+    hide_popup()
+    notify("Unsupported AI CLI backend", vim.log.levels.ERROR)
+    return
+  end
 
-  state.job = vim.system({
-    config.command,
-    "exec",
-    "--ephemeral",
-    "--skip-git-repo-check",
-    "--color",
-    "never",
-    "-s",
-    "read-only",
-    "-c",
-    string.format('model_reasoning_effort="%s"', config.reasoning_effort),
-    "-m",
-    config.model,
-    "-o",
-    state.temp_output,
-    "-",
-  }, {
+  state.job = vim.system(command, vim.tbl_extend("force", opts, {
     cwd = cwd,
-    text = true,
-    stdin = prompt,
-  }, function(obj)
+  }), function(obj)
     vim.schedule(function()
       if not buf_is_valid(state.popup_buf) then
         stop_timeout()
@@ -417,7 +589,7 @@ function M.generate()
         stop_timeout()
         local err = obj.stderr and obj.stderr:gsub("%s+$", "") or ""
         set_popup_lines({
-          "Codex generation failed.",
+          "AI CLI generation failed.",
           "",
           err ~= "" and err or ("Exit code: " .. obj.code),
         })
@@ -428,13 +600,9 @@ function M.generate()
         return
       end
 
-      local output = {}
-      if state.temp_output and vim.fn.filereadable(state.temp_output) == 1 then
-        output = vim.fn.readfile(state.temp_output)
-      end
-      cleanup_tempfile()
+      local output = read_cli_output(cli, obj)
       state.job = nil
-      render_result(table.concat(output, "\n"))
+      render_result(output)
     end)
   end)
 end
