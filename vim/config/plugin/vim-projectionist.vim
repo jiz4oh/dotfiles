@@ -49,6 +49,7 @@ let g:projectionist_heuristics = {
       \   'docker-compose.yml': {'type': 'compose'},
       \   'README.md': {'type': 'doc'},
       \   'README.markdown': {'type': 'doc'},
+      \   'docs/*': {'type': 'doc'},
       \   'doc/*': {'type': 'doc'},
       \ },
       \ '.hg/|.svn/|.bzr/': {
