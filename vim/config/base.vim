@@ -130,7 +130,7 @@ set smarttab
 set shiftround
 
 " indent
-set autoindent smartindent shiftround
+set autoindent shiftround
 set shiftwidth=2                " auto indent use 2 spaces
 set tabstop=2                   " insert mode tab use 2 spaces
 set softtabstop=2               " insert mode <Tab> use 2 spaces
