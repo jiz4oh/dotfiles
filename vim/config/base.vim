@@ -528,22 +528,23 @@ augroup vimrc
   "autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
   "autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * set nornu
 
-  autocmd BufRead,BufNewFile *.icc                     set filetype=cpp
-  autocmd BufRead,BufNewFile *.pde                     set filetype=java
-  autocmd BufRead,BufNewFile *.coffee-processing       set filetype=coffee
-  autocmd BufRead,BufNewFile Dockerfile*               set filetype=dockerfile
-  autocmd BufRead,BufNewFile *.wxml                    set filetype=xml
-  autocmd BufRead,BufNewFile *.wxss                    set filetype=css
-  autocmd BufRead,BufNewFile **/.vscode/*.json         set filetype=jsonc
+  autocmd BufRead,BufNewFile *.stoverride,stash.override set filetype=yaml
+  autocmd BufRead,BufNewFile *.icc                       set filetype=cpp
+  autocmd BufRead,BufNewFile *.pde                       set filetype=java
+  autocmd BufRead,BufNewFile *.coffee-processing         set filetype=coffee
+  autocmd BufRead,BufNewFile Dockerfile*                 set filetype=dockerfile
+  autocmd BufRead,BufNewFile *.wxml                      set filetype=xml
+  autocmd BufRead,BufNewFile *.wxss                      set filetype=css
+  autocmd BufRead,BufNewFile **/.vscode/*.json           set filetype=jsonc
   autocmd BufRead,BufNewFile
     \     *zpath,.zlocal,zshenv.local,zlogin.local,zlogout.local,zshrc.local,zprofile.local,*/zsh/configs/*,
     \     set                filetype=zsh
   autocmd BufRead,BufNewFile .env.local,.env.development,.env.development.local,.env.test,.env.test.local,
     \     set                filetype=sh
-  autocmd BufRead,BufNewFile gitconfig,gitconfig.local set filetype=gitconfig
-  autocmd BufRead,BufNewFile tmux.conf,tmux.conf.local set filetype=tmux
-  autocmd BufRead,BufNewFile vimrc,vimrc.local         set filetype=vim
-  autocmd BufRead,BufNewFile .pryrc                    set filetype=ruby
+  autocmd BufRead,BufNewFile gitconfig,gitconfig.local   set filetype=gitconfig
+  autocmd BufRead,BufNewFile tmux.conf,tmux.conf.local   set filetype=tmux
+  autocmd BufRead,BufNewFile vimrc,vimrc.local           set filetype=vim
+  autocmd BufRead,BufNewFile .pryrc                      set filetype=ruby
 
   " autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown           set filetype=markdown.mkd
   autocmd FileType ruby setlocal regexpengine=1
