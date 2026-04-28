@@ -45,14 +45,6 @@ return {
       mode = { "n" },
     },
     {
-      "<leader>sf",
-      function()
-        Snacks.picker.recent()
-      end,
-      desc = "Search recent files",
-      mode = { "n" },
-    },
-    {
       "<leader>sP",
       function()
         Snacks.picker()
