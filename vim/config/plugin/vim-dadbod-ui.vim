@@ -1,9 +1,9 @@
-let g:dbs = {
+let g:dbs = extend(get(g:, 'dbs', {}), {
 \ 'mysql': 'mysql://root@localhost/mysql',
 \ 'mysql_sys': 'mysql://root@localhost/sys',
 \ 'mysql_information_schema': 'mysql://root@localhost/information_schema',
 \ 'reids_development': 'redis:0',
-\ }
+\ }, 'keep')
 
 " ~/.local/share/db_ui/connections.json
 let g:db_ui_save_location = '~/.local/share/db_ui'

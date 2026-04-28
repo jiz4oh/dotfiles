@@ -19,16 +19,33 @@ function! s:init() abort
   nmap <buffer><leader>dbb <Plug>(DBExeLine)
 endfunction
 
-function! s:init_sqlite() abort
-  if executable('file') && executable('file')
-    let path = expand('%:p')
-    let output = system('file ' . path)
-    if output =~# 'SQLite'
-      let b:start = ':DB'
-      execute 'DB b:db = sqlite:' . path
-      let g:dbs = get(g:, 'dbs', {})
-      let g:dbs[pathshorten(path)] = b:db
+function! s:is_wechat_db(path) abort
+  let full_path = resolve(fnamemodify(a:path, ':p'))
+  let current = fnamemodify(full_path, ':h')
+  while current !=# '' && current !=# '/'
+    if fnamemodify(current, ':t') ==# 'Msg' && filereadable(current . '/db_key.json')
+      return 1
     endif
+    let parent = fnamemodify(current, ':h')
+    if parent ==# current
+      break
+    endif
+    let current = parent
+  endwhile
+endfunction
+
+function! s:init_sqlite() abort
+  let path = expand('%:p')
+  let is_sqlite = 0
+  if executable('file')
+    let output = system('file ' . shellescape(path))
+    let is_sqlite = output =~# 'SQLite'
+  endif
+  if is_sqlite || s:is_wechat_db(path)
+    let b:start = ':DB'
+    execute 'DB b:db = sqlite:' . path
+    let g:dbs = get(g:, 'dbs', {})
+    let g:dbs[pathshorten(path)] = b:db
   endif
   call s:init()
 endfunction
