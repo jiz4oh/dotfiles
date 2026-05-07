@@ -38,6 +38,16 @@ let vscode_tasks = {
 
 "https://gist.github.com/jiz4oh/d763f906c65e302b0162a3c05723138b
 let g:projectionist_heuristics = {
+      \ 'AGENTS.md|CLAUDE.md': {
+      \   'AGENTS.md': {'type': 'agent'},
+      \   'CLAUDE.md': {'type': 'agent'},
+      \   '.agents/skills/*/SKILL.md': {'type': 'skill'},
+      \   '.agents/skills/*/references/*': {'type': 'skillref'},
+      \   '.agents/skills/*/scripts/*': {'type': 'skillscript'},
+      \   '.claude/skills/*/SKILL.md': {'type': 'skill'},
+      \   '.claude/skills/*/references/*': {'type': 'skillref'},
+      \   '.claude/skills/*/scripts/*': {'type': 'skillscript'},
+      \ },
       \ '.git/': {
       \   '.git/hooks/*': {'type': 'githook'},
       \   '.github/workflows/*': {'type': 'githubworkflow'},
