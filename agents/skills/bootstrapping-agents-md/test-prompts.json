@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "prompt": "进入一个没有 AGENTS.md 的 pnpm monorepo。请扫描仓库，识别 apps 和 packages，采访我需要确认的策略，然后生成一个精简的根 AGENTS.md。",
+    "expected": "先扫仓库，再按优先级问少量策略问题，最后生成简洁根文件，并只加入有证据支撑的章节。",
+    "must_not_include": ["Co-Authored-By", "coauthor", "提交署名"]
+  },
+  {
+    "id": 2,
+    "prompt": "这个仓库已经有 AGENTS.md，但 CI 命令已经变化，文件里还保留了旧的测试命令。请在保留已确认策略的前提下提出一个窄 patch。",
+    "expected": "保留策略字段，更新命令和事实型章节，删除过时低信号内容，并把改动说明成事实漂移 patch。",
+    "must_not_include": ["Co-Authored-By", "coauthor", "提交署名"]
+  },
+  {
+    "id": 3,
+    "prompt": "这是一个导出 SDK 的仓库，同时有数据库迁移目录。请判断哪些信息可以直接推断，哪些策略必须先问我，再生成 AGENTS.md。",
+    "expected": "明确区分推断事实和已确认策略，优先追问公共 API 和迁移策略，并把高风险边界写清楚。",
+    "must_not_include": ["Co-Authored-By", "coauthor", "提交署名"]
+  }
+]
