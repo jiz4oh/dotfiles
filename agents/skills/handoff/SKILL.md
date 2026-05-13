@@ -1,72 +1,88 @@
 ---
 name: handoff
-description: generate a structured handoff summary for the next ai agent when context is long or session is ending. use when the user wants to continue work in a new session and needs a concise but complete transfer of state, progress, decisions, and next steps.
+description: generate a structured, execution-ready handoff markdown for the next ai agent when context is long or the session is ending, with clear state, evidence, risks, and immediate next action.
 ---
 
-# write handoff summary
+# Write Handoff Summary
 
-when the user indicates that the current context is too long, or wants to continue in a new session, generate a handoff document for another ai agent.
+Use this skill when the user asks to continue in another session, requests handoff, or current context is too long.
 
-assume the next agent has no access to previous conversation history. the output must be self-contained and sufficient to resume work immediately.
+Assume the next agent has no access to prior conversation. The handoff must be self-contained and immediately executable.
 
-## output format
+## Scope
 
-write the result as a markdown document saved to:
+- In scope: task state transfer, decisions, changed files, commands run, blockers, next action.
+- Out of scope: rewriting implementation, speculative redesign, unrelated cleanup.
 
-./{yymmdd}-{hhmm}-handoff.md
+## Output File
 
-use the following structure exactly:
+Save markdown to:
+
+`./{yymmdd}-{hhmm}-handoff.md`
+
+Example: `./260513-1650-handoff.md`
+
+## Required Workflow
+
+1. Collect facts only from current workspace evidence:
+   - changed files (`git status --short`)
+   - key diffs (`git diff -- <file>`)
+   - validation commands and outputs
+   - unresolved errors and exact messages
+2. Compress to execution state:
+   - what is done
+   - what remains
+   - what was tried and ruled out
+3. Write the handoff file in the required structure.
+4. Run a quick self-check before finalizing.
+
+## Required Structure
+
+Use this structure exactly:
 
 ## 1. 当前任务目标
-clearly state the problem being solved, expected output, and completion criteria.
+State problem, expected output, completion criteria.
 
 ## 2. 当前进展
-summarize completed analysis, decisions, changes, debugging, or discussions.
+Summarize completed analysis, decisions, code/config changes, debugging status.
 
 ## 3. 关键上下文
-include only actionable context:
-- important background
-- explicit user requirements
-- constraints
-- key decisions
-- important assumptions
+Include actionable background, hard constraints, user requirements, assumptions.
 
 ## 4. 关键发现
-list the most important findings:
-- conclusions
-- patterns
-- anomalies
-- root causes
-- design decisions
+List conclusions, root causes, anomalies, rejected paths.
 
 ## 5. 未完成事项
-list remaining work, sorted by priority.
+Prioritized remaining work with dependency notes.
 
 ## 6. 建议接手路径
-tell the next agent how to proceed:
-- what to inspect first (files, modules, logs, commands, etc.)
-- what to validate
-- recommended next actions
+What to inspect first, what to run, what to validate.
 
 ## 7. 风险与注意事项
-highlight:
-- common pitfalls
-- already-tested dead ends
-- things likely to cause duplicate work or confusion
+Pitfalls, risky operations, duplicate-work traps.
 
-## writing rules
+## 8. 证据与命令
+Only include commands that were actually run or should be run first.
 
-- this is a handoff document, not a user-facing summary
-- prioritize concrete, executable information
-- avoid vague or generic statements
-- reference real entities when possible (file paths, modules, commands, etc.)
-- keep it dense and useful
-- no fluff
+## Writing Rules
 
-## final requirement
+- Dense, executable, no fluff.
+- Prefer concrete paths, modules, commands, and error strings.
+- Mark unknowns explicitly as `不确定` and provide a verification path.
+- Use absolute dates when time matters.
 
-end with:
+## Final Line (mandatory)
 
-“下一位 Agent 的第一步建议”
+End with this heading and one concrete step:
 
-provide a clear first action the next agent should take.
+`下一位 Agent 的第一步建议`
+
+## Quick Verification
+
+After writing the file, run:
+
+```bash
+ls -lt ./*-handoff.md | head -n 3
+rg -n "^## (1|2|3|4|5|6|7|8)\\." ./*-handoff.md
+rg -n "下一位 Agent 的第一步建议" ./*-handoff.md
+```

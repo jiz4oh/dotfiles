@@ -1,32 +1,39 @@
 ---
 name: takeover
-description: read the latest handoff markdown file and resume work from it when the user starts a new session, asks to continue previous work, mentions handoff, or wants the agent to pick up from a saved transfer note. use when agent should inspect files like ./*-handoff.md, recover task state, summarize current status, and continue execution without access to the prior full conversation.
+description: read the latest handoff markdown, reconstruct execution state, and resume safely with minimal user re-explanation when user asks to continue prior work.
 ---
 
-# takeover from handoff
+# Takeover From Handoff
 
-when the user asks to continue previous work, resume from a prior session, read a handoff, or pick up from saved context, first look for the latest matching file in the current working directory:
+When user asks to continue prior work, resume from handoff, or pick up previous context, locate handoff first.
 
-./*-handoff.md
+## Scope
 
-prefer the most recent file by date in the filename. if the user explicitly names a handoff file, use that file instead.
+- In scope: locate handoff, load state, verify key facts quickly, continue execution.
+- Out of scope: full historical replay, broad re-analysis before first action.
 
-## required behavior
+## File Selection
 
-before doing any new task work:
+1. If user specified a handoff file, use it.
+2. Else use newest match in current directory:
+   - `./*-handoff.md`
+3. If none found, state it clearly and ask for minimum missing context.
 
-1. locate the relevant handoff file
-2. read it fully
-3. extract the current task state from it
-4. delete that handoff file immediately after it has been read successfully
-5. treat it as the primary source of prior-session context
-6. continue from the handoff instead of asking the user to repeat background unnecessarily
+## Required Workflow (before new implementation work)
 
-## how to interpret the handoff
+1. Read selected handoff fully.
+2. Extract:
+   - goal
+   - completed work
+   - pending items
+   - risks and dead ends
+   - first recommended action
+3. Perform fast verification for high-impact claims (paths, changed files, running services, failing command).
+4. Announce resume state briefly, then execute next action.
 
-read the handoff as an execution-state document for another agent.
+## Handoff Interpretation
 
-pay special attention to:
+Prioritize these sections:
 
 - 当前任务目标
 - 当前进展
@@ -37,54 +44,49 @@ pay special attention to:
 - 风险与注意事项
 - 下一位 Agent 的第一步建议
 
-use these sections to reconstruct:
+Use them to rebuild execution state and avoid duplicate work.
 
-- the actual goal
-- what is already done
-- what remains
-- what has been ruled out
-- what should be checked first
-- what mistakes to avoid repeating
+## Resume Message Pattern
 
-## response pattern after reading
+After loading handoff, reply briefly:
 
-after reading the handoff, do not dump the whole document back to the user.
+1. `已加载 handoff: <filename>`
+2. `正在继续: <task>`
+3. `下一步: <single concrete action>`
 
-once the handoff has been read into context, remove the file so it is not reused accidentally in a later session.
+Do not dump the full handoff unless user asks.
 
-instead:
+## Safety Rule (important)
 
-- briefly acknowledge that the handoff has been loaded
-- state the task you are resuming
-- state the most relevant next action
-- then continue the work
+- Do not delete handoff file by default.
+- If cleanup is needed, move to archive path:
+  - `./.handoff_archive/<original-name>`
+- Only remove source file after archive copy is confirmed.
 
-keep this brief unless the user explicitly asks for a full summary.
+## Conflict and Missing Data Handling
 
-## when the handoff is missing or unclear
+- If handoff conflicts with latest user instruction, follow latest user instruction.
+- If handoff is incomplete, ask one minimal clarification question.
+- If claims cannot be verified quickly, mark as `待验证` and continue with bounded checks.
 
-if no matching handoff file exists, say clearly that no handoff file was found in the current directory and continue by asking only for the minimum missing context.
+## Execution Rules
 
-if multiple handoff files exist and the latest one is ambiguous, prefer the newest dated filename unless the user specifies another file.
+- Do not invent facts absent from handoff/workspace evidence.
+- Do not redo completed work unless verification fails.
+- Inspect referenced files/commands first before exploring new directions.
+- Keep takeover summary concise and action-oriented.
 
-if the handoff conflicts with the user's new instruction, follow the user's latest instruction and treat the handoff as background context.
+## Quick Verification Commands
 
-## execution rules
+```bash
+ls -lt ./*-handoff.md 2>/dev/null | head -n 5
+rg -n "^## " ./$(ls -t ./*-handoff.md 2>/dev/null | head -n 1)
+mkdir -p ./.handoff_archive
+```
 
-do not assume access to the old conversation.
+## Optional Archive Commands
 
-do not invent missing facts that are not in the handoff.
-
-do not restart completed work that the handoff says is already done unless verification is required.
-
-do not ignore risks, dead ends, or rejected paths recorded in the handoff.
-
-if the handoff includes concrete file paths, commands, modules, logs, or next steps, inspect those first before exploring new directions.
-
-## preferred continuation behavior
-
-when the handoff contains enough detail to proceed, start executing immediately.
-
-when the handoff is incomplete, ask only the smallest possible follow-up question.
-
-when the handoff recommends a first step, do that first unless the user's latest message overrides it.
+```bash
+f="$(ls -t ./*-handoff.md 2>/dev/null | head -n 1)"
+[ -n "$f" ] && cp "$f" "./.handoff_archive/$(basename "$f")"
+```
