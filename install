@@ -29,6 +29,7 @@ for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
   rbenv/default-gems snipaste/config.ini hammerspoon/init.lua config/direnv/direnv.toml\
   config/lemonade.toml \
   codex/AGENTS.md \
+  hermes/SOUL.md hermes/config.yaml \
   oh-my-zsh/custom/* \
   default-*-packages; do
   dir=$(dirname $rc)
