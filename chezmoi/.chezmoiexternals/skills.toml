@@ -1,0 +1,31 @@
+[".agents/skill-sources/notebooklm-skill"]
+  type = "git-repo"
+  url = "https://github.com/PleasePrompto/notebooklm-skill"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["notellm=."]
+
+[".agents/skill-sources/ordinary-claude-skills"]
+  type = "git-repo"
+  url = "https://github.com/Microck/ordinary-claude-skills"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["markitdown=skills_all/markitdown"]
+
+[".agents/skill-sources/superpowers"]
+  type = "git-repo"
+  url = "https://github.com/obra/superpowers"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["brainstorming=skills/brainstorming", "writing-skills=skills/writing-skills", "writing-plans=skills/writing-plans", "executing-plans=skills/executing-plans", "dispatching-parallel-agents=skills/dispatching-parallel-agents"]
+
+[".agents/skill-sources/git-commit-helper"]
+  type = "git-repo"
+  url = "https://github.com/alirezarezvani/claude-code-tresor"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["git-commit-helper=skills/development/git-commit-helper"]

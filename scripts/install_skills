@@ -2,8 +2,156 @@
 
 set -euo pipefail
 
-cat <<'EOF'
-skills are managed by chezmoi now:
-- externals: .chezmoiexternal.toml
-- links: dot_agents/skills/symlink_*
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE="$(cd "$SCRIPT_DIR/.." && pwd)"
+SKILLS_EXTERNALS_FILE="$BASE/chezmoi/.chezmoiexternals/skills.toml"
+SKILLS_DIR="$BASE/chezmoi/dot_agents/skills"
+PRUNE="${PRUNE:-0}"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  scripts/install_skills
+
+Environment:
+  PRUNE=1   remove stale symlink_* entries not declared in .chezmoiexternals/skills.toml
+
+This script treats .chezmoiexternals/skills.toml as the source of truth for
+external skill entrypoints. It reads x.skills from .agents/skill-sources/*
+sections and generates chezmoi source files under:
+  chezmoi/dot_agents/skills/symlink_<skill-name>
+
+Local first-party skills should remain as real directories in:
+  chezmoi/dot_agents/skills/<skill-name>/
 EOF
+}
+
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+  usage
+  exit 0
+fi
+
+if [ ! -f "$SKILLS_EXTERNALS_FILE" ]; then
+  echo "missing skills externals file: $SKILLS_EXTERNALS_FILE" >&2
+  exit 1
+fi
+
+if [ ! -d "$SKILLS_DIR" ]; then
+  echo "missing skills dir: $SKILLS_DIR" >&2
+  exit 1
+fi
+
+created=0
+updated=0
+unchanged=0
+warnings=0
+declared_names=()
+skill_rows_file="$(mktemp)"
+trap 'rm -f "$skill_rows_file"' EXIT
+
+ruby - "$SKILLS_EXTERNALS_FILE" > "$skill_rows_file" <<'RUBY'
+path = ARGV.fetch(0)
+lines = File.readlines(path, chomp: true)
+current_source_id = nil
+i = 0
+
+while i < lines.length
+  line = lines[i]
+
+  if (match = line.match(/^\["\.agents\/skill-sources\/([^"]+)"\]\s*$/))
+    current_source_id = match[1]
+    i += 1
+    next
+  end
+
+  if current_source_id && line =~ /^\s*x\.skills\s*=\s*\[/
+    block = line.dup
+    until block.include?("]")
+      i += 1
+      break if i >= lines.length
+      block << "\n" << lines[i]
+    end
+
+    block.scan(/"([^"]+)"/).flatten.each do |item|
+      name, relpath = item.split("=", 2)
+      next if name.nil? || name.empty? || relpath.nil? || relpath.empty?
+      puts [current_source_id, name, relpath].join("\t")
+    end
+  end
+
+  i += 1
+end
+RUBY
+
+while IFS=$'\t' read -r source_id skill_name source_subdir; do
+  [ -z "${source_id:-}" ] && continue
+  [ -z "${skill_name:-}" ] && continue
+  [ -z "${source_subdir:-}" ] && continue
+
+  case "$skill_name" in
+    */* | .* | *".."* )
+      echo "warn: skip unsafe skill name '$skill_name'" >&2
+      warnings=$((warnings + 1))
+      continue
+      ;;
+  esac
+
+  target_path="../skill-sources/$source_id"
+  if [ "$source_subdir" != "." ]; then
+    target_path="$target_path/$source_subdir"
+  fi
+
+  entry_path="$SKILLS_DIR/symlink_$skill_name"
+  declared_names+=("$skill_name")
+
+  if [ -d "$SKILLS_DIR/$skill_name" ]; then
+    echo "warn: local skill dir exists, keep directory and skip symlink_$skill_name" >&2
+    warnings=$((warnings + 1))
+    continue
+  fi
+
+  if [ -f "$entry_path" ]; then
+    current="$(cat "$entry_path")"
+    if [ "$current" = "$target_path" ]; then
+      unchanged=$((unchanged + 1))
+      continue
+    fi
+    printf '%s\n' "$target_path" > "$entry_path"
+    updated=$((updated + 1))
+    continue
+  fi
+
+  printf '%s\n' "$target_path" > "$entry_path"
+  created=$((created + 1))
+done < "$skill_rows_file"
+
+for entry_path in "$SKILLS_DIR"/symlink_*; do
+  [ -e "$entry_path" ] || continue
+  skill_name="${entry_path##*/symlink_}"
+
+  declared=0
+  for known_name in "${declared_names[@]}"; do
+    if [ "$known_name" = "$skill_name" ]; then
+      declared=1
+      break
+    fi
+  done
+
+  if [ "$declared" -eq 1 ]; then
+    continue
+  fi
+
+  if [ "$PRUNE" = "1" ]; then
+    rm -f "$entry_path"
+    echo "pruned: symlink_$skill_name"
+  else
+    echo "warn: undeclared symlink preserved: symlink_$skill_name" >&2
+    warnings=$((warnings + 1))
+  fi
+done
+
+echo "skills sync complete"
+echo "  created:   $created"
+echo "  updated:   $updated"
+echo "  unchanged: $unchanged"
+echo "  warnings:  $warnings"

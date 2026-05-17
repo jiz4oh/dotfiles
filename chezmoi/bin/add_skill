@@ -14,12 +14,16 @@ while [ -L "$SOURCE" ]; do
 done
 SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 BASE="$(cd "$SCRIPT_DIR/.." && pwd)"
-REGISTRY_FILE="$BASE/agents/skills.registry.tsv"
+SKILLS_EXTERNALS_FILE="$BASE/.chezmoiexternals/skills.toml"
 
 usage() {
   echo "Usage:"
   echo "  $0 <skill-name> <repo-url> [branch]"
   echo "  $0 <source-id> <repo-url> <source-subdir> <skill-name> [branch]"
+  echo
+  echo "Examples:"
+  echo "  $0 markitdown https://github.com/Microck/ordinary-claude-skills skills_all/markitdown markitdown"
+  echo "  $0 notebooklm-skill https://github.com/PleasePrompto/notebooklm-skill . notellm"
   exit 1
 }
 
@@ -47,55 +51,122 @@ fi
 [ -z "$skill_name" ] && usage
 [ -z "$branch" ] && branch="-"
 
-mkdir -p "$BASE/agents"
-if [ ! -f "$REGISTRY_FILE" ]; then
-  cat > "$REGISTRY_FILE" <<'EOF'
-# source_id	repo_url	branch	source_subdir	skill_name
-# branch 用 - 表示默认分支
-# source_subdir 用 . 表示仓库根目录
-EOF
-fi
+case "$source_id" in
+  */* | .* | *".."* ) echo "invalid source_id: $source_id" >&2; exit 1 ;;
+esac
 
-tmp_file="$(mktemp)"
-awk -F '\t' -v OFS='\t' \
-  -v source_id="$source_id" \
-  -v repo_url="$repo_url" \
-  -v branch="$branch" \
-  -v source_subdir="$source_subdir" \
-  -v skill_name="$skill_name" '
-  BEGIN {
-    updated = 0
-    new_line = source_id OFS repo_url OFS branch OFS source_subdir OFS skill_name
-  }
-  /^#/ || NF == 0 {
-    print $0
-    next
-  }
-  NF >= 5 && $5 == skill_name {
-    if (!updated) {
-      print new_line
-      updated = 1
-    }
-    next
-  }
-  {
-    print $0
-  }
-  END {
-    if (!updated) {
-      print new_line
-    }
-  }
-' "$REGISTRY_FILE" > "$tmp_file"
+case "$skill_name" in
+  */* | .* | *".."* ) echo "invalid skill_name: $skill_name" >&2; exit 1 ;;
+esac
 
-mv "$tmp_file" "$REGISTRY_FILE"
+mkdir -p "$(dirname "$SKILLS_EXTERNALS_FILE")"
+[ -f "$SKILLS_EXTERNALS_FILE" ] || : > "$SKILLS_EXTERNALS_FILE"
 
-cd "$BASE"
+ruby - "$SKILLS_EXTERNALS_FILE" "$source_id" "$repo_url" "$source_subdir" "$skill_name" "$branch" <<'RUBY'
+path, source_id, repo_url, source_subdir, skill_name, branch = ARGV
+
+section_header = %([".agents/skill-sources/#{source_id}"])
+lines = File.exist?(path) ? File.readlines(path, chomp: true) : []
+
+def quoted(value)
+  %("#{value.gsub('\\', '\\\\').gsub('"', '\"')}")
+end
+
+def parse_skill_items(lines)
+  lines.flat_map { |line| line.scan(/"([^"]+)"/).flatten }.map do |item|
+    name, relpath = item.split("=", 2)
+    [name, relpath]
+  end.select { |name, relpath| name && !name.empty? && relpath && !relpath.empty? }
+end
+
+section_start = lines.index { |line| line == section_header }
+
+if section_start
+  section_end = lines.length
+  ((section_start + 1)...lines.length).each do |idx|
+    if lines[idx] =~ /^\[.*\]\s*$/
+      section_end = idx
+      break
+    end
+  end
+
+  section_lines = lines[section_start...section_end]
+  url_line = section_lines.find { |line| line =~ /^\s*url\s*=/ }
+  if url_line
+    current_url = url_line[/=\s*"([^"]+)"/, 1]
+    if current_url && current_url != repo_url
+      warn "existing source '#{source_id}' uses a different repo URL: #{current_url}"
+      exit 1
+    end
+  end
+
+  skills_start = nil
+  skills_end = nil
+  (0...section_lines.length).each do |idx|
+    next unless section_lines[idx] =~ /^\s*x\.skills\s*=\s*\[/
+    skills_start = idx
+    skills_end = idx
+    until section_lines[skills_end].include?("]")
+      skills_end += 1
+      break if skills_end >= section_lines.length
+    end
+    break
+  end
+
+  skill_items =
+    if skills_start
+      parse_skill_items(section_lines[skills_start..skills_end])
+    else
+      []
+    end
+
+  ordered_names = skill_items.map(&:first)
+  skill_map = skill_items.to_h
+  ordered_names << skill_name unless ordered_names.include?(skill_name)
+  skill_map[skill_name] = source_subdir
+  rendered_items = ordered_names.map { |name| "#{name}=#{skill_map.fetch(name)}" }
+  skills_line = "  x.skills = [#{rendered_items.map { |item| quoted(item) }.join(', ')}]"
+
+  if skills_start
+    section_lines[skills_start..skills_end] = [skills_line]
+  else
+    insert_at = section_lines.length
+    insert_at -= 1 while insert_at > 0 && section_lines[insert_at - 1].empty?
+    section_lines.insert(insert_at, skills_line)
+  end
+
+  lines[section_start...section_end] = section_lines
+else
+  clone_args =
+    if branch == "-"
+      '["--filter=blob:none"]'
+    else
+      %(["--branch", #{quoted(branch)}, "--single-branch", "--filter=blob:none"])
+    end
+
+  new_block = [
+    section_header,
+    '  type = "git-repo"',
+    "  url = #{quoted(repo_url)}",
+    '  refreshPeriod = "72h"',
+    "  clone.args = #{clone_args}",
+    '  pull.args = ["--ff-only"]',
+    "  x.skills = [#{quoted("#{skill_name}=#{source_subdir}")}]",
+  ]
+
+  lines << "" unless lines.empty? || lines.last.empty?
+  lines.concat(new_block)
+end
+
+File.write(path, lines.join("\n") + "\n")
+RUBY
+
+cd "$BASE/.."
 if [ "${SKIP_INSTALL:-0}" = "1" ]; then
-  echo "Registry updated: $skill_name"
+  echo "External skill metadata updated: $skill_name"
   exit 0
 fi
 
-"$BASE/scripts/install_skills"
+"$BASE/../scripts/install_skills"
 
-echo "Skill registered: $skill_name"
+echo "Skill registered and synced: $skill_name"

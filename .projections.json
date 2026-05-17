@@ -1,10 +1,4 @@
 {
-  "install": {
-    "type": "install"
-  },
-  "scripts/install_*": {
-    "type": "install"
-  },
   "vim/lsp/*.lua": {
     "type": "lsp",
     "template":  [
