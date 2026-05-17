@@ -7,9 +7,9 @@ external entries.
 ## Daily flow
 
 ```sh
-scripts/chezmoi_doctor
-scripts/chezmoi_apply --dry-run
-scripts/chezmoi_apply
+chezmoi --source "$PWD" managed
+chezmoi --source "$PWD" apply --dry-run --force --no-tty
+chezmoi --source "$PWD" apply --force --no-tty
 ```
 
 Equivalent raw commands:
