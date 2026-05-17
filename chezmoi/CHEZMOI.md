@@ -40,11 +40,13 @@ The migration currently covers the files and directories from the legacy
 - larger directories as symlinks, including `~/.agents`, `~/.vim`,
   `~/.raycast`, `~/.terminfo`, `~/.config/{kitty,mise,rubocop,solargraph,wezterm}`,
   and `~/.hammerspoon/{Spoons,modules}`
-- former git submodules are now managed by `chezmoi/.chezmoiexternal.toml`:
+- former git submodules are now managed by files under
+  `chezmoi/.chezmoiexternals/`:
   `~/.config/kitty/kitty_search`, `~/.tmux/plugins/tpm`, and
   `~/.agents/skill-sources/{git-commit-helper,notebooklm-skill,ordinary-claude-skills,superpowers}`
 
-Mutating setup steps are now executed through chezmoi run scripts:
+Mutating setup steps are now executed through files under
+`chezmoi/.chezmoiscripts/`:
 
 - `run_once_*`: one-time bootstrap steps
 - `run_onchange_*`: rerun when script content changes
