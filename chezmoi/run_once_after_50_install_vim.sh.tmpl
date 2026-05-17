@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-"$(cd "{{ .chezmoi.sourceDir }}/.." && pwd)/vim/install"
+vim_install="$(cd "{{ .chezmoi.sourceDir }}/.." && pwd)/vim/install"
+if [ ! -x "$vim_install" ]; then
+  echo "[vim-init][warn] missing executable: $vim_install" >&2
+  exit 0
+fi
+"$vim_install"

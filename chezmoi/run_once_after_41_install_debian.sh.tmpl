@@ -1,15 +1,58 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-[ "$(uname -s)" = "Linux" ] || exit 0
-if [ -f /etc/debian_version ]; then
-  apt update
-  apt-get install -y -qq --no-install-recommends git curl wget python-is-python3 >/dev/null
+{{- if ne .chezmoi.os "linux" }}
+exit 0
+{{- end }}
 
+DISTRO_ID="{{ get .chezmoi.osRelease "id" }}"
+DISTRO_LIKE="{{ get .chezmoi.osRelease "idLike" }}"
+
+# Prefer chezmoi metadata; keep a filesystem fallback for minimal environments.
+if [ -z "$DISTRO_ID" ] && [ -f /etc/os-release ]; then
+  # shellcheck disable=SC1091
+  . /etc/os-release
+  DISTRO_ID="${ID:-}"
+  DISTRO_LIKE="${ID_LIKE:-}"
+fi
+
+case " $DISTRO_ID $DISTRO_LIKE " in
+  *" debian "*|*" ubuntu "*)
+    ;;
+  *)
+    exit 0
+    ;;
+esac
+
+command -v apt-get >/dev/null 2>&1 || exit 0
+
+if [ "$(id -u)" -eq 0 ]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
+$SUDO apt-get update -y
+$SUDO apt-get install -y -qq --no-install-recommends git curl wget python-is-python3 >/dev/null
+
+# Install universal-ctags only when missing.
+if ! command -v ctags >/dev/null 2>&1; then
   release="2023.08.13%2Bce46d93811faefaa75b87e334d768fbf9a831861"
-  file="uctags-2023.08.13-linux-x86_64"
-  curl -fsSL "https://github.com/universal-ctags/ctags-nightly-build/releases/download/$release/$file.tar.xz" -o ctags.tar.xz
-  tar -xf ctags.tar.xz
-  sudo mv "$file"/bin/* /usr/local/bin/
-  rm -rf ctags.tar.xz "$file"
+  case "{{ .chezmoi.arch }}" in
+    arm64|aarch64)
+      file="uctags-2023.08.13-linux-arm64"
+      ;;
+    amd64|x86_64)
+      file="uctags-2023.08.13-linux-x86_64"
+      ;;
+    *)
+      echo "[debian-init][warn] unsupported arch for prebuilt ctags: {{ .chezmoi.arch }}" >&2
+      exit 0
+      ;;
+  esac
+  tmp_dir="$(mktemp -d)"
+  trap 'rm -rf "$tmp_dir"' EXIT
+  curl -fsSL "https://github.com/universal-ctags/ctags-nightly-build/releases/download/$release/$file.tar.xz" -o "$tmp_dir/ctags.tar.xz"
+  tar -C "$tmp_dir" -xf "$tmp_dir/ctags.tar.xz"
+  $SUDO install -m 0755 "$tmp_dir/$file/bin/ctags" /usr/local/bin/ctags
 fi

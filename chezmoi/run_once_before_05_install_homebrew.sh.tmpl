@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
+
+if command -v brew >/dev/null 2>&1; then
+  exit 0
+fi
+
+echo "[bootstrap] installing homebrew"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"

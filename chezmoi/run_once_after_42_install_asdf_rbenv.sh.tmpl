@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
+
+if [ ! -d "$HOME/.asdf" ]; then
+  git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf"
+fi
+
+mkdir -p "$HOME/.rbenv/plugins"
+if [ ! -e "$HOME/.rbenv/plugins/rbenv-default-gems" ]; then
+  git clone https://github.com/rbenv/rbenv-default-gems.git "$HOME/.rbenv/plugins/rbenv-default-gems"
+fi
+if [ ! -e "$HOME/.rbenv/plugins/rbenv-ctags" ]; then
+  git clone https://github.com/tpope/rbenv-ctags.git "$HOME/.rbenv/plugins/rbenv-ctags"
+fi
