@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+SOURCE_DIR="$ROOT"
+status=0
+
+bash -n "$ROOT/scripts/chezmoi_apply"
+bash -n "$ROOT/scripts/chezmoi_doctor"
+
+if command -v chezmoi >/dev/null 2>&1; then
+  chezmoi --source "$SOURCE_DIR" managed >/dev/null
+  chezmoi --source "$SOURCE_DIR" apply --dry-run --force --no-tty >/dev/null
+else
+  echo "warning: chezmoi is not installed; skipped chezmoi managed check" >&2
+fi
+
+exit "$status"

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE_DIR="{{ .chezmoi.sourceDir }}"
+mkdir -p "$HOME/bin"
+
+for f in "$SOURCE_DIR"/bin/*; do
+  [ -f "$f" ] || continue
+  ln -sfn "$f" "$HOME/bin/$(basename "$f")"
+done

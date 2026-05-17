@@ -1,117 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
-
 BASE=$(pwd)
-touch bashrc-extra
-mkdir -pv bak
 
-# keep all submodules in sync on every install
-if command -v git >/dev/null && [ -d "$BASE/.git" ]; then
-  git -C "$BASE" submodule sync --recursive >/dev/null 2>&1 || true
-  git -C "$BASE" submodule update --init --recursive >/dev/null 2>&1 || true
+if ! command -v chezmoi >/dev/null 2>&1; then
+  echo "chezmoi is required. Install it first:" >&2
+  echo "  brew install chezmoi" >&2
+  echo "  or: sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b \"\$HOME/.local/bin\"" >&2
+  exit 1
 fi
 
-echo $BASE > ~/.mydotfile
-if command -v zsh >/dev/null; then
-    echo "Configuring Zsh..."
-    "$BASE"/scripts/install_zsh
-else
-    echo "Warning: Zsh is not installed. Skipping Oh-My-Zsh setup."
-fi
-
-# dotfiles
-for rc in *rc *rc.json tmux.conf tool-versions gitconfig gitignore \
-  alias shenv zprofile zshenv zpath p10k.zsh \
-  ignore \
-  aider.conf.yml \
-  prettierignore yamllint.yaml vintrc.yaml \
-  rbenv/default-gems snipaste/config.ini hammerspoon/init.lua config/direnv/direnv.toml\
-  config/lemonade.toml \
-  codex/AGENTS.md \
-  hermes/SOUL.md hermes/config.yaml \
-  oh-my-zsh/custom/* \
-  default-*-packages; do
-  dir=$(dirname $rc)
-  [ "$dir" != '.' ] && mkdir -pv bak/."$dir" && mkdir -pv ~/."$dir"
-  mv -fv ~/."$rc" bak/."$rc" >/dev/null 2>&1
-  ln -sfv "$BASE/$rc" ~/."$rc"
-done
-
-# dotdirs
-for dir in git_template ctags.d vim raycast \
-  tmux/plugins/tpm \
-  prompts \
-  config/rubocop config/solargraph config/kitty config/wezterm config/mise \
-  agents \
-  hammerspoon/Spoons hammerspoon/modules \
-  terminfo; do
-  rm -rf bak/$dir
-  parent_dir=$(dirname "$dir")
-  [ "$parent_dir" != '.' ] && mkdir -pv bak/"$parent_dir"
-  mv -v ~/.$dir bak/$dir >/dev/null 2>&1
-  
-  mkdir -pv ~/.$parent_dir
-  ln -svf "$BASE/$dir"/ ~/.$dir
-done
-
-# claude skills (reuse agent skills)
-mkdir -pv ~/.claude bak/.claude
-if [ -e ~/.claude/skills ] || [ -L ~/.claude/skills ]; then
-  if [ "$(readlink ~/.claude/skills 2>/dev/null)" != "$HOME/.agents/skills" ]; then
-    rm -rf bak/.claude/skills
-    mv -v ~/.claude/skills bak/.claude/skills >/dev/null 2>&1
-  fi
-fi
-ln -sfnv ~/.agents/skills ~/.claude/skills
-
-# git-prompt
-if [ ! -e ~/.git-prompt.sh ]; then
-  curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
-fi
-
-# scripts
-mkdir -p ~/bin
-for bin in $BASE/bin/*; do
-  ln -svf "$bin" ~/bin
-done
-
-"$BASE"/scripts/install_tmux
-
-OS=$(uname -s)
-if [ "${OS}" == "Darwin" ]; then
-  release="Darwin"
-elif [ "${OS}" == "Linux" ]; then
-  if [ -f /etc/centos-release ]; then
-    release="centos"
-  elif [ -f /etc/redhat-release ]; then
-    release="rhel"
-  elif grep -q -E -i "centos" < /etc/issue; then
-    release="centos"
-  elif grep -q -E -i "red hat|redhat" < /etc/issue; then
-    release="rhel"
-  elif grep -q -E -i "debian" < /etc/issue; then
-    release="debian"
-  elif grep -q -E -i "ubuntu" < /etc/issue; then
-    release="ubuntu"
-  elif grep -q -E -i "centos" < /proc/version; then
-    release="centos"
-  elif grep -q -E -i "red hat|redhat" < /proc/version; then
-    release="rhel"
-  elif grep -q -E -i "debian" < /proc/version; then
-    release="debian"
-  elif grep -q -E -i "ubuntu" < /proc/version; then
-    release="ubuntu"
-  elif [ -f /etc/os-release ]; then
-    release=$(grep -E "^ID" /etc/os-release | awk -F '=' '{print $2}')
-  fi
-fi
-
-if [ "$release" == "Darwin" ]; then
-  "$BASE"/scripts/install_osx
-  "$BASE"/scripts/install_skills
-elif [ "$release" == "debian" ]; then
-  "$BASE"/scripts/install_debian
-fi
-
-"$BASE"/vim/install
+exec chezmoi --source "$BASE" apply --force --no-tty

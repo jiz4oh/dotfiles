@@ -1,5 +1,5 @@
 [tools]
-ruby = ["latest", "prefix:2.7"]
+ruby = "3.1.2"
 node = "lts"
 go = "latest"
 "go:github.com/lemonade-command/lemonade" = "latest"
@@ -20,11 +20,12 @@ pdm = "latest"
 "npm:wrangler" = "latest"
 "gem:rubocop" = "latest"
 # support ruby >= 2.4.0
-"gem:solargraph" = "0.52.0"
-"gem:solargraph-rails" = "latest"
-"gem:rails" = "latest"
+"pipx:ansible" = "latest"
 
 [settings]
 experimental = true
 python.uv_venv_auto = true
 idiomatic_version_file_enable_tools = ["ruby", "python"]
+
+[settings.node]
+gpg_verify = false

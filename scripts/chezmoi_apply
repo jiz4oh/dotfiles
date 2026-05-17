@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+SOURCE_DIR="$ROOT"
+
+if ! command -v chezmoi >/dev/null 2>&1; then
+  echo "chezmoi is not installed. Install it first, then rerun this command." >&2
+  echo "Homebrew: brew install chezmoi" >&2
+  exit 127
+fi
+
+if [ "${1:-}" = "--dry-run" ]; then
+  shift
+  exec chezmoi --source "$SOURCE_DIR" apply --dry-run --force --no-tty "$@"
+fi
+
+exec chezmoi --source "$SOURCE_DIR" apply --force --no-tty "$@"

@@ -1,0 +1,130 @@
+{
+  "version": 3,
+  "skills": {
+    "wx-cli": {
+      "source": "jackwener/wx-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jackwener/wx-cli.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "ae74072b3fe466f61e2471352a27446ca63cc816",
+      "installedAt": "2026-04-17T08:53:04.072Z",
+      "updatedAt": "2026-04-17T08:53:04.072Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "3013fdeb8a11b10b1eb795ec3ae8bfca38f7c26d",
+      "installedAt": "2026-04-17T08:53:08.271Z",
+      "updatedAt": "2026-05-14T03:55:33.569Z"
+    },
+    "longbridge": {
+      "source": "longbridge/developers",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/longbridge/developers.git",
+      "skillPath": "skills/longbridge/SKILL.md",
+      "skillFolderHash": "5770005238edf1dbd3da26d1c2e0c0573b2f1cee",
+      "installedAt": "2026-05-14T16:30:22.966Z",
+      "updatedAt": "2026-05-14T16:30:22.966Z"
+    },
+    "check": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/tw93/Waza.git",
+      "skillPath": "skills/check/SKILL.md",
+      "skillFolderHash": "6ab9b9564dfa4b47c663c12e3cecf29c6455d79e",
+      "pluginName": "waza-check",
+      "installedAt": "2026-05-16T12:24:30.973Z",
+      "updatedAt": "2026-05-16T12:24:30.973Z"
+    },
+    "design": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/tw93/Waza.git",
+      "skillPath": "skills/design/SKILL.md",
+      "skillFolderHash": "f07620aba3a520635ef6db4a05ad8643eacc8927",
+      "pluginName": "waza-design",
+      "installedAt": "2026-05-16T12:24:30.978Z",
+      "updatedAt": "2026-05-16T12:24:30.978Z"
+    },
+    "health": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/tw93/Waza.git",
+      "skillPath": "skills/health/SKILL.md",
+      "skillFolderHash": "d239180c2fa857f51e94e4f3ab542f777b352fd5",
+      "pluginName": "waza-health",
+      "installedAt": "2026-05-16T12:24:30.979Z",
+      "updatedAt": "2026-05-16T12:24:30.979Z"
+    },
+    "hunt": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/tw93/Waza.git",
+      "skillPath": "skills/hunt/SKILL.md",
+      "skillFolderHash": "6595574046dc02331af4ce8300cd922a339bfd59",
+      "pluginName": "waza-hunt",
+      "installedAt": "2026-05-16T12:24:30.980Z",
+      "updatedAt": "2026-05-16T12:24:30.980Z"
+    },
+    "learn": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/tw93/Waza.git",
+      "skillPath": "skills/learn/SKILL.md",
+      "skillFolderHash": "228cb1a7e6f309f295040874ac90305e7bf50ee6",
+      "pluginName": "waza-learn",
+      "installedAt": "2026-05-16T12:24:30.981Z",
+      "updatedAt": "2026-05-16T12:24:30.981Z"
+    },
+    "read": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/tw93/Waza.git",
+      "skillPath": "skills/read/SKILL.md",
+      "skillFolderHash": "97f8b7872a6e1fa132454fa0b3ba04b1016bdab0",
+      "pluginName": "waza-read",
+      "installedAt": "2026-05-16T12:24:30.982Z",
+      "updatedAt": "2026-05-16T12:24:30.982Z"
+    },
+    "think": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/tw93/Waza.git",
+      "skillPath": "skills/think/SKILL.md",
+      "skillFolderHash": "c1d0390b277a447d2b15c3993fd77a5b333c5d22",
+      "pluginName": "waza-think",
+      "installedAt": "2026-05-16T12:24:30.983Z",
+      "updatedAt": "2026-05-16T12:24:30.983Z"
+    },
+    "write": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/tw93/Waza.git",
+      "skillPath": "skills/write/SKILL.md",
+      "skillFolderHash": "e5e811c0bbf659456e98eb9e81aca05d9626ac19",
+      "pluginName": "waza-write",
+      "installedAt": "2026-05-16T12:24:30.984Z",
+      "updatedAt": "2026-05-16T12:24:30.984Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "antigravity",
+    "cline",
+    "codex",
+    "cursor",
+    "deepagents",
+    "dexto",
+    "firebender",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-cli",
+    "opencode",
+    "warp"
+  ]
+}

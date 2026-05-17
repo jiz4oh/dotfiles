@@ -3,11 +3,28 @@ if get(g:, 'vimrc_loaded', 0) != 0
 endif
 let g:vimrc_loaded = 1
 
+let s:fallback_config_home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+let s:config_home = ''
+
 if exists('$_DOTFILES_PATH')
-  let g:config_home = $_DOTFILES_PATH . '/vim'
-else
-  let g:config_home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-end
+  let s:from_env = $_DOTFILES_PATH . '/vim'
+  if filereadable(s:from_env . '/config.vim')
+    let s:config_home = s:from_env
+  endif
+endif
+
+if empty(s:config_home) && filereadable($HOME . '/.mydotfile')
+  let s:from_mydotfile = trim(join(readfile($HOME . '/.mydotfile'), "\n")) . '/vim'
+  if filereadable(s:from_mydotfile . '/config.vim')
+    let s:config_home = s:from_mydotfile
+  endif
+endif
+
+if empty(s:config_home)
+  let s:config_home = s:fallback_config_home
+endif
+
+let g:config_home = s:config_home
 
 let g:plug_home = g:config_home . '/bundle'
 

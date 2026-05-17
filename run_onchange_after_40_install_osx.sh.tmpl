@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[ "$(uname -s)" = "Darwin" ] || exit 0
+
+BASE="{{ .chezmoi.sourceDir }}"
+
+[ -z "$(command -v brew)" ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+mkdir -p "$HOME/Library/Application Scripts/com.apple.mail" "$HOME/Library/LaunchAgents"
+ln -sf "$BASE/dot_raycast/scripts/extra-code-from-mail.applescript" "$HOME/Library/Application Scripts/com.apple.mail/extra-code-from-mail.applescript"
+ln -sf "$BASE/macos/Library/LaunchAgents/com.minis.tg.listen.plist" "$HOME/Library/LaunchAgents/com.minis.tg.listen.plist"
+ln -sf "$BASE/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" "$HOME/Library/LaunchAgents/com.jiz4oh.lemonade.plist"
+
+echo "Updating homebrew"
+brew bundle --no-upgrade
+echo "Updated homebrew"
+
+if [ ! -d "$HOME/.asdf" ]; then
+  git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf"
+fi
+mkdir -p "$HOME/.rbenv/plugins"
+if [ ! -e "$HOME/.rbenv/plugins/rbenv-default-gems" ]; then
+  git clone https://github.com/rbenv/rbenv-default-gems.git "$HOME/.rbenv/plugins/rbenv-default-gems"
+fi
+if [ ! -e "$HOME/.rbenv/plugins/rbenv-ctags" ]; then
+  git clone https://github.com/tpope/rbenv-ctags.git "$HOME/.rbenv/plugins/rbenv-ctags"
+fi
+
+"$BASE/rime/install" "$HOME/Library/Rime"
+
+# macOS defaults
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock show-recents -bool false
+killall Dock || true
+
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
+defaults write com.apple.finder FXDefaultSearchScope -string SCcf
+defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+defaults write com.apple.finder FXPreferredViewStyle -string Nlsv
+defaults write com.apple.finder RelativeDates -bool false
+defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add 1 "yyyy-MM-dd HH:mm"
+defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add 2 "yyyy-MM-dd HH:mm:ss"
+defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add 3 "yyyy-MM-dd HH:mm:ss"
+defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add 4 "yyyy-MM-dd HH:mm:ss"
+killall Finder || true
+
+defaults write com.apple.menuextra.clock DateFormat -string "\"EEE d MMM HH:mm:ss\""
+defaults write com.apple.menuextra.clock ShowSeconds -bool true
+defaults write com.apple.menuextra.clock FlashDateSeparators -bool true
+killall SystemUIServer || true
+
+defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
+defaults write -g KeyRepeat -int 2
+defaults write -g InitialKeyRepeat -int 15
+defaults write NSGlobalDomain AppleMeasurementUnits -string Centimeters
+defaults write NSGlobalDomain AppleICUForce24HourTime -bool true
+defaults write -g AppleTemperatureUnit -string Celsius
+defaults write -g WebAutomaticTextReplacementEnabled -int 0
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
+pwpolicy -clearaccountpolicies || true
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+defaults write com.rouge41.middleClick fingers 5
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/MiddleClick.app", hidden:true}' || true

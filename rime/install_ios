@@ -24,6 +24,7 @@ UPSTREAM_ZIP_FILENAME="$VERSION.zip"
 EXTRACTED_DIR_NAME="rime-frost-$VERSION"
 # https://ihsiao.com/apps/hamster/docs/guides/sync/
 HAMSTER_DIR="$HOME/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime"
+HAMSTER3_DIR="$HOME/Library/Mobile Documents/iCloud~com~ihsiao~apps~Hamster3/Documents/RimeUserData/jiz4oh"
 
 WORK_DIR="/tmp/rime"
 mkdir -p "$WORK_DIR" # 创建工作目录
@@ -57,11 +58,19 @@ find "$EXTRACTED_PATH" -mindepth 1 -name '.*' -exec rm -rf {} +
 echo "确保目标目录存在: $HAMSTER_DIR"
 mkdir -p "$HAMSTER_DIR"
 
-echo "正在同步文件到 Hamster Rime 目录..."
+echo "正在同步文件..."
 # 使用 rsync -av 将文件同步到目标目录
 # -a: 归档模式，保留权限、时间戳等
 # 注意源路径末尾的 / 表示复制目录内容，而不是目录本身
 rsync -a "$EXTRACTED_PATH/" "$HAMSTER_DIR/"
 
 echo "配置已成功同步到 $HAMSTER_DIR"
+
+echo "确保目标目录存在: $HAMSTER3_DIR"
+mkdir -p "$HAMSTER3_DIR"
+
+echo "正在同步文件..."
+rsync -a "$EXTRACTED_PATH/" "$HAMSTER3_DIR/"
+echo "配置已成功同步到 $HAMSTER3_DIR"
+
 echo "清理临时工作目录 $WORK_DIR..." # trap 会自动执行清理

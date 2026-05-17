@@ -1,0 +1,65 @@
+_ARCH=$(arch)
+unset _ZPATH_LOADED
+
+# export OPENAI_BASE_URL="http://ai.brill-ling.ts.net/v1"
+# # fallback compibility
+# export OPENAI_API_BASE=$OPENAI_BASE_URL
+# export OPENAI_API_KEY="-"
+# export ANTHROPIC_BASE_URL="http://ai.brill-ling.ts.net"
+# export ANTHROPIC_AUTH_TOKEN="-"
+
+case $(uname -s) in
+  "Darwin")
+    if [[ "$_ARCH" == "i386" ]]; then
+      export BREW_PREFIX="/usr/local"
+    elif [[ "$_ARCH" == "arm64" ]]; then
+      export BREW_PREFIX="/opt/homebrew"
+    fi
+    ;;
+  "Linux")
+    export BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+    ;;
+esac
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+if [ -n "$NVIM" ]; then
+  export EDITOR=nvim
+else
+  export EDITOR=vim
+fi
+
+export GPG_TTY=$(tty)
+export RUBY_BUILD_MIRROR_URL=https://cache.ruby-china.com
+
+export MISE_RUBY_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
+# https://mise.jdx.dev/configuration.html#mise-use-toml-0
+export MISE_USE_TOML=1
+# avoid stuck vim if someone is not installed
+# https://mise.jdx.dev/configuration.html#mise-not-found-auto-install-true
+export MISE_NOT_FOUND_AUTO_INSTALL=false
+# export MISE_ENV_FILE=.env
+
+export ASDF_GEM_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
+export ASDF_GOLANG_DEFAULT_PACKAGES_FILE=~/.default-go-packages
+export ASDF_GOLANG_MOD_VERSION_ENABLED=true
+export ASDF_DIRENV_IGNORE_MISSING_PLUGINS=1
+
+export PDM_USE_UV=true
+
+export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
+
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+if [ -z "$SSH_AUTH_SOCK" ]; then
+  if [ -S "$HOME/.bitwarden-ssh-agent.sock" ]; then
+    export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
+  else
+    eval "$(ssh-agent -s)" >/dev/null
+  fi
+fi
+
+if [ -f ~/.env ]; then
+  set -o allexport; source ~/.env; set +o allexport
+fi
