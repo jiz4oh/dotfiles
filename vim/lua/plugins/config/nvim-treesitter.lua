@@ -28,6 +28,29 @@ else
   branch = "master"
 end
 
+local function treesitter_highlight_disabled(ft, lang)
+  local disable = opts.highlight and opts.highlight.disable
+  if type(disable) == "function" then
+    local ok, result = pcall(disable, lang, 0)
+    return ok and result or false
+  end
+  if type(disable) == "table" then
+    return vim.tbl_contains(disable, ft) or vim.tbl_contains(disable, lang)
+  end
+  return false
+end
+
+local function ensure_regex_syntax(buf, ft)
+  if ft == nil or ft == "" then
+    return
+  end
+  pcall(vim.treesitter.stop, buf)
+  if vim.bo[buf].syntax ~= "" then
+    return
+  end
+  vim.bo[buf].syntax = ft
+end
+
 local set_treesitter = function(event)
   if vim.fn.has("nvim-0.12") ~= 1 then
     local ok, parsers = pcall(require, "nvim-treesitter.parsers")
@@ -64,14 +87,22 @@ local set_treesitter = function(event)
     local ft = event.match
     local lang = vim.treesitter.language.get_lang(ft)
     if not lang then
+      ensure_regex_syntax(buf, ft)
+      return
+    end
+
+    if treesitter_highlight_disabled(ft, lang) then
+      ensure_regex_syntax(buf, ft)
       return
     end
 
     if not require("nvim-treesitter").get_available then
+      ensure_regex_syntax(buf, ft)
       return
     end
 
     if not vim.tbl_contains(require("nvim-treesitter").get_available(), lang) then
+      ensure_regex_syntax(buf, ft)
       return
     end
     ensure_parser(buf, lang)
@@ -96,11 +127,20 @@ return {
     -- during startup.
     require("lazy.core.loader").add_to_rtp(plugin)
     pcall(require, "nvim-treesitter.query_predicates")
+    local group = vim.api.nvim_create_augroup("ts_setup", {})
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "*",
-      group = vim.api.nvim_create_augroup("ts_setup", {}),
+      group = group,
       callback = set_treesitter,
     })
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_loaded(buf) then
+        local ft = vim.bo[buf].filetype
+        if ft ~= nil and ft ~= "" then
+          set_treesitter({ buf = buf, match = ft })
+        end
+      end
+    end
   end,
   config = function(_, opts)
     if vim.fn.has("nvim-0.12") ~= 1 then

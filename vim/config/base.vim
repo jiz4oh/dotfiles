@@ -13,6 +13,11 @@ let g:mapleader    = ' '
 syntax on
 syntax enable
 
+augroup syntax_fallback
+  autocmd!
+  autocmd FileType,BufEnter * if exists('b:ts_highlight') && (!get(g:, 'with_treesitter', 0) || index(['git', 'gitcommit', 'json'], &l:filetype) >= 0) | unlet! b:ts_highlight | endif | if empty(&l:syntax) && !empty(&l:filetype) | silent! execute 'setlocal syntax=' . &l:filetype | endif
+augroup END
+
 " filetype
 filetype on
 " Enable filetype plugins
