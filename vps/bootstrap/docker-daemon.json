@@ -1,0 +1,9 @@
+{
+  "log-driver": "json-file",
+  "log-opts": { "max-size": "2m", "max-file": "3" },
+  "ipv6": true,
+  "fixed-cidr-v6": "fd00::/80",
+  "ip6tables": true,
+  "experimental": true,
+  "live-restore": true
+}
