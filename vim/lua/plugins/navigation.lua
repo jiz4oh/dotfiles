@@ -20,9 +20,8 @@ return {
   },
   {
     "echasnovski/mini.jump2d",
-    enabled = false,
   },
-  {
-    "folke/flash.nvim",
-  },
+  -- {
+  --   "folke/flash.nvim",
+  -- },
 }
