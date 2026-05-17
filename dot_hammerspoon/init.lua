@@ -19,20 +19,25 @@ hs.spoons.use("window", {
   hotkeys = "default",
 })
 
-local file = io.open(os.getenv("HOME") .. "/.mydotfile", "r")
-if file ~= nil then
-  local dir = file:read()
-  file:close()
+local _DOTFILES_PATH = os.getenv("_DOTFILES_PATH")
+if _DOTFILES_PATH == nil then
+  local file = io.open(os.getenv("HOME") .. "/.mydotfile", "r")
+  if file ~= nil then
+    local _DOTFILES_PATH = file:read()
+    file:close()
+  end
+end
 
+if _DOTFILES_PATH ~= nil then
   hs.timer.doAt("5:21", function()
-    local path = hs.fs.pathToAbsolute(dir .. "/rime/squirrel_sync")
+    local path = hs.fs.pathToAbsolute(_DOTFILES_PATH .. "/rime/squirrel_sync")
     hs.task.new(path, nil):start()
   end)
 
   -- random for each different machines
   require("modules.crontab")
     :new(
-      hs.fs.pathToAbsolute(dir .. "/rime/sync_icloud"),
+      hs.fs.pathToAbsolute(_DOTFILES_PATH .. "/rime/sync_icloud"),
       -- 基础间隔 6 小时，加上 0 到 3600 秒 (0-60分钟) 的随机偏移
       hs.timer.hours(6) + math.random(0, 3600)
     )

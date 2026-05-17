@@ -9,14 +9,10 @@ fi
 
 # Resolve dotfiles root in a way that works for both symlink-managed and
 # chezmoi-managed plain files.
-if [ -f "$HOME/.mydotfile" ]; then
+if [ -d "$HOME/.local/share/chezmoi/" ]; then
+  export _DOTFILES_PATH="$HOME/.local/share/chezmoi/"
+elif [ -f "$HOME/.mydotfile" ]; then
   export _DOTFILES_PATH="$(cat "$HOME/.mydotfile")"
-elif [ -L "$HOME/.vim" ]; then
-  export _DOTFILES_PATH="$(dirname "$(realpath "$HOME/.vim")")"
-elif [ -n "${BASH_SOURCE[0]:-}" ]; then
-  export _DOTFILES_PATH="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-elif [ -n "$ZSH_VERSION" ]; then
-  export _DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 else
   export _DOTFILES_PATH="$HOME"
 fi
