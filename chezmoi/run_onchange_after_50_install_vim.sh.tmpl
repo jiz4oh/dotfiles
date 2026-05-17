@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-"{{ .chezmoi.sourceDir }}/vim/install"
+"$(cd "{{ .chezmoi.sourceDir }}/.." && pwd)/vim/install"

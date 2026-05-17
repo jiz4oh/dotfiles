@@ -3,17 +3,18 @@ set -euo pipefail
 
 [ "$(uname -s)" = "Darwin" ] || exit 0
 
-BASE="{{ .chezmoi.sourceDir }}"
+SOURCE_DIR="{{ .chezmoi.sourceDir }}"
+ROOT_DIR="$(cd "$SOURCE_DIR/.." && pwd)"
 
 [ -z "$(command -v brew)" ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 mkdir -p "$HOME/Library/Application Scripts/com.apple.mail" "$HOME/Library/LaunchAgents"
-ln -sf "$BASE/dot_raycast/scripts/extra-code-from-mail.applescript" "$HOME/Library/Application Scripts/com.apple.mail/extra-code-from-mail.applescript"
-ln -sf "$BASE/macos/Library/LaunchAgents/com.minis.tg.listen.plist" "$HOME/Library/LaunchAgents/com.minis.tg.listen.plist"
-ln -sf "$BASE/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" "$HOME/Library/LaunchAgents/com.jiz4oh.lemonade.plist"
+ln -sf "$SOURCE_DIR/dot_raycast/scripts/extra-code-from-mail.applescript" "$HOME/Library/Application Scripts/com.apple.mail/extra-code-from-mail.applescript"
+ln -sf "$ROOT_DIR/macos/Library/LaunchAgents/com.minis.tg.listen.plist" "$HOME/Library/LaunchAgents/com.minis.tg.listen.plist"
+ln -sf "$ROOT_DIR/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" "$HOME/Library/LaunchAgents/com.jiz4oh.lemonade.plist"
 
 echo "Updating homebrew"
-brew bundle --no-upgrade --file "$BASE/Brewfile" || echo "[warn] brew bundle failed; continue"
+brew bundle --no-upgrade --file "$SOURCE_DIR/Brewfile" || echo "[warn] brew bundle failed; continue"
 echo "Updated homebrew"
 
 if [ ! -d "$HOME/.asdf" ]; then
