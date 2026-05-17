@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage:
+  chezmoi_link <target-path> [--source <chezmoi-source>] [--no-apply]
+
+Example:
+  chezmoi_link ~/.hermes/SOUL.md
+  chezmoi_link ~/Projects/my-repo
+  chezmoi_link ~/.codex/AGENTS.md --no-apply
+EOF
+}
+
+SOURCE_DIR="${HOME}/.local/share/chezmoi"
+NO_APPLY=0
+TARGET=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --source)
+      SOURCE_DIR="$2"
+      shift 2
+      ;;
+    --no-apply)
+      NO_APPLY=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      if [[ -z "$TARGET" ]]; then
+        TARGET="$1"
+        shift
+      else
+        echo "Unexpected argument: $1" >&2
+        usage
+        exit 1
+      fi
+      ;;
+  esac
+done
+
+if [[ -z "$TARGET" ]]; then
+  usage
+  exit 1
+fi
+
+if ! command -v chezmoi >/dev/null 2>&1; then
+  echo "chezmoi not found in PATH" >&2
+  exit 1
+fi
+
+TARGET="${TARGET/#\~/$HOME}"
+if [[ "$TARGET" != /* ]]; then
+  TARGET="$(cd "$(pwd)" && pwd)/$TARGET"
+fi
+
+if [[ ! -e "$TARGET" ]]; then
+  echo "Target does not exist: $TARGET" >&2
+  exit 1
+fi
+
+case "$TARGET" in
+  "$HOME"/*) ;;
+  *)
+    echo "Target must be under HOME: $TARGET" >&2
+    exit 1
+    ;;
+esac
+
+REL="${TARGET#$HOME/}"
+IFS='/' read -r -a PARTS <<< "$REL"
+if [[ ${#PARTS[@]} -eq 0 ]]; then
+  echo "Invalid target path: $TARGET" >&2
+  exit 1
+fi
+
+# Build plain source path, e.g. .hermes/SOUL.md -> hermes/SOUL.md
+PLAIN_PARTS=()
+for p in "${PARTS[@]}"; do
+  if [[ "$p" == .* ]]; then
+    PLAIN_PARTS+=("${p#.}")
+  else
+    PLAIN_PARTS+=("$p")
+  fi
+done
+
+PLAIN_PATH="$SOURCE_DIR"
+for p in "${PLAIN_PARTS[@]}"; do
+  PLAIN_PATH="$PLAIN_PATH/$p"
+done
+
+# Build chezmoi entry path, e.g. .hermes/SOUL.md -> dot_hermes/symlink_SOUL.md
+ENTRY_DIR="$SOURCE_DIR"
+for ((i=0; i<${#PARTS[@]}-1; i++)); do
+  p="${PARTS[$i]}"
+  if [[ "$p" == .* ]]; then
+    ENTRY_DIR="$ENTRY_DIR/dot_${p#.}"
+  else
+    ENTRY_DIR="$ENTRY_DIR/$p"
+  fi
+done
+
+BASENAME="${PARTS[-1]}"
+ENTRY_PATH="$ENTRY_DIR/symlink_${BASENAME}"
+
+mkdir -p "$(dirname "$PLAIN_PATH")" "$ENTRY_DIR"
+if [[ -d "$TARGET" ]]; then
+  rm -rf "$PLAIN_PATH"
+  cp -R "$TARGET" "$PLAIN_PATH"
+else
+  cp -f "$TARGET" "$PLAIN_PATH"
+fi
+printf '%s\n' "$PLAIN_PATH" > "$ENTRY_PATH"
+
+if [[ $NO_APPLY -eq 0 ]]; then
+  chezmoi --source "$SOURCE_DIR" apply --force --no-tty
+fi
+
+echo "ok"
+echo "target: $TARGET"
+if [[ -d "$TARGET" ]]; then
+  if [[ -d "$TARGET/.git" ]]; then
+    echo "kind: repo-directory"
+  else
+    echo "kind: directory"
+  fi
+else
+  echo "kind: file"
+fi
+echo "source-file: $PLAIN_PATH"
+echo "symlink-entry: $ENTRY_PATH"
