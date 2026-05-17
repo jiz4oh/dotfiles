@@ -1,6 +1,4 @@
-# Keep this repository as the chezmoi source directory while exposing only
-# native dot_* entries and explicit symlink_* entries. Raw project files are
-# ignored so they are not copied to $HOME by accident.
+# Keep only ephemeral/system artifacts ignored.
 
 .DS_Store
 .aider.chat.history.md
@@ -8,39 +6,8 @@
 .aider.tags.cache.v4
 .git
 .gitmodules
-.gutctags
-.omx
-.projections.json
-.ruby-lsp
-.stylua.toml
 .vscode
-Brewfile
-Brewfile.lock.json
-CHEZMOI.md
-agents
 bak
-bin
-codex
-config
-ctags.d
-git_template
-hammerspoon
-install
-macos
-mihomo.yaml
-nvim.log
-oh-my-zsh
-prompts
-raycast
-rbenv
-rime
-scripts
-snipaste
-stash1.yaml
 tags
-terminfo
 tmp
-tmux
-vim
-windows
-zsh_autoload
+vim/bundle
