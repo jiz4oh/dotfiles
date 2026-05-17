@@ -13,7 +13,7 @@ ln -sf "$BASE/macos/Library/LaunchAgents/com.minis.tg.listen.plist" "$HOME/Libra
 ln -sf "$BASE/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" "$HOME/Library/LaunchAgents/com.jiz4oh.lemonade.plist"
 
 echo "Updating homebrew"
-brew bundle --no-upgrade
+brew bundle --no-upgrade --file "$BASE/Brewfile" || echo "[warn] brew bundle failed; continue"
 echo "Updated homebrew"
 
 if [ ! -d "$HOME/.asdf" ]; then
