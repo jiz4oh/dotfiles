@@ -1,0 +1,13 @@
+[".config/kitty/kitty_search"]
+  type = "git-repo"
+  url = "https://github.com/trygveaa/kitty-kitten-search"
+  refreshPeriod = "168h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+
+[".tmux/plugins/tpm"]
+  type = "git-repo"
+  url = "https://github.com/tmux-plugins/tpm"
+  refreshPeriod = "168h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
