@@ -1,4 +1,34 @@
 {
+  "chezmoi/.chezmoiexternals": {
+    "type": "chezmoiexternal"
+  },
+  "chezmoi/.chezmoiexternals/*.toml": {
+    "type": "chezmoiexternal"
+  },
+  "chezmoi/.chezmoiscripts": {
+    "type": "chezmoiscripts"
+  },
+  "chezmoi/.chezmoiscripts/*.tmpl": {
+    "type": "chezmoiscripts"
+  },
+  "chezmoi/.chezmoidata": {
+    "type": "chezmoidata"
+  },
+  "chezmoi/.chezmoidata/*": {
+    "type": "chezmoidata"
+  },
+  "chezmoi/.chezmoitemplates": {
+    "type": "chezmoitemplates"
+  },
+  "chezmoi/.chezmoitemplates/*": {
+    "type": "chezmoitemplates"
+  },
+  "chezmoi/bin": {
+    "type": "bin"
+  },
+  "chezmoi/bin/*": {
+    "type": "bin"
+  },
   "vim/lsp/*.lua": {
     "type": "lsp",
     "template":  [
