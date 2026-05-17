@@ -2,51 +2,71 @@
   type = "git-repo"
   url = "https://github.com/trygveaa/kitty-kitten-search"
   refreshPeriod = "168h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".tmux/plugins/tpm"]
   type = "git-repo"
   url = "https://github.com/tmux-plugins/tpm"
   refreshPeriod = "168h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".agents/skill-sources/notebooklm-skill"]
   type = "git-repo"
   url = "https://github.com/PleasePrompto/notebooklm-skill"
-  refreshPeriod = "168h"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".agents/skill-sources/ordinary-claude-skills"]
   type = "git-repo"
   url = "https://github.com/Microck/ordinary-claude-skills"
-  refreshPeriod = "168h"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".agents/skill-sources/superpowers"]
   type = "git-repo"
   url = "https://github.com/obra/superpowers"
-  refreshPeriod = "168h"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".agents/skill-sources/git-commit-helper"]
   type = "git-repo"
   url = "https://github.com/alirezarezvani/claude-code-tresor"
-  refreshPeriod = "168h"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".oh-my-zsh/custom/plugins/zsh-autosuggestions"]
   type = "git-repo"
   url = "https://github.com/zsh-users/zsh-autosuggestions"
-  refreshPeriod = "168h"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
   type = "git-repo"
   url = "https://github.com/zsh-users/zsh-syntax-highlighting"
-  refreshPeriod = "168h"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".oh-my-zsh/custom/plugins/fzf-tab"]
   type = "git-repo"
   url = "https://github.com/Aloxaf/fzf-tab"
-  refreshPeriod = "168h"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".oh-my-zsh/custom/themes/powerlevel10k"]
   type = "git-repo"
   url = "https://github.com/romkatv/powerlevel10k"
-  refreshPeriod = "168h"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
 
 [".hammerspoon/Spoons/EmmyLua.spoon"]
   type = "archive"
