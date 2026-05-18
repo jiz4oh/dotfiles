@@ -10,7 +10,6 @@ shellcheck = "latest"
 usage = "latest"
 tirith = "latest"
 "github:cormiertyshawn895/PixelPerfect" = { version = "latest", no_app = "false" }
-"npm:@jackwener/wx-cli" = "latest"
 
 [settings]
 go_set_gobin = true
