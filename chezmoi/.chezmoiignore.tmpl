@@ -20,8 +20,6 @@ vim/bundle
 Thumbs.db
 ehthumbs.db
 
-**/*~
-**/#*#
 .TemporaryItems
 
 Library/Application Support/com.mitchellh.ghostty/*.tmp
@@ -37,3 +35,25 @@ yarn.lock
 temp
 
 *.cache
+
+{{- if ne .chezmoi.os "darwin" }}
+bin/macos-askpass
+bin/new_wechat
+bin/open-kitty
+bin/open-wezterm
+bin/report_verification_code
+bin/extract_verification_code
+bin/copy_ntfy
+bin/lemonade-daemon
+
+dot_hammerspoon
+dot_hammerspoon/**
+dot_raycast
+dot_raycast/**
+dot_snipaste
+dot_snipaste/**
+{{- end }}
+
+{{- if or (ne .chezmoi.os "linux") (ne (get .chezmoi.osRelease "id") "debian") }}
+bin/upgrade_debian.sh
+{{- end }}
