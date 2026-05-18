@@ -13,5 +13,3 @@ fi
 
 rm -f ~/.config/nvim 2> /dev/null
 rm -rf ~/.config/nvim 2> /dev/null
-
-ln -svf "$BASE"/ ~/.config/nvim
