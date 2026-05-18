@@ -1,10 +1,9 @@
-# Chezmoi migration
+# Chezmoi 结构说明
 
-This repository root is the chezmoi source directory. Simple files use native
-chezmoi `dot_*` source-state names. Large mutable trees use explicit symlink or
-external entries.
+这个仓库根目录就是 `chezmoi` 的 source dir。简单文件优先使用原生
+`dot_*` 命名，大型或可变目录使用显式 `symlink_*` 或 external 管理。
 
-## Daily flow
+## 日常命令
 
 ```sh
 chezmoi --source "$PWD" managed
@@ -12,67 +11,68 @@ chezmoi --source "$PWD" apply --dry-run --force --no-tty
 chezmoi --source "$PWD" apply --force --no-tty
 ```
 
-Equivalent raw commands:
+查看差异：
 
 ```sh
 chezmoi --source "$PWD" diff
-chezmoi --source "$PWD" apply
 ```
 
-Direct source path:
+## 当前覆盖范围
 
-```sh
-chezmoi --source "$PWD" diff
-chezmoi --source "$PWD" apply
-```
+这次迁移已经把旧 `install` 脚本里的主要内容收进 `chezmoi`：
 
-## Scope
-
-The migration currently covers the files and directories from the legacy
-`install` script:
-
-- simple shell, git, tmux, editor, formatter, and tool dotfiles as native
-  `dot_*` entries
-- simple nested files such as `~/.config/direnv/direnv.toml`,
-  `~/.config/lemonade.toml`, `~/.codex/AGENTS.md`,
-  `~/.rbenv/default-gems`, `~/.snipaste/config.ini`, and
-  `~/.hammerspoon/init.lua`
-- larger directories as symlinks, including `~/.agents`, `~/.vim`,
-  `~/.raycast`, `~/.terminfo`, `~/.config/{kitty,mise,rubocop,solargraph,wezterm}`,
-  and `~/.hammerspoon/{Spoons,modules}`
-- former git submodules are now managed by files under
-  `chezmoi/.chezmoiexternals/`:
-  `~/.config/kitty/kitty_search`, `~/.tmux/plugins/tpm`, and
+- shell、git、tmux、编辑器、格式化工具等简单 dotfiles，使用原生
+  `dot_*` 形式管理
+- `~/.config/direnv/direnv.toml`、`~/.config/lemonade.toml`、
+  `~/.codex/AGENTS.md`、`~/.rbenv/default-gems`、
+  `~/.snipaste/config.ini`、`~/.hammerspoon/init.lua` 这类单文件或浅层目录
+- `~/.agents`、`~/.vim`、`~/.raycast`、`~/.terminfo`、
+  `~/.config/{kitty,mise,rubocop,solargraph,wezterm}`、
+  `~/.hammerspoon/{Spoons,modules}` 这类大目录，使用 symlink 管理
+- 原先的 git submodule 现在统一放进 `chezmoi/.chezmoiexternals/`：
+  `~/.config/kitty/kitty_search`、`~/.tmux/plugins/tpm`、以及
   `~/.agents/skill-sources/{git-commit-helper,notebooklm-skill,ordinary-claude-skills,superpowers}`
-- the Rime upstream repo is managed as an external checkout under
-  `~/.local/share/rime-frost`, while local overlays remain in `rime/custom` and
-  `rime/opencc`
+- Rime 上游仓库通过 external 落到 `~/.local/share/rime-frost`，本地覆盖层继续放在
+  `rime/custom` 和 `rime/opencc`
 
-Mutating setup steps are now executed through files under
-`chezmoi/.chezmoiscripts/`:
+## 脚本约定
 
-- `run_once_*`: one-time bootstrap steps
-- `run_onchange_*`: rerun when script content changes
-- `run_after_*`: run after `chezmoi apply` finishes
+会修改机器状态的步骤统一放在 `chezmoi/.chezmoiscripts/`：
 
-Declarative package lists live under `chezmoi/.chezmoidata/`. The current
-package source of truth is `chezmoi/.chezmoidata/packages.yaml`, consumed by
-OS-specific `run_onchange_*install_packages*` scripts.
+- `run_once_*`：只执行一次的初始化步骤
+- `run_onchange_*`：脚本内容变化时重新执行
+- `run_after_*`：每次 `chezmoi apply` 完成后执行
 
-Manual helper scripts that should not run during `chezmoi apply` should stay
-outside `chezmoi/.chezmoiscripts/`. For Rime, the user-facing entrypoints stay
-under `rime/`, while only the automatic apply hook remains in
-`chezmoi/.chezmoiscripts/`.
+## 包管理
 
-## Notes
+声明式包清单放在 `chezmoi/.chezmoidata/`。当前唯一真源是：
 
-- `.chezmoiignore` ignores raw repository files so only native `dot_*`
-  entries and explicit `symlink_*` entries are applied.
-- The remaining symlink targets use `{{ .chezmoi.sourceDir }}` so the source
-  checkout can move without editing the mappings.
-- The legacy `install` script now skips missing legacy file paths. Use chezmoi
-  for dotfile placement, then run the legacy scripts only for software,
-  plugins, and system setup.
-- `oh-my-zsh/custom` is not mapped in this pass because an existing Oh My Zsh
-  install commonly owns that directory. Keep using `install` or migrate it after
-  deciding whether the whole directory should be replaced by a symlink.
+```text
+chezmoi/.chezmoidata/packages.yaml
+```
+
+对应安装脚本：
+
+- macOS：`run_onchange_before_06_install_packages_darwin.sh.tmpl`
+- Linux：`run_onchange_before_41_install_packages_linux.sh.tmpl`
+
+## 手动脚本
+
+不应该在 `chezmoi apply` 期间自动执行的 helper，继续放在
+`.chezmoiscripts/` 之外。
+
+Rime 这块的约定是：
+
+- 用户手动入口保留在 `rime/`
+- 只有自动同步钩子保留在 `chezmoi/.chezmoiscripts/`
+
+## 备注
+
+- `.chezmoiignore` 会忽略原始仓库文件，只让原生 `dot_*`、显式 `symlink_*`
+  和脚本映射参与 apply
+- 还在使用的 symlink 目标统一引用 `{{ .chezmoi.sourceDir }}`，这样 source dir
+  挪位置后不用改路径
+- 旧 `install` 脚本现在只适合做遗留的软件安装、插件安装或系统初始化补充，不再作为
+  dotfiles 落盘主入口
+- `oh-my-zsh/custom` 目前没有整体切成 symlink，因为很多机器已经有现成的
+  Oh My Zsh 目录；后续要不要整体接管，先看目标机器的实际安装状态
