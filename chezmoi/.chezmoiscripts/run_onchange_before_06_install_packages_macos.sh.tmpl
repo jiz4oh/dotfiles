@@ -6,7 +6,7 @@ exit 0
 {{- end }}
 
 if ! command -v brew >/dev/null 2>&1; then
-  echo "[packages-darwin][warn] brew not found; skip package install" >&2
+  echo "[packages-macos][warn] brew not found; skip package install" >&2
   exit 0
 fi
 
@@ -16,7 +16,7 @@ warn_count=0
 if ! brew tap | grep -qxF {{ $tap | quote }}; then
   if ! out="$(brew tap {{ $tap | quote }} 2>&1)"; then
     warn_count=$((warn_count + 1))
-    echo "[packages-darwin][warn] failed tap {{ $tap }}" >&2
+    echo "[packages-macos][warn] failed tap {{ $tap }}" >&2
     printf '%s\n' "$out" >&2
   fi
 fi
@@ -26,7 +26,7 @@ fi
 if ! brew list --formula {{ $pkg.name | quote }} >/dev/null 2>&1; then
   if ! out="$(brew install{{ if (get $pkg "head") }} --HEAD{{ end }} {{ $pkg.name | quote }} 2>&1)"; then
     warn_count=$((warn_count + 1))
-    echo "[packages-darwin][warn] failed formula {{ $pkg.name }}" >&2
+    echo "[packages-macos][warn] failed formula {{ $pkg.name }}" >&2
     printf '%s\n' "$out" >&2
   fi
 fi
@@ -36,10 +36,10 @@ fi
 if ! brew list --cask {{ $cask | quote }} >/dev/null 2>&1; then
   if ! out="$(brew install --cask {{ $cask | quote }} 2>&1)"; then
     if printf '%s' "$out" | grep -q "depends on hardware architecture"; then
-      echo "[packages-darwin][skip] cask {{ $cask }} skipped by brew architecture check" >&2
+      echo "[packages-macos][skip] cask {{ $cask }} skipped by brew architecture check" >&2
     else
       warn_count=$((warn_count + 1))
-      echo "[packages-darwin][warn] failed cask {{ $cask }}" >&2
+      echo "[packages-macos][warn] failed cask {{ $cask }}" >&2
       printf '%s\n' "$out" >&2
     fi
   fi
@@ -50,14 +50,14 @@ fi
 if brew list --formula {{ $service | quote }} >/dev/null 2>&1; then
   if ! out="$(brew services start {{ $service | quote }} 2>&1)"; then
     warn_count=$((warn_count + 1))
-    echo "[packages-darwin][warn] failed service start {{ $service }}" >&2
+    echo "[packages-macos][warn] failed service start {{ $service }}" >&2
     printf '%s\n' "$out" >&2
   fi
 fi
 {{- end }}
 
 if [ "$warn_count" -gt 0 ]; then
-  echo "[packages-darwin][warn] completed with ${warn_count} warning(s)" >&2
+  echo "[packages-macos][warn] completed with ${warn_count} warning(s)" >&2
 else
-  echo "[packages-darwin][ok] completed without warnings"
+  echo "[packages-macos][ok] completed without warnings"
 fi
