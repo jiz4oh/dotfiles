@@ -21,7 +21,3 @@ fi
 if [ -f "$ROOT_DIR/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" ]; then
   ln -sf "$ROOT_DIR/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" "$HOME/Library/LaunchAgents/com.jiz4oh.lemonade.plist"
 fi
-
-if [ -x "$ROOT_DIR/rime/install" ]; then
-  bash "$ROOT_DIR/rime/install" || warn "rime/install failed; continue"
-fi

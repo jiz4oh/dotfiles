@@ -1,0 +1,6 @@
+[".local/share/rime-frost"]
+  type = "git-repo"
+  url = "https://github.com/gaboolic/rime-frost"
+  refreshPeriod = "168h"
+  clone.args = ["--branch", "0.0.5", "--single-branch", "--filter=blob:none"]
+  pull.args = ["--ff-only"]

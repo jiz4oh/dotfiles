@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# https://github.com/rime/squirrel/issues/421#issuecomment-2228984110
-mkdir -p ~/Library/Rime
-if [ -n "$(pgrep 'Squirrel')" ]; then
-	cpu_usage=$(ps -p $(pgrep 'Squirrel') -o %cpu=)
-	if [ "$(echo "$cpu_usage <= 0.5" | bc -l)" -eq 1 ]; then
-		cd ~/Library/Rime || exit
-		DYLD_LIBRARY_PATH="/Library/Input Methods/Squirrel.app/Contents/Frameworks" "/Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel" --quit
-		DYLD_LIBRARY_PATH="/Library/Input Methods/Squirrel.app/Contents/Frameworks" "/Library/Input Methods/Squirrel.app/Contents/MacOS/rime_dict_manager" -s
-	fi
+set -euo pipefail
+
+mkdir -p "$HOME/Library/Rime"
+if [ -n "$(pgrep 'Squirrel' || true)" ]; then
+  cpu_usage="$(ps -p "$(pgrep 'Squirrel')" -o %cpu=)"
+  if [ "$(echo "$cpu_usage <= 0.5" | bc -l)" -eq 1 ]; then
+    cd "$HOME/Library/Rime" || exit 1
+    DYLD_LIBRARY_PATH="/Library/Input Methods/Squirrel.app/Contents/Frameworks" "/Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel" --quit
+    DYLD_LIBRARY_PATH="/Library/Input Methods/Squirrel.app/Contents/Frameworks" "/Library/Input Methods/Squirrel.app/Contents/MacOS/rime_dict_manager" -s
+  fi
 fi

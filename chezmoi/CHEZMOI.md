@@ -44,12 +44,24 @@ The migration currently covers the files and directories from the legacy
   `chezmoi/.chezmoiexternals/`:
   `~/.config/kitty/kitty_search`, `~/.tmux/plugins/tpm`, and
   `~/.agents/skill-sources/{git-commit-helper,notebooklm-skill,ordinary-claude-skills,superpowers}`
+- the Rime upstream repo is managed as an external checkout under
+  `~/.local/share/rime-frost`, while local overlays remain in `rime/custom` and
+  `rime/opencc`
 
 Mutating setup steps are now executed through files under
 `chezmoi/.chezmoiscripts/`:
 
 - `run_once_*`: one-time bootstrap steps
 - `run_onchange_*`: rerun when script content changes
+
+Declarative package lists live under `chezmoi/.chezmoidata/`. The current
+package source of truth is `chezmoi/.chezmoidata/packages.yaml`, consumed by
+OS-specific `run_onchange_*install_packages*` scripts.
+
+Manual helper scripts that should not run during `chezmoi apply` should stay
+outside `chezmoi/.chezmoiscripts/`. For Rime, the user-facing entrypoints stay
+under `rime/`, while only the automatic apply hook remains in
+`chezmoi/.chezmoiscripts/`.
 
 ## Notes
 

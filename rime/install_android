@@ -1,113 +1,68 @@
-#!/bin/bash
-# ./install_android /sdcard/Android/rime
-# ANDROID_SERIAL=xxxx ./install_android /sdcard/Android/rime
-# Example Usage:
-# ./install_android /sdcard/Android/data/org.fcitx.fcitx5.android/files/data/rime/
-# ANDROID_SERIAL=xxxx ./install_android /sdcard/Android/data/org.fcitx.fcitx5.android/files/data/rime/
+#!/usr/bin/env bash
 
-# Exit immediately if a command exits with a non-zero status.
-# Print commands and their arguments as they are executed.
-set -ex
+set -euo pipefail
 
-# --- Configuration ---
-# Check if target directory is provided
-if [ -z "$1" ]; then
-  echo "错误: 请提供目标安装目录作为第一个参数。" >&2
+log() {
+  echo "[rime-android] $*"
+}
+
+if [ -z "${1:-}" ]; then
   echo "用法: $0 <目标目录>" >&2
   exit 1
 fi
+
 TARGET_DIR="$1"
+BASE="$(cd "$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")" && pwd)"
+UPSTREAM_DIR="$HOME/.local/share/rime-frost"
+LOCAL_TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$LOCAL_TMP_DIR"' EXIT
+STAGE_DIR="$LOCAL_TMP_DIR/rime"
+ARCHIVE_PATH="$LOCAL_TMP_DIR/rime-android.zip"
+REMOTE_TMP_DIR="/sdcard/Download/rime-install"
+REMOTE_ARCHIVE_PATH="$REMOTE_TMP_DIR/rime-android.zip"
+REMOTE_EXTRACT_DIR="$REMOTE_TMP_DIR/extracted"
 
-# Determine script's base directory and project root
-SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
-BASE=$(dirname "$SCRIPT_DIR")
-cd "$BASE" || exit 1 # Ensure we are in the project root
+command -v adb >/dev/null 2>&1 || { log "错误：需要 adb 命令。" >&2; exit 1; }
+command -v zip >/dev/null 2>&1 || { log "错误：需要 zip 命令。" >&2; exit 1; }
+[ -d "$UPSTREAM_DIR" ] || { log "错误：缺少 upstream 目录 $UPSTREAM_DIR" >&2; exit 1; }
 
-# Read version and construct URLs/names
-VERSION=$(cat "$BASE"/rime/upstream_version)
-REPO_URL="https://github.com/gaboolic/rime-frost/archive/refs/tags/$VERSION.zip"
-UNZIP_DIR_NAME="rime-frost-$VERSION"
-REMOTE_TMP_DIR="/sdcard/Download" # Temporary directory on the Android device
+log "staging files from upstream"
+mkdir -p "$STAGE_DIR"
+rsync -a --delete --exclude '.git/' --exclude 'sync/' "$UPSTREAM_DIR/" "$STAGE_DIR/"
+cp "$BASE"/rime/custom/* "$STAGE_DIR/"
+mkdir -p "$STAGE_DIR/opencc"
+cp "$BASE"/rime/opencc/* "$STAGE_DIR/opencc/"
+cp -f "$UPSTREAM_DIR/rime_frost.dict.yaml" "$STAGE_DIR/pinyin_flypy.dict.yaml"
 
-# Create a local temporary directory for downloads
-LOCAL_TMP_DIR=$(mktemp -d)
-# Ensure the temporary directory is cleaned up on script exit
-trap 'rm -rf -- "$LOCAL_TMP_DIR"' EXIT
-LOCAL_ZIP="$LOCAL_TMP_DIR/rime-frost-$VERSION.zip"
-ZIP_BASENAME=$(basename "$LOCAL_ZIP")
-REMOTE_ZIP_PATH="$REMOTE_TMP_DIR/$ZIP_BASENAME"
-REMOTE_UNZIP_PATH="$REMOTE_TMP_DIR/$UNZIP_DIR_NAME"
+log "creating archive $ARCHIVE_PATH"
+(
+  cd "$STAGE_DIR"
+  zip -qr "$ARCHIVE_PATH" .
+)
 
-# --- Helper Functions ---
-adb_shell() {
-  echo "Executing on device: adb shell $@"
-  adb shell "$@"
-  if [ $? -ne 0 ]; then
-    echo "错误: adb shell 命令执行失败: $@" >&2
-    exit 1
-  fi
-}
-
-adb_push() {
-  echo "Pushing to device: adb push $@"
-  adb push "$@"
-  if [ $? -ne 0 ]; then
-    echo "错误: adb push 命令执行失败: $@" >&2
-    exit 1
-  fi
-}
-
-# --- Main Logic ---
-
-# Ensure target directories exist on the device
-adb_shell "mkdir -p '$TARGET_DIR'"
-adb_shell "mkdir -p '$TARGET_DIR/opencc'"
-adb_shell "mkdir -p '$REMOTE_TMP_DIR'" # Ensure remote temp dir exists
-
-# 1. Download rime-frost release zip
-echo "正在下载 Rime Frost v$VERSION..."
-curl -L -o "$LOCAL_ZIP" "$REPO_URL"
-if [ $? -ne 0 ]; then
-  echo "错误: 下载 Rime Frost ZIP 包失败 ($REPO_URL)" >&2
+log "probing unzip support on device"
+if adb shell "command -v unzip >/dev/null 2>&1"; then
+  UNZIP_CMD="unzip"
+elif adb shell "toybox unzip -h >/dev/null 2>&1"; then
+  UNZIP_CMD="toybox unzip"
+else
+  log "错误：设备端缺少 unzip 或 toybox unzip，无法解压压缩包。" >&2
   exit 1
 fi
-echo "下载完成: $LOCAL_ZIP"
 
-# 2. Push zip to device
-echo "正在将 ZIP 包推送到设备: $REMOTE_ZIP_PATH"
-adb_push "$LOCAL_ZIP" "$REMOTE_ZIP_PATH"
+log "preparing remote temp dir"
+adb shell "rm -rf '$REMOTE_TMP_DIR' && mkdir -p '$REMOTE_TMP_DIR' '$TARGET_DIR'"
 
-# 3. Extract zip on device
-echo "正在设备上解压 ZIP 包..."
-# Clean up previous extraction attempts first
-adb_shell "rm -rf '$REMOTE_UNZIP_PATH'"
-# Unzip, overwriting existing files (-o), quiet mode (-q) might be useful too
-adb_shell "cd '$REMOTE_TMP_DIR' && unzip -o '$ZIP_BASENAME'"
-echo "解压完成。"
+log "pushing archive to device"
+adb push "$ARCHIVE_PATH" "$REMOTE_ARCHIVE_PATH"
 
-# 4. Copy extracted files to target directory
-echo "正在将解压后的文件复制到目标目录: $TARGET_DIR"
-# Use -T to treat destination as a normal file if source is single file (safer)
-# Use -a for archive mode (preserves permissions, etc.), though -r might suffice
-adb_shell "cp -a '$REMOTE_UNZIP_PATH'/* '$TARGET_DIR/'"
-echo "文件复制完成。"
+log "extracting archive on device"
+adb shell "rm -rf '$REMOTE_EXTRACT_DIR' && mkdir -p '$REMOTE_EXTRACT_DIR' && $UNZIP_CMD -o '$REMOTE_ARCHIVE_PATH' -d '$REMOTE_EXTRACT_DIR' >/dev/null"
 
-# 5. Push custom configuration files
-echo "正在推送自定义配置文件..."
-adb_push "$BASE"/rime/custom/* "$TARGET_DIR/"
-echo "自定义配置文件推送完成。"
+log "replacing target contents on device"
+adb shell "find '$TARGET_DIR' -mindepth 1 -maxdepth 1 -exec rm -rf {} + && cp -a '$REMOTE_EXTRACT_DIR'/.' '$TARGET_DIR'/"
 
-# 6. Push custom opencc files
-echo "正在推送自定义 OpenCC 文件..."
-adb_push "$BASE"/rime/opencc/* "$TARGET_DIR/opencc/"
-echo "自定义 OpenCC 文件推送完成。"
+log "cleaning remote temp dir"
+adb shell "rm -rf '$REMOTE_TMP_DIR'"
 
-# 7. Clean up temporary files on device
-echo "正在清理设备上的临时文件..."
-adb_shell "rm '$REMOTE_ZIP_PATH'"
-adb_shell "rm -rf '$REMOTE_UNZIP_PATH'"
-echo "设备清理完成。"
-
-# Local temporary directory is cleaned up by trap
-
-echo "Rime 配置安装/更新成功！目标目录: $TARGET_DIR"
+log "done: $TARGET_DIR"
