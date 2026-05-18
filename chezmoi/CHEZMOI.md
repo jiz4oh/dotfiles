@@ -53,6 +53,7 @@ Mutating setup steps are now executed through files under
 
 - `run_once_*`: one-time bootstrap steps
 - `run_onchange_*`: rerun when script content changes
+- `run_after_*`: run after `chezmoi apply` finishes
 
 Declarative package lists live under `chezmoi/.chezmoidata/`. The current
 package source of truth is `chezmoi/.chezmoidata/packages.yaml`, consumed by

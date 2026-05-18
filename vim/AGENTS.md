@@ -23,7 +23,7 @@ nvim --headless "+lua print('ok')" +qall
 - 保持 Vim 和 Neovim 兼容判断：仓库大量使用 `has('nvim')`、版本判断和可执行文件探测，修改时不要移除这些守卫。
 - `install` 会改写 `~/.config/nvim` 符号链接并执行插件恢复；除非用户明确要求，不要替用户运行它。
 - `tasks.ini`、`config/plugin/vim-test.vim`、`config/plugin/vim-dispatch.vim` 约定了 `Dispatch` 与 `vim-test` 工作流；改任务或测试相关行为时先核对这三处。
-- Markdown 预览当前走 `brianhuster/live-preview.nvim`，命令入口 `:MarkdownPreview` 实际映射到 `:LivePreview start`；不要误改回已禁用的 `iamcco/markdown-preview.nvim`。
+- Markdown 预览当前默认走 `brianhuster/live-preview.nvim`，命令入口 `:MarkdownPreview` 实际映射到 `:LivePreview start`；`iamcco/markdown-preview.nvim` 仍保留在插件清单里做兼容，不要把两条链路的说明写反。
 - 涉及 SSH 下浏览器打开或远程预览时，优先检查 `lua/config/ui.lua` 和 `lua/plugins/config/live-preview.lua`。
 
 ## 维护规则

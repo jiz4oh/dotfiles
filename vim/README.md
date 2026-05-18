@@ -227,6 +227,7 @@ NERDTree 代替 netrw
 
 插件:
 
+- https://github.com/brianhuster/live-preview.nvim
 - https://github.com/iamcco/markdown-preview.nvim
 - https://github.com/lervag/wiki.vim
 - https://github.com/mzlogin/vim-markdown-toc
@@ -241,6 +242,7 @@ NERDTree 代替 netrw
 
 命令|速记|描述
 ---|---|---
+`MarkdownPreview`||默认映射到 `LivePreview start`
 `Goyo`||切换勿扰模式
 
 #### 其他
@@ -276,4 +278,3 @@ NERDTree 代替 netrw
 - [Vim-plug](https://github.com/junegunn/vim-plug)
 - [vim-for-server](https://github.com/wklken/vim-for-server)
 - [Vime](https://github.com/fgheng/vime)
-
