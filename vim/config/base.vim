@@ -421,6 +421,15 @@ end
 augroup vimrc
   autocmd!
 
+  if filereadable(expand('~/.local/share/chezmoi/.chezmoiroot'))
+    let path = readfile(expand('~/.local/share/chezmoi/.chezmoiroot'))[0]
+    let dir = '~/.local/share/chezmoi/' . path . '/*'
+    
+    exec 'autocmd BufWritePost ' . dir . ' ! chezmoi apply --source-path "%"'
+  else
+    autocmd BufWritePost ~/.local/share/chezmoi/* ! chezmoi apply --source-path "%"
+  end
+
   let s:max_line_length_threshold = 1000
   " too long line with wrap freezes neovim
   " e.g. https://raw.githubusercontent.com/BingyanStudio/LapisCV/refs/heads/main/templates/obsidian/.obsidian/snippets/fonts.css
