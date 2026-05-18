@@ -1,82 +1,52 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-{{- if ne .chezmoi.os "darwin" }}
-exit 0
-{{- end }}
-
 SOURCE_DIR="{{ .chezmoi.sourceDir }}"
 ROOT_DIR="$(cd "$SOURCE_DIR/.." && pwd)"
 UPSTREAM_DIR="$HOME/.local/share/rime-frost"
-RIME_DIR="$HOME/Library/Rime"
-TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/rime-sync.XXXXXX")"
-SYNC_STASH="$TMP_DIR/sync"
-SYNC_MODE="missing"
-SYNC_TARGET=""
+STATE_DIR="$HOME/.local/state/chezmoi"
+STATE_FILE="$STATE_DIR/rime-sync.state"
 
 log() { echo "[rime-init] $*"; }
 warn() { echo "[rime-init][warn] $*" >&2; }
-
-cleanup() {
-  rm -rf "$TMP_DIR"
-}
-trap cleanup EXIT
-
-if ! command -v rsync >/dev/null 2>&1; then
-  warn "rsync not found; skip rime sync"
-  exit 0
-fi
 
 if [ ! -d "$UPSTREAM_DIR" ]; then
   warn "missing upstream dir: $UPSTREAM_DIR"
   exit 0
 fi
 
-if [ -L "$RIME_DIR/sync" ]; then
-  SYNC_MODE="symlink"
-  SYNC_TARGET="$(readlink "$RIME_DIR/sync")"
-elif [ -d "$RIME_DIR/sync" ]; then
-  SYNC_MODE="dir"
-  mkdir -p "$SYNC_STASH"
-  rsync -a "$RIME_DIR/sync/" "$SYNC_STASH/"
-fi
-
-if [ -L "$RIME_DIR" ]; then
-  log "replacing legacy symlinked Rime dir with a real directory"
-  rm -f "$RIME_DIR"
-fi
-
-mkdir -p "$RIME_DIR"
-
-rsync -a --delete \
-  --exclude '.git/' \
-  --exclude 'sync/' \
-  "$UPSTREAM_DIR/" "$RIME_DIR/"
-
-mkdir -p "$RIME_DIR/opencc"
-
-for file in "$ROOT_DIR"/rime/custom/*; do
-  [ -f "$file" ] || continue
-  base="$(basename "$file")"
-  if [ "$base" = "pinyin_flypy.dict.yaml" ]; then
-    continue
+hash_dir_files() {
+  local dir="$1"
+  if [ ! -d "$dir" ]; then
+    printf "missing"
+    return
   fi
-  ln -sfn "$file" "$RIME_DIR/$base"
-done
+  if [ -z "$(find "$dir" -type f -print -quit 2>/dev/null)" ]; then
+    printf "empty"
+    return
+  fi
+  (
+    cd "$dir"
+    find . -type f -print0 \
+      | sort -z \
+      | xargs -0 shasum
+  ) | shasum | awk '{print $1}'
+}
 
-for file in "$ROOT_DIR"/rime/opencc/*; do
-  [ -f "$file" ] || continue
-  base="$(basename "$file")"
-  ln -sfn "$file" "$RIME_DIR/opencc/$base"
-done
+upstream_rev="$(git -C "$UPSTREAM_DIR" rev-parse HEAD 2>/dev/null || echo "nogit")"
+custom_hash="$(hash_dir_files "$ROOT_DIR/rime/custom")"
+opencc_hash="$(hash_dir_files "$ROOT_DIR/rime/opencc")"
+new_state="upstream=${upstream_rev};custom=${custom_hash};opencc=${opencc_hash}"
+old_state="$(cat "$STATE_FILE" 2>/dev/null || true)"
 
-ln -sfn "$UPSTREAM_DIR/rime_frost.dict.yaml" "$RIME_DIR/pinyin_flypy.dict.yaml"
-
-if [ -e "$HOME/.mybackups" ]; then
-  bash "$ROOT_DIR/rime/install_osx" || warn "install_osx sync link failed"
-elif [ "$SYNC_MODE" = "symlink" ] && [ -n "$SYNC_TARGET" ]; then
-  ln -sfn "$SYNC_TARGET" "$RIME_DIR/sync"
-elif [ "$SYNC_MODE" = "dir" ]; then
-  mkdir -p "$RIME_DIR/sync"
-  rsync -a "$SYNC_STASH/" "$RIME_DIR/sync/"
+if [ "$new_state" = "$old_state" ]; then
+  log "skip sync (no change)"
+  exit 0
 fi
+
+{{- if eq .chezmoi.os "darwin" }}
+ROOT_DIR="$ROOT_DIR" UPSTREAM_DIR="$UPSTREAM_DIR" bash "$ROOT_DIR/rime/install_osx" || warn "install_osx sync handling failed"
+{{- end }}
+
+mkdir -p "$STATE_DIR"
+printf '%s\n' "$new_state" > "$STATE_FILE"

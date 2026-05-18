@@ -2,9 +2,73 @@
 
 set -euo pipefail
 
-if [ ! -e "$HOME/.mybackups" ]; then
+ROOT_DIR="${ROOT_DIR:-$(cd "$(dirname "$0")/.." && pwd)}"
+UPSTREAM_DIR="${UPSTREAM_DIR:-$HOME/.local/share/rime-frost}"
+RIME_DIR="$HOME/Library/Rime"
+TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/rime-sync-link.XXXXXX")"
+SYNC_STASH="$TMP_DIR/sync"
+SYNC_MODE="missing"
+SYNC_TARGET=""
+
+cleanup() {
+  rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT
+
+if ! command -v rsync >/dev/null 2>&1; then
+  echo "[rime-install_osx][warn] rsync not found; skip" >&2
   exit 0
 fi
 
-mkdir -p "$HOME/Library/Rime"
-ln -sfn "$(cat "$HOME/.mybackups")/rime" "$HOME/Library/Rime/sync"
+if [ ! -d "$UPSTREAM_DIR" ]; then
+  echo "[rime-install_osx][warn] missing upstream dir: $UPSTREAM_DIR" >&2
+  exit 0
+fi
+
+if [ -L "$RIME_DIR" ]; then
+  rm -f "$RIME_DIR"
+fi
+
+mkdir -p "$RIME_DIR"
+
+if [ -L "$RIME_DIR/sync" ]; then
+  SYNC_MODE="symlink"
+  SYNC_TARGET="$(readlink "$RIME_DIR/sync")"
+elif [ -d "$RIME_DIR/sync" ]; then
+  SYNC_MODE="dir"
+  mkdir -p "$SYNC_STASH"
+  rsync -a "$RIME_DIR/sync/" "$SYNC_STASH/"
+fi
+
+rsync -a --delete \
+  --exclude '.git/' \
+  --exclude 'sync/' \
+  "$UPSTREAM_DIR/" "$RIME_DIR/"
+
+mkdir -p "$RIME_DIR/opencc"
+
+for file in "$ROOT_DIR"/rime/custom/*; do
+  [ -f "$file" ] || continue
+  base="$(basename "$file")"
+  if [ "$base" = "pinyin_flypy.dict.yaml" ]; then
+    continue
+  fi
+  ln -sfn "$file" "$RIME_DIR/$base"
+done
+
+for file in "$ROOT_DIR"/rime/opencc/*; do
+  [ -f "$file" ] || continue
+  base="$(basename "$file")"
+  ln -sfn "$file" "$RIME_DIR/opencc/$base"
+done
+
+ln -sfn "$UPSTREAM_DIR/rime_frost.dict.yaml" "$RIME_DIR/pinyin_flypy.dict.yaml"
+
+if [ -e "$HOME/.mybackups" ]; then
+  ln -sfn "$(cat "$HOME/.mybackups")/rime" "$RIME_DIR/sync"
+elif [ "$SYNC_MODE" = "symlink" ] && [ -n "$SYNC_TARGET" ]; then
+  ln -sfn "$SYNC_TARGET" "$RIME_DIR/sync"
+elif [ "$SYNC_MODE" = "dir" ]; then
+  mkdir -p "$RIME_DIR/sync"
+  rsync -a "$SYNC_STASH/" "$RIME_DIR/sync/"
+fi
