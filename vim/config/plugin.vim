@@ -135,6 +135,7 @@ Plug 'vim-test/vim-test', { 'on': ['TestNearest', 'TestFile', 'TestSuite', 'Test
 " ============================================================================
 " FILETYPE {{{
 " ============================================================================
+Plug 'alker0/chezmoi.vim'
 if has('nvim') && !has('nvim-0.7')
   Plug 'nathom/filetype.nvim'
 endif
