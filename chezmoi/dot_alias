@@ -112,3 +112,5 @@ alias mux='tmuxinator'
 
 alias a=aider
 alias oc=opencode
+
+alias cz=chezmoi
