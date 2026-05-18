@@ -11,10 +11,6 @@ ROOT_DIR="$(cd "$SOURCE_DIR/.." && pwd)"
 log() { echo "[osx-init] $*"; }
 warn() { echo "[osx-init][warn] $*" >&2; }
 
-if ! command -v brew >/dev/null 2>&1; then
-  warn "brew not found; skip brew bundle in this run"
-fi
-
 mkdir -p "$HOME/Library/Application Scripts/com.apple.mail" "$HOME/Library/LaunchAgents"
 if [ -f "$SOURCE_DIR/dot_raycast/scripts/extra-code-from-mail.applescript" ]; then
   ln -sf "$SOURCE_DIR/dot_raycast/scripts/extra-code-from-mail.applescript" "$HOME/Library/Application Scripts/com.apple.mail/extra-code-from-mail.applescript"
@@ -24,11 +20,6 @@ if [ -f "$ROOT_DIR/macos/Library/LaunchAgents/com.minis.tg.listen.plist" ]; then
 fi
 if [ -f "$ROOT_DIR/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" ]; then
   ln -sf "$ROOT_DIR/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" "$HOME/Library/LaunchAgents/com.jiz4oh.lemonade.plist"
-fi
-
-if command -v brew >/dev/null 2>&1 && [ -f "$SOURCE_DIR/Brewfile" ]; then
-  log "updating homebrew"
-  brew bundle --no-upgrade --file "$SOURCE_DIR/Brewfile" || warn "brew bundle failed; continue"
 fi
 
 if [ -x "$ROOT_DIR/rime/install" ]; then

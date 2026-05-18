@@ -3,7 +3,7 @@
 ## 包管理器
 
 - 主入口是 `chezmoi`；仓库根目录就是 source dir。
-- Homebrew 清单在 `chezmoi/Brewfile`。
+- 包清单在 `chezmoi/.chezmoidata/packages.yaml`。
 - 外部依赖仓库由 `chezmoi/.chezmoiexternals/` 目录管理。
 
 ## 文件级命令
@@ -15,7 +15,7 @@ chezmoi --source "$PWD" apply --force --no-tty
 ```
 
 - 查看待应用差异时运行 `chezmoi --source "$PWD" diff`。
-- 改 `chezmoi/Brewfile`、`chezmoi/.chezmoiexternals/*`、`chezmoi/.chezmoiscripts/*`、`chezmoi/dot_*` 后，至少运行 `chezmoi --source "$PWD" managed` 和 `chezmoi --source "$PWD" apply --dry-run --force --no-tty`。
+- 改 `chezmoi/.chezmoidata/*`、`chezmoi/.chezmoiexternals/*`、`chezmoi/.chezmoiscripts/*`、`chezmoi/dot_*` 后，至少运行 `chezmoi --source "$PWD" managed` 和 `chezmoi --source "$PWD" apply --dry-run --force --no-tty`。
 - 改会影响落盘结果的模板或映射后，再跑一次 `chezmoi --source "$PWD" diff` 确认变更范围。
 
 ## 关键约定

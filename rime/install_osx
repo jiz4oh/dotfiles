@@ -1,3 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-ln -sf "$(cat "$HOME/.mybackups")/rime" "$HOME/Library/Rime/sync"
+set -euo pipefail
+
+if [ ! -e "$HOME/.mybackups" ]; then
+  exit 0
+fi
+
+mkdir -p "$HOME/Library/Rime"
+ln -sfn "$(cat "$HOME/.mybackups")/rime" "$HOME/Library/Rime/sync"

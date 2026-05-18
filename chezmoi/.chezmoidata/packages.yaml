@@ -1,0 +1,70 @@
+packages:
+  darwin:
+    taps:
+      - localsend/localsend
+      - steipete/tap
+      - universal-ctags/universal-ctags
+      - wxtsky/tap
+    brews:
+      - name: bash-completion
+      - name: git
+      - name: gnupg
+      - name: httpie
+      - name: mise
+      - name: mysql
+      - name: pandoc
+      - name: postgresql@14
+      - name: ranger
+      - name: redis
+      - name: scrcpy
+      - name: tmux
+      - name: translate-shell
+      - name: tree
+      - name: tree-sitter-cli
+      - name: universal-ctags
+        head: true
+      - name: wget
+      - name: zsh
+    casks:
+      - alt-tab
+      - android-platform-tools
+      - bitwarden
+      - codexbar
+      - codeisland
+      - font-hack-nerd-font
+      - hammerspoon
+      - imageoptim
+      - keka
+      - keycastr
+      - kitty
+      - localsend
+      - middleclick
+      - notunes
+      - obsidian
+      - onedrive
+      - openmtp
+      - orbstack
+      - qlcolorcode
+      - qlmarkdown
+      - qlstephen
+      - quicklook-video
+      - quicklookase
+      - raycast
+      - snipaste
+      - squirrel-app
+      - telegram
+      - thaw
+      - ticktick
+      - kap
+    services:
+      - mysql
+      - postgresql@14
+  linux:
+    apt:
+      common:
+        - curl
+        - git
+        - python-is-python3
+        - wget
+      debian:
+        - universal-ctags

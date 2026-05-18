@@ -8,20 +8,15 @@ exit 0
 DISTRO_ID="{{ get .chezmoi.osRelease "id" }}"
 DISTRO_LIKE="{{ get .chezmoi.osRelease "idLike" }}"
 
-# Prefer chezmoi metadata; keep a filesystem fallback for minimal environments.
 if [ -z "$DISTRO_ID" ] && [ -f /etc/os-release ]; then
-  # shellcheck disable=SC1091
   . /etc/os-release
   DISTRO_ID="${ID:-}"
   DISTRO_LIKE="${ID_LIKE:-}"
 fi
 
 case " $DISTRO_ID $DISTRO_LIKE " in
-  *" debian "*|*" ubuntu "*)
-    ;;
-  *)
-    exit 0
-    ;;
+  *" debian "*|*" ubuntu "*) ;;
+  *) exit 0 ;;
 esac
 
 command -v apt-get >/dev/null 2>&1 || exit 0
@@ -33,20 +28,22 @@ else
 fi
 
 $SUDO apt-get update -y
-$SUDO apt-get install -y -qq --no-install-recommends git curl wget python-is-python3 >/dev/null
+$SUDO apt-get install -y --no-install-recommends \
+{{- range .packages.linux.apt.common }}
+  {{ . | quote }} \
+{{- end }}
+{{- range .packages.linux.apt.debian }}
+  {{ . | quote }} \
+{{- end }}
+  >/dev/null
 
-# Install universal-ctags only when missing.
 if ! command -v ctags >/dev/null 2>&1; then
   release="2023.08.13%2Bce46d93811faefaa75b87e334d768fbf9a831861"
   case "{{ .chezmoi.arch }}" in
-    arm64|aarch64)
-      file="uctags-2023.08.13-linux-arm64"
-      ;;
-    amd64|x86_64)
-      file="uctags-2023.08.13-linux-x86_64"
-      ;;
+    arm64|aarch64) file="uctags-2023.08.13-linux-arm64" ;;
+    amd64|x86_64) file="uctags-2023.08.13-linux-x86_64" ;;
     *)
-      echo "[debian-init][warn] unsupported arch for prebuilt ctags: {{ .chezmoi.arch }}" >&2
+      echo "[packages-linux][warn] unsupported arch for prebuilt ctags: {{ .chezmoi.arch }}" >&2
       exit 0
       ;;
   esac
