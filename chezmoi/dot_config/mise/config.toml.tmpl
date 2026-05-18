@@ -1,0 +1,18 @@
+# https://mise.jdx.dev/configuration.html
+[tools]
+# https://github.com/jdx/mise/blob/main/registry.toml
+bat = "latest"
+dust = "latest"
+"github:sharkdp/fd" = "latest"
+neovim = "latest"
+rg = "latest"
+shellcheck = "latest"
+usage = "latest"
+tirith = "latest"
+{{- if eq .chezmoi.os "darwin" }}
+"github:cormiertyshawn895/PixelPerfect" = { version = "latest", no_app = "false" }
+{{- end }}
+
+[settings]
+go_set_gobin = true
+status.missing_tools = "never"
