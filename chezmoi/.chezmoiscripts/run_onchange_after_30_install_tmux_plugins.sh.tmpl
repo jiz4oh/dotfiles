@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# tmux plugin list fingerprint:
+# {{ output "sh" "-lc" (printf "sed -n '/@plugin/p' %q | shasum | awk '{print $1}'" (joinPath .chezmoi.sourceDir "dot_tmux.conf")) | trim }}
+
 if [ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]; then
   "$HOME/.tmux/plugins/tpm/bin/install_plugins" >/dev/null 2>&1 || true
 fi
