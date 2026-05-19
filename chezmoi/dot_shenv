@@ -1,6 +1,25 @@
 _ARCH=$(arch)
 unset _ZPATH_LOADED
 
+if [ $(uname -s) = "Darwin" ]; then
+  # https://mise.jdx.dev/configuration/environments.html
+  export MISE_ENV=development
+  # put this line into .env
+  # export MISE_ENV=development,ai
+fi
+
+# Resolve dotfiles root in a way that works for both symlink-managed and
+# chezmoi-managed plain files.
+if [ -d "$HOME/.local/share/chezmoi/" ]; then
+  export _DOTFILES_PATH="$HOME/.local/share/chezmoi/"
+elif [ -f "$HOME/.mydotfile" ]; then
+  export _DOTFILES_PATH="$(cat "$HOME/.mydotfile")"
+else
+  export _DOTFILES_PATH="$HOME"
+fi
+
+export FZF_BASE=$_DOTFILES_PATH/vim/bundle/fzf
+
 # export OPENAI_BASE_URL="http://ai.brill-ling.ts.net/v1"
 # # fallback compibility
 # export OPENAI_API_BASE=$OPENAI_BASE_URL

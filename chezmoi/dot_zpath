@@ -7,15 +7,6 @@ if [ "$_ZPATH_LOADED" = "1" ]; then
   return
 fi
 
-# Resolve dotfiles root in a way that works for both symlink-managed and
-# chezmoi-managed plain files.
-if [ -d "$HOME/.local/share/chezmoi/" ]; then
-  export _DOTFILES_PATH="$HOME/.local/share/chezmoi/"
-elif [ -f "$HOME/.mydotfile" ]; then
-  export _DOTFILES_PATH="$(cat "$HOME/.mydotfile")"
-else
-  export _DOTFILES_PATH="$HOME"
-fi
 export PATH="$BREW_PREFIX/bin:$PATH"
 export PATH="$BREW_PREFIX/opt:$PATH"
 if [ $(command -v brew) ]; then
@@ -30,7 +21,6 @@ fi
 export PATH="${XDG_DATA_HOME:-~/.local/share}/nvim/mason/bin:$PATH:$HOME/go/bin"
 # https://mise.jdx.dev/dev-tools/shims.html#how-to-add-mise-shims-to-path
 export PATH="$HOME/.local/share/mise/shims:$PATH"
-export FZF_BASE=$_DOTFILES_PATH/vim/bundle/fzf
 
 if [ $(uname -s) = "Darwin" ]; then
   # for ruby version < 2.4
@@ -40,10 +30,6 @@ if [ $(uname -s) = "Darwin" ]; then
   # for ruby version > 3.0
   openssl_version=""
   export PATH="$BREW_PREFIX/opt/openssl$openssl_version/bin:$PATH"
-  # https://mise.jdx.dev/configuration/environments.html
-  export MISE_ENV=development
-  # put this line into .env
-  # export MISE_ENV=development,ai
 fi
 
 # if [ $(command -v rbenv) ]; then
