@@ -69,9 +69,17 @@ export PDM_USE_UV=true
 
 export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
 
+export XDG_RUNTIME_DIR="$HOME/.local/run"
+
+{{- if eq .chezmoi.os "darwin" }}
+export SSH_AUTH_SOCK=$(getconf DARWIN_USER_TEMP_DIR)/rbw-$(id -u)/ssh-agent-socket
+{{- else if eq .chezmoi.os "linux" }}
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/rbw/ssh-agent-socket"
+{{- end }}
+
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-if [ -z "$SSH_AUTH_SOCK" ]; then
+if [ ! -S "$SSH_AUTH_SOCK" ]; then
   if [ -S "$HOME/.bitwarden-ssh-agent.sock" ]; then
     export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
   else

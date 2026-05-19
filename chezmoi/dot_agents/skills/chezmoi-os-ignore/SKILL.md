@@ -36,11 +36,11 @@ rg -n "darwin|macos|linux|debian|apt|brew|launchctl|osascript|hammerspoon|raycas
 只改 [`chezmoi/.chezmoiignore.tmpl`](~/.local/share/chezmoi/chezmoi/.chezmoiignore.tmpl)，使用条件模板：
 
 ```tmpl
-{{- if ne .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.os "darwin" }}
 # macOS only entries...
 {{- end }}
 
-{{- if or (ne .chezmoi.os "linux") (ne (get .chezmoi.osRelease "id") "debian") }}
+{{- if and (eq .chezmoi.os "linux") (eq (get .chezmoi.osRelease "id" "") "debian") }}
 # Debian only entries...
 {{- end }}
 ```
