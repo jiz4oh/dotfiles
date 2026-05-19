@@ -14,6 +14,38 @@
   pull.args = ["--ff-only"]
   x.skills = ["brainstorming=skills/brainstorming", "writing-skills=skills/writing-skills", "writing-plans=skills/writing-plans", "executing-plans=skills/executing-plans", "dispatching-parallel-agents=skills/dispatching-parallel-agents"]
 
+[".agents/skills-sources/longbridge"]
+  type = "git-repo"
+  url = "https://github.com/longbridge/developers"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["longbridge=skills/longbridge"]
+
+[".agents/skills-sources/Waza"]
+  type = "git-repo"
+  url = "https://github.com/tanweai/pua"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["read=skills/read", "write=skills/write", "think=skills/think", "learn=skills/learn", "hunt=skills/hunt", "health=skills/health", "design=skills/design", "check=skills/check"]
+
+[".agents/skills-sources/vercel-labs"]
+  type = "git-repo"
+  url = "https://github.com/vercel-labs/skills"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["find-skills=skills/find-skills"]
+
+[".agents/skills-sources/pua"]
+  type = "git-repo"
+  url = "https://github.com/tanweai/pua"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["pua=skills/pua"]
+
 [".agents/skills/notebooklm-skill"]
   type = "git-repo"
   url = "https://github.com/PleasePrompto/notebooklm-skill"
@@ -25,6 +57,27 @@
 [".agents/skills/git-commit-helper"]
   type = "git-repo"
   url = "https://github.com/alirezarezvani/claude-code-tresor"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+
+[".agents/skills/tg-cli"]
+  type = "git-repo"
+  url = "https://github.com/jackwener/tg-cli"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+
+[".agents/skills/xiaohongshu-cli"]
+  type = "git-repo"
+  url = "https://github.com/jackwener/xiaohongshu-cli"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+
+[".agents/skills/twitter-cli"]
+  type = "git-repo"
+  url = "https://github.com/jackwener/twitter-cli"
   refreshPeriod = "72h"
   clone.args = ["--filter=blob:none"]
   pull.args = ["--ff-only"]
