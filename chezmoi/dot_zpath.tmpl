@@ -22,15 +22,15 @@ export PATH="${XDG_DATA_HOME:-~/.local/share}/nvim/mason/bin:$PATH:$HOME/go/bin"
 # https://mise.jdx.dev/dev-tools/shims.html#how-to-add-mise-shims-to-path
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
-if [ $(uname -s) = "Darwin" ]; then
-  # for ruby version < 2.4
-  openssl_version="@1-0"
-  # for ruby version 2.4 - 3.0
-  openssl_version="@1.1"
-  # for ruby version > 3.0
-  openssl_version=""
-  export PATH="$BREW_PREFIX/opt/openssl$openssl_version/bin:$PATH"
-fi
+{{- if eq .chezmoi.os "darwin" }}
+# for ruby version < 2.4
+openssl_version="@1-0"
+# for ruby version 2.4 - 3.0
+openssl_version="@1.1"
+# for ruby version > 3.0
+openssl_version=""
+export PATH="$BREW_PREFIX/opt/openssl$openssl_version/bin:$PATH"
+{{- end }}
 
 # if [ $(command -v rbenv) ]; then
 #   # https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell

@@ -1,12 +1,12 @@
 _ARCH=$(arch)
 unset _ZPATH_LOADED
 
-if [ $(uname -s) = "Darwin" ]; then
-  # https://mise.jdx.dev/configuration/environments.html
-  export MISE_ENV=development
-  # put this line into .env
-  # export MISE_ENV=development,ai
-fi
+{{- if eq .chezmoi.os "darwin" }}
+# https://mise.jdx.dev/configuration/environments.html
+export MISE_ENV=development
+# put this line into .env
+# export MISE_ENV=development,ai
+{{- end }}
 
 # Resolve dotfiles root in a way that works for both symlink-managed and
 # chezmoi-managed plain files.
@@ -27,18 +27,15 @@ export FZF_BASE=$_DOTFILES_PATH/vim/bundle/fzf
 # export ANTHROPIC_BASE_URL="http://ai.brill-ling.ts.net"
 # export ANTHROPIC_AUTH_TOKEN="-"
 
-case $(uname -s) in
-  "Darwin")
-    if [[ "$_ARCH" == "i386" ]]; then
-      export BREW_PREFIX="/usr/local"
-    elif [[ "$_ARCH" == "arm64" ]]; then
-      export BREW_PREFIX="/opt/homebrew"
-    fi
-    ;;
-  "Linux")
-    export BREW_PREFIX="/home/linuxbrew/.linuxbrew"
-    ;;
-esac
+{{- if eq .chezmoi.os "darwin" }}
+    {{- if eq .chezmoi.arch "arm64" }}
+export BREW_PREFIX="/opt/homebrew"
+    {{- else if eq .chezmoi.arch "amd64" }}
+export BREW_PREFIX="/usr/local"
+    {{- end }}
+{{- else if eq .chezmoi.os "linux" }}
+export BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+{{- end }}
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
