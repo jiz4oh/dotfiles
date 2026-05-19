@@ -11,6 +11,8 @@ packages:
       - name: gnupg
       - name: httpie
       - name: mise
+      - name: rbw
+      - name: pinentry-mac
       - name: mysql
       - name: pandoc
       - name: postgresql@14
@@ -64,6 +66,7 @@ packages:
       common:
         - curl
         - git
+        - rbw
         - python-is-python3
         - wget
       debian:
