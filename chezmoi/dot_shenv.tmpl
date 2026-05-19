@@ -27,16 +27,6 @@ export FZF_BASE=$_DOTFILES_PATH/vim/bundle/fzf
 # export ANTHROPIC_BASE_URL="http://ai.brill-ling.ts.net"
 # export ANTHROPIC_AUTH_TOKEN="-"
 
-{{- if eq .chezmoi.os "darwin" }}
-    {{- if eq .chezmoi.arch "arm64" }}
-export BREW_PREFIX="/opt/homebrew"
-    {{- else if eq .chezmoi.arch "amd64" }}
-export BREW_PREFIX="/usr/local"
-    {{- end }}
-{{- else if eq .chezmoi.os "linux" }}
-export BREW_PREFIX="/home/linuxbrew/.linuxbrew"
-{{- end }}
-
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 

@@ -7,6 +7,16 @@ if [ "$_ZPATH_LOADED" = "1" ]; then
   return
 fi
 
+{{- if eq .chezmoi.os "darwin" }}
+    {{- if eq .chezmoi.arch "arm64" }}
+export BREW_PREFIX="/opt/homebrew"
+    {{- else if eq .chezmoi.arch "amd64" }}
+export BREW_PREFIX="/usr/local"
+    {{- end }}
+{{- else if eq .chezmoi.os "linux" }}
+export BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+{{- end }}
+
 export PATH="$BREW_PREFIX/bin:$PATH"
 export PATH="$BREW_PREFIX/opt:$PATH"
 if [ $(command -v brew) ]; then
