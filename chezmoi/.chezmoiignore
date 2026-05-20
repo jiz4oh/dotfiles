@@ -47,6 +47,8 @@ bin/report_verification_code
 bin/extract_verification_code
 bin/copy_ntfy
 bin/lemonade-daemon
+Library/LaunchAgents/**
+Library/Application Scripts/**
 
 .hammerspoon/**
 .raycast/**

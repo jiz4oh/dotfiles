@@ -10,14 +10,3 @@ ROOT_DIR="$(cd "$SOURCE_DIR/.." && pwd)"
 
 log() { echo "[osx-init] $*"; }
 warn() { echo "[osx-init][warn] $*" >&2; }
-
-mkdir -p "$HOME/Library/Application Scripts/com.apple.mail" "$HOME/Library/LaunchAgents"
-if [ -f "$SOURCE_DIR/dot_raycast/scripts/extra-code-from-mail.applescript" ]; then
-  ln -sf "$SOURCE_DIR/dot_raycast/scripts/extra-code-from-mail.applescript" "$HOME/Library/Application Scripts/com.apple.mail/extra-code-from-mail.applescript"
-fi
-if [ -f "$ROOT_DIR/macos/Library/LaunchAgents/com.minis.tg.listen.plist" ]; then
-  ln -sf "$ROOT_DIR/macos/Library/LaunchAgents/com.minis.tg.listen.plist" "$HOME/Library/LaunchAgents/com.minis.tg.listen.plist"
-fi
-if [ -f "$ROOT_DIR/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" ]; then
-  ln -sf "$ROOT_DIR/macos/Library/LaunchAgents/com.jiz4oh.lemonade.plist" "$HOME/Library/LaunchAgents/com.jiz4oh.lemonade.plist"
-fi
