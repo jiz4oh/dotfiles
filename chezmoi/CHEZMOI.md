@@ -27,8 +27,9 @@ chezmoi --source "$PWD" diff
   `~/.codex/AGENTS.md`、`~/.rbenv/default-gems`、
   `~/.snipaste/config.ini`、`~/.hammerspoon/init.lua` 这类单文件或浅层目录
 - `~/.agents`、`~/.vim`、`~/.raycast`、`~/.terminfo`、
-  `~/.config/{kitty,mise,rubocop,solargraph,wezterm}`、
+  `~/.config/{kitty,rubocop,solargraph,wezterm}`、
   `~/.hammerspoon/{Spoons,modules}` 这类大目录，使用 symlink 管理
+- `~/.config/mise` 由仓库内 `chezmoi/dot_config/mise/` 直接管理（不再走 symlink）
 - 原先的 git submodule 现在统一放进 `chezmoi/.chezmoiexternals/`：
   `~/.config/kitty/kitty_search`、`~/.tmux/plugins/tpm`、以及
   `~/.agents/skill-sources/{git-commit-helper,notebooklm-skill,ordinary-claude-skills,superpowers}`
@@ -53,7 +54,7 @@ chezmoi/.chezmoidata/packages.yaml
 
 对应安装脚本：
 
-- macOS：`run_onchange_before_06_install_packages_darwin.sh.tmpl`
+- macOS：`run_onchange_before_06_install_packages_macos.sh.tmpl`
 - Linux：`run_onchange_before_41_install_packages_linux.sh.tmpl`
 
 ## 手动脚本
@@ -64,12 +65,14 @@ chezmoi/.chezmoidata/packages.yaml
 Rime 这块的约定是：
 
 - 用户手动入口保留在 `rime/`
-- 只有自动同步钩子保留在 `chezmoi/.chezmoiscripts/`
+- 自动同步入口在 `chezmoi/.chezmoiscripts/run_after_41_sync_rime.sh.tmpl`
+- macOS 专属落盘与 `sync` 处理收敛到 `rime/install_osx`
 
 ## 备注
 
 - `.chezmoiignore` 会忽略原始仓库文件，只让原生 `dot_*`、显式 `symlink_*`
-  和脚本映射参与 apply
+  和脚本映射参与 apply（当前文件为 `.chezmoiignore.tmpl`）
+- 可执行文件统一使用 `executable_*` 前缀（如 `bin/`、`dot_git_template/hooks/`）
 - 还在使用的 symlink 目标统一引用 `{{ .chezmoi.sourceDir }}`，这样 source dir
   挪位置后不用改路径
 - 旧 `install` 脚本现在只适合做遗留的软件安装、插件安装或系统初始化补充，不再作为
