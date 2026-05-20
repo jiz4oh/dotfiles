@@ -10,6 +10,3 @@ fi
 if type nvim &>/dev/null;then
   nvim --headless +Lazy restore +qall
 fi
-
-rm -f ~/.config/nvim 2> /dev/null
-rm -rf ~/.config/nvim 2> /dev/null
