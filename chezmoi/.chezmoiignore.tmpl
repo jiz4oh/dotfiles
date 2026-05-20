@@ -1,5 +1,6 @@
 # Keep only ephemeral/system artifacts ignored.
 
+CHEZMOI.md
 .DS_Store
 .aider.chat.history.md
 .aider.input.history
@@ -48,6 +49,11 @@ bin/lemonade-daemon
 .hammerspoon/**
 .raycast/**
 .snipaste/**
+
+bin/add_skill
+.agents/skills/**
+.aider.conf.yml
+.claude/skills/**
 {{- end }}
 
 {{- if or (ne .chezmoi.os "linux") (ne (get .chezmoi.osRelease "id") "debian") }}
