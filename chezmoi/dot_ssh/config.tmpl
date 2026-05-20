@@ -1,0 +1,46 @@
+{{- if eq .chezmoi.os "darwin" -}}
+Include ~/.orbstack/ssh/config
+
+{{- end }}
+Include config.d/*
+
+Host github.com
+  HostName ssh.github.com
+  User git
+  Port 443
+  PreferredAuthentications publickey
+
+Host gist.github.com
+  HostName ssh.github.com
+  User git
+  Port 443
+  PreferredAuthentications publickey
+
+Host *
+  # 把这些本地环境变量转发到远端
+  # 远端 sshd 需要配 AcceptEnv 才会接收
+  SendEnv TERM TERM_PROGRAM COLORTERM
+
+  # 每 30 秒发一次 keepalive，减少空闲连接被中间网络设备踢掉
+  ServerAliveInterval=30
+
+  # macOS 用钥匙串保存/读取 SSH 密钥口令
+  # 下次连接时可自动从 Keychain 里取，不一定每次都手输
+  UseKeychain yes
+
+  # 首次使用私钥时，把它加入本机 ssh-agent
+  # 这样同一会话内后续连接通常不会重复问口令
+  AddKeysToAgent yes
+
+  # 让同一台主机的多个 SSH 连接复用同一个底层 TCP 连接
+  # 可以加速重复 ssh / git 操作
+  # ControlMaster auto
+
+  # 主连接保持 120 秒，期间新连接可复用
+  # ControlPersist 120
+
+  # 复用连接的 socket 路径
+  # 需要确保目录存在，且权限合适
+  # ControlPath ~/.ssh/.socket-%r@%h:%p
+
+  ForwardAgent no
