@@ -1,8 +1,6 @@
 # https://zsh.sourceforge.io/Guide/zshguide02.html#l24
 typeset -U PATH path
 
-[ -f $HOME/.shenv ] && source $HOME/.shenv
-
 # load zpath in non-login non-interactive shell
 if [[ $- != *i* ]]; then
   if [[ $- != *l* ]]; then
@@ -10,6 +8,7 @@ if [[ $- != *i* ]]; then
   fi
 fi
 
+[ -f $HOME/.shenv ] && source $HOME/.shenv
 # 1. login interactive shell:
 #   -	/etc/zshenv
 #   -	~/.zshenv

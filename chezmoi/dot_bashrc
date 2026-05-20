@@ -1,3 +1,5 @@
+[ -f $HOME/.zpath ] && source $HOME/.zpath
+
 for file in $HOME/.shenv \
   $HOME/.alias; do
   if test -f "$file"; then
@@ -5,5 +7,3 @@ for file in $HOME/.shenv \
     source "$file"
   fi
 done
-
-[ -f $HOME/.zpath ] && source $HOME/.zpath
