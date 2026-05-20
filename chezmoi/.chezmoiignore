@@ -1,5 +1,7 @@
 # Keep only ephemeral/system artifacts ignored.
 
+install
+
 CHEZMOI.md
 .DS_Store
 .aider.chat.history.md
