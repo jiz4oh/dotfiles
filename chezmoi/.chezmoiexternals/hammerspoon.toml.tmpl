@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "darwin" }}
 [".hammerspoon/Spoons/EmmyLua.spoon"]
   type = "archive"
   url = "https://github.com/Hammerspoon/Spoons/raw/master/Spoons/EmmyLua.spoon.zip"
@@ -18,3 +19,4 @@
   refreshPeriod = "168h"
   exact = true
   stripComponents = 1
+{{- end }}

@@ -1,9 +1,11 @@
+{{- if eq .chezmoi.os "darwin" }}
 [".config/kitty/kitty_search"]
   type = "git-repo"
   url = "https://github.com/trygveaa/kitty-kitten-search"
   refreshPeriod = "168h"
   clone.args = ["--filter=blob:none"]
   pull.args = ["--ff-only"]
+{{- end }}
 
 [".tmux/plugins/tpm"]
   type = "git-repo"

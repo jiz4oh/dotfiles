@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "darwin" }}
 [".agents/skill-sources/ordinary-claude-skills"]
   type = "git-repo"
   url = "https://github.com/Microck/ordinary-claude-skills"
@@ -81,3 +82,4 @@
   refreshPeriod = "72h"
   clone.args = ["--filter=blob:none"]
   pull.args = ["--ff-only"]
+{{- end }}
