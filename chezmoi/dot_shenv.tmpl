@@ -73,6 +73,10 @@ if [ ! -S "$SSH_AUTH_SOCK" ]; then
   fi
 fi
 
+{{- if lookPath "rbw" }}
+export DEEPSEEK_API_KEY={{- output "rbw" "get" "DEEPSEEK_API_KEY" -}}
+{{- end }}
+
 if [ -f ~/.env ]; then
   set -o allexport; source ~/.env; set +o allexport
 fi
