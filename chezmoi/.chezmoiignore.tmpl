@@ -45,12 +45,9 @@ bin/extract_verification_code
 bin/copy_ntfy
 bin/lemonade-daemon
 
-dot_hammerspoon
-dot_hammerspoon/**
-dot_raycast
-dot_raycast/**
-dot_snipaste
-dot_snipaste/**
+.hammerspoon/**
+.raycast/**
+.snipaste/**
 {{- end }}
 
 {{- if or (ne .chezmoi.os "linux") (ne (get .chezmoi.osRelease "id") "debian") }}
