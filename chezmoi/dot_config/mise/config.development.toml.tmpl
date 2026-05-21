@@ -1,5 +1,5 @@
 [tools]
-ruby = "3.1.2"
+ruby = { version = "3.1.2", postinstall = "{{- .chezmoi.homeDir -}}/.local/share/chezmoi/mise-ruby-ctags/bin/mise-ruby-ctags \"$MISE_TOOL_INSTALL_PATH\"" }
 node = "lts"
 go = "latest"
 "go:github.com/lemonade-command/lemonade" = "latest"
@@ -19,6 +19,7 @@ pdm = "latest"
 "npm:stylelint-prettier" = "latest"
 "npm:wrangler" = "latest"
 "gem:rubocop" = "latest"
+"gem:ripper-tags" = "latest"
 # support ruby >= 2.4.0
 "pipx:ansible" = "latest"
 

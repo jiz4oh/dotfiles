@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+mise_root() {
+  if [[ -n "${MISE_DATA_DIR:-}" ]]; then
+    printf '%s\n' "$MISE_DATA_DIR"
+  elif [[ -n "${XDG_DATA_HOME:-}" ]]; then
+    printf '%s\n' "$XDG_DATA_HOME/mise"
+  else
+    printf '%s\n' "$HOME/.local/share/mise"
+  fi
+}
+
+usage() {
+  cat <<'EOF'
+Usage:
+  mise-ruby-ctags
+  mise-ruby-ctags <version>
+  mise-ruby-ctags <install-path>
+  mise-ruby-ctags --all
+  mise-ruby-ctags --complete
+EOF
+}
+
+installed_versions() {
+  local root
+  root="$(mise_root)/installs/ruby"
+  [[ -d "$root" ]] || return 0
+  find "$root" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort
+}
+
+resolve_current_version() {
+  if [[ -n "${MISE_TOOL_VERSION:-}" ]]; then
+    printf '%s\n' "$MISE_TOOL_VERSION"
+    return 0
+  fi
+
+  local current
+  current="$(mise current ruby 2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -n1 || true)"
+  [[ -n "$current" ]] || return 1
+  printf '%s\n' "$current"
+}
+
+resolve_install_path() {
+  local input="${1:-}"
+  local root
+  root="$(mise_root)/installs/ruby"
+
+  if [[ -n "${MISE_TOOL_INSTALL_PATH:-}" && -z "$input" ]]; then
+    printf '%s\n' "$MISE_TOOL_INSTALL_PATH"
+    return 0
+  fi
+
+  if [[ -n "$input" && -d "$input" ]]; then
+    printf '%s\n' "$input"
+    return 0
+  fi
+
+  if [[ -z "$input" ]]; then
+    input="$(resolve_current_version)"
+  fi
+
+  [[ -n "$input" ]] || return 1
+  printf '%s\n' "$root/$input"
+}
+
+generate_ctags_in() {
+  local dir="$1"
+
+  [[ -d "$dir" ]] || return 0
+  [[ -w "$dir" ]] || {
+    printf 'skip unwritable directory: %s\n' "$dir" >&2
+    return 0
+  }
+
+  (
+    cd "$dir"
+    ctags --languages=Ruby -R --tag-relative=yes .
+  )
+  printf 'generated tags in %s\n' "$dir"
+}
+
+generate_for_install_path() {
+  local install_path="$1"
+  local site_ruby_arch
+  local arch
+  local minor
+
+  [[ -d "$install_path" ]] || {
+    printf 'install path not found: %s\n' "$install_path" >&2
+    return 1
+  }
+
+  site_ruby_arch="$(find "$install_path/lib/ruby/site_ruby" -mindepth 2 -maxdepth 2 -type d 2>/dev/null | head -n1 || true)"
+  [[ -n "$site_ruby_arch" ]] || {
+    printf 'unable to infer ruby stdlib layout from %s\n' "$install_path" >&2
+    return 1
+  }
+
+  arch="$(basename "$site_ruby_arch")"
+  minor="$(basename "$(dirname "$site_ruby_arch")")"
+
+  generate_ctags_in "$install_path/lib/ruby/site_ruby/$minor"
+  generate_ctags_in "$install_path/lib/ruby/site_ruby/$minor/$arch"
+  generate_ctags_in "$install_path/lib/ruby/site_ruby"
+  generate_ctags_in "$install_path/lib/ruby/vendor_ruby/$minor"
+  generate_ctags_in "$install_path/lib/ruby/vendor_ruby/$minor/$arch"
+  generate_ctags_in "$install_path/lib/ruby/vendor_ruby"
+  generate_ctags_in "$install_path/lib/ruby/$minor"
+  generate_ctags_in "$install_path/lib/ruby/$minor/$arch"
+}
+
+main() {
+  [[ $# -gt 0 ]] || {
+    local install_path
+    install_path="$(resolve_install_path)"
+    generate_for_install_path "$install_path"
+    return
+  }
+
+  case "${1:-}" in
+    -h|--help)
+      usage
+      ;;
+    --complete)
+      installed_versions
+      ;;
+    --all)
+      local version
+      while IFS= read -r version; do
+        [[ -n "$version" ]] || continue
+        generate_for_install_path "$(resolve_install_path "$version")"
+      done < <(installed_versions)
+      ;;
+    *)
+      generate_for_install_path "$(resolve_install_path "$1")"
+      ;;
+  esac
+}
+
+main "$@"
