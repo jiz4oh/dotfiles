@@ -39,3 +39,7 @@ pwpolicy -clearaccountpolicies || true
 defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
 defaults write com.rouge41.middleClick fingers 5
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/MiddleClick.app", hidden:true}' || true
+
+# https://x.com/mylifcc/status/2057026933473616017?s=46
+defaults write com.openai.codex SUEnableAutomaticChecks -bool false
+defaults write com.openai.codex SUAutomaticallyUpdate -bool false
