@@ -5,6 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASE="$(cd "$SCRIPT_DIR/.." && pwd)"
 SKILLS_EXTERNALS_FILE="$BASE/chezmoi/.chezmoiexternals/skills.toml"
+SKILLS_EXTERNALS_TEMPLATE="$BASE/chezmoi/.chezmoiexternals/skills.toml.tmpl"
 SKILLS_DIR="$BASE/chezmoi/dot_agents/skills"
 PRUNE="${PRUNE:-0}"
 
@@ -16,9 +17,9 @@ Usage:
 Environment:
   PRUNE=1   remove stale symlink_* entries not declared in .chezmoiexternals/skills.toml
 
-This script treats .chezmoiexternals/skills.toml as the source of truth for
-external skill entrypoints. It reads x.skills from .agents/skill-sources/*
-sections and generates chezmoi source files under:
+This script treats .chezmoiexternals/skills.toml(.tmpl) as the source of truth
+for external skill entrypoints. It reads x.skills from
+.agents/skill-sources/* sections and generates chezmoi source files under:
   chezmoi/dot_agents/skills/symlink_<skill-name>
 
 Local first-party skills should remain as real directories in:
@@ -32,8 +33,11 @@ if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
 fi
 
 if [ ! -f "$SKILLS_EXTERNALS_FILE" ]; then
-  echo "missing skills externals file: $SKILLS_EXTERNALS_FILE" >&2
-  exit 1
+  if [ ! -f "$SKILLS_EXTERNALS_TEMPLATE" ]; then
+    echo "missing skills externals file: $SKILLS_EXTERNALS_FILE" >&2
+    echo "missing skills externals template: $SKILLS_EXTERNALS_TEMPLATE" >&2
+    exit 1
+  fi
 fi
 
 if [ ! -d "$SKILLS_DIR" ]; then
@@ -41,30 +45,41 @@ if [ ! -d "$SKILLS_DIR" ]; then
   exit 1
 fi
 
+warn() {
+  echo "warn: $*" >&2
+}
+
 created=0
 updated=0
 unchanged=0
 warnings=0
 declared_names=()
 skill_rows_file="$(mktemp)"
-trap 'rm -f "$skill_rows_file"' EXIT
+skills_config_file="$(mktemp)"
+trap 'rm -f "$skill_rows_file" "$skills_config_file"' EXIT
 
-ruby - "$SKILLS_EXTERNALS_FILE" > "$skill_rows_file" <<'RUBY'
+if [ -f "$SKILLS_EXTERNALS_TEMPLATE" ]; then
+  chezmoi --source "$BASE" execute-template < "$SKILLS_EXTERNALS_TEMPLATE" > "$skills_config_file"
+else
+  cp "$SKILLS_EXTERNALS_FILE" "$skills_config_file"
+fi
+
+ruby - "$skills_config_file" > "$skill_rows_file" <<'RUBY'
 path = ARGV.fetch(0)
 lines = File.readlines(path, chomp: true)
-current_source_id = nil
+current_section = nil
 i = 0
 
 while i < lines.length
   line = lines[i]
 
-  if (match = line.match(/^\["\.agents\/skill-sources\/([^"]+)"\]\s*$/))
-    current_source_id = match[1]
+  if (match = line.match(/^\["([^"]+)"\]\s*$/))
+    current_section = match[1]
     i += 1
     next
   end
 
-  if current_source_id && line =~ /^\s*x\.skills\s*=\s*\[/
+  if current_section && line =~ /^\s*x\.skills\s*=\s*\[/
     block = line.dup
     until block.include?("]")
       i += 1
@@ -72,10 +87,17 @@ while i < lines.length
       block << "\n" << lines[i]
     end
 
+    unless (section_match = current_section.match(/^\.agents\/skill-sources\/([^\/]+)$/))
+      puts ["warn", "skip x.skills under unsupported external path '#{current_section}'"].join("\t")
+      i += 1
+      next
+    end
+
+    source_id = section_match[1]
     block.scan(/"([^"]+)"/).flatten.each do |item|
       name, relpath = item.split("=", 2)
       next if name.nil? || name.empty? || relpath.nil? || relpath.empty?
-      puts [current_source_id, name, relpath].join("\t")
+      puts ["row", source_id, name, relpath].join("\t")
     end
   end
 
@@ -83,14 +105,34 @@ while i < lines.length
 end
 RUBY
 
-while IFS=$'\t' read -r source_id skill_name source_subdir; do
+while IFS=$'\t' read -r row_type field1 field2 field3; do
+  if [ "${row_type:-}" = "warn" ]; then
+    warn "$field1"
+    warnings=$((warnings + 1))
+    continue
+  fi
+
+  [ "${row_type:-}" = "row" ] || continue
+
+  source_id="$field1"
+  skill_name="$field2"
+  source_subdir="$field3"
+
   [ -z "${source_id:-}" ] && continue
   [ -z "${skill_name:-}" ] && continue
   [ -z "${source_subdir:-}" ] && continue
 
   case "$skill_name" in
     */* | .* | *".."* )
-      echo "warn: skip unsafe skill name '$skill_name'" >&2
+      warn "skip unsafe skill name '$skill_name'"
+      warnings=$((warnings + 1))
+      continue
+      ;;
+  esac
+
+  case "$source_subdir" in
+    "" | /* | *".."* )
+      warn "skip unsafe source subdir '$source_subdir' for skill '$skill_name'"
       warnings=$((warnings + 1))
       continue
       ;;
@@ -103,9 +145,26 @@ while IFS=$'\t' read -r source_id skill_name source_subdir; do
 
   entry_path="$SKILLS_DIR/symlink_$skill_name"
   declared_names+=("$skill_name")
+  source_base="$HOME/.agents/skill-sources/$source_id"
+  source_path="$source_base"
+  if [ "$source_subdir" != "." ]; then
+    source_path="$source_base/$source_subdir"
+  fi
+
+  if [ ! -d "$source_base" ]; then
+    warn "skip skill '$skill_name': missing skill source '$source_base'"
+    warnings=$((warnings + 1))
+    continue
+  fi
+
+  if [ ! -e "$source_path" ]; then
+    warn "skip skill '$skill_name': missing declared path '$source_path'"
+    warnings=$((warnings + 1))
+    continue
+  fi
 
   if [ -d "$SKILLS_DIR/$skill_name" ]; then
-    echo "warn: local skill dir exists, keep directory and skip symlink_$skill_name" >&2
+    warn "local skill dir exists, keep directory and skip symlink_$skill_name"
     warnings=$((warnings + 1))
     continue
   fi
@@ -145,7 +204,7 @@ for entry_path in "$SKILLS_DIR"/symlink_*; do
     rm -f "$entry_path"
     echo "pruned: symlink_$skill_name"
   else
-    echo "warn: undeclared symlink preserved: symlink_$skill_name" >&2
+    warn "undeclared symlink preserved: symlink_$skill_name"
     warnings=$((warnings + 1))
   fi
 done

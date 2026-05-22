@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE_DIR="{{ .chezmoi.sourceDir }}"
+ROOT_DIR="$(cd "$SOURCE_DIR/.." && pwd)"
+
+"$ROOT_DIR/scripts/install_skills"
