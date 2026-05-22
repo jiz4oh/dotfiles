@@ -9,12 +9,19 @@ Host github.com
   User git
   Port 443
   PreferredAuthentications publickey
+  # 优先使用 bitwarden 中密钥
+  IdentityFile ~/.ssh/id_github.pub
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
 
 Host gist.github.com
   HostName ssh.github.com
   User git
   Port 443
   PreferredAuthentications publickey
+  IdentityFile ~/.ssh/id_github.pub
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
 
 Host *
   # 把这些本地环境变量转发到远端
