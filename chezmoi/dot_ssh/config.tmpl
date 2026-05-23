@@ -11,7 +11,7 @@ Host github.com
   PreferredAuthentications publickey
   # 优先使用 bitwarden 中密钥
   IdentityFile ~/.ssh/id_github.pub
-  IdentityFile ~/.ssh/id_ed25519
+  IdentityFile ~/.ssh/id_rsa
   IdentitiesOnly yes
 
 Host gist.github.com
@@ -20,7 +20,7 @@ Host gist.github.com
   Port 443
   PreferredAuthentications publickey
   IdentityFile ~/.ssh/id_github.pub
-  IdentityFile ~/.ssh/id_ed25519
+  IdentityFile ~/.ssh/id_rsa
   IdentitiesOnly yes
 
 Host *
