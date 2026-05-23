@@ -631,6 +631,11 @@ def render_markdown(data):
     lines.append("- 根目录：`{}`".format(data["root"]))
     lines.append("- 项目类型：`{}`".format(PROJECT_TYPE_LABELS.get(data["project_type"], data["project_type"])))
     lines.append("")
+    lines.append("## 使用提示")
+    lines.append("- 这里的扫描结果是候选证据，不是自动落盘结论")
+    lines.append("- 只有能帮助未来 agent 决策的内容，才值得写进 `AGENTS.md`")
+    lines.append("- 未确认的偏好先留在待确认，不要伪装成仓库事实")
+    lines.append("")
 
     for title, key in [
         ("指导文件", "guidance_files"),

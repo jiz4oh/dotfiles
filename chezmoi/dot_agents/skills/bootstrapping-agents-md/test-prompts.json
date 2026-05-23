@@ -1,20 +1,32 @@
 [
   {
     "id": 1,
-    "prompt": "进入一个没有 AGENTS.md 的 pnpm monorepo。请扫描仓库，识别 apps 和 packages，采访我需要确认的策略，然后生成一个精简的根 AGENTS.md。",
-    "expected": "先扫仓库，再按优先级问少量策略问题，最后生成简洁根文件，并只加入有证据支撑的章节。",
+    "prompt": "进入一个只有 README 和 lockfile、还没有 AGENTS.md 的简单仓库。请先扫描仓库，再生成一个精简的根 AGENTS.md。",
+    "expected": "先扫仓库，再直接生成最小骨架；不主动发明迁移、公共 API、monorepo 或维护章节。",
     "must_not_include": ["Co-Authored-By", "coauthor", "提交署名"]
   },
   {
     "id": 2,
-    "prompt": "这个仓库已经有 AGENTS.md，但 CI 命令已经变化，文件里还保留了旧的测试命令。请在保留已确认策略的前提下提出一个窄 patch。",
-    "expected": "保留策略字段，更新命令和事实型章节，删除过时低信号内容，并把改动说明成事实漂移 patch。",
+    "prompt": "这个仓库有 `migrations/` 目录和导出入口，但我还没确认迁移和公共 API 策略。请判断哪些信息可以直接推断，哪些必须先问，再生成 AGENTS.md。",
+    "expected": "明确区分 `Confirmed Policies`、`Inferred Repo Facts`、`待确认`；优先追问迁移和公共 API 策略；未确认策略不写死。",
     "must_not_include": ["Co-Authored-By", "coauthor", "提交署名"]
   },
   {
     "id": 3,
-    "prompt": "这是一个导出 SDK 的仓库，同时有数据库迁移目录。请判断哪些信息可以直接推断，哪些策略必须先问我，再生成 AGENTS.md。",
-    "expected": "明确区分推断事实和已确认策略，优先追问公共 API 和迁移策略，并把高风险边界写清楚。",
+    "prompt": "这个仓库已经有一个 120 行的 AGENTS.md，里面有背景介绍、重复 setup 和过时命令。请在保留已确认策略的前提下提出一个窄 patch。",
+    "expected": "保留仍然有效的用户策略，删除低信号内容，按事实漂移或策略漂移分类改动，并保持 diff 很窄。",
+    "must_not_include": ["Co-Authored-By", "coauthor", "提交署名"]
+  },
+  {
+    "id": 4,
+    "prompt": "进入一个 pnpm monorepo，其中某个 package 有独立测试命令和更严格的公共 API 边界。请生成根 AGENTS.md，并判断是否需要包级覆盖。",
+    "expected": "根文件保持共享规则，只在必要时建议该包使用局部 AGENTS 覆盖；不要把包级细节塞回根文件。",
+    "must_not_include": ["Co-Authored-By", "coauthor", "提交署名"]
+  },
+  {
+    "id": 5,
+    "prompt": "仓库里的 CI 已经改成新测试命令，但现有 AGENTS.md 还写着旧命令。请先收集证据，再决定是直接 patch 还是先问我。",
+    "expected": "先把问题识别为可能的模糊漂移；收集 CI、配置和现有文档证据；必要时触发一个聚焦问题，再输出窄 patch。",
     "must_not_include": ["Co-Authored-By", "coauthor", "提交署名"]
   }
 ]
