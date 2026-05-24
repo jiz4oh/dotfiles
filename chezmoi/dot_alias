@@ -6,10 +6,7 @@ alias pc='proxychains4'
 alias dlf='docker logs -n 50 -f '
 
 # macos
-alias abrew="/opt/homebrew/bin/brew"
-alias i="arch -x86_64"
-alias i="arch -x86_64"
-alias ibrew="arch -x86_64 /usr/local/bin/brew"
+alias unlock='security unlock-keychain ~/Library/Keychains/login.keychain-db'
 
 # unix
 alias ..='cd ..'
