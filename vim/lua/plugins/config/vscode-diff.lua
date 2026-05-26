@@ -2,6 +2,7 @@
 return {
   "esmuellert/vscode-diff.nvim",
   optional = true,
+  cmd = "CodeDiff",
   keys = {
     {
       "<leader>df",

@@ -51,7 +51,7 @@
   prereleaseSuffix = -rc
   prereleaseSuffix = .rc
 [merge]
-	conflictstyle = diff3
+	conflictstyle = zdiff3
 [commit]
 	verbose = true
 [diff]
