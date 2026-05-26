@@ -2,13 +2,13 @@
   "chezmoi/.chezmoiexternals": {
     "type": "chezmoiexternal"
   },
-  "chezmoi/.chezmoiexternals/*.toml": {
+  "chezmoi/.chezmoiexternals/*": {
     "type": "chezmoiexternal"
   },
   "chezmoi/.chezmoiscripts": {
     "type": "chezmoiscripts"
   },
-  "chezmoi/.chezmoiscripts/*.tmpl": {
+  "chezmoi/.chezmoiscripts/*": {
     "type": "chezmoiscripts"
   },
   "chezmoi/.chezmoidata": {
