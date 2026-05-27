@@ -49,6 +49,7 @@ bin/copy_ntfy
 bin/lemonade-daemon
 Library/LaunchAgents/**
 Library/Application Scripts/**
+Library/Application Support/**
 
 .hammerspoon/**
 .raycast/**

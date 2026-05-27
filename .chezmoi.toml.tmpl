@@ -1,0 +1,3 @@
+{{- $bitwardenEmail := promptStringOnce . "bitwardenEmail" "rbw email" -}}
+[data]
+    bitwardenEmail = {{ $bitwardenEmail | quote }}
