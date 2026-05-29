@@ -64,9 +64,21 @@ packages:
   linux:
     apt:
       common:
+        - sudo
+        - zsh
         - curl
+        - wget
         - git
         - python-is-python3
-        - wget
+        - neovim
+        - kitty-terminfo
       debian:
         - universal-ctags
+    yum:
+      common:
+        - sudo
+        - zsh
+        - curl
+        - wget
+        - git
+        - neovim

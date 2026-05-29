@@ -20,13 +20,6 @@ SOURCE_DIR="{{ .chezmoi.sourceDir }}"
 ROOT_DIR="$(cd "$SOURCE_DIR/.." && pwd)"
 BOOTSTRAP_DIR="$ROOT_DIR/vps/bootstrap"
 
-if command -v apt-get >/dev/null 2>&1; then
-  $SUDO apt-get update -y
-  $SUDO apt-get install -y -qq --no-install-recommends sudo zsh neovim git curl wget kitty-terminfo >/dev/null || true
-elif command -v yum >/dev/null 2>&1; then
-  $SUDO yum install -y sudo zsh neovim git curl wget >/dev/null || true
-fi
-
 # sshd hardening drop-in
 $SUDO mkdir -p /etc/ssh/sshd_config.d
 if [ -f "$BOOTSTRAP_DIR/sshd_config.conf" ]; then
