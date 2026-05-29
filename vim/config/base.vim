@@ -38,7 +38,7 @@ if executable('rg')
       let g:__rg_ignore = entries
     endif
 
-    let source = 'rg --no-ignore-vcs --ignore-file ' . rgignore .' --column --line-number --no-heading --smart-case --follow -F ' . a:args . ' || true'
+    let source = 'rg --hidden --no-ignore-vcs --ignore-file ' . rgignore .' --column --line-number --no-heading --smart-case --follow -F ' . a:args . ' || true'
     return source
   endfunction
 endif
