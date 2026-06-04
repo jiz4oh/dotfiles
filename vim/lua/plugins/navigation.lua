@@ -21,7 +21,7 @@ return {
   {
     "echasnovski/mini.jump2d",
   },
-  -- {
-  --   "folke/flash.nvim",
-  -- },
+  {
+    "echasnovski/mini.jump",
+  },
 }

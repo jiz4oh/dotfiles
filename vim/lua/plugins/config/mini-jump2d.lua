@@ -77,24 +77,7 @@ return {
     },
   },
   init = function()
-    make_fFtT_keymap("f", { allowed_lines = { cursor_before = false } })
-    make_fFtT_keymap("F", { allowed_lines = { cursor_after = false } })
-    make_fFtT_keymap("t", {
-      allowed_lines = { cursor_before = false },
-      hooks = {
-        after_jump = function()
-          vim.api.nvim_input("<Left>")
-        end,
-      },
-    })
-    make_fFtT_keymap("T", {
-      allowed_lines = { cursor_after = false },
-      hooks = {
-        after_jump = function()
-          vim.api.nvim_input("<Right>")
-        end,
-      },
-    })
+    make_fFtT_keymap("<leader><leader>f", { allowed_lines = { cursor_before = false } })
   end,
   optional = true,
   specs = {
