@@ -24,7 +24,7 @@ chezmoi --source "$PWD" apply --force --no-tty
 - 主要受管内容在 `chezmoi/`；机器级配置通常使用 `dot_*`、`symlink_*`、`run_*` 命名。
 - `chezmoi/CHEZMOI.md` 是迁移和布局说明；大范围结构调整前先对照这里。
 - 外部仓库优先通过 `.chezmoiexternals/` 目录管理，避免直接把第三方源码散落进受管目录。
-- agent skill source repo 与暴露的 skill 入口统一登记在 `chezmoi/.chezmoiexternals/skills.toml`；`scripts/install_skills` 会读取各个 `.agents/skill-sources/*` entry 的 `x.skills` 生成 `dot_agents/skills/symlink_*`。
+- agent skill source repo 与暴露的 skill 入口统一登记在 `chezmoi/.chezmoiexternals/skills.toml`；`scripts/install_skills` 会读取各个 `.agents/skill-sources/*` entry 的 `x.skills`，执行后在本机 `$HOME/.agents/skills` 下生成软链接。
 - 提交信息保持 `conventional commit` 风格，必要时加 scope；现有历史以 `feat(chezmoi): ...`、`fix(vim): ...` 为准。
 - 有包级规则时先读最近的那个，例如 `chezmoi/AGENTS.md`、`codex/AGENTS.md`、`chezmoi/dot_agents/skills/wx-cli/AGENTS.md`。
 - 不要在生成内容里加入 `Co-Authored-By`、`coauthor` 或提交署名规则。
