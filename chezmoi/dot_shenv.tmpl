@@ -73,9 +73,11 @@ if [ ! -S "$SSH_AUTH_SOCK" ]; then
   fi
 fi
 
-{{- if lookPath "rbw" }}
-export DEEPSEEK_API_KEY={{- output "rbw" "get" "DEEPSEEK_API_KEY" -}}
-{{- end }}
+_chezmoi_cached_env="$HOME/.local/state/chezmoi/cached-env.env"
+if [ -r "$_chezmoi_cached_env" ]; then
+  . "$_chezmoi_cached_env"
+fi
+unset _chezmoi_cached_env
 
 if [ -f ~/.env ]; then
   set -o allexport; source ~/.env; set +o allexport

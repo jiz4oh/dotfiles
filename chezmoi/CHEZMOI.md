@@ -43,6 +43,7 @@ chezmoi --source "$PWD" diff
 - `run_once_*`：只执行一次的初始化步骤
 - `run_onchange_*`：脚本内容变化时重新执行
 - `run_after_*`：每次 `chezmoi apply` 完成后执行
+- `run_before_20_refresh_cached_env.sh.tmpl`：每次 apply 前按 `.chezmoidata/cached-env.yaml` 刷新本机 `~/.local/state/chezmoi/cached-env.env`；单项刷新失败时 warning、保留该项上一版缓存并继续其他项
 
 ## 包管理
 
