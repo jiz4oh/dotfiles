@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASE="$(cd "$SCRIPT_DIR/.." && pwd)"
 SKILLS_EXTERNALS_FILE="$BASE/chezmoi/.chezmoiexternals/skills.toml"
 SKILLS_EXTERNALS_TEMPLATE="$BASE/chezmoi/.chezmoiexternals/skills.toml.tmpl"
-SKILLS_DIR="$BASE/chezmoi/dot_agents/skills"
+LOCAL_SKILLS_DIR="${LOCAL_SKILLS_DIR:-$HOME/.agents/skills}"
 PRUNE="${PRUNE:-0}"
 
 usage() {
@@ -15,15 +15,16 @@ Usage:
   scripts/install_skills
 
 Environment:
-  PRUNE=1   remove stale symlink_* entries not declared in .chezmoiexternals/skills.toml
+  LOCAL_SKILLS_DIR=...  local skills directory, defaults to $HOME/.agents/skills
+  PRUNE=1              remove stale local symlinks not declared in .chezmoiexternals/skills.toml
 
 This script treats .chezmoiexternals/skills.toml(.tmpl) as the source of truth
 for external skill entrypoints. It reads x.skills from
-.agents/skill-sources/* sections and generates chezmoi source files under:
-  chezmoi/dot_agents/skills/symlink_<skill-name>
+.agents/skill-sources/* sections and creates local symlinks under:
+  $HOME/.agents/skills/<skill-name>
 
 Local first-party skills should remain as real directories in:
-  chezmoi/dot_agents/skills/<skill-name>/
+  $HOME/.agents/skills/<skill-name>/
 EOF
 }
 
@@ -40,14 +41,11 @@ if [ ! -f "$SKILLS_EXTERNALS_FILE" ]; then
   fi
 fi
 
-if [ ! -d "$SKILLS_DIR" ]; then
-  echo "missing skills dir: $SKILLS_DIR" >&2
-  exit 1
-fi
-
 warn() {
   echo "warn: $*" >&2
 }
+
+mkdir -p "$LOCAL_SKILLS_DIR"
 
 created=0
 updated=0
@@ -143,7 +141,7 @@ while IFS=$'\t' read -r row_type field1 field2 field3; do
     target_path="$target_path/$source_subdir"
   fi
 
-  entry_path="$SKILLS_DIR/symlink_$skill_name"
+  entry_path="$LOCAL_SKILLS_DIR/$skill_name"
   declared_names+=("$skill_name")
   source_base="$HOME/.agents/skill-sources/$source_id"
   source_path="$source_base"
@@ -163,30 +161,39 @@ while IFS=$'\t' read -r row_type field1 field2 field3; do
     continue
   fi
 
-  if [ -d "$SKILLS_DIR/$skill_name" ]; then
-    warn "local skill dir exists, keep directory and skip symlink_$skill_name"
-    warnings=$((warnings + 1))
-    continue
-  fi
-
-  if [ -f "$entry_path" ]; then
-    current="$(cat "$entry_path")"
+  if [ -L "$entry_path" ]; then
+    current="$(readlink "$entry_path")"
     if [ "$current" = "$target_path" ]; then
       unchanged=$((unchanged + 1))
       continue
     fi
-    printf '%s\n' "$target_path" > "$entry_path"
+    rm -f "$entry_path"
+    ln -s "$target_path" "$entry_path"
     updated=$((updated + 1))
     continue
   fi
 
-  printf '%s\n' "$target_path" > "$entry_path"
+  if [ -e "$entry_path" ]; then
+    warn "local skill entry exists, keep it and skip $skill_name"
+    warnings=$((warnings + 1))
+    continue
+  fi
+
+  ln -s "$target_path" "$entry_path"
   created=$((created + 1))
 done < "$skill_rows_file"
 
-for entry_path in "$SKILLS_DIR"/symlink_*; do
-  [ -e "$entry_path" ] || continue
-  skill_name="${entry_path##*/symlink_}"
+for entry_path in "$LOCAL_SKILLS_DIR"/*; do
+  [ -e "$entry_path" ] || [ -L "$entry_path" ] || continue
+  [ -L "$entry_path" ] || continue
+
+  current="$(readlink "$entry_path")"
+  case "$current" in
+    ../skill-sources/* ) ;;
+    * ) continue ;;
+  esac
+
+  skill_name="${entry_path##*/}"
 
   declared=0
   for known_name in "${declared_names[@]}"; do
@@ -202,9 +209,9 @@ for entry_path in "$SKILLS_DIR"/symlink_*; do
 
   if [ "$PRUNE" = "1" ]; then
     rm -f "$entry_path"
-    echo "pruned: symlink_$skill_name"
+    echo "pruned: $skill_name"
   else
-    warn "undeclared symlink preserved: symlink_$skill_name"
+    warn "undeclared local skill symlink preserved: $skill_name -> $current"
     warnings=$((warnings + 1))
   fi
 done
