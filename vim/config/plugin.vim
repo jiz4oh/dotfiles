@@ -287,7 +287,7 @@ if exists('$SSH_TTY') && !has('nvim-0.10')
   Plug 'ojroques/vim-oscyank'
 endif
 Plug 'skywind3000/vim-dict'
-Plug 'justinmk/vim-gtfo'
+"Plug 'justinmk/vim-gtfo'
 Plug 'mhinz/vim-startify'
 Plug 'dstein64/vim-startuptime', {'on':'StartupTime'}
 
