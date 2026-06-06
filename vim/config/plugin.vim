@@ -75,7 +75,6 @@ Plug 'tpope/vim-projectionist'
 " Plug 'airblade/vim-rooter'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rhubarb'
 " Plug 'junegunn/gv.vim', { 'on': ['GV', 'GV!'] }
 
 if has('nvim') || executable('luajit')
