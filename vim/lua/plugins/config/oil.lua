@@ -100,7 +100,7 @@ return {
       ["<C-l>"] = false,
       -- 通过以下方式关闭 qnap 的引导界面
       -- getcfg "Console Mgmt" "Auto Launch" -f /etc/config/uLinux.conf
-      ["<m-->"] = { "actions.open_terminal", mode = "n" },
+      ["got"] = { "actions.open_terminal", mode = "n" },
       ["<leader>:"] = {
         "actions.open_cmdline",
         opts = {
