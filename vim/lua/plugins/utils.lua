@@ -1,10 +1,6 @@
 ---@type LazySpec[]
 return {
   {
-    "linrongbin16/gitlinker.nvim",
-    import = "plugins.config.gitlinker",
-  },
-  {
     import = "plugins.config.nvim-treesitter",
   },
   {
