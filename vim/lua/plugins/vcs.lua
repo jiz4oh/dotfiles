@@ -1,6 +1,9 @@
 ---@type LazySpec[]
 return {
   {
+    "afonsofrancof/worktrees.nvim",
+  },
+  {
     "lewis6991/gitsigns.nvim",
     import = "plugins.config.gitsigns",
   },
