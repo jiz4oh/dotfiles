@@ -1,3 +1,7 @@
+local create = "<leader>wtc"
+local delete = "<leader>wtd"
+local switch = "<leader>wts"
+
 ---@module "lazy"
 ---@type LazyPluginSpec
 return {
@@ -10,9 +14,9 @@ return {
     "WorktreeSwitch",
   },
   keys = {
-    "<leader>gwc",
-    "<leader>gwd",
-    "<leader>gws",
+    create,
+    delete,
+    switch,
   },
   opts = {
     -- Specify where to create worktrees relative to git common dir
@@ -32,9 +36,9 @@ return {
 
     -- Key mappings for interactive UI (optional)
     mappings = {
-      create = "<leader>gwc",
-      delete = "<leader>gwd",
-      switch = "<leader>gws",
+      create = create,
+      delete = delete,
+      switch = switch,
     },
 
     -- Lifecycle hooks (optional)
