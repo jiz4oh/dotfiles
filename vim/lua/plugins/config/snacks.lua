@@ -152,8 +152,8 @@ return {
       enabled = true,
       win = {
         relative = "cursor",
-        row = 1
-      }
+        row = 1,
+      },
     },
     indent = { enabled = true },
     image = { enabled = true },
@@ -212,9 +212,9 @@ return {
         vim.api.nvim_create_autocmd("User", {
           pattern = "OilActionsPost",
           callback = function(event)
-              if event.data.actions.type == "move" then
-                  Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
-              end
+            if event.data.actions.type == "move" then
+              Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
+            end
           end,
         })
 
@@ -287,20 +287,22 @@ return {
           .option("background", { off = "light", on = "dark", name = "Dark Background" })
           :map("<leader>ub")
         Snacks.toggle.inlay_hints():map("<leader>uh")
-        Snacks.toggle.new({
-          id = "padding",
-          name = "Padding",
-          get = function()
-            return vim.g._fix_padding
-          end,
-          set = function(state)
-            if state then
-              fix_padding()
-            else
-              revert_fix_padding()
-            end
-          end,
-        }):map("<leader>up")
+        Snacks.toggle
+          .new({
+            id = "padding",
+            name = "Padding",
+            get = function()
+              return vim.g._fix_padding
+            end,
+            set = function(state)
+              if state then
+                fix_padding()
+              else
+                revert_fix_padding()
+              end
+            end,
+          })
+          :map("<leader>up")
 
         for _, m in ipairs(vim.tbl_keys(lsp_handlers)) do
           vim.lsp.handlers[m] = lsp_handlers[m]
