@@ -1,6 +1,9 @@
 ---@type LazySpec[]
 return {
   {
+    "barrettruth/diffs.nvim",
+  },
+  {
     "andymass/vim-matchup",
   },
   {
