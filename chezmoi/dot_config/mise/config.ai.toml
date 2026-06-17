@@ -1,3 +1,7 @@
 [tools]
 "npm:skills@latest" = "latest"
 opencode = "latest"
+codex = "latest"
+
+[settings]
+minimum_release_age_excludes = ["codex"]
