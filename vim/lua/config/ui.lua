@@ -41,13 +41,44 @@ local function open_via_lemonade(target)
     end)
   end
 
-  vim.system({  "lemonade", "open", target },  { detach = true }, on_exit)
+  vim.system({ "lemonade", "open", target }, { detach = true }, on_exit)
   return true, nil
 end
 
-vim.ui.open = function(path, opt)
-  vim.validate("path", path, "string")
+local function get_remote_file_by_ssh(host, port, path, callback)
+  if vim.endswith(path, "/") then
+    vim.notify("current buffer is not a file", vim.log.levels.ERROR)
+    return
+  end
 
+  local src = host .. ":" .. path
+
+  local tmpdir = vim.fn.stdpath("cache") .. "/remote-open"
+  vim.fn.mkdir(tmpdir, "p")
+
+  -- 保留后缀，方便 Chrome Markdown 插件识别 .md/.markdown/.yaml
+  local digest = vim.fn.sha256(host .. ":" .. path):sub(1, 12)
+  local basename = vim.fn.fnamemodify(path, ":t")
+  local tmpfile = vim.fs.joinpath(tmpdir, ("%s-%s"):format(digest, basename))
+
+  local cmd = { "scp" }
+  if port then
+    vim.list_extend(cmd, { "-P", port })
+  end
+  vim.list_extend(cmd, { src, tmpfile })
+
+  vim.notify("copying remote file: " .. path)
+
+  require("oil.shell").run(cmd, function(err)
+    if err then
+      vim.notify(("copy remote file faield: %s"):format(err), vim.log.levels.ERROR)
+    else
+      callback(tmpfile)
+    end
+  end)
+end
+
+local function ui_open(path, opt)
   if not vim.F.is_ssh_session() then
     return builtin_ui_open(path, opt)
   end
@@ -70,4 +101,22 @@ vim.ui.open = function(path, opt)
     vim.log.levels.WARN
   )
   return nil, "vim.ui.open: remote session detected but clipboard bridge is unavailable"
+end
+
+vim.ui.open = function(path, opt)
+  vim.validate("path", path, "string")
+  if path:match("^(oil-ssh://)(.*)$") then
+    local ok1, oil_ssh = pcall(require, "oil.adapters.ssh")
+    if ok1 then
+      local res = oil_ssh.parse_url(vim.api.nvim_buf_get_name(0))
+      path = get_remote_file_by_ssh(res.host, res.port, res.path, function(path)
+        ui_open(path, opt)
+      end)
+      if path == nil then
+        return nil, nil
+      end
+    end
+  else
+    ui_open(path, opt)
+  end
 end
