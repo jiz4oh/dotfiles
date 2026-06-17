@@ -7,6 +7,10 @@
   "notifications_url": null,
   "lock_timeout": 86400,
   "sync_interval": 3600,
+{{- if eq .chezmoi.os "darwin" }}
+  "pinentry": "pinentry-mac",
+{{- else }}
   "pinentry": "pinentry",
+{{- end }}
   "client_cert_path": null
 }
