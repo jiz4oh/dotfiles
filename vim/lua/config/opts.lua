@@ -33,3 +33,9 @@ vim.F.has_words_before = function()
   return col ~= 0
     and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
+
+if vim.g.clipboard == nil then
+  if vim.F.is_ssh_session then
+    vim.g.clipboard = "osc52"
+  end
+end
