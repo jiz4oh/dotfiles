@@ -34,8 +34,16 @@ endfunction
 call ale#fix#registry#Add('typescript-tools',
       \'FixTypescript', 
       \[
+      \'javascript',
+      \'javascript.jsx',
+      \'javascriptreact',
+      \'jsx',
+      \'js',
+      \'ts',
+      \'tsx',
       \'typescript',
       \'typescript.tsx',
+      \'typescriptreact',
       \], 
       \'add missing imports, sorts and removes unused imports, fixes all fixable errors'
       \)
