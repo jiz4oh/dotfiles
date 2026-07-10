@@ -35,7 +35,7 @@ vim.F.has_words_before = function()
 end
 
 if vim.g.clipboard == nil then
-  if vim.F.is_ssh_session then
+  if vim.F.is_ssh_session() then
     vim.g.clipboard = "osc52"
   end
 end
