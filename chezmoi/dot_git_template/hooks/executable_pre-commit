@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+.git/hooks/restore_eol_only_changes
+.git/hooks/check_migration_timestamps

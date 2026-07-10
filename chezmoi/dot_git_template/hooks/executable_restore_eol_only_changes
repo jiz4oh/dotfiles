@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""Restore staged lines whose text is unchanged and only line endings differ."""
+
+import difflib
+import pathlib
+import subprocess
+import sys
+
+
+def git(*args, input_data=None):
+    return subprocess.run(["git", *args], input=input_data, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True).stdout
+
+
+def content(line):
+    if line.endswith(b"\r\n"):
+        return line[:-2]
+    if line.endswith((b"\n", b"\r")):
+        return line[:-1]
+    return line
+
+
+def main():
+    root = pathlib.Path(git("rev-parse", "--show-toplevel").decode().strip())
+    paths = [path.decode() for path in git("diff", "--cached", "--name-only", "-z", "--diff-filter=ACMR").split(b"\0") if path]
+    fixed = []
+
+    for path in paths:
+        if subprocess.run(["git", "cat-file", "-e", f"HEAD:{path}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+            continue
+
+        base = git("show", f"HEAD:{path}").splitlines(keepends=True)
+        staged = git("show", f":{path}").splitlines(keepends=True)
+        matcher = difflib.SequenceMatcher(a=[content(line) for line in base], b=[content(line) for line in staged], autojunk=False)
+        corrected = list(staged)
+        changes = 0
+
+        for tag, base_start, base_end, staged_start, staged_end in matcher.get_opcodes():
+            if tag != "equal":
+                continue
+            for base_index, staged_index in zip(range(base_start, base_end), range(staged_start, staged_end)):
+                if base[base_index] != corrected[staged_index] and content(base[base_index]) == content(corrected[staged_index]):
+                    corrected[staged_index] = base[base_index]
+                    changes += 1
+
+        if not changes:
+            continue
+
+        worktree_path = root / path
+        staged_blob = b"".join(staged)
+        if worktree_path.read_bytes() != staged_blob:
+            raise RuntimeError(f"{path} has unstaged changes; stage the whole file before committing")
+
+        mode = git("ls-files", "-s", "--", path).decode().split()[0]
+        corrected_blob = b"".join(corrected)
+        blob = git("hash-object", "-w", "--stdin", input_data=corrected_blob).decode().strip()
+        git("update-index", "--cacheinfo", f"{mode},{blob},{path}")
+        worktree_path.write_bytes(corrected_blob)
+        fixed.append(f"{path}: {changes} line(s)")
+
+    if fixed:
+        print("Restored EOL-only staged changes:\n" + "\n".join(fixed))
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as error:
+        print(f"pre-commit EOL cleanup failed: {error}", file=sys.stderr)
+        sys.exit(1)

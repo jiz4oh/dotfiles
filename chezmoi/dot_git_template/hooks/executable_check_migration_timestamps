@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+invalid_migrations=$(git diff --cached --name-only --diff-filter=ACR | awk '
+  {
+    name = $0
+    sub(/^.*\//, "", name)
+
+    if ($0 ~ /(^|\/)db\/migrate\/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[^\/]+\.rb$/ && substr(name, 13, 2) == "00") {
+      print "  - " $0
+    }
+  }
+')
+
+if [ -z "$invalid_migrations" ]; then
+  exit 0
+fi
+
+cat >&2 <<EOF
+拒绝提交：以下 Rails migration 的时间戳不正确：
+
+$invalid_migrations
+
+请生成合理、唯一且按时间排序的时间戳（分钟数应为 01-59，秒数应为 01-59），再重新暂存文件。不要把多个 migration 人工改成同一个秒数。
+EOF
+
+exit 1
