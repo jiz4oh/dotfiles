@@ -16,6 +16,7 @@ packages:
       - name: mysql
       - name: pandoc
       - name: postgresql@14
+      - name: pre-commit
       - name: ranger
       - name: redis
       - name: scrcpy
@@ -70,6 +71,7 @@ packages:
         - wget
         - git
         - python-is-python3
+        - pre-commit
         - neovim
         - kitty-terminfo
       debian:

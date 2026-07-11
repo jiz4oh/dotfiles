@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
 
-.git/hooks/restore_eol_only_changes
-.git/hooks/check_migration_timestamps
+exec pre-commit run \
+  --config "$HOME/.config/pre-commit/config.yaml" \
+  --hook-stage pre-commit
