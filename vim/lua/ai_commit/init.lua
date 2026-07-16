@@ -281,6 +281,13 @@ end
 
 local function get_repo_cwd()
   if vim.b.git_dir and vim.b.git_dir ~= "" then
+    if vim.fn.exists("*FugitiveWorkTree") == 1 then
+      local worktree = vim.fn.FugitiveWorkTree(vim.b.git_dir)
+      if worktree and worktree ~= "" then
+        return worktree
+      end
+    end
+
     return vim.fn.fnamemodify(vim.b.git_dir, ":h")
   end
 
