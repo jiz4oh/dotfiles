@@ -33,7 +33,7 @@
 [github]
 	user = jiz4oh
 [log]
-	date = iso
+	date = iso-local
 [status]
   # Display submodule rev change summaries in status
   submoduleSummary = true
@@ -66,4 +66,4 @@
   pushInsteadOf = "https://github.com/"
 
 [difftool "nvim_difftool"]
-  cmd = nvim -c \"DiffTool $LOCAL $REMOTE\"
+  cmd = nvim -c \"CodeDiff\"

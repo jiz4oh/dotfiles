@@ -1,3 +1,5 @@
+let g:flog_default_opts = { 'date': 'iso-local' }
+
 vnoremap <silent> <leader>gl :Flog<cr>
 nnoremap <silent> <leader>gl :Flog -path=%<cr>
 nnoremap <silent> <leader>gL :Flog<cr>
