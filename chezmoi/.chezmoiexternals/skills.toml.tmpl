@@ -55,13 +55,6 @@
   pull.args = ["--ff-only"]
   x.skills = ["notellm=."]
 
-[".agents/skills/git-commit-helper"]
-  type = "git-repo"
-  url = "https://github.com/alirezarezvani/claude-code-tresor"
-  refreshPeriod = "72h"
-  clone.args = ["--filter=blob:none"]
-  pull.args = ["--ff-only"]
-
 [".agents/skills/tg-cli"]
   type = "git-repo"
   url = "https://github.com/jackwener/tg-cli"
