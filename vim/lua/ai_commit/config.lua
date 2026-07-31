@@ -1,8 +1,8 @@
 return {
   model = {
-    codex = "gpt-5.4-mini",
+    codex = "gpt-5.6-luna",
     opencode = {
-      "openai/gpt-5.4-mini",
+      "openai/gpt-5.6-luna",
       "deepseek/deepseek-v4-flash",
     },
   },
