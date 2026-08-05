@@ -559,6 +559,7 @@ augroup vimrc
   autocmd BufRead,BufNewFile tmux.conf,tmux.conf.local   set filetype=tmux
   autocmd BufRead,BufNewFile vimrc,vimrc.local           set filetype=vim
   autocmd BufRead,BufNewFile .pryrc                      set filetype=ruby
+  autocmd BufRead,BufNewFile *.lcf                       set filetype=conf  " loon configuration file
 
   " autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown           set filetype=markdown.mkd
   autocmd FileType ruby setlocal regexpengine=1
