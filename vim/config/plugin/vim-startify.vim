@@ -30,6 +30,7 @@ let g:startify_session_savevars = [
 let g:_startify_bookmarks = [
             \ $MYVIMRC,
             \ "$HOME/.local/share/chezmoi/",
+            \ "$HOME/.Trash",
             \ "$HOME/Library/Mobile Documents/com~apple~CloudDocs",
             \ ]
 let g:startify_bookmarks = copy(g:_startify_bookmarks)
