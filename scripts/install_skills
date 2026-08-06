@@ -23,6 +23,10 @@ for external skill entrypoints. It reads x.skills from
 .agents/skill-sources/* sections and creates local symlinks under:
   $HOME/.agents/skills/<skill-name>
 
+x.skills entries use the form:
+  <skill-name>=<relative-path>  link one skill explicitly
+  *=<relative-directory>        discover immediate child directories that contain SKILL.md
+
 Local first-party skills should remain as real directories in:
   $HOME/.agents/skills/<skill-name>/
 EOF
@@ -95,7 +99,11 @@ while i < lines.length
     block.scan(/"([^"]+)"/).flatten.each do |item|
       name, relpath = item.split("=", 2)
       next if name.nil? || name.empty? || relpath.nil? || relpath.empty?
-      puts ["row", source_id, name, relpath].join("\t")
+      if name == "*"
+        puts ["discover", source_id, relpath].join("\t")
+      else
+        puts ["row", source_id, name, relpath].join("\t")
+      end
     end
   end
 
@@ -103,28 +111,44 @@ while i < lines.length
 end
 RUBY
 
-while IFS=$'\t' read -r row_type field1 field2 field3; do
-  if [ "${row_type:-}" = "warn" ]; then
-    warn "$field1"
-    warnings=$((warnings + 1))
-    continue
-  fi
+is_declared() {
+  local skill_name="$1"
+  local known_name
 
-  [ "${row_type:-}" = "row" ] || continue
+  [ "${#declared_names[@]}" -gt 0 ] || return 1
 
-  source_id="$field1"
-  skill_name="$field2"
-  source_subdir="$field3"
+  for known_name in "${declared_names[@]}"; do
+    if [ "$known_name" = "$skill_name" ]; then
+      return 0
+    fi
+  done
 
-  [ -z "${source_id:-}" ] && continue
-  [ -z "${skill_name:-}" ] && continue
-  [ -z "${source_subdir:-}" ] && continue
+  return 1
+}
+
+sync_skill() {
+  local source_id="$1"
+  local skill_name="$2"
+  local source_subdir="$3"
+  local target_path
+  local entry_path
+  local current
+  local source_base
+  local source_path
+
+  case "$source_id" in
+    "" | */* | .* | *".."* )
+      warn "skip skill '$skill_name': unsafe source id '$source_id'"
+      warnings=$((warnings + 1))
+      return
+      ;;
+  esac
 
   case "$skill_name" in
     */* | .* | *".."* )
       warn "skip unsafe skill name '$skill_name'"
       warnings=$((warnings + 1))
-      continue
+      return
       ;;
   esac
 
@@ -132,9 +156,15 @@ while IFS=$'\t' read -r row_type field1 field2 field3; do
     "" | /* | *".."* )
       warn "skip unsafe source subdir '$source_subdir' for skill '$skill_name'"
       warnings=$((warnings + 1))
-      continue
+      return
       ;;
   esac
+
+  if is_declared "$skill_name"; then
+    warn "skip duplicate skill name '$skill_name'"
+    warnings=$((warnings + 1))
+    return
+  fi
 
   target_path="../skill-sources/$source_id"
   if [ "$source_subdir" != "." ]; then
@@ -152,35 +182,100 @@ while IFS=$'\t' read -r row_type field1 field2 field3; do
   if [ ! -d "$source_base" ]; then
     warn "skip skill '$skill_name': missing skill source '$source_base'"
     warnings=$((warnings + 1))
-    continue
+    return
   fi
 
   if [ ! -e "$source_path" ]; then
     warn "skip skill '$skill_name': missing declared path '$source_path'"
     warnings=$((warnings + 1))
-    continue
+    return
   fi
 
   if [ -L "$entry_path" ]; then
     current="$(readlink "$entry_path")"
     if [ "$current" = "$target_path" ]; then
       unchanged=$((unchanged + 1))
-      continue
+      return
     fi
     rm -f "$entry_path"
     ln -s "$target_path" "$entry_path"
     updated=$((updated + 1))
-    continue
+    return
   fi
 
   if [ -e "$entry_path" ]; then
     warn "local skill entry exists, keep it and skip $skill_name"
     warnings=$((warnings + 1))
-    continue
+    return
   fi
 
   ln -s "$target_path" "$entry_path"
   created=$((created + 1))
+}
+
+while IFS=$'\t' read -r row_type field1 field2 field3; do
+  if [ "${row_type:-}" = "warn" ]; then
+    warn "$field1"
+    warnings=$((warnings + 1))
+    continue
+  fi
+
+  if [ "${row_type:-}" = "discover" ]; then
+    source_id="$field1"
+    source_subdir="$field2"
+    source_root="$HOME/.agents/skill-sources/$source_id"
+
+    case "$source_id" in
+      "" | */* | .* | *".."* )
+        warn "skip skill discovery with unsafe source id '$source_id'"
+        warnings=$((warnings + 1))
+        continue
+        ;;
+    esac
+
+    case "$source_subdir" in
+      "" | /* | *".."* )
+        warn "skip skill discovery with unsafe source subdir '$source_subdir'"
+        warnings=$((warnings + 1))
+        continue
+        ;;
+    esac
+
+    if [ "$source_subdir" != "." ]; then
+      source_root="$source_root/$source_subdir"
+    fi
+
+    if [ ! -d "$source_root" ]; then
+      warn "skip skill discovery '$source_id=$source_subdir': missing directory '$source_root'"
+      warnings=$((warnings + 1))
+      continue
+    fi
+
+    for skill_path in "$source_root"/*; do
+      [ -d "$skill_path" ] || continue
+      [ -f "$skill_path/SKILL.md" ] || continue
+
+      skill_name="${skill_path##*/}"
+      discovered_subdir="${skill_name}"
+      if [ "$source_subdir" != "." ]; then
+        discovered_subdir="$source_subdir/$skill_name"
+      fi
+      sync_skill "$source_id" "$skill_name" "$discovered_subdir"
+    done
+    continue
+  fi
+
+  [ "${row_type:-}" = "row" ] || continue
+
+  source_id="$field1"
+  skill_name="$field2"
+  source_subdir="$field3"
+
+  [ -z "${source_id:-}" ] && continue
+  [ -z "${skill_name:-}" ] && continue
+  [ -z "${source_subdir:-}" ] && continue
+
+  sync_skill "$source_id" "$skill_name" "$source_subdir"
 done < "$skill_rows_file"
 
 for entry_path in "$LOCAL_SKILLS_DIR"/*; do

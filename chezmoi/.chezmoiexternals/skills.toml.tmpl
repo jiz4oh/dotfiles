@@ -31,6 +31,24 @@
   pull.args = ["--ff-only"]
   x.skills = ["read=skills/read", "write=skills/write", "think=skills/think", "learn=skills/learn", "hunt=skills/hunt", "health=skills/health", "ui=skills/ui", "check=skills/check"]
 
+[".agents/skill-sources/mattpocock"]
+  type = "git-repo"
+  url = "https://github.com/mattpocock/skills"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  # Keep the stable engineering group discoverable as upstream adds skills.
+  # `handoff` stays first-party, so productivity skills are listed explicitly.
+  x.skills = [
+    "*=skills/engineering",
+    "grill-me=skills/productivity/grill-me",
+    "grilling=skills/productivity/grilling",
+    "teach=skills/productivity/teach",
+    "to-questionnaire=skills/productivity/to-questionnaire",
+    "wait-what=skills/productivity/wait-what",
+    "writing-for-agents=skills/productivity/writing-for-agents",
+  ]
+
 [".agents/skill-sources/vercel-labs"]
   type = "git-repo"
   url = "https://github.com/vercel-labs/skills"
