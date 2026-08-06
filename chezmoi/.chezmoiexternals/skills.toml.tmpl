@@ -7,14 +7,6 @@
   pull.args = ["--ff-only"]
   x.skills = ["markitdown=skills_all/markitdown"]
 
-[".agents/skill-sources/superpowers"]
-  type = "git-repo"
-  url = "https://github.com/obra/superpowers"
-  refreshPeriod = "72h"
-  clone.args = ["--filter=blob:none"]
-  pull.args = ["--ff-only"]
-  x.skills = ["writing-skills=skills/writing-skills", "writing-plans=skills/writing-plans", "executing-plans=skills/executing-plans", "dispatching-parallel-agents=skills/dispatching-parallel-agents"]
-
 [".agents/skill-sources/longbridge"]
   type = "git-repo"
   url = "https://github.com/longbridge/developers"

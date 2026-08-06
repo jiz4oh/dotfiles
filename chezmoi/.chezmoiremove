@@ -1,3 +1,7 @@
 # .DS_Store # caused timed out on apply
 .prompts/**
 .agents/skills/brainstorming
+.agents/skills/writing-skills
+.agents/skills/writing-plans
+.agents/skills/executing-plans
+.agents/skills/dispatching-parallel-agents
