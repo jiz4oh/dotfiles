@@ -31,15 +31,13 @@ def main():
     if not revision_exists("HEAD"):
         return
 
-    bases = ["HEAD"]
-    # During amend or rebase, the final parent can be HEAD^ rather than HEAD.
-    if revision_exists("HEAD^"):
-        bases.append("HEAD^")
+    # Use the current commit as the only baseline. Comparing against HEAD^
+    # also scans changes from the parent commit and can restage unrelated EOL changes.
+    base_revision = "HEAD"
     root = pathlib.Path(git("rev-parse", "--show-toplevel").decode().strip())
     paths = {
         path.decode()
-        for base in bases
-        for path in git("diff", "--cached", "--name-only", "-z", "--diff-filter=ACMR", base).split(b"\0")
+        for path in git("diff", "--cached", "--name-only", "-z", "--diff-filter=ACMR", base_revision).split(b"\0")
         if path
     }
     fixed = []
@@ -49,20 +47,19 @@ def main():
         corrected = list(staged)
         changes = 0
 
-        for base_revision in bases:
-            if subprocess.run(["git", "cat-file", "-e", f"{base_revision}:{path}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+        if subprocess.run(["git", "cat-file", "-e", f"{base_revision}:{path}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+            continue
+
+        base = git("show", f"{base_revision}:{path}").splitlines(keepends=True)
+        matcher = difflib.SequenceMatcher(a=[content(line) for line in base], b=[content(line) for line in corrected], autojunk=False)
+
+        for tag, base_start, base_end, staged_start, staged_end in matcher.get_opcodes():
+            if tag != "equal":
                 continue
-
-            base = git("show", f"{base_revision}:{path}").splitlines(keepends=True)
-            matcher = difflib.SequenceMatcher(a=[content(line) for line in base], b=[content(line) for line in corrected], autojunk=False)
-
-            for tag, base_start, base_end, staged_start, staged_end in matcher.get_opcodes():
-                if tag != "equal":
-                    continue
-                for base_index, staged_index in zip(range(base_start, base_end), range(staged_start, staged_end)):
-                    if base[base_index] != corrected[staged_index] and content(base[base_index]) == content(corrected[staged_index]):
-                        corrected[staged_index] = base[base_index]
-                        changes += 1
+            for base_index, staged_index in zip(range(base_start, base_end), range(staged_start, staged_end)):
+                if base[base_index] != corrected[staged_index] and content(base[base_index]) == content(corrected[staged_index]):
+                    corrected[staged_index] = base[base_index]
+                    changes += 1
 
         if not changes:
             continue
