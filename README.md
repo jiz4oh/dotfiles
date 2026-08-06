@@ -34,6 +34,7 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/jiz4oh/d
 2. 拉取本仓库到 `~/.local/share/chezmoi`
 3. 执行 `chezmoi apply`
 4. 在 Debian / Ubuntu 上自动执行 `apt` 包安装
+5. 在 Debian / Ubuntu 上通过 `mise` 自动安装 `~/.config/mise/config.toml` 里声明的工具
 
 ## 分步安装
 
