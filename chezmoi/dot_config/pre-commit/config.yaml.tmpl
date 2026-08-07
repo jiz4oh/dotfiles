@@ -3,13 +3,13 @@ repos:
     hooks:
       - id: restore-eol-only-changes
         name: Restore EOL-only staged changes
-        entry: "~/bin/restore_eol_only_changes"
+        entry: "{{ .chezmoi.homeDir }}/bin/restore_eol_only_changes"
         language: system
         pass_filenames: false
 
       - id: check-migration-timestamps
         name: Check Rails migration timestamps
-        entry: "~/bin/check_migration_timestamps"
+        entry: "{{ .chezmoi.homeDir }}/bin/check_migration_timestamps"
         language: system
         files: '(^|/)db/migrate/[0-9]{14}_[^/]+\.rb$'
         pass_filenames: true
