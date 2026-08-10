@@ -45,7 +45,7 @@ return {
       group = aug,
       callback = function(args)
         local bufnr = args.buf
-        vim.b[bufnr].dispatch = ":LivePreview start"
+        vim.b[bufnr].dispatch = ":tcd %:p:h | LivePreview start"
       end,
     })
 
