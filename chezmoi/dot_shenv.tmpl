@@ -36,6 +36,11 @@ else
 fi
 
 export GPG_TTY=$(tty)
+
+if [ -n "${SSH_CONNECTION:-}" ] || [ -n "${SSH_TTY:-}" ]; then
+  export PINENTRY_USER_DATA=rbw-ssh
+fi
+
 export RUBY_BUILD_MIRROR_URL=https://cache.ruby-china.com
 
 export MISE_RUBY_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems

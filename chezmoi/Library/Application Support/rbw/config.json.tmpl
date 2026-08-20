@@ -8,7 +8,7 @@
   "lock_timeout": 86400,
   "sync_interval": 3600,
 {{- if eq .chezmoi.os "darwin" }}
-  "pinentry": "pinentry-mac",
+  "pinentry": {{ printf "%s/bin/rbw-pinentry" .chezmoi.homeDir | quote }},
 {{- else }}
   "pinentry": "pinentry",
 {{- end }}
