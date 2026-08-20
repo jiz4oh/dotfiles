@@ -3,6 +3,7 @@ return {
     codex = "gpt-5.6-luna",
     opencode = {
       "openai/gpt-5.6-luna",
+      "openrouter/deepseek/deepseek-v4-flash",
       "deepseek/deepseek-v4-flash",
     },
   },
