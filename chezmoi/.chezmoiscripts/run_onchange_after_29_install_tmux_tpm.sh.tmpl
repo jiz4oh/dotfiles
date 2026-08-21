@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+TPM_DIR="$HOME/.tmux/plugins/tpm"
+TPM_URL="https://github.com/tmux-plugins/tpm"
+
+if ! command -v git >/dev/null 2>&1; then
+  echo "[tmux][warn] git not found, skip TPM installation" >&2
+  exit 0
+fi
+
+if [ -d "$TPM_DIR/.git" ]; then
+  git -C "$TPM_DIR" pull --ff-only >/dev/null 2>&1 || \
+    echo "[tmux][warn] failed to refresh TPM: $TPM_DIR" >&2
+elif [ -e "$TPM_DIR" ]; then
+  echo "[tmux][warn] TPM path exists but is not a git repository: $TPM_DIR" >&2
+else
+  mkdir -p "$(dirname "$TPM_DIR")"
+  git clone --filter=blob:none "$TPM_URL" "$TPM_DIR" >/dev/null 2>&1 || \
+    echo "[tmux][warn] failed to clone TPM: $TPM_URL" >&2
+fi

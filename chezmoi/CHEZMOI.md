@@ -31,7 +31,7 @@ chezmoi --source "$PWD" diff
   `~/.hammerspoon/{Spoons,modules}` 这类大目录，使用 symlink 管理
 - `~/.config/mise` 由仓库内 `chezmoi/dot_config/mise/` 直接管理（不再走 symlink）
 - 原先的 git submodule 现在统一放进 `chezmoi/.chezmoiexternals/`：
-  `~/.config/kitty/kitty_search`、`~/.tmux/plugins/tpm`、以及
+  `~/.config/kitty/kitty_search` 以及
   `~/.agents/skill-sources/{git-commit-helper,notebooklm-skill,ordinary-claude-skills,superpowers}`
 - Rime 上游仓库通过 external 落到 `~/.local/share/rime-frost`，本地覆盖层继续放在
   `rime/custom` 和 `rime/opencc`
@@ -44,6 +44,7 @@ chezmoi --source "$PWD" diff
 - `run_onchange_*`：脚本内容变化时重新执行
 - `run_after_*`：每次 `chezmoi apply` 完成后执行
 - `run_before_20_refresh_cached_env.sh.tmpl`：每次 apply 前按 `.chezmoidata/cached-env.yaml` 刷新本机 `~/.local/state/chezmoi/cached-env.env`；单项刷新失败时 warning、保留该项上一版缓存并继续其他项
+- `run_onchange_after_29_install_tmux_tpm.sh.tmpl`：目录准备完成后幂等安装或刷新 TPM，避免 external 刷新早于父目录创建
 
 ## 包管理
 

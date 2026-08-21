@@ -17,54 +17,10 @@ rows_file="$(mktemp)"
 values_file="$(mktemp)"
 trap 'rm -f "$rows_file" "$values_file"' EXIT
 
-if ! ruby -ryaml - "$CONFIG_FILE" > "$rows_file" <<'RUBY'
-path = ARGV.fetch(0)
-config = YAML.safe_load(File.read(path), permitted_classes: [], aliases: false) || {}
-entries = config.fetch("cached_env", [])
-seen_names = {}
-
-unless entries.is_a?(Array)
-  warn "cached_env must be a list"
-  exit 1
-end
-
-entries.each_with_index do |entry, index|
-  unless entry.is_a?(Hash)
-    warn "cached_env[#{index}] must be a map"
-    exit 1
-  end
-
-  name = entry["name"].to_s
-  rbw = entry["rbw"].to_s
-
-  unless name.match?(/\A[A-Za-z_][A-Za-z0-9_]*\z/)
-    warn "cached_env[#{index}].name is not a valid shell variable name: #{name.inspect}"
-    exit 1
-  end
-
-  if seen_names[name]
-    warn "cached_env[#{index}].name is duplicated: #{name}"
-    exit 1
-  end
-  seen_names[name] = true
-
-  if rbw.empty?
-    warn "cached_env[#{index}].rbw is required"
-    exit 1
-  end
-
-  if rbw.match?(/[\t\n]/)
-    warn "cached_env[#{index}].rbw cannot contain a tab or newline"
-    exit 1
-  end
-
-  puts ["rbw", name, rbw].join("\t")
-end
-RUBY
-then
-  warn "invalid cached env config, keep existing cache: $CONFIG_FILE"
-  exit 0
-fi
+: > "$rows_file"
+{{- range .cached_env }}
+printf '%s\t%s\t%s\n' 'rbw' '{{ .name }}' '{{ .rbw }}' >> "$rows_file"
+{{- end }}
 
 if [ ! -s "$rows_file" ]; then
   exit 0
