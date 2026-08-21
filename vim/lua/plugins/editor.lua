@@ -2,6 +2,8 @@
 return {
   {
     "barrettruth/diffs.nvim",
+    -- diffs.nvim uses the positional vim.validate API introduced in 0.11.
+    enabled = vim.fn.has("nvim-0.11") == 1,
   },
   {
     "andymass/vim-matchup",
