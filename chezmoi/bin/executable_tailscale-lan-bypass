@@ -1,0 +1,270 @@
+#!/usr/bin/env python3
+"""Prefer fixed, directly connected LANs over overlapping Tailscale routes."""
+
+from __future__ import annotations
+
+import argparse
+import ipaddress
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
+from typing import Union
+
+
+PRIORITY = "2500"
+STATE_FILE = Path("/run/tailscale-lan-bypass.rules")
+TAILSCALE_INTERFACE = "tailscale0"
+Network = Union[ipaddress.IPv4Network, ipaddress.IPv6Network]
+
+
+def run(command: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(command, check=check, text=True, capture_output=True)
+
+
+def read_json(command: list[str]) -> object:
+    return json.loads(run(command).stdout)
+
+
+def route_preferences(tailscale: str) -> tuple[bool, list[str]]:
+    prefs = read_json([tailscale, "debug", "prefs"])
+    if not isinstance(prefs, dict):
+        raise ValueError("unexpected output from tailscale debug prefs")
+
+    advertised = prefs.get("AdvertiseRoutes", [])
+    if not isinstance(advertised, list):
+        advertised = []
+    routes = [route for route in advertised if isinstance(route, str)]
+    return bool(prefs.get("RouteAll")), routes
+
+
+def parse_network(value: object) -> Network | None:
+    if not isinstance(value, str) or value == "default":
+        return None
+    try:
+        return ipaddress.ip_network(value, strict=False)
+    except ValueError:
+        return None
+
+
+def route_rows(ip: str, family: int, table: str) -> list[dict[str, object]]:
+    rows = read_json([ip, f"-{family}", "-j", "route", "show", "table", table])
+    if not isinstance(rows, list):
+        raise ValueError(f"unexpected IPv{family} route output")
+    return [row for row in rows if isinstance(row, dict)]
+
+
+def connected_networks(ip: str, family: int) -> set[Network]:
+    networks: set[Network] = set()
+    for row in route_rows(ip, family, "main"):
+        if row.get("protocol") != "kernel":
+            continue
+        if family == 4 and row.get("scope") != "link":
+            continue
+        device = row.get("dev")
+        if not isinstance(device, str) or device in {"lo", TAILSCALE_INTERFACE}:
+            continue
+        network = parse_network(row.get("dst"))
+        if network is not None:
+            networks.add(network)
+    return networks
+
+
+def ifconfig_networks(ifconfig: str, family: int) -> set[Network]:
+    """Read connected networks from both modern and legacy net-tools output."""
+    networks: set[Network] = set()
+    device = ""
+    output = run([ifconfig, "-a"]).stdout
+    for raw_line in output.splitlines():
+        if raw_line and not raw_line[0].isspace():
+            device = raw_line.split(":", 1)[0].split()[0]
+        if device in {"", "lo", TAILSCALE_INTERFACE}:
+            continue
+
+        fields = raw_line.replace("addr:", "addr ").replace("Mask:", "netmask ").split()
+        if family == 4 and "inet" in fields:
+            try:
+                address = fields[fields.index("inet") + 1]
+                if address == "addr":
+                    address = fields[fields.index("addr") + 1]
+                netmask = fields[fields.index("netmask") + 1]
+                networks.add(ipaddress.ip_interface(f"{address}/{netmask}").network)
+            except (ValueError, IndexError):
+                continue
+        elif family == 6 and "inet6" in fields:
+            try:
+                address = fields[fields.index("inet6") + 1]
+                if address == "addr":
+                    address = fields[fields.index("addr") + 1]
+                if "/" in address:
+                    interface = ipaddress.ip_interface(address)
+                else:
+                    prefix = fields[fields.index("prefixlen") + 1]
+                    interface = ipaddress.ip_interface(f"{address}/{prefix}")
+                if not interface.network.is_link_local:
+                    networks.add(interface.network)
+            except (ValueError, IndexError):
+                continue
+    return networks
+
+
+def tailscale_networks(ip: str, family: int) -> set[Network]:
+    networks: set[Network] = set()
+    for row in route_rows(ip, family, "52"):
+        if row.get("dev") != TAILSCALE_INTERFACE:
+            continue
+        network = parse_network(row.get("dst"))
+        if network is not None and network.prefixlen != 0:
+            networks.add(network)
+    return networks
+
+
+def primary_routes(status: dict[str, object], family: int) -> set[Network]:
+    networks: set[Network] = set()
+    peers = status.get("Peer", {})
+    if not isinstance(peers, dict):
+        return networks
+    for peer in peers.values():
+        if not isinstance(peer, dict):
+            continue
+        routes = peer.get("PrimaryRoutes", [])
+        if not isinstance(routes, list):
+            continue
+        for value in routes:
+            network = parse_network(value)
+            if network is not None and network.version == family and network.prefixlen != 0:
+                networks.add(network)
+    return networks
+
+
+def overlapping_lans(ip: str, ifconfig: str | None,
+                     status: dict[str, object]) -> list[tuple[int, str]]:
+    overlaps: list[tuple[int, str]] = []
+    for family in (4, 6):
+        try:
+            local = connected_networks(ip, family)
+        except (subprocess.CalledProcessError, json.JSONDecodeError, ValueError):
+            if ifconfig is None:
+                raise
+            local = ifconfig_networks(ifconfig, family)
+        try:
+            remote = tailscale_networks(ip, family)
+        except (subprocess.CalledProcessError, json.JSONDecodeError, ValueError):
+            remote = primary_routes(status, family)
+        for network in local:
+            if any(network.overlaps(candidate) for candidate in remote):
+                overlaps.append((family, str(network)))
+    return sorted(overlaps)
+
+
+def read_state() -> set[tuple[int, str]]:
+    state: set[tuple[int, str]] = set()
+    try:
+        lines = STATE_FILE.read_text(encoding="utf-8").splitlines()
+    except FileNotFoundError:
+        return state
+    for line in lines:
+        try:
+            family_text, network = line.split(maxsplit=1)
+            family = int(family_text)
+        except ValueError:
+            continue
+        if family in (4, 6) and parse_network(network) is not None:
+            state.add((family, network))
+    return state
+
+
+def write_state(rules: set[tuple[int, str]]) -> None:
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temp_name = tempfile.mkstemp(dir=STATE_FILE.parent, text=True)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as file:
+            for family, network in sorted(rules):
+                file.write(f"{family} {network}\n")
+        os.replace(temp_name, STATE_FILE)
+    finally:
+        try:
+            os.unlink(temp_name)
+        except FileNotFoundError:
+            pass
+
+
+def existing_rules(ip: str, family: int) -> set[str]:
+    output = run([ip, f"-{family}", "rule", "show", "priority", PRIORITY]).stdout
+    rules: set[str] = set()
+    for line in output.splitlines():
+        fields = line.replace(":", " ").split()
+        if "to" not in fields or "lookup" not in fields:
+            continue
+        to_index = fields.index("to")
+        table_index = fields.index("lookup")
+        if table_index + 1 < len(fields) and fields[table_index + 1] == "main":
+            rules.add(fields[to_index + 1])
+    return rules
+
+
+def apply_rules(ip: str, desired: set[tuple[int, str]], dry_run: bool) -> None:
+    previous = read_state()
+    managed = previous & desired
+    for family, network in sorted(previous - desired):
+        command = [ip, f"-{family}", "rule", "del", "to", network,
+                   "priority", PRIORITY, "lookup", "main"]
+        if dry_run:
+            print("+", " ".join(command))
+        else:
+            run(command, check=False)
+
+    for family, network in sorted(desired):
+        if network in existing_rules(ip, family):
+            continue
+        command = [ip, f"-{family}", "rule", "add", "to", network,
+                   "priority", PRIORITY, "lookup", "main"]
+        if dry_run:
+            print("+", " ".join(command))
+        else:
+            run(command)
+            managed.add((family, network))
+
+    if not dry_run:
+        write_state(managed)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args()
+
+    ip = shutil.which("ip")
+    ifconfig = shutil.which("ifconfig")
+    tailscale = shutil.which("tailscale")
+    if ip is None or tailscale is None:
+        print("tailscale-lan-bypass: ip rule and tailscale are required", file=sys.stderr)
+        return 1
+
+    try:
+        status = read_json([tailscale, "status", "--json"])
+        if not isinstance(status, dict) or status.get("BackendState") != "Running":
+            raise ValueError("tailscaled is not ready")
+        accepts_routes, advertised_routes = route_preferences(tailscale)
+        if accepts_routes and advertised_routes:
+            desired = set(overlapping_lans(ip, ifconfig, status))
+        else:
+            desired = set()
+        apply_rules(ip, desired, args.dry_run)
+    except (subprocess.CalledProcessError, json.JSONDecodeError, ValueError) as error:
+        print(f"tailscale-lan-bypass: {error}", file=sys.stderr)
+        return 1
+
+    if desired:
+        routes = ", ".join(network for _, network in sorted(desired))
+        print(f"tailscale-lan-bypass: LAN preferred for {routes}")
+    else:
+        print("tailscale-lan-bypass: no overlapping fixed LAN routes found")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

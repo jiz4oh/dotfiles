@@ -45,6 +45,12 @@ chezmoi --source "$PWD" diff
 - `run_after_*`：每次 `chezmoi apply` 完成后执行
 - `run_before_20_refresh_cached_env.sh.tmpl`：每次 apply 前按 `.chezmoidata/cached-env.yaml` 刷新本机 `~/.local/state/chezmoi/cached-env.env`；单项刷新失败时 warning、保留该项上一版缓存并继续其他项
 - `run_onchange_after_29_install_tmux_tpm.sh.tmpl`：目录准备完成后幂等安装或刷新 TPM，避免 external 刷新早于父目录创建
+- `run_after_42_apply_tailscale_lan_bypass.sh.tmpl`：Linux 上每次 apply 都安装并
+  运行 `tailscale-lan-bypass`。仅当本机同时 Advertise + Accept Routes，且物理
+  直连网段与 Tailscale 接收路由重叠时，添加 `priority 2500 lookup main` 规则。
+  检测兼容不支持 `ip -j` 的旧环境，会回退到 `ifconfig`；写入 Linux 策略路由
+  仍需要提供 RPDB 接口的 `ip rule`。规则在本次开机期间有效，不配置开机恢复。
+  这个绕过只用于网络配置明确且固定的设备。
 
 ## Shell 与 PATH 策略
 

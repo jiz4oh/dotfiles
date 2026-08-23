@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{- if ne .chezmoi.os "linux" }}
+exit 0
+{{- end }}
+
+for command in ip python3 tailscale; do
+  if ! command -v "$command" >/dev/null 2>&1; then
+    echo "[tailscale-lan-bypass] skipping: $command is unavailable"
+    exit 0
+  fi
+done
+
+if [ "$(id -u)" -eq 0 ]; then
+  SUDO=""
+elif command -v sudo >/dev/null 2>&1; then
+  SUDO="sudo"
+else
+  echo "[tailscale-lan-bypass][error] sudo is required" >&2
+  exit 1
+fi
+
+SOURCE="{{ .chezmoi.sourceDir }}/bin/executable_tailscale-lan-bypass"
+TARGET="/usr/local/sbin/tailscale-lan-bypass"
+
+$SUDO install -m 0755 "$SOURCE" "$TARGET"
+$SUDO "$TARGET"
