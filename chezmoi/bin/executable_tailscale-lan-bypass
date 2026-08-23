@@ -29,16 +29,11 @@ def read_json(command: list[str]) -> object:
     return json.loads(run(command).stdout)
 
 
-def route_preferences(tailscale: str) -> tuple[bool, list[str]]:
+def accepts_routes(tailscale: str) -> bool:
     prefs = read_json([tailscale, "debug", "prefs"])
     if not isinstance(prefs, dict):
         raise ValueError("unexpected output from tailscale debug prefs")
-
-    advertised = prefs.get("AdvertiseRoutes", [])
-    if not isinstance(advertised, list):
-        advertised = []
-    routes = [route for route in advertised if isinstance(route, str)]
-    return bool(prefs.get("RouteAll")), routes
+    return bool(prefs.get("RouteAll"))
 
 
 def parse_network(value: object) -> Network | None:
@@ -248,8 +243,7 @@ def main() -> int:
         status = read_json([tailscale, "status", "--json"])
         if not isinstance(status, dict) or status.get("BackendState") != "Running":
             raise ValueError("tailscaled is not ready")
-        accepts_routes, advertised_routes = route_preferences(tailscale)
-        if accepts_routes and advertised_routes:
+        if accepts_routes(tailscale):
             desired = set(overlapping_lans(ip, ifconfig, status))
         else:
             desired = set()

@@ -23,7 +23,7 @@ class RouteDetectionTest(unittest.TestCase):
                  "protocol": "kernel", "scope": "link"},
             ],
             (4, "52"): [
-                {"dst": "192.168.0.0/16", "dev": "tailscale0"},
+                {"dst": "192.168.130.0/23", "dev": "tailscale0"},
             ],
             (6, "main"): [],
             (6, "52"): [],
@@ -112,6 +112,38 @@ class RuleOwnershipTest(unittest.TestCase):
 
         run.assert_not_called()
         write_state.assert_called_once_with(set())
+
+
+class AcceptRoutesGateTest(unittest.TestCase):
+    def test_accepting_node_does_not_need_to_advertise_routes(self):
+        overlap = [(4, "192.168.131.0/24")]
+        with mock.patch.object(MODULE.sys, "argv", ["tailscale-lan-bypass"]), \
+             mock.patch.object(MODULE.shutil, "which",
+                               side_effect=lambda command: f"/usr/bin/{command}"), \
+             mock.patch.object(MODULE, "read_json",
+                               return_value={"BackendState": "Running"}), \
+             mock.patch.object(MODULE, "accepts_routes", return_value=True), \
+             mock.patch.object(MODULE, "overlapping_lans",
+                               return_value=overlap) as overlapping_lans, \
+             mock.patch.object(MODULE, "apply_rules") as apply_rules:
+            self.assertEqual(MODULE.main(), 0)
+
+        overlapping_lans.assert_called_once()
+        apply_rules.assert_called_once_with("/usr/bin/ip", set(overlap), False)
+
+    def test_non_accepting_node_skips_overlap_detection(self):
+        with mock.patch.object(MODULE.sys, "argv", ["tailscale-lan-bypass"]), \
+             mock.patch.object(MODULE.shutil, "which",
+                               side_effect=lambda command: f"/usr/bin/{command}"), \
+             mock.patch.object(MODULE, "read_json",
+                               return_value={"BackendState": "Running"}), \
+             mock.patch.object(MODULE, "accepts_routes", return_value=False), \
+             mock.patch.object(MODULE, "overlapping_lans") as overlapping_lans, \
+             mock.patch.object(MODULE, "apply_rules") as apply_rules:
+            self.assertEqual(MODULE.main(), 0)
+
+        overlapping_lans.assert_not_called()
+        apply_rules.assert_called_once_with("/usr/bin/ip", set(), False)
 
 
 if __name__ == "__main__":
