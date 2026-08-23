@@ -1,15 +1,25 @@
 # https://mise.jdx.dev/configuration.html
+{{- $isOmarchy := and (eq .chezmoi.os "linux") (eq (get .chezmoi.osRelease "id") "omarchy") }}
 [tools]
 # https://github.com/jdx/mise/blob/main/registry.toml
+{{- if $isOmarchy }}
+# Provided by pacman on Omarchy: bat, fd, neovim, ripgrep, usage.
+{{- else }}
 bat = "latest"
-dust = "latest"
 "github:sharkdp/fd" = "latest"
 neovim = "latest"
 rg = "latest"
-shellcheck = "latest"
 usage = "latest"
+{{- end }}
+
+dust = "latest"
+shellcheck = "latest"
 # tirith = "latest"
 "github:lemonade-command/lemonade" = "latest"
+{{- if $isOmarchy }}
+# Omarchy's lazy launcher registers Codex in the global mise config.
+codex = "latest"
+{{- end }}
 {{- if eq .chezmoi.os "darwin" }}
 "github:cormiertyshawn895/PixelPerfect" = { version = "latest", no_app = "false" }
 {{- end }}
