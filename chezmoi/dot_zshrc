@@ -120,7 +120,7 @@ source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 ###### Multiple Homebrew
-PROMPT="$(arch) $PROMPT"
+PROMPT="$(uname -m) $PROMPT"
 
 #export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
 # Preferred editor for local and remote sessions

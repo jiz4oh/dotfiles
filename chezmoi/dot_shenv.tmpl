@@ -1,4 +1,4 @@
-_ARCH=$(arch)
+_ARCH=$(uname -m)
 
 {{- if eq .chezmoi.os "darwin" }}
 # https://mise.jdx.dev/configuration/environments.html
