@@ -76,6 +76,17 @@ packages:
         - kitty-terminfo
       debian:
         - universal-ctags
+    arch:
+      - sudo
+      - zsh
+      - curl
+      - wget
+      - git
+      - python
+      - pre-commit
+      - neovim
+      - kitty-terminfo
+      - ctags
     yum:
       common:
         - sudo

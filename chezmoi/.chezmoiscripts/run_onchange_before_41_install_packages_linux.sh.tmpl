@@ -15,41 +15,63 @@ if [ -z "$DISTRO_ID" ] && [ -f /etc/os-release ]; then
 fi
 
 case " $DISTRO_ID $DISTRO_LIKE " in
-  *" debian "*|*" ubuntu "*) ;;
-  *) exit 0 ;;
-esac
+  *" debian "*|*" ubuntu "*)
+    command -v apt-get >/dev/null 2>&1 || exit 0
 
-command -v apt-get >/dev/null 2>&1 || exit 0
+    if [ "$(id -u)" -eq 0 ]; then
+      SUDO=""
+    elif command -v sudo >/dev/null 2>&1; then
+      SUDO="sudo"
+    else
+      echo "[packages-linux][error] sudo is required to install Linux packages" >&2
+      exit 1
+    fi
 
-if [ "$(id -u)" -eq 0 ]; then
-  SUDO=""
-else
-  SUDO="sudo"
-fi
-
-$SUDO apt-get update -y
-$SUDO apt-get install -y --no-install-recommends \
+    $SUDO apt-get update -y
+    $SUDO apt-get install -y --no-install-recommends \
 {{- range .packages.linux.apt.common }}
-  {{ . | quote }} \
+      {{ . | quote }} \
 {{- end }}
 {{- range .packages.linux.apt.debian }}
-  {{ . | quote }} \
+      {{ . | quote }} \
 {{- end }}
-  >/dev/null
+      >/dev/null
 
-if ! command -v ctags >/dev/null 2>&1; then
-  release="2023.08.13%2Bce46d93811faefaa75b87e334d768fbf9a831861"
-  case "{{ .chezmoi.arch }}" in
-    arm64|aarch64) file="uctags-2023.08.13-linux-arm64" ;;
-    amd64|x86_64) file="uctags-2023.08.13-linux-x86_64" ;;
-    *)
-      echo "[packages-linux][warn] unsupported arch for prebuilt ctags: {{ .chezmoi.arch }}" >&2
-      exit 0
-      ;;
-  esac
-  tmp_dir="$(mktemp -d)"
-  trap 'rm -rf "$tmp_dir"' EXIT
-  curl -fsSL "https://github.com/universal-ctags/ctags-nightly-build/releases/download/$release/$file.tar.xz" -o "$tmp_dir/ctags.tar.xz"
-  tar -C "$tmp_dir" -xf "$tmp_dir/ctags.tar.xz"
-  $SUDO install -m 0755 "$tmp_dir/$file/bin/ctags" /usr/local/bin/ctags
-fi
+    if ! command -v ctags >/dev/null 2>&1; then
+      release="2023.08.13%2Bce46d93811faefaa75b87e334d768fbf9a831861"
+      case "{{ .chezmoi.arch }}" in
+        arm64|aarch64) file="uctags-2023.08.13-linux-arm64" ;;
+        amd64|x86_64) file="uctags-2023.08.13-linux-x86_64" ;;
+        *)
+          echo "[packages-linux][warn] unsupported arch for prebuilt ctags: {{ .chezmoi.arch }}" >&2
+          exit 0
+          ;;
+      esac
+      tmp_dir="$(mktemp -d)"
+      trap 'rm -rf "$tmp_dir"' EXIT
+      curl -fsSL "https://github.com/universal-ctags/ctags-nightly-build/releases/download/$release/$file.tar.xz" -o "$tmp_dir/ctags.tar.xz"
+      tar -C "$tmp_dir" -xf "$tmp_dir/ctags.tar.xz"
+      $SUDO install -m 0755 "$tmp_dir/$file/bin/ctags" /usr/local/bin/ctags
+    fi
+    ;;
+  *" arch "*|*" omarchy "*)
+    command -v pacman >/dev/null 2>&1 || exit 0
+
+    if [ "$(id -u)" -eq 0 ]; then
+      SUDO=""
+    elif command -v sudo >/dev/null 2>&1; then
+      SUDO="sudo"
+    else
+      echo "[packages-linux][error] sudo is required to install Linux packages" >&2
+      exit 1
+    fi
+
+    $SUDO pacman -S --needed --noconfirm \
+{{- range .packages.linux.arch }}
+      {{ . | quote }} \
+{{- end }}
+    ;;
+  *)
+    exit 0
+    ;;
+esac

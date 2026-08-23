@@ -20,9 +20,9 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/jiz4oh/d
 4. 在首次 apply 时自动安装 Homebrew
 5. 根据 [packages.yaml](/Users/jiz4oh/.local/share/chezmoi/chezmoi/.chezmoidata/packages.yaml) 安装 macOS 软件包
 
-### Linux
+### Linux（Debian / Ubuntu / Arch / Omarchy）
 
-当前完整包安装流程主要针对 Debian / Ubuntu：
+完整包安装流程支持 Debian / Ubuntu 和基于 Arch 的 Omarchy：
 
 ```sh
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/jiz4oh/dotfiles.git
@@ -33,8 +33,8 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/jiz4oh/d
 1. 安装 `chezmoi`
 2. 拉取本仓库到 `~/.local/share/chezmoi`
 3. 执行 `chezmoi apply`
-4. 在 Debian / Ubuntu 上自动执行 `apt` 包安装
-5. 在 Debian / Ubuntu 上通过 `mise` 自动安装 `~/.config/mise/config.toml` 里声明的工具
+4. 在 Debian / Ubuntu 上自动执行 `apt` 包安装，在 Arch / Omarchy 上自动执行 `pacman` 包安装
+5. 通过 `mise` 自动安装 `~/.config/mise/config.toml` 里声明的工具
 
 ## 分步安装
 
