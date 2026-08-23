@@ -2,10 +2,9 @@
 
 # https://0xmachos.com/2021-05-13-zsh-path-macos/
 # https://gist.github.com/Linerre/f11ad4a6a934dcf01ee8415c9457e7b2
-# path_helper will reorder $PATH, so we can not set PATH in ~/.zshenv
-if [ "$_ZPATH_LOADED" = "1" ]; then
-  return
-fi
+# macOS path_helper runs before user login profiles and reorders PATH.
+# Keep this file safe to source again from ~/.zprofile and ~/.bash_profile so
+# user tools regain their intended precedence after path_helper has run.
 
 {{- if eq .chezmoi.os "darwin" }}
     {{- if eq .chezmoi.arch "arm64" }}
@@ -18,8 +17,7 @@ export BREW_PREFIX="/home/linuxbrew/.linuxbrew"
 {{- end }}
 
 export PATH="$BREW_PREFIX/bin:$PATH"
-export PATH="$BREW_PREFIX/opt:$PATH"
-if [ $(command -v brew) ]; then
+if command -v brew >/dev/null 2>&1; then
   eval "$(brew shellenv)"
 fi
 
@@ -28,7 +26,7 @@ if [ -n "$ZSH_VERSION" ]; then
   export FPATH="$BREW_PREFIX/share/zsh/site-functions:${FPATH}"
 fi
 
-export PATH="${XDG_DATA_HOME:-~/.local/share}/nvim/mason/bin:$PATH:$HOME/go/bin"
+export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/mason/bin:$PATH:$HOME/go/bin"
 # https://mise.jdx.dev/dev-tools/shims.html#how-to-add-mise-shims-to-path
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
@@ -47,17 +45,21 @@ export PATH="$BREW_PREFIX/opt/openssl$openssl_version/bin:$PATH"
 #   eval "$(rbenv init - --no-rehash)"
 # fi
 
-if [ $(command -v nvim) ]; then
+if command -v nvim >/dev/null 2>&1; then
   export EDITOR=nvim
   export MANPAGER='nvim +Man!'
   export MANWIDTH=999
-elif [ $(command -v vim) ]; then
+elif command -v vim >/dev/null 2>&1; then
   export EDITOR=vim
   export MANPAGER="vim +MANPAGER --not-a-term -"
 fi
 
 # pnpm
-export PNPM_HOME="~/Library/pnpm"
+{{- if eq .chezmoi.os "darwin" }}
+export PNPM_HOME="$HOME/Library/pnpm"
+{{- else }}
+export PNPM_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
+{{- end }}
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -72,8 +74,8 @@ if ! command -v mise >/dev/null && [ -d ~/.asdf ]; then
   if [ -n "$ZSH_VERSION" ]; then
     for file in $HOME/.asdf/plugins/golang/set-env.zsh \
                 ${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc; do
-      if [ -f $file ]; then
-        source $file
+      if [ -f "$file" ]; then
+        source "$file"
       fi
     done
   fi
@@ -95,10 +97,12 @@ fi
 # fi
 
 # pipx
-export PATH=~/.local/bin:$PATH
+export PATH="$HOME/.local/bin:$PATH"
 # pipx end
 
-export PATH=~/bin:$_DOTFILES_PATH/bin:$PATH
+_dotfiles_path="${_DOTFILES_PATH:-$HOME}"
+export PATH="$HOME/bin:${_dotfiles_path%/}/bin:$PATH"
+unset _dotfiles_path
 # or asdf reshim every time
 # export PATH="$PATH:$(go env GOPATH)/bin" 2>/dev/null
 
@@ -125,4 +129,22 @@ if [ -f /proc/version ] && grep -qEi "(Microsoft|WSL)" /proc/version && ! comman
     export PATH="$PATH:$WSL_WIN_PATH"
 fi
 
-export _ZPATH_LOADED=1
+# Keep the first occurrence of every directory. Re-sourcing this file moves
+# the managed paths above entries reordered by path_helper without allowing
+# nested login shells to grow PATH indefinitely.
+if _deduped_path="$(awk -v current="$PATH" 'BEGIN {
+  count = split(current, entries, ":")
+  separator = ""
+  for (position = 1; position <= count; position++) {
+    entry = entries[position]
+    if (entry == "" || seen[entry]++) {
+      continue
+    }
+    printf "%s%s", separator, entry
+    separator = ":"
+  }
+}')" && [ -n "$_deduped_path" ]; then
+  PATH="$_deduped_path"
+fi
+unset _deduped_path
+export PATH

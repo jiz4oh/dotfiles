@@ -1,21 +1,20 @@
 # https://zsh.sourceforge.io/Guide/zshguide02.html#l24
 typeset -U PATH path
 
-# load zpath in non-login non-interactive shell
-if [[ $- != *i* ]]; then
-  if [[ $- != *l* ]]; then
-    [ -f $HOME/.zpath ] && source $HOME/.zpath
-  fi
-fi
+[ -r "$HOME/.shenv" ] && source "$HOME/.shenv"
 
-[ -f $HOME/.shenv ] && source $HOME/.shenv
+# A login shell waits for ~/.zprofile because macOS path_helper runs first.
+# A non-login interactive shell loads PATH from ~/.zshrc.
+if [[ $- != *i* && $- != *l* ]]; then
+  [ -r "$HOME/.zpath" ] && source "$HOME/.zpath"
+fi
 # 1. login interactive shell:
 #   -	/etc/zshenv
 #   -	~/.zshenv
 #   -	/etc/zprofile # macos path_helper
 #   -	~/.zprofile
-#   -	~/.zlogin
 #   - ~/.zshrc
+#   -	~/.zlogin
 # 2. login non-interactive shell: (usually open new shell in current shell)
 #   -	/etc/zshenv
 #   -	~/.zshenv

@@ -46,6 +46,41 @@ chezmoi --source "$PWD" diff
 - `run_before_20_refresh_cached_env.sh.tmpl`：每次 apply 前按 `.chezmoidata/cached-env.yaml` 刷新本机 `~/.local/state/chezmoi/cached-env.env`；单项刷新失败时 warning、保留该项上一版缓存并继续其他项
 - `run_onchange_after_29_install_tmux_tpm.sh.tmpl`：目录准备完成后幂等安装或刷新 TPM，避免 external 刷新早于父目录创建
 
+## Shell 与 PATH 策略
+
+macOS 和 Linux 都保留 Bash 作为账户、自动化和 SSH 命令 Shell，交互式
+Bash 再通过受保护的 `exec zsh` 进入 zsh。这样依赖 `$SHELL -lc` 的 Neovim
+插件和任务运行器统一使用 Bash，日常终端继续使用 Oh My Zsh 和
+Powerlevel10k。
+
+macOS 的 `/etc/profile` 和 `/etc/zprofile` 会运行 `path_helper`，将系统目录
+重新排到继承 PATH 的前面。过去 `.zpath` 导出的 `_ZPATH_LOADED=1` 会被子
+login shell 继承，导致 `.bash_profile` 或 `.zprofile` 无法在 `path_helper`
+之后恢复个人目录顺序，mise 安装的工具可能因此被系统或 Homebrew 同名程序
+覆盖。
+
+当前约定是：
+
+- `.zpath` 是 Bash 和 zsh 共享、可重复加载的 PATH 真源；每次加载后按首次
+  出现位置去重
+- `.shenv` 只保存非交互 shell 也需要的环境变量；依赖 TTY、可能启动
+  `ssh-agent` 的操作放在仅由交互 shell 加载的 `.shellrc`
+- 启动文件先加载 `.shenv` 解析 `_DOTFILES_PATH`，再加载 `.zpath`，确保
+  全新环境也能加入仓库自己的 `bin`
+- `.bash_profile` 和 `.zprofile` 必须在系统 login profile 之后加载
+  `.zpath`
+- `.zshenv` 只为非 login、非交互 zsh 加载 `.zpath`；login zsh 等待
+  `.zprofile`，交互 zsh 由 `.zshrc` 处理
+- mise 采用 shims-only 模式，`~/.local/share/mise/shims` 保持在 Homebrew
+  和系统目录之前；项目需要严格版本边界时使用 `mise exec -- <command>`
+- 不全局设置 `BASH_ENV`，避免普通 Bash 脚本隐式加载用户配置
+- Omarchy 继续拥有 `/usr/share/omarchy`；交互启动文件只读取它的
+  `env-bootstrap`，不安装或覆盖使用者的 zsh 框架
+
+chezmoi 不自动修改账户 Shell。新机器应用配置并确认 Bash、zsh 都可用后，
+手动执行 `chsh -s /bin/bash`；重新登录后 `$SHELL` 应为 `/bin/bash`，交互
+进程应为 zsh。
+
 ## 包管理
 
 声明式包清单放在 `chezmoi/.chezmoidata/`。当前唯一真源是：

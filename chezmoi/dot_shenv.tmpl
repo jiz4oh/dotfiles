@@ -10,9 +10,10 @@ export MISE_ENV=development
 # Resolve dotfiles root in a way that works for both symlink-managed and
 # chezmoi-managed plain files.
 if [ -d "$HOME/.local/share/chezmoi/" ]; then
-  export _DOTFILES_PATH="$HOME/.local/share/chezmoi/"
+  export _DOTFILES_PATH="$HOME/.local/share/chezmoi"
 elif [ -f "$HOME/.mydotfile" ]; then
-  export _DOTFILES_PATH="$(cat "$HOME/.mydotfile")"
+  _DOTFILES_PATH="$(cat "$HOME/.mydotfile")"
+  export _DOTFILES_PATH
 else
   export _DOTFILES_PATH="$HOME"
 fi
@@ -34,8 +35,6 @@ if [ -n "$NVIM" ] || command -v nvim >/dev/null 2>&1; then
 else
   export EDITOR=vim
 fi
-
-export GPG_TTY=$(tty)
 
 if [ -n "${SSH_CONNECTION:-}" ] || [ -n "${SSH_TTY:-}" ]; then
   export PINENTRY_USER_DATA=rbw-ssh
@@ -62,21 +61,16 @@ export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
 
 export XDG_RUNTIME_DIR="$HOME/.local/run"
 
+if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
 {{- if eq .chezmoi.os "darwin" }}
-export SSH_AUTH_SOCK=$(getconf DARWIN_USER_TEMP_DIR)rbw-$(id -u)/ssh-agent-socket
+SSH_AUTH_SOCK="$(getconf DARWIN_USER_TEMP_DIR)rbw-$(id -u)/ssh-agent-socket"
+export SSH_AUTH_SOCK
 {{- else if eq .chezmoi.os "linux" }}
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/rbw/ssh-agent-socket"
 {{- end }}
+fi
 
 export HOMEBREW_NO_AUTO_UPDATE=1
-
-if [ ! -S "$SSH_AUTH_SOCK" ]; then
-  if [ -S "$HOME/.bitwarden-ssh-agent.sock" ]; then
-    export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
-  else
-    eval "$(ssh-agent -s)" >/dev/null
-  fi
-fi
 
 _chezmoi_cached_env="$HOME/.local/state/chezmoi/cached-env.env"
 if [ -r "$_chezmoi_cached_env" ]; then

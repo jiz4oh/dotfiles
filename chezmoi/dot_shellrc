@@ -1,0 +1,13 @@
+# TTY-bound setup belongs in interactive shells, not in `$SHELL -lc` calls
+# started by editors, task runners, or SSH commands.
+if [ -t 0 ]; then
+  GPG_TTY="$(tty 2>/dev/null)" && export GPG_TTY
+fi
+
+if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
+  if [ -S "$HOME/.bitwarden-ssh-agent.sock" ]; then
+    export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
+  elif command -v ssh-agent >/dev/null 2>&1; then
+    eval "$(ssh-agent -s)" >/dev/null
+  fi
+fi

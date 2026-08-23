@@ -1,9 +1,29 @@
-[ -f $HOME/.zpath ] && source $HOME/.zpath
+# Keep OMARCHY_PATH in sync with Omarchy updates when this file is used there.
+if [[ $- == *i* && -r /usr/share/omarchy/default/bash/env-bootstrap ]]; then
+  source /usr/share/omarchy/default/bash/env-bootstrap
+fi
 
-for file in $HOME/.shenv \
-  $HOME/.alias; do
-  if test -f "$file"; then
-    # 文件存在,执行source命令加载文件
-    source "$file"
+[ -r "$HOME/.shenv" ] && source "$HOME/.shenv"
+[ -r "$HOME/.zpath" ] && source "$HOME/.zpath"
+[ -r "$HOME/.alias" ] && source "$HOME/.alias"
+
+if [[ $- == *i* && -r "$HOME/.shellrc" ]]; then
+  source "$HOME/.shellrc"
+fi
+
+# Keep Bash as the account and automation shell while using zsh interactively.
+# The parent check lets Bash launched explicitly from zsh stay in Bash and
+# prevents a Bash -> zsh -> Bash recursion loop, including inside tmux panes.
+if [[ $- == *i* ]] &&
+   [[ -z ${BASH_EXECUTION_STRING:-} ]] &&
+   command -v zsh >/dev/null 2>&1; then
+  parent_command="$(ps -p "$PPID" -o comm= 2>/dev/null)"
+  if [[ $parent_command != *zsh* ]]; then
+    if shopt -q login_shell; then
+      exec zsh --login
+    else
+      exec zsh
+    fi
   fi
-done
+  unset parent_command
+fi

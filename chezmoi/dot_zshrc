@@ -15,7 +15,13 @@
 # If you come from bash you might have to change your $PATH.
 #export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-[ -f $HOME/.zpath ] && source $HOME/.zpath
+# Keep Omarchy's package-managed command path available without adopting its
+# zsh framework or generated dotfiles. Personal PATH precedence is restored
+# immediately afterwards.
+[[ -r /usr/share/omarchy/default/bash/env-bootstrap ]] && source /usr/share/omarchy/default/bash/env-bootstrap
+
+[ -r "$HOME/.zpath" ] && source "$HOME/.zpath"
+[ -r "$HOME/.shellrc" ] && source "$HOME/.shellrc"
 # mise: shims-only mode for consistent behavior across interactive/non-interactive shells
 # Keep shims on PATH; do not use `mise activate zsh` on this host.
 # if [ $(command -v mise) ]; then

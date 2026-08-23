@@ -49,8 +49,3 @@ fi
 if ! command -v docker >/dev/null 2>&1; then
   curl -fsSL https://get.docker.com | $SUDO bash
 fi
-
-# Default shell
-if command -v zsh >/dev/null 2>&1; then
-  chsh -s "$(command -v zsh)" "$(id -un)" 2>/dev/null || true
-fi

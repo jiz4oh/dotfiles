@@ -1,0 +1,9 @@
+# macOS /etc/profile runs path_helper before this file. Load the shared PATH
+# here so login non-interactive callers such as `$SHELL -lc` see mise shims
+# before Homebrew and system tools.
+if [[ $- == *i* ]]; then
+  [ -r "$HOME/.bashrc" ] && source "$HOME/.bashrc"
+else
+  [ -r "$HOME/.shenv" ] && source "$HOME/.shenv"
+  [ -r "$HOME/.zpath" ] && source "$HOME/.zpath"
+fi
