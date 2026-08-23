@@ -5,6 +5,16 @@ set -euo pipefail
 exit 0
 {{- end }}
 
-if command -v zsh >/dev/null 2>&1 && [ ! -d "$HOME/.oh-my-zsh" ]; then
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended >/dev/null 2>&1
+if command -v zsh >/dev/null 2>&1 && [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
+  tmp_dir="$(mktemp -d)"
+  trap 'rm -rf "$tmp_dir"' EXIT
+  git clone --depth=1 --filter=blob:none --branch master \
+    https://github.com/ohmyzsh/ohmyzsh.git "$tmp_dir/oh-my-zsh" >/dev/null 2>&1
+  mkdir -p "$HOME/.oh-my-zsh"
+  for entry in "$tmp_dir/oh-my-zsh"/* "$tmp_dir/oh-my-zsh"/.[!.]*; do
+    case "$entry" in
+      "$tmp_dir/oh-my-zsh/custom") continue ;;
+    esac
+    cp -a "$entry" "$HOME/.oh-my-zsh/"
+  done
 fi
