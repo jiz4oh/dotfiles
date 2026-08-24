@@ -4,7 +4,11 @@ function! personal#functions#selected()
   let old_regtype = getregtype('"')
   let old_clipboard = &clipboard
   set clipboard&
-  normal! ""gvy
+  if mode() ==# 'v' || mode() ==# 'V' || mode() ==# "\<C-V>"
+    normal! ""y
+  else
+    normal! ""gvy
+  endif
   let selection = getreg('"')
   call setreg('"', old_reg, old_regtype)
   let &clipboard = old_clipboard

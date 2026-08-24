@@ -1,12 +1,3 @@
-local lsp_handlers = {
-  ["textDocument/documentSymbol"] = function(err, result, ctx, config)
-    Snacks.picker.lsp_symbols()
-  end,
-  ["workspace/symbol"] = function(err, result, ctx, config)
-    Snacks.picker.lsp_workspace_symbols()
-  end,
-}
-
 local ui = require("config.ui")
 
 ---@type LazyPluginSpec
@@ -33,30 +24,6 @@ return {
       mode = { "n" },
     },
     {
-      "<leader>sP",
-      function()
-        Snacks.picker()
-      end,
-      desc = "Open Snacks Pickers",
-      mode = { "n" },
-    },
-    {
-      "<leader>sd",
-      function()
-        Snacks.picker.diagnostics_buffer()
-      end,
-      desc = "Open Diagnostics Picker",
-      mode = { "n" },
-    },
-    {
-      "<leader>sD",
-      function()
-        Snacks.picker.diagnostics()
-      end,
-      desc = "Open Diagnostics Picker",
-      mode = { "n" },
-    },
-    {
       "<leader>un",
       function()
         Snacks.notifier.hide()
@@ -64,34 +31,11 @@ return {
       desc = "Dismiss All Notifications",
     },
     {
-      "<leader>ld",
+      "<leader><Tab>",
       function()
-        Snacks.picker.lsp_definitions({ unique_lines = true })
+        Snacks.dashboard()
       end,
-    },
-    {
-      "<leader>lD",
-      function()
-        Snacks.picker.lsp_declarations({ unique_lines = true })
-      end,
-    },
-    {
-      "<leader>li",
-      function()
-        Snacks.picker.lsp_implementations({ unique_lines = true })
-      end,
-    },
-    {
-      "<leader>lr",
-      function()
-        Snacks.picker.lsp_references({ unique_lines = true, include_declaration = false })
-      end,
-    },
-    {
-      "<leader>lt",
-      function()
-        Snacks.picker.lsp_type_definitions({ unique_lines = true })
-      end,
+      desc = "Open Dashboard",
     },
   },
   cmd = {
@@ -105,6 +49,7 @@ return {
     dashboard = {
       enabled = true,
       preset = {
+        pick = "fzf-lua",
         keys = {
           { icon = " ", key = "f", desc = "Find File", action = ":lua require('config.picker').files()" },
           { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
@@ -236,46 +181,6 @@ return {
           Snacks.picker.notifications()
         end, { desc = "Notification History" })
 
-        vim.api.nvim_create_user_command("Maps", function()
-          Snacks.picker.keymaps({
-            modes = { "n" },
-          })
-        end, { desc = "Normal Keymaps Definitions" })
-
-        vim.api.nvim_create_user_command("Imaps", function()
-          Snacks.picker.keymaps({
-            modes = { "i" },
-          })
-        end, { desc = "Insert Keymaps Definitions" })
-
-        vim.api.nvim_create_user_command("Xmaps", function()
-          Snacks.picker.keymaps({
-            modes = { "v", "x" },
-          })
-        end, { desc = "Virtual Keymaps Definitions" })
-
-        vim.api.nvim_create_user_command("Omaps", function()
-          Snacks.picker.keymaps({
-            modes = { "o" },
-          })
-        end, { desc = "Operator Keymaps Definitions" })
-
-        vim.api.nvim_create_user_command("Commands", function()
-          Snacks.picker.commands()
-        end, { desc = "Commands Definitions" })
-
-        vim.api.nvim_create_user_command("History", function(opts)
-          if opts.fargs[1] == ":" then
-            Snacks.picker.command_history()
-          elseif opts.fargs[1] == "/" then
-            Snacks.picker.search_history()
-          else
-            Snacks.picker.recent()
-          end
-        end, {
-          desc = "History",
-          nargs = "*", -- 接受任意参数
-        })
         -- Create some toggle mappings
         Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
         Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
@@ -307,9 +212,6 @@ return {
           })
           :map("<leader>up")
 
-        for _, m in ipairs(vim.tbl_keys(lsp_handlers)) do
-          vim.lsp.handlers[m] = lsp_handlers[m]
-        end
       end,
     })
   end,

@@ -48,11 +48,9 @@ let g:with_treesitter = g:as_ide && has('nvim-0.12') && executable('tree-sitter'
 " NAVIGATION / MOVE / Easier READ {{{
 " ============================================================================
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'junegunn/fzf', { 'do': ':call fzf#install()' } |
-     \ Plug 'junegunn/fzf.vim'
-
-Plug 'tracyone/fzf-funky', {'on': 'FzfFunky'}
-
+" Keep the fzf checkout for the shell integration in dot_shenv.tmpl.
+" Neovim pickers are provided by fzf-lua.
+Plug 'junegunn/fzf', { 'do': ':call fzf#install()' }
 if g:as_ide
   Plug 'andymass/vim-matchup'
 end
