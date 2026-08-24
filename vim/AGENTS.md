@@ -5,22 +5,21 @@
 - 当前工作树已存在用户未提交改动；不要回退或覆盖不属于本次任务的变更。
 
 ## 包管理器
-- Neovim 插件采用混合模式：插件声明主入口在 `config/plugin.vim`，Lazy 引导在 `config/plugin.lua`，适配层在 `lua/vim-plug.lua`。
+- 当前配置只支持 Neovim；插件仍采用 Vimscript + Lua 混合模式。插件声明主入口在 `config/plugin.vim`，Lazy 引导在 `config/plugin.lua`，适配层在 `lua/vim-plug.lua`。
 - 基础启动链路是 `init.vim -> config.vim -> config/base.lua -> lua/config/*`。
-- 旧版 Vimscript 配置仍然有效；新增或修复行为时，先确认应该落在 `config/`、`plugin/` 还是 `lua/plugins/`。
+- Vimscript 插件和配置仍然有效，不要求仅为使用 Lua 而替换成熟插件；新增或修复行为时，先确认应该落在 `config/`、`plugin/` 还是 `lua/plugins/`。
 
 ## 文件级命令
 ```bash
 sh ./install
 nvim --headless +Lazy\ restore +qall
-vim +'PlugInstall --sync' +qall
 nvim --headless "+lua print('ok')" +qall
 ```
 
 ## 关键约定
 - 改插件清单、懒加载条件或安装流程时，优先检查 `config/plugin.vim`、`config/plugin.lua`、`lua/vim-plug.lua` 是否需要同步。
 - 改 Neovim 内置行为、UI、LSP、按键映射时，优先落在 `lua/config/*`；插件专属配置放在 `lua/plugins/config/*`。
-- 保持 Vim 和 Neovim 兼容判断：仓库大量使用 `has('nvim')`、版本判断和可执行文件探测，修改时不要移除这些守卫。
+- 不再为 Vim 保持兼容。清理旧路径时可删除只服务 Vim 的 `!has('nvim')` 分支；Neovim 版本判断和可执行文件探测仍需按实际支持范围保留。
 - `install` 会改写 `~/.config/nvim` 符号链接并执行插件恢复；除非用户明确要求，不要替用户运行它。
 - `tasks.ini`、`config/plugin/vim-test.vim`、`config/plugin/vim-dispatch.vim` 约定了 `Dispatch` 与 `vim-test` 工作流；改任务或测试相关行为时先核对这三处。
 - Markdown 预览当前默认走 `brianhuster/live-preview.nvim`，命令入口 `:MarkdownPreview` 实际映射到 `:LivePreview start`；`iamcco/markdown-preview.nvim` 仍保留在插件清单里做兼容，不要把两条链路的说明写反。

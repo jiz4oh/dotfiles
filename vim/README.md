@@ -1,11 +1,11 @@
 从 [wklken/k-vim](https://github.com/wklken/k-vim) 开始，随着自己使用的增加
 而添加了一些自己用着舒服的配置。
 
-服务器版不包含插件安装，只是一个基础 vimrc 文件，方便在服务器上使用常用的快捷键。
+当前配置运行时只支持 Neovim。插件仍采用 Vimscript + Lua 混合模式，保留成熟的
+Vimscript 插件；服务器环境也通过 Neovim 使用同一套基础快捷键。
 
-IDE 版是尝试将 vim/neovim 作为一个正式的开发环境而配置，包含我对比之后认为
-比较好用的插件。宗旨是尽量使用 vimscript 插件和 lua 插件，减少外部依赖，比如
-YouCompleteMe 这种非常难以安装的插件。
+IDE 版是将 Neovim 作为正式开发环境的配置，包含经过筛选的 Vimscript 和 Lua 插件，
+并尽量减少难以维护的外部依赖。
 
 <!-- TOC GFM -->
 
@@ -43,12 +43,12 @@ git clone https://github.com/jiz4oh/vim.git vim
 
 #### 依赖
 
-1. [fzf](https://github.com/junegunn/fzf)
-   在启用 IDE 版之后，会自动调用 fzf#install()
+1. [neovim](https://github.com/neovim/neovim)
+   至少需要 Neovim 0.9.4
 2. [ripgrep](https://github.com/BurntSushi/ripgrep)
-   可选, [安装教程](https://github.com/BurntSushi/ripgrep#installation)
-3. [neovim](https://github.com/neovim/neovim)
-   可选，至少需要 neovim 0.5+，如果不需要补全可以只使用 vim
+  可选, [安装教程](https://github.com/BurntSushi/ripgrep#installation)
+3. [fzf](https://github.com/junegunn/fzf)
+   可选，仅用于 shell 集成；Neovim 内的搜索由 Snacks picker 提供
 
 ## 功能:
 
@@ -89,81 +89,77 @@ git clone https://github.com/jiz4oh/vim.git vim
 
 ### IDE 版
 
-- 包含所有服务器版的功能，在对某些功能使用插件扩展的同时尽量保持一致，比如使用
-NERDTree 代替 netrw
+- 包含基础快捷键，并使用 Oil、Snacks picker、Outline 和 Gitsigns 扩展开发工作流
 
 #### 搜索
 
 插件：
 
-- https://github.com/junegunn/fzf
-- https://github.com/junegunn/fzf.vim
+- https://github.com/folke/snacks.nvim
+- https://github.com/BurntSushi/ripgrep
 
 快捷键|速记|应用模式|描述
 ---|---|---|---
 <kbd>\\</kbd>||v|在当前 buffer 向下搜索选中文本
 <kbd>??</kbd>||v|在当前 buffer 向上搜索选中文本
-<kbd>\<space>sb</kbd>|search buffer|n/v|使用 fzf 在当前 buffer 搜索
-<kbd>\<space>sp</kbd>|search project|n/v|在git仓库搜索文件名/内容，如果不处于git仓库下则搜索当前工作目录
-<kbd>\<space>st</kbd>|search tag|n|在 tags 中搜索，默认精准匹配
-<kbd>\<space>sd</kbd>|search dir|n|在当前工作目录下搜索文件名
-<kbd>\<space>sh</kbd>|search history|n|在 fzf 历史记录中搜索文件名
-<kbd>\<space>sg</kbd>|search gem|n/v|在所有 gem 中搜索文件内容(需要 bundle)
-<kbd>ctrl-x</kbd> / <kbd>ctrl-v</kbd>||fzf|在下/右方打开文件
-<kbd>ctrl-t</kbd>||fzf|在新 tab 中打开文件
-<kbd>ctrl-f</kbd> / <kbd>ctrl-b</kbd>||fzf|搜索结果下/上一页
-<kbd>alt-f</kbd> / <kbd>ctrl-b</kbd>||fzf|预览窗口下/上一页
+<kbd>\<leader>s\<space></kbd>|ripgrep|n/v|使用 ripgrep 搜索文本
+<kbd>\<leader>sp</kbd>|search project|n/v|在当前项目搜索文本
+<kbd>\<leader>s]</kbd>|search tags|n|搜索 tags
+<kbd>\<leader>si</kbd>|search paths|n/v|在配置的路径中搜索
+<kbd>\<leader>sb</kbd>|search buffer|n|搜索当前 buffer 的行
+<kbd>\<leader>sf</kbd>|search recent|n|搜索最近打开的文件
+<kbd>\<leader>s'</kbd>|search marks|n|搜索 marks
+<kbd>\<leader>s:</kbd>|search command history|n|搜索命令历史
+<kbd>\<leader>s/</kbd>|search history|n|搜索搜索历史
+<kbd>\<leader>ss</kbd>|search bookmarks|n|打开书签
 
 命令|速记|描述
 ---|---|---
-`Pg`|Project Prep|在git仓库搜索文件名/内容，如果不处于git仓库下则搜索当前工作目录
-`Rg`|RipGrep|在当前工作目录下搜索文件内容
+`Pg`|Project Grep|在当前项目搜索文件内容
+`RG` / `Grep`|RipGrep|在当前工作目录下搜索文件内容
 `GGrep` / `GitGrep`||在 git 仓库搜索文件名/内容
-`Gems`||在所有 gem 中搜索文件内容(需要 bundle)
-`Gem`||跳转到指定 gem 中搜索文件内容(需要 bundle)
+`Paths` / `Path`||在配置的路径中搜索
+`Tags`||搜索 tags
+`Packages`||搜索 Ruby、Go、Vim 或 JavaScript 包
+`Bookmarks`||打开书签
+`BookmarkAdd`||添加当前文件或指定路径书签
+`BookmarkDelete`||删除用户书签
 
 #### 跳转
 
 插件：
 
-- https://github.com/easymotion/vim-easymotion
-- https://github.com/preservim/tagbar
+- https://github.com/echasnovski/mini.jump
+- https://github.com/echasnovski/mini.jump2d
+- https://github.com/hedyhli/outline.nvim
 
 快捷键|速记|应用模式|描述
 ---|---|---|---
 <kbd>gl</kbd>|go to line|n|跳转到某行
-<kbd>F2</kbd>||n|打开当前文件结构
+<kbd>F2</kbd>||n|打开当前文件结构（Outline）
 
 #### 文件浏览器
 
 插件：
 
-- https://github.com/preservim/nerdtree
-- https://github.com/Xuyuanp/nerdtree-git-plugin
+- https://github.com/stevearc/oil.nvim
+- https://github.com/SirZenith/oil-vcs-status
 
 快捷键|速记|应用模式|描述
 ---|---|---|---
 <kbd>F1</kbd>||n/i|打开文件浏览器并定位到当前文件
 <kbd>ctrl-e</kbd>|explore|n/i|打开文件浏览器
-<kbd>ctrl-v</kbd>||nerdtree|在水平窗口打开当前文件
-<kbd>ctrl-x</kbd>||nerdtree|在垂直窗口打开当前文件
-<kbd>.</kbd>||nerdtree|切换隐藏文件和目录
-<kbd>j</kbd> / <kbd>k</kbd>||nerdtree|上下移动
-<kbd>h</kbd>||nerdtree|进入上一个目录
-<kbd>l</kbd>||nerdtree|打开/收起目录或者打开文件
-<kbd>H</kbd> / <kbd>L</kbd>||nerdtree|递归收起/打开目录
-<kbd>N</kbd> / <kbd>d</kbd>||nerdtree|添加/删除节点
-<kbd>\<backspace></kbd>||nerdtree|回退到上一个目录并将工作目录切换为上一个目录
-<kbd>\<enter></kbd>||nerdtree|进入目录并将切换工作目录或者打开文件
+Oil 的目录缓冲区保留 Vim 风格的移动和文件操作；<kbd>F1</kbd> 用于打开并定位当前文件，
+<kbd>ctrl-e</kbd> 用于打开当前目录。
 
 #### 项目结构
 
 插件：
 
-- https://github.com/airblade/vim-rooter
-- https://github.com/airblade/vim-gitgutter
+- https://github.com/lewis6991/gitsigns.nvim
 - https://github.com/tpope/vim-fugitive
-- https://github.com/rhysd/git-messenger.vim
+- https://github.com/rbong/vim-flog
+- https://github.com/linrongbin16/gitlinker.nvim
 
 快捷键|速记|应用模式|描述
 ---|---|---|---
@@ -184,7 +180,8 @@ NERDTree 代替 netrw
 - https://github.com/hrsh7th/cmp-buffer
 - https://github.com/hrsh7th/cmp-path
 - https://github.com/hrsh7th/cmp-cmdline
-- https://github.com/ojroques/nvim-lspfuzzy
+- https://github.com/Saghen/blink.cmp
+- https://github.com/folke/snacks.nvim
 
 快捷键|速记|应用模式|描述
 ---|---|---|---
@@ -195,10 +192,10 @@ NERDTree 代替 netrw
 <kbd>K</kbd>||n|查看当前符号对应的文档
 <kbd>ctrl-f</kbd>||n|向下移动文档
 <kbd>ctrl-b</kbd>||n|向上移动文档
-<kbd>gd</kbd>|go to definition|n|跳转到定义，如果有多个，激活 fzf 查询窗口
-<kbd>gD</kbd>|go to declaration|n|跳转到声明，如果有多个，激活 fzf 查询窗口
-<kbd>gr</kbd>|go to references|n|跳转到引用，如果有多个，激活 fzf 查询窗口
-<kbd>gi</kbd>|go to implementation|n|跳转到实现，如果有多个，激活 fzf 查询窗口
+<kbd>gd</kbd>|go to definition|n|跳转到定义；多个结果由 Snacks picker 选择
+<kbd>gD</kbd>|go to declaration|n|跳转到声明；多个结果由 Snacks picker 选择
+<kbd>gr</kbd>|go to references|n|跳转到引用；多个结果由 Snacks picker 选择
+<kbd>gi</kbd>|go to implementation|n|跳转到实现；多个结果由 Snacks picker 选择
 <kbd>[d</kbd>|diagnostic|n|跳转到上一个语法错误
 <kbd>]d</kbd>|diagnostic|n|跳转到下一个语法错误
 <kbd>\<space>f</kbd>|format|n|根据语法检查格式化当前 buffer
