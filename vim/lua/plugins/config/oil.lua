@@ -52,18 +52,11 @@ return {
       remap = true,
     },
   },
-  specs = {
-    "preservim/nerdtree",
-    enabled = false,
-  },
   event = {
     "BufEnter",
     "BufNew",
     "FileType",
   },
-  -- specs = {
-  --   { "preservim/nerdtree", enabled = false },
-  -- },
   lazy = false,
   ---@type oil.setupOpts
   opts = {

@@ -6,10 +6,6 @@ return {
     "SirZenith/oil-vcs-status",
   },
   {
-    "preservim/nerdtree",
-    import = "plugins.config.nerdtree",
-  },
-  {
     -- "miversen33/netman.nvim",
     -- import = "plugins.config.netman",
   },
