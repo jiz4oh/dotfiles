@@ -451,7 +451,13 @@ augroup vimrc
   autocmd BufReadPost,BufWritePost,FileType * call CheckAndSetWrap()
 
   "https://github.com/xiantang/nvim-conf/blob/31f8c57c84907cdf3ce7e5127b2ebe6512b1dc07/lua/autocmd.lua#L38
-  autocmd VimLeavePre * :redir >> ~/.config/nvim/messages.txt | silent messages | redir END
+  function! s:save_messages() abort
+    call mkdir(stdpath('state'), 'p')
+    execute 'redir >> ' . fnameescape(stdpath('state') . '/messages.txt')
+    silent messages
+    redir END
+  endfunction
+  autocmd VimLeavePre * call <SID>save_messages()
 
   autocmd BufWrite scp://*,ftp://*,sftp://* if !get(g:, 'disable_netrw', 0) | Nwrite | endif
 

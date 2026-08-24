@@ -10,12 +10,11 @@ IDE 版是将 Neovim 作为正式开发环境的配置，包含经过筛选的 V
 <!-- TOC GFM -->
 
 * [依赖与安装](#依赖与安装)
-    - [服务器版](#服务器版)
-    - [IDE 版](#ide-版)
+    - [安装](#安装)
         + [依赖](#依赖)
-* [功能:](#功能)
-    - [服务器版](#服务器版-1)
-    - [IDE 版](#ide-版-1)
+* [功能](#功能)
+    - [基础功能](#基础功能)
+    - [IDE 版](#ide-版)
         + [搜索](#搜索)
         + [跳转](#跳转)
         + [文件浏览器](#文件浏览器)
@@ -30,11 +29,7 @@ IDE 版是将 Neovim 作为正式开发环境的配置，包含经过筛选的 V
 <!-- /TOC -->
 ## 依赖与安装
 
-### 服务器版
-
-`curl https://raw.githubusercontent.com/jiz4oh/vim/master/config/base.vim > ~/.vimrc`
-
-### IDE 版
+### 安装
 
 ```console
 git clone https://github.com/jiz4oh/vim.git vim
@@ -52,7 +47,7 @@ git clone https://github.com/jiz4oh/vim.git vim
 
 ## 功能:
 
-### 服务器版
+### 基础功能
 
 - 增量且大小写不敏感的搜索
 - 新增窗口时总是在右边/下边

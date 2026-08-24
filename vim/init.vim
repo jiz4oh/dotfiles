@@ -1,7 +1,7 @@
-if get(g:, 'vimrc_loaded', 0) != 0
+if get(g:, 'nvimrc_loaded', 0) != 0
 	finish
 endif
-let g:vimrc_loaded = 1
+let g:nvimrc_loaded = 1
 
 let s:fallback_config_home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 let s:config_home = ''
@@ -28,12 +28,16 @@ let g:config_home = s:config_home
 
 let g:plug_home = g:config_home . '/bundle'
 
+if index(split(&runtimepath, ','), g:config_home) < 0
+  let &runtimepath = g:config_home . ',' . &runtimepath
+endif
+
 exec 'source ' . g:config_home . '/config.vim'
 
 function SourceConfig(configName) abort
-    let l:vim_path = g:config_home . '/config/' . a:configName . '.vim'
-    if filereadable(l:vim_path)
-      exec 'source ' . l:vim_path
+    let l:config_path = g:config_home . '/config/' . a:configName . '.vim'
+    if filereadable(l:config_path)
+      exec 'source ' . l:config_path
     endif
 endfunction
 
@@ -47,13 +51,9 @@ function! HasInstall(plugName) abort
 endfunction
 
 call SourceConfig('base')
-if has('nvim')
-  exec 'luafile ' . g:config_home . '/config/base.lua'
-end
+exec 'luafile ' . g:config_home . '/config/base.lua'
 call SourceConfig('plugin')
-if exists(':packadd')
-  silent! packadd nvim.difftool
-end
+silent! packadd nvim.difftool
 
 " https://github.com/neovide/neovide/discussions/1220
 if exists('g:neovide')
@@ -83,6 +83,6 @@ endif
 
 let &packpath = &runtimepath
 
-if filereadable($HOME . '/.vimrc.local')
-  exec 'source' $HOME . '/.vimrc.local'
+if filereadable($HOME . '/.nvimrc.local')
+  exec 'source' $HOME . '/.nvimrc.local'
 endif

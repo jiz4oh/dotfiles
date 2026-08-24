@@ -1,7 +1,7 @@
 " Install vim-plug if not found
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://cdn.jsdelivr.net/gh/junegunn/vim-plug@master/plug.vim
+let s:plug_autoload = stdpath('data') . '/site/autoload/plug.vim'
+if empty(glob(s:plug_autoload))
+  silent execute '!curl -fLo ' . shellescape(s:plug_autoload) . ' --create-dirs https://cdn.jsdelivr.net/gh/junegunn/vim-plug@master/plug.vim'
 endif
 
 "Run PlugInstall if there are missing plugins
@@ -75,11 +75,7 @@ Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-fugitive'
 " Plug 'junegunn/gv.vim', { 'on': ['GV', 'GV!'] }
 
-if has('nvim') || executable('luajit')
-  Plug 'rbong/vim-flog'
-else
-  Plug 'rbong/vim-flog', { 'branch': 'v1' }
-end
+Plug 'rbong/vim-flog'
 " if v:version >= 800
 "   Plug 'rhysd/git-messenger.vim'
 " endif
@@ -284,9 +280,6 @@ Plug 'tpope/vim-apathy'
 Plug 'AndrewRadev/undoquit.vim'
 Plug 'kristijanhusak/vim-carbon-now-sh'
 Plug 'junegunn/vader.vim'
-if !has('nvim')
-  Plug 'rhysd/vim-healthcheck'
-endif
 Plug 'lfv89/vim-interestingwords'
 " Plug 'romainl/vim-qf'
 Plug 'jiz4oh/eol.vim'
@@ -304,9 +297,6 @@ end
 Plug 'vim-utils/vim-man'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'tpope/vim-repeat'
-if !has('nvim') && exists('##TextYankPost')
-  Plug 'machakann/vim-highlightedyank'
-end
 Plug 'markonm/traces.vim'
 " replace by which-key.nvim
 if !has('nvim-0.10')
@@ -316,9 +306,7 @@ Plug 'haya14busa/vim-asterisk'
 Plug 'troydm/zoomwintab.vim'
 
 "https://github.com/tmux-plugins/vim-tmux-focus-events?tab=readme-ov-file#tmux-focus-eventsvim
-if has('patch-8.2.2345') || has('nvim')
-  Plug 'roxma/vim-tmux-clipboard'
-endif
+Plug 'roxma/vim-tmux-clipboard'
 " }}}
 
 " ============================================================================
@@ -342,30 +330,8 @@ if g:as_ide
 endif
 Plug 'uguu-org/vim-matrix-screensaver'
 "}}}
-if has('nvim-0.8')
-  let g:loaded_lazy = 1
-  execute 'luafile '. expand('<sfile>:p:h') . '/plugin.lua'
-else
-  call plug#end()
-
-  augroup PlugLazyLoad
-    autocmd!
-
-    if exists('g:plugs_order')
-      for plugName in g:plugs_order
-        if HasInstall(plugName)
-          let spec = g:plugs[plugName]
-          "TODO plug.vim 内部判断某个插件是否 lazy，不只是判断是否有 on 或者 for
-          " if has_key(spec, 'on') || has_key(spec, 'for')
-          "   execute 'autocmd User ' . plugName . ' call SourceConfig("plugin/' . plugName . '")'
-          " else
-            call SourceConfig('plugin/' . plugName)
-          " endif
-        endif
-      endfor
-    endif
-  augroup END
-end
+let g:loaded_lazy = 1
+execute 'luafile '. expand('<sfile>:p:h') . '/plugin.lua'
 endif
 
 function! s:plug_gf() abort
