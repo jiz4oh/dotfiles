@@ -14,13 +14,6 @@ set tabline=%!MyTabLine()  " custom tab pages line
 function! MyTabLine()
   let s = ''
 
-  let session_flag = ' [<' . fnamemodify(v:this_session, ':t') . '>]'
-
-  " set session name
-  if !empty(v:this_session) && &sessionoptions =~ "tabpages"
-    let s .= session_flag
-  end
-
   " loop through each tab page
   for i in range(tabpagenr('$'))
     if i + 1 == tabpagenr()
@@ -34,11 +27,6 @@ function! MyTabLine()
       let s .= '%#Title#'
     endif
 
-    " set session name
-    if !empty(v:this_session) && &sessionoptions !~ "tabpages"
-      let s .= session_flag
-    end
-    
     " set the tab page number (for mouse clicks)
     let s .= '%' . (i + 1) . 'T '
     " set page number string

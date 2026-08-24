@@ -29,20 +29,6 @@ if !exists('g:python_executable')
   endif
 endif
 
-if has('nvim')
-  let session_dir = has('nvim-0.3.1')
-        \ ? stdpath('data').'/session'
-        \ : has('win32')
-        \   ? '~/AppData/Local/nvim-data/session'
-        \   : '~/.local/share/nvim/session'
-else " Vim
-  let session_dir = has('win32')
-        \ ? '~/vimfiles/session'
-        \ : '~/.vim/session'
-endif
-
-let g:session_dir          = session_dir
-
 let g:project_markers = [
       \'.git', '.hg', '.svn', '.bzr', '_darcs', '_FOSSIL_',
       \'.fslckout', 'package.json', 'Gemfile', '.projections.json',
@@ -132,9 +118,9 @@ let g:which_key_map['e'] = {
       \ 'f': 'open file explorer and locate current buffer',
       \ 'd': 'open Db connector',
       \ 'q': 'open Quickfix list',
-      \ 't': 'open Tagbar',
+      \ 't': 'open Outline',
       \ 'g': 'open fugitive',
-      \ 's': 'open Startify',
+      \ 's': 'open bookmarks',
       \ }
 
 let g:which_key_map['f'] = {
@@ -189,7 +175,7 @@ let g:which_key_map['s'] = {
       \ ']': 'Search <cword> in Tags',
       \ 'b': 'Search lines in the current Buffer',
       \ "'": 'Search Marks',
-      \ 's': 'Search available Sessions',
+      \ 's': 'Search bookmarks',
       \ }
 
 let g:which_key_map['w'] = {
