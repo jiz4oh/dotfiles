@@ -99,10 +99,4 @@ return {
       desc = "Undo Hunk",
     },
   },
-  specs = {
-    {
-      "airblade/vim-gitgutter",
-      enabled = false,
-    },
-  },
 }
