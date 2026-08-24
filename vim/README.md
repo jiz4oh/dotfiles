@@ -43,7 +43,7 @@ git clone https://github.com/jiz4oh/vim.git vim
 2. [ripgrep](https://github.com/BurntSushi/ripgrep)
   可选, [安装教程](https://github.com/BurntSushi/ripgrep#installation)
 3. [fzf](https://github.com/junegunn/fzf)
-   可选，仅用于 shell 集成；Neovim 内的搜索由 Snacks picker 提供
+   可选，仅用于 shell 集成；Neovim 内的搜索由 fzf-lua 提供
 
 ## 功能:
 
@@ -84,13 +84,14 @@ git clone https://github.com/jiz4oh/vim.git vim
 
 ### IDE 版
 
-- 包含基础快捷键，并使用 Oil、Snacks picker、Outline 和 Gitsigns 扩展开发工作流
+- 包含基础快捷键，并使用 Oil、fzf-lua、Snacks、Outline 和 Gitsigns 扩展开发工作流
 
 #### 搜索
 
 插件：
 
 - https://github.com/folke/snacks.nvim
+- https://github.com/ibhagwan/fzf-lua
 - https://github.com/BurntSushi/ripgrep
 
 快捷键|速记|应用模式|描述
@@ -187,10 +188,10 @@ Oil 的目录缓冲区保留 Vim 风格的移动和文件操作；<kbd>F1</kbd> 
 <kbd>K</kbd>||n|查看当前符号对应的文档
 <kbd>ctrl-f</kbd>||n|向下移动文档
 <kbd>ctrl-b</kbd>||n|向上移动文档
-<kbd>gd</kbd>|go to definition|n|跳转到定义；多个结果由 Snacks picker 选择
-<kbd>gD</kbd>|go to declaration|n|跳转到声明；多个结果由 Snacks picker 选择
-<kbd>gr</kbd>|go to references|n|跳转到引用；多个结果由 Snacks picker 选择
-<kbd>gi</kbd>|go to implementation|n|跳转到实现；多个结果由 Snacks picker 选择
+<kbd>gd</kbd>|go to definition|n|跳转到定义；多个结果由 fzf-lua 选择
+<kbd>gD</kbd>|go to declaration|n|跳转到声明；多个结果由 fzf-lua 选择
+<kbd>gr</kbd>|go to references|n|跳转到引用；多个结果由 fzf-lua 选择
+<kbd>gi</kbd>|go to implementation|n|跳转到实现；多个结果由 fzf-lua 选择
 <kbd>[d</kbd>|diagnostic|n|跳转到上一个语法错误
 <kbd>]d</kbd>|diagnostic|n|跳转到下一个语法错误
 <kbd>\<space>f</kbd>|format|n|根据语法检查格式化当前 buffer
