@@ -20,11 +20,6 @@ return {
     enabled = lsp_enabled,
   },
   {
-    "ojroques/nvim-lspfuzzy",
-    enabled = lsp_enabled,
-    import = "plugins.config.nvim-lspfuzzy",
-  },
-  {
     "pmizio/typescript-tools.nvim",
     enabled = lsp_enabled,
     import = "plugins.config.typescript-tools",

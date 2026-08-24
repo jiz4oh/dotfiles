@@ -155,7 +155,7 @@ if vim.fn.has("nvim-0.8") == 1 then
         and client.server_capabilities.definitionProvider
       then
         vim.keymap.set({ "n" }, "gd", function()
-          vim.lsp.buf.definition({ on_list = vim.lsp.on_list })
+          require("config.picker").lsp_definitions()
         end, { buffer = true })
       end
 
@@ -164,12 +164,9 @@ if vim.fn.has("nvim-0.8") == 1 then
         and client.server_capabilities.declarationProvider
       then
         vim.keymap.set({ "n" }, "gD", function()
-          vim.lsp.buf.declaration({ on_list = vim.lsp.on_list })
+          require("config.picker").lsp_declarations()
         end, { buffer = true })
       end
-
-      vim.g["vista_" .. vim.api.nvim_get_option_value("filetype", { buf = bufnr }) .. "_executive"] =
-        "nvim_lsp"
 
       if client.name == "ruff" then
         -- remove ruff from ale_linters since it report to nvim directly
@@ -187,19 +184,19 @@ end
 
 if vim.fn.has("nvim-0.7") == 1 then
   vim.keymap.set({ "n" }, "<leader>ld", function()
-    vim.lsp.buf.definition({ on_list = vim.lsp.on_list })
+    require("config.picker").lsp_definitions()
   end)
   vim.keymap.set({ "n" }, "<leader>lD", function()
-    vim.lsp.buf.declaration({ on_list = vim.lsp.on_list })
+    require("config.picker").lsp_declarations()
   end)
   vim.keymap.set({ "n" }, "<leader>lt", function()
-    vim.lsp.buf.type_definition({ on_list = vim.lsp.on_list })
+    require("config.picker").lsp_type_definitions()
   end)
   vim.keymap.set({ "n" }, "<leader>li", function()
-    vim.lsp.buf.implementation({ on_list = vim.lsp.on_list })
+    require("config.picker").lsp_implementations()
   end)
   vim.keymap.set({ "n" }, "<leader>lr", function()
-    vim.lsp.buf.references({ includeDeclaration = false }, { on_list = vim.lsp.on_list })
+    require("config.picker").lsp_references()
   end)
   vim.keymap.set({ "n" }, "<leader>ll", function()
     vim.lsp.codelens.run()
@@ -208,10 +205,10 @@ if vim.fn.has("nvim-0.7") == 1 then
     vim.lsp.buf.rename()
   end)
   vim.keymap.set({ "n" }, "<leader>ls", function()
-    vim.lsp.buf.document_symbol({ on_list = vim.lsp.on_list })
+    require("config.picker").lsp_symbols()
   end)
   vim.keymap.set({ "n" }, "<leader>lS", function()
-    vim.lsp.buf.workspace_symbol(nil, { on_list = vim.lsp.on_list })
+    require("config.picker").lsp_workspace_symbols()
   end)
   vim.keymap.set({ "n" }, "<leader>lK", function()
     vim.lsp.buf.hover({ border = "rounded" })
