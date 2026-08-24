@@ -48,17 +48,11 @@ let g:with_treesitter = g:as_ide && has('nvim-0.12') && executable('tree-sitter'
 " NAVIGATION / MOVE / Easier READ {{{
 " ============================================================================
 Plug 'christoomey/vim-tmux-navigator'
-" https://github.com/easymotion/vim-easymotion
-Plug 'easymotion/vim-easymotion', { 'on': ['<Plug>(easymotion-prefix)', '<Plug>(easymotion-bd-jk)', '<Plug>(easymotion-overwin-line)'] }
-
 Plug 'junegunn/fzf', { 'do': ':call fzf#install()' } |
      \ Plug 'junegunn/fzf.vim'
 
 Plug 'tracyone/fzf-funky', {'on': 'FzfFunky'}
 
-Plug 'preservim/nerdtree', { 'on': ['NERDTree', 'NERDTreeVCS', 'NERDTreeToggle', 'NERDTreeFind'] }
-Plug 'Xuyuanp/nerdtree-git-plugin', { 'for': 'NERDTree' }
-Plug 'PhilRunninger/nerdtree-visual-selection', { 'for': 'NERDTree' }
 if g:as_ide
   Plug 'andymass/vim-matchup'
 end
@@ -189,23 +183,6 @@ endif
 "endif
 if has('nvim-0.10')
   "Plug 'rachartier/tiny-inline-diagnostic.nvim'
-endif
-
-"lsp
-if g:as_ide
-  if has('nvim-0.8')
-    if has('nvim-0.9.4')
-      "TextChanged event is too slow
-      "Plug 'maxandron/goplements.nvim'
-    endif
-  else
-    "https://github.com/prabirshrestha/vim-lsp/issues/1492
-    Plug 'prabirshrestha/vim-lsp'
-    Plug 'jiz4oh/vim-lspfuzzy'
-    Plug 'rhysd/vim-lsp-ale'
-    Plug 'mattn/vim-lsp-settings'
-    Plug 'dmitmel/cmp-vim-lsp'
-   endif
 endif
 
 "autocomplete
