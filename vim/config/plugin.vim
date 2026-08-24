@@ -269,7 +269,6 @@ if g:as_ide
   Plug 'tpope/vim-scriptease'
   Plug 'tweekmonster/helpful.vim', { 'on': 'HelpfulVersion' }
 end
-Plug 'mhinz/vim-hugefile'
 if !has('nvim-0.10')
   Plug 'liuchengxu/vim-which-key'
 end

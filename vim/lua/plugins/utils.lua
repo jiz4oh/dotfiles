@@ -24,8 +24,4 @@ return {
     enabled = vim.fn.has("nvim-0.9.4") == 1,
     import = "plugins.config.snacks",
   },
-  {
-    "mhinz/vim-hugefile",
-    enabled = vim.fn.has("nvim-0.9.4") == 0,
-  },
 }
