@@ -73,7 +73,7 @@ let g:which_key_map['<']  = 'decrease window width, and can be repeat by dot'
 let g:which_key_map['>']  = 'increase window width, and can be repeat by dot'
 
 let g:which_key_map[' '] = {
-      \ 'name' : '+easymotion' ,
+      \ 'name' : '+Jump' ,
       \ 'f' : 'find {char} to the right',
       \ 'F' : 'find {char} to the left',
       \ 't' : 'till before the {char} to the right',

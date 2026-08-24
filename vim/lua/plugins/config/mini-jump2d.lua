@@ -80,10 +80,4 @@ return {
     make_fFtT_keymap("<leader><leader>f", { allowed_lines = { cursor_before = false } })
   end,
   optional = true,
-  specs = {
-    {
-      "easymotion/vim-easymotion",
-      enabled = false,
-    },
-  },
 }

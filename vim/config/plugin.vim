@@ -62,7 +62,6 @@ Plug 'PhilRunninger/nerdtree-visual-selection', { 'for': 'NERDTree' }
 if g:as_ide
   Plug 'andymass/vim-matchup'
 end
-" isn't compatible with easymotion
 "if has('nvim')
 "  Plug 'nvimdev/indentmini.nvim'
 "endif
