@@ -270,7 +270,6 @@ if g:as_ide
   Plug 'tweekmonster/helpful.vim', { 'on': 'HelpfulVersion' }
 end
 Plug 'mhinz/vim-hugefile'
-Plug 'pbogut/fzf-mru.vim'
 if !has('nvim-0.10')
   Plug 'liuchengxu/vim-which-key'
 end
