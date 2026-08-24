@@ -114,6 +114,21 @@ return {
     -- your configuration comes here
     -- or leave it empty to use the default settings
     -- refer to the configuration section below
+    dashboard = {
+      enabled = true,
+      preset = {
+        keys = {
+          { icon = " ", key = "f", desc = "Find File", action = ":lua require('config.picker').files()" },
+          { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+          { icon = " ", key = "g", desc = "Find Text", action = ":lua require('config.picker').rg()" },
+          { icon = " ", key = "r", desc = "Recent Files", action = ":lua require('config.picker').recent()" },
+          { icon = " ", key = "b", desc = "Bookmarks", action = ":lua require('config.picker').bookmarks()" },
+          { icon = " ", key = "c", desc = "Config", action = ":lua require('config.picker').files(nil, {cwd = vim.fn.stdpath('config')})" },
+          { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+          { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+        },
+      },
+    },
     bigfile = {
       enabled = true,
       setup = function(ctx)
