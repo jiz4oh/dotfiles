@@ -7,19 +7,7 @@ local lsp_handlers = {
   end,
 }
 
-_G.fix_padding = function()
-  vim.g._fix_padding = true
-  local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
-  if not normal.bg then
-    return
-  end
-  io.write(string.format("\027]11;#%06x\027\\", normal.bg))
-end
-
-_G.revert_fix_padding = function()
-  vim.g._fix_padding = false
-  io.write("\027]111\027\\")
-end
+local ui = require("config.ui")
 
 ---@type LazyPluginSpec
 return {
@@ -305,15 +293,15 @@ return {
         Snacks.toggle
           .new({
             id = "padding",
-            name = "Padding",
+            name = "Transparent Padding",
             get = function()
-              return vim.g._fix_padding
+              return vim.g._transparent == true
             end,
             set = function(state)
               if state then
-                fix_padding()
+                ui.make_transparent(true)
               else
-                revert_fix_padding()
+                ui.make_transparent(false)
               end
             end,
           })

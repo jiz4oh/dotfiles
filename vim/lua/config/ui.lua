@@ -1,3 +1,88 @@
+local M = {}
+
+-- Keep this list aligned with Omarchy's transparency.lua. Missing highlight
+-- groups are harmless and are skipped by make_transparent().
+local transparent_groups = {
+  "Normal",
+  "NormalFloat",
+  "FloatBorder",
+  "Pmenu",
+  "Terminal",
+  "EndOfBuffer",
+  "FoldColumn",
+  "Folded",
+  "SignColumn",
+  "LineNr",
+  "CursorLineNr",
+  "NormalNC",
+  "WhichKeyFloat",
+  "TelescopeBorder",
+  "TelescopeNormal",
+  "TelescopePromptBorder",
+  "TelescopePromptTitle",
+  "NeoTreeNormal",
+  "NeoTreeNormalNC",
+  "NeoTreeVertSplit",
+  "NeoTreeWinSeparator",
+  "NeoTreeEndOfBuffer",
+  "NvimTreeNormal",
+  "NvimTreeVertSplit",
+  "NvimTreeEndOfBuffer",
+  "NotifyINFOBody",
+  "NotifyERRORBody",
+  "NotifyWARNBody",
+  "NotifyTRACEBody",
+  "NotifyDEBUGBody",
+  "NotifyINFOTitle",
+  "NotifyERRORTitle",
+  "NotifyWARNTitle",
+  "NotifyTRACETitle",
+  "NotifyDEBUGTitle",
+  "NotifyINFOBorder",
+  "NotifyERRORBorder",
+  "NotifyWARNBorder",
+  "NotifyTRACEBorder",
+  "NotifyDEBUGBorder",
+}
+
+local original_highlights = {}
+
+local function capture_highlights()
+  local highlights = {}
+  for _, name in ipairs(transparent_groups) do
+    local ok, highlight = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+    if ok then
+      highlights[name] = vim.deepcopy(highlight)
+    end
+  end
+  return highlights
+end
+
+local function clear_backgrounds()
+  for _, name in ipairs(transparent_groups) do
+    local ok, highlight = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+    if ok then
+      highlight.bg = nil
+      vim.api.nvim_set_hl(0, name, highlight)
+    end
+  end
+end
+
+function M.make_transparent(enabled)
+  if enabled then
+    -- Capture again after a colorscheme change so disabling restores the
+    -- current theme rather than the theme that was active before the change.
+    original_highlights = capture_highlights()
+    clear_backgrounds()
+  else
+    for name, highlight in pairs(original_highlights) do
+      vim.api.nvim_set_hl(0, name, highlight)
+    end
+    original_highlights = {}
+  end
+  vim.g._transparent = enabled
+end
+
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("custom_highlight", { clear = true }),
   pattern = "*",
@@ -9,6 +94,10 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     local hl = vim.api.nvim_get_hl(0, { name = "NormalFloat" })
     -- change the background color of floating window to None, so it blenders better
     vim.api.nvim_set_hl(0, "NormalFloat", { fg = hl.fg, bg = "None" })
+
+    if vim.g._transparent then
+      M.make_transparent(true)
+    end
   end,
 })
 
@@ -120,3 +209,5 @@ vim.ui.open = function(path, opt)
     ui_open(path, opt)
   end
 end
+
+return M
