@@ -178,13 +178,6 @@ Plug 'whatyouhide/vim-textobj-erb', { 'for': 'eruby' }
 " ============================================================================
 if executable('ctags')
   Plug 'ludovicchabant/vim-gutentags'
-  if has('patch-7.3.1058')
-    Plug 'preservim/tagbar', { 'on': 'TagbarToggle' }
-  endif
-endif
-
-if g:as_ide || executable('ctags')
-  Plug 'liuchengxu/vista.vim'
 endif
 "}}}
 

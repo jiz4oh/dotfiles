@@ -477,7 +477,7 @@ augroup vimrc
 
   "https://github.com/vim/vim/issues/6445
   if exists('&winfixbuf')
-    autocmd FileType tagbar,floaterm,fzf,vista_kind,aerial,notify,startuptime,toggleterm,qf setlocal winfixbuf
+    autocmd FileType floaterm,notify,startuptime,toggleterm,qf,Outline setlocal winfixbuf
   endif
   " Keep a list of the most recent two tabs.
   let g:tablist = [1, 1]

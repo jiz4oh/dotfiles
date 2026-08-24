@@ -7,7 +7,7 @@ let s:loaded = 1
 let g:disable_personal_stl = get(g:, 'disable_personal_stl', 0)
 
 let s:disabled_fts =
-  \ ['defx', 'denite', 'vista', 'tagbar', 'undotree', 'diff', 'peekaboo', 'sidemenu', 'qf', 'coc-explorer', 'startify', 'vim-plug']
+  \ ['defx', 'denite', 'outline', 'undotree', 'diff', 'peekaboo', 'sidemenu', 'qf', 'coc-explorer', 'vim-plug']
 
 function! StatusDiagnostic() abort
   let info = get(b:, 'coc_diagnostic_info', {})

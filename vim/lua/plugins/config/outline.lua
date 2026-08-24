@@ -18,16 +18,6 @@ local ctags = {
 ---@type LazyPluginSpec
 return {
   {
-    "liuchengxu/vista.vim",
-    optional = true,
-    enabled = false,
-  },
-  {
-    "preservim/tagbar",
-    optional = true,
-    enabled = false,
-  },
-  {
     "hedyhli/outline.nvim",
     optional = true,
     enabled = vim.fn.has("nvim-0.9") == 1,
