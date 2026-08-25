@@ -653,7 +653,7 @@ local function unique(values)
   return result
 end
 
-local function bookmark_data()
+function M.bookmark_data()
   local defaults = {}
   for _, value in ipairs(default_bookmarks) do
     local path = value()
@@ -693,7 +693,7 @@ function M.add_bookmark(path)
     return
   end
 
-  local defaults, user = bookmark_data()
+  local defaults, user = M.bookmark_data()
   if vim.tbl_contains(defaults, bookmark) or vim.tbl_contains(user, bookmark) then
     notify("Bookmark already exists: " .. vim.fn.fnamemodify(bookmark, ":~:."), vim.log.levels.WARN)
     return
@@ -728,7 +728,7 @@ local function bookmark_entries(delete_mode)
   return entries, lookup, delete_mode and "Delete Bookmark" or "Bookmarks"
 end
 
-local function open_bookmark(path)
+function M.open_bookmark(path)
   if vim.fn.isdirectory(path) == 1 then
     open_directory(path)
   else
@@ -773,7 +773,7 @@ local function bookmark_picker(delete_mode)
             notify("Default bookmarks cannot be deleted", vim.log.levels.WARN)
           end
         else
-          open_bookmark(item.path)
+          M.open_bookmark(item.path)
         end
       end,
       ["ctrl-a"] = not delete_mode and bookmark_input or nil,
