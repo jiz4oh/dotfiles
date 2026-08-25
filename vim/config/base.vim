@@ -24,6 +24,26 @@ filetype on
 filetype plugin on
 filetype indent on
 
+" ============================================================================
+" Function {{{
+" ============================================================================
+if executable('rg')
+  let g:__rg_ignore = []
+  " https://github.com/junegunn/fzf.vim/issues/133#issuecomment-225541566
+  function! RgWithWildignore(args)
+    let rgignore = '/tmp/rgignore-for-vim'
+    let entries = split(&wildignore, ',')
+    if g:__rg_ignore != entries
+      call writefile(entries, rgignore)
+      let g:__rg_ignore = entries
+    endif
+
+    let source = 'rg --hidden --no-ignore-vcs --ignore-file ' . rgignore .' --column --line-number --no-heading --smart-case --follow -F ' . a:args . ' || true'
+    return source
+  endfunction
+endif
+" }}}
+
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case\ --follow
   set grepformat=%f:%l:%c:%m
@@ -207,6 +227,7 @@ set timeoutlen=1500
 set ttimeoutlen=50
 
 set diffopt+=vertical                  " make diff windows vertical
+set sessionoptions-=options sessionoptions-=buffers sessionoptions-=folds sessionoptions-=terminal
 set viewoptions-=options
 if !g:is_win
   set dictionary+=/usr/share/dict/words
@@ -512,6 +533,12 @@ augroup vimrc
   "return where you left last time
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif | normal! zvzz
 
+  " restore session automatically if no file is opened
+  " autocmd VimEnter * nested
+  "     \ if !argc() && empty(v:this_session) && filereadable('Session.vim') && !&modified |
+  "     \   source Session.vim |
+  "     \ endif
+
   if has('nvim')
     autocmd TermOpen * setlocal nonumber norelativenumber
   elseif exists('##TerminalOpen')
@@ -564,8 +591,11 @@ augroup vimrc
         \compiler python
   autocmd FileType gitcommit setlocal textwidth=72 colorcolumn=72
   if exists(':tnoremap')
-    autocmd! FileType floaterm tnoremap <expr> <C-r> getreg(nr2char(getchar()))
+    " https://github.com/junegunn/fzf.vim/issues/672#issuecomment-1191112563
+    autocmd! FileType fzf,floaterm tnoremap <expr> <C-r> getreg(nr2char(getchar()))
   end
+
+  autocmd SessionLoadPost * call ChangeCWDTo(personal#project#find_home())
 
   function! s:GoIncludeExpr(filename) abort
     " search in current package

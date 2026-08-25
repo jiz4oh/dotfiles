@@ -48,9 +48,11 @@ let g:with_treesitter = g:as_ide && has('nvim-0.12') && executable('tree-sitter'
 " NAVIGATION / MOVE / Easier READ {{{
 " ============================================================================
 Plug 'christoomey/vim-tmux-navigator'
-" Keep the fzf checkout for the shell integration in dot_shenv.tmpl.
-" Neovim pickers are provided by fzf-lua.
-Plug 'junegunn/fzf', { 'do': ':call fzf#install()' }
+Plug 'junegunn/fzf', { 'do': ':call fzf#install()' } |
+     \ Plug 'junegunn/fzf.vim'
+
+Plug 'tracyone/fzf-funky', {'on': 'FzfFunky'}
+
 if g:as_ide
   Plug 'andymass/vim-matchup'
 end
@@ -240,6 +242,7 @@ if g:as_ide
   Plug 'tpope/vim-scriptease'
   Plug 'tweekmonster/helpful.vim', { 'on': 'HelpfulVersion' }
 end
+Plug 'pbogut/fzf-mru.vim'
 if !has('nvim-0.10')
   Plug 'liuchengxu/vim-which-key'
 end
@@ -248,6 +251,7 @@ if exists('$SSH_TTY') && !has('nvim-0.10')
 endif
 Plug 'skywind3000/vim-dict'
 "Plug 'justinmk/vim-gtfo'
+Plug 'mhinz/vim-startify'
 Plug 'dstein64/vim-startuptime', {'on':'StartupTime'}
 
 Plug 'tpope/vim-unimpaired'

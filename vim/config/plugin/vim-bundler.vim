@@ -1,3 +1,7 @@
+if exists('*FzfGrepMap')
+  call FzfGrepMap('<leader>sg', 'Packages')
+endif
+
 let s:rails_engine_path_dirs = [
       \ 'app/models/concerns',
       \ 'app/controllers/concerns',

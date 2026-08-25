@@ -43,7 +43,7 @@ git clone https://github.com/jiz4oh/vim.git vim
 2. [ripgrep](https://github.com/BurntSushi/ripgrep)
   可选, [安装教程](https://github.com/BurntSushi/ripgrep#installation)
 3. [fzf](https://github.com/junegunn/fzf)
-   可选，仅用于 shell 集成；Neovim 内的搜索由 fzf-lua 提供
+   Neovim 内的搜索由 fzf.vim 提供；fzf 也用于 shell 集成
 
 ## 功能:
 
@@ -84,14 +84,14 @@ git clone https://github.com/jiz4oh/vim.git vim
 
 ### IDE 版
 
-- 包含基础快捷键，并使用 Oil、fzf-lua、Snacks、Outline 和 Gitsigns 扩展开发工作流
+- 包含基础快捷键，并使用 Oil、fzf.vim、Snacks、Outline 和 Gitsigns 扩展开发工作流
 
 #### 搜索
 
 插件：
 
-- https://github.com/folke/snacks.nvim
-- https://github.com/ibhagwan/fzf-lua
+- https://github.com/junegunn/fzf
+- https://github.com/junegunn/fzf.vim
 - https://github.com/BurntSushi/ripgrep
 
 快捷键|速记|应用模式|描述
@@ -107,7 +107,7 @@ git clone https://github.com/jiz4oh/vim.git vim
 <kbd>\<leader>s'</kbd>|search marks|n|搜索 marks
 <kbd>\<leader>s:</kbd>|search command history|n|搜索命令历史
 <kbd>\<leader>s/</kbd>|search history|n|搜索搜索历史
-<kbd>\<leader>ss</kbd>|search bookmarks|n|打开书签
+<kbd>\<leader>ss</kbd>|search sessions|n|搜索可用会话
 
 命令|速记|描述
 ---|---|---
@@ -117,9 +117,11 @@ git clone https://github.com/jiz4oh/vim.git vim
 `Paths` / `Path`||在配置的路径中搜索
 `Tags`||搜索 tags
 `Packages`||搜索 Ruby、Go、Vim 或 JavaScript 包
-`Bookmarks`||打开书签
-`BookmarkAdd`||添加当前文件或指定路径书签
-`BookmarkDelete`||删除用户书签
+`Startify`||打开 Startify 启动页
+`StartifyAddBookmark`||添加当前文件或指定路径书签
+`StartifyDeleteBookmark`||删除用户书签
+`Sessions`||搜索可用会话
+`FZFMru`||搜索最近打开的文件
 
 #### 跳转
 
@@ -188,10 +190,10 @@ Oil 的目录缓冲区保留 Vim 风格的移动和文件操作；<kbd>F1</kbd> 
 <kbd>K</kbd>||n|查看当前符号对应的文档
 <kbd>ctrl-f</kbd>||n|向下移动文档
 <kbd>ctrl-b</kbd>||n|向上移动文档
-<kbd>gd</kbd>|go to definition|n|跳转到定义；多个结果由 fzf-lua 选择
-<kbd>gD</kbd>|go to declaration|n|跳转到声明；多个结果由 fzf-lua 选择
-<kbd>gr</kbd>|go to references|n|跳转到引用；多个结果由 fzf-lua 选择
-<kbd>gi</kbd>|go to implementation|n|跳转到实现；多个结果由 fzf-lua 选择
+<kbd>gd</kbd>|go to definition|n|跳转到定义；多个结果进入 Neovim 的位置列表
+<kbd>gD</kbd>|go to declaration|n|跳转到声明；多个结果进入 Neovim 的位置列表
+<kbd>gr</kbd>|go to references|n|跳转到引用；多个结果进入 Neovim 的位置列表
+<kbd>gi</kbd>|go to implementation|n|跳转到实现；多个结果进入 Neovim 的位置列表
 <kbd>[d</kbd>|diagnostic|n|跳转到上一个语法错误
 <kbd>]d</kbd>|diagnostic|n|跳转到下一个语法错误
 <kbd>\<space>f</kbd>|format|n|根据语法检查格式化当前 buffer
