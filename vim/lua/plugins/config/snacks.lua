@@ -1,5 +1,43 @@
 local ui = require("config.ui")
 
+local dashboard_pane_width = 60
+local dashboard_pane_gap = 0
+local dashboard_header_width = dashboard_pane_width * 2 + dashboard_pane_gap
+local dashboard_header =
+  [[███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]]
+
+local function split_dashboard_header()
+  local left, right = {}, {}
+
+  for _, line in ipairs(vim.split(dashboard_header, "\n", { plain = true })) do
+    local expanded = {}
+    for _, char in ipairs(vim.fn.split(line, [[\zs]])) do
+      expanded[#expanded + 1] = char:rep(2)
+    end
+
+    local value = table.concat(expanded)
+    local padding = math.floor((dashboard_header_width - vim.fn.strdisplaywidth(value)) / 2)
+    value = (" "):rep(padding) .. value
+    value = value .. (" "):rep(dashboard_header_width - vim.fn.strdisplaywidth(value))
+
+    left[#left + 1] = vim.fn.strcharpart(value, 0, dashboard_pane_width)
+    right[#right + 1] = vim.fn.strcharpart(value, dashboard_pane_width, dashboard_pane_width)
+  end
+
+  return left, right
+end
+
+local dashboard_header_left, dashboard_header_right = split_dashboard_header()
+
+local function dashboard_header_text(lines)
+  return { { table.concat(lines, "\n"), hl = "header" } }
+end
+
 ---@type LazyPluginSpec
 return {
   "folke/snacks.nvim",
@@ -48,19 +86,106 @@ return {
     -- refer to the configuration section below
     dashboard = {
       enabled = true,
+      width = dashboard_pane_width,
+      pane_gap = dashboard_pane_gap,
       preset = {
+        header = dashboard_header,
         pick = "fzf-lua",
         keys = {
-          { icon = " ", key = "f", desc = "Find File", action = ":lua require('config.picker').files()" },
+          {
+            icon = " ",
+            key = "f",
+            desc = "Find File",
+            action = ":lua require('config.picker').files()",
+          },
           { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-          { icon = " ", key = "g", desc = "Find Text", action = ":lua require('config.picker').rg()" },
-          { icon = " ", key = "r", desc = "Recent Files", action = ":lua require('config.picker').recent()" },
-          { icon = " ", key = "b", desc = "Bookmarks", action = ":lua require('config.picker').bookmarks()" },
-          { icon = " ", key = "c", desc = "Config", action = ":lua require('config.picker').files(nil, {cwd = vim.fn.stdpath('config')})" },
-          { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+          {
+            icon = " ",
+            key = "g",
+            desc = "Find Text",
+            action = ":lua require('config.picker').rg()",
+          },
+          {
+            icon = " ",
+            key = "r",
+            desc = "Recent Files",
+            action = ":lua require('config.picker').recent()",
+          },
+          {
+            icon = " ",
+            key = "b",
+            desc = "Bookmarks",
+            action = ":lua require('config.picker').bookmarks()",
+          },
+          {
+            icon = " ",
+            key = "c",
+            desc = "Config",
+            action = ":lua require('config.picker').files(nil, {cwd = vim.fn.stdpath('config')})",
+          },
+          {
+            icon = "󰒲 ",
+            key = "L",
+            desc = "Lazy",
+            action = ":Lazy",
+            enabled = package.loaded.lazy ~= nil,
+          },
           { icon = " ", key = "q", desc = "Quit", action = ":qa" },
         },
       },
+      sections = function(dashboard)
+        local sections = {}
+
+        if dashboard:size().width >= dashboard_header_width then
+          sections[#sections + 1] = {
+            pane = 1,
+            text = dashboard_header_text(dashboard_header_left),
+            padding = 2,
+          }
+          sections[#sections + 1] = {
+            pane = 2,
+            text = dashboard_header_text(dashboard_header_right),
+            padding = 2,
+          }
+        else
+          sections[#sections + 1] = { section = "header" }
+        end
+
+        sections[#sections + 1] = { section = "keys", gap = 1, padding = 1 }
+        sections[#sections + 1] = {
+          pane = 2,
+          icon = " ",
+          title = "Recent Files",
+          section = "recent_files",
+          indent = 2,
+          padding = 1,
+        }
+        sections[#sections + 1] = {
+          pane = 2,
+          icon = " ",
+          title = "Projects",
+          section = "projects",
+          indent = 2,
+          padding = 1,
+        }
+        sections[#sections + 1] = {
+          pane = 2,
+          icon = " ",
+          title = "Git Status",
+          section = "terminal",
+          enabled = function()
+            return Snacks.git.get_root() ~= nil
+          end,
+          cmd = "git status --short --branch --renames",
+          height = 5,
+          padding = 1,
+          ttl = 5 * 60,
+          indent = 3,
+        }
+        sections[#sections + 1] = { section = "startup" }
+
+        return sections
+      end,
     },
     bigfile = {
       enabled = true,
@@ -106,6 +231,16 @@ return {
     indent = { enabled = true },
     image = { enabled = true },
     picker = {
+      pick = {
+        picker = "snacks", ---@type snacks.profiler.Picker
+        ---@type snacks.profiler.Badge.type[]
+        badges = { "time", "count", "name" },
+        ---@type snacks.profiler.Highlights
+        preview = {
+          badges = { "time", "pct", "count" },
+          align = "right",
+        },
+      },
       ui_select = true,
       layout = {
         layout = {
@@ -211,7 +346,6 @@ return {
             end,
           })
           :map("<leader>up")
-
       end,
     })
   end,
