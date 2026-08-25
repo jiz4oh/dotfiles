@@ -6,11 +6,15 @@ if (( $# == 0 )); then
   while IFS= read -r -d '' path; do
     paths+=("$path")
   done < <(git diff --cached --name-only --diff-filter=ACR -z)
-  set -- "${paths[@]}"
+  if ((${#paths[@]})); then
+    set -- "${paths[@]}"
+  fi
 fi
 
 invalid_migrations=$(
   for path in "$@"; do
+    [[ $path =~ (^|/)db/migrate/[0-9]{14}_[^/]+\.rb$ ]] || continue
+
     name=${path##*/}
     timestamp=${name%%_*}
 

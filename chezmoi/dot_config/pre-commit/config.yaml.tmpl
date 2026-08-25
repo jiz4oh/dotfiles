@@ -12,4 +12,4 @@ repos:
         entry: "{{ .chezmoi.homeDir }}/bin/check_migration_timestamps"
         language: system
         files: '(^|/)db/migrate/[0-9]{14}_[^/]+\.rb$'
-        pass_filenames: true
+        pass_filenames: false
