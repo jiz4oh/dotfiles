@@ -1,6 +1,7 @@
 ---
 name: handoff
 description: generate a structured, execution-ready handoff markdown for the next ai agent when context is long or the session is ending, with clear state, evidence, risks, and immediate next action.
+disable-model-invocation: true
 ---
 
 # Write Handoff Summary
