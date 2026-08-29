@@ -667,6 +667,10 @@ augroup END
 " ============================================================================
 " COMMAND {{{
 " ============================================================================
+command! -nargs=? -complete=file BookmarkAdd call personal#bookmarks#add(<q-args>)
+command! -nargs=0 BookmarkDel call personal#bookmarks#delete()
+command! -nargs=0 BookmarkEdit call personal#bookmarks#edit()
+ 
 if !has('nvim-0.9')
   command! Inspect echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
 endif

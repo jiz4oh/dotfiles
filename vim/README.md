@@ -118,8 +118,8 @@ git clone https://github.com/jiz4oh/vim.git vim
 `Tags`||搜索 tags
 `Packages`||搜索 Ruby、Go、Vim 或 JavaScript 包
 `Startify`||打开 Startify 启动页
-`StartifyAddBookmark`||添加当前文件或指定路径书签
-`StartifyDeleteBookmark`||删除用户书签
+`BookmarkAdd [path]`||添加当前文件或指定路径书签，并立即保存
+`BookmarkDel`||删除用户书签，并立即保存
 `Sessions`||搜索可用会话
 `FZFMru`||搜索最近打开的文件
 

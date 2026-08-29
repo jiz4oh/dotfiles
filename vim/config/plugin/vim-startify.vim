@@ -4,6 +4,10 @@ if !exists('*MRUCwd')
   endfunction
 endif
 
+if !exists('*personal#bookmarks#list')
+  execute 'source ' . fnameescape(g:config_home . '/autoload/personal/bookmarks.vim')
+endif
+
 if exists('g:session_dir')
   let g:startify_session_dir          = g:session_dir
 endif
@@ -27,19 +31,11 @@ let g:startify_session_savevars = [
     \ 'MRU_Exclude_Files',
     \ ]
 
-let g:_startify_bookmarks = [
-            \ $MYVIMRC,
-            \ "$HOME/.local/share/chezmoi/",
-            \ "$HOME/.Trash",
-            \ "$HOME/Library/Mobile Documents/com~apple~CloudDocs",
-            \ ]
-let g:startify_bookmarks = copy(g:_startify_bookmarks)
-
 " returns all modified files of the current git repo
 " `2>/dev/null` makes the command fail quietly, so that when we are not
 " in a git repo, the list will be empty
 let g:startify_lists = [
-        \ { 'type': 'bookmarks',                                       'header': ['   Bookmarks']               },
+        \ { 'type': function('personal#bookmarks#list'), 'header': ['   Bookmarks'] },
         \ { 'type': function('MRUCwd', [g:startify_files_number]),     'header': ['   MRU']                     },
         \ { 'type': 'commands',                                        'header': ['   Commands']                },
         \ ]
@@ -56,7 +52,7 @@ let g:startify_commands = [
     \ {'d': ['Databases',       'tabnew | DBUI']      },
     \ {'u': ['Update Plugins',  update]  },
     \ {'i': ['Install Plugins', install] },
-    \ {'b': ['Delete Bookmark', 'StartifyDeleteBookmark'] },
+    \ {'b': ['Delete Bookmark', 'BookmarkDel'] },
     \ ]
 
 function! LoadSession(name) abort
@@ -79,47 +75,10 @@ function! SaveSession() abort
   SClose
 endfunction
 
-let s:bookmarks = []
-let s:bookmark_file = expand('~/.cache/startify_bookmarks')
-if filereadable(s:bookmark_file)
-  let s:bookmarks = readfile(s:bookmark_file)
-  call extend(g:startify_bookmarks, s:bookmarks)
-endif
-
-function! s:save_bookmarks()
-  call writefile(s:bookmarks, s:bookmark_file)
-endfunction
-
-function! s:add_bookmark(bookmark)
-  if !exists('g:startify_bookmarks')
-    let g:startify_bookmarks = []
-  endif
-  if a:bookmark ==# ""
-    let bookmark = expand('%:p')
-  else
-    let bookmark = a:bookmark
-  end
-  let s:bookmarks += [ bookmark ]
-  let g:startify_bookmarks += [ bookmark ]
-endfunction
-
-function! StarifyOnDeleteBookmark(item, idx) abort
-  call remove(s:bookmarks, a:idx)
-  let g:startify_bookmarks = extend(copy(g:_startify_bookmarks), s:bookmarks)
-endfunction
-
-function! s:delete_bookmark()
-  call select#input('Delete bookmark> ', s:bookmarks, function('StarifyOnDeleteBookmark'))
-endfunction
-
 augroup vim-startify-augroup
   autocmd!
 
-  autocmd VimLeave * call <sid>save_bookmarks()
   autocmd filetype startify setlocal foldlevel=99
 augroup END
-
-command! -nargs=? StartifyAddBookmark call <sid>add_bookmark(<q-args>)
-command! -nargs=? StartifyDeleteBookmark call <sid>delete_bookmark()
 
 nnoremap <silent> <leader><tab> :Startify<cr>
