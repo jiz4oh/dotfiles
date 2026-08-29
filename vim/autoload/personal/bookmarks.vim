@@ -26,6 +26,16 @@ function! s:path_key(path) abort
   return fnamemodify(expand(a:path), ':p')
 endfunction
 
+function! s:short_path(path) abort
+  let shortest = a:path
+  for candidate in [fnamemodify(a:path, ':~')]
+    if strdisplaywidth(candidate) < strdisplaywidth(shortest)
+      let shortest = candidate
+    endif
+  endfor
+  return shortest
+endfunction
+
 function! s:index_by_path(bookmarks, target) abort
   let target = s:path_key(a:target)
   let index = 0
@@ -40,7 +50,9 @@ endfunction
 
 function! s:read() abort
   let file = s:bookmark_file()
-  return filereadable(file) ? s:unique(readfile(file)) : []
+  return filereadable(file)
+        \ ? s:unique(map(readfile(file), 's:path_key(v:val)'))
+        \ : []
 endfunction
 
 function! s:create_lock(lock) abort
@@ -108,9 +120,10 @@ endfunction
 function! personal#bookmarks#list() abort
   let entries = []
   for bookmark in s:unique(copy(s:default_bookmarks) + s:read())
+    let path = s:path_key(bookmark)
     call add(entries, {
-          \ 'line': bookmark,
-          \ 'path': fnameescape(expand(bookmark)),
+          \ 'line': s:short_path(path),
+          \ 'path': fnameescape(path),
           \ 'type': 'file',
           \ 'cmd': 'edit',
           \ })
@@ -124,6 +137,7 @@ function! personal#bookmarks#add(bookmark) abort
     echoerr 'BookmarkAdd: no bookmark path'
     return
   endif
+  let bookmark = s:path_key(bookmark)
   if s:index_by_path(s:default_bookmarks, bookmark) != -1
     return
   endif
