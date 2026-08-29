@@ -13,15 +13,29 @@ function! s:bookmark_file() abort
 endfunction
 
 function! s:unique(items) abort
-  let seen = {}
   let result = []
   for item in a:items
-    if !empty(item) && !has_key(seen, item)
-      let seen[item] = 1
+    if !empty(item) && s:index_by_path(result, item) == -1
       call add(result, item)
     endif
   endfor
   return result
+endfunction
+
+function! s:path_key(path) abort
+  return fnamemodify(expand(a:path), ':p')
+endfunction
+
+function! s:index_by_path(bookmarks, target) abort
+  let target = s:path_key(a:target)
+  let index = 0
+  for bookmark in a:bookmarks
+    if s:path_key(bookmark) ==# target
+      return index
+    endif
+    let index += 1
+  endfor
+  return -1
 endfunction
 
 function! s:read() abort
@@ -77,7 +91,7 @@ function! s:update(action, bookmark) abort
   let lock = s:acquire_lock()
   try
     let bookmarks = s:read()
-    let index = index(bookmarks, a:bookmark)
+    let index = s:index_by_path(bookmarks, a:bookmark)
     if a:action ==# 'add' && index == -1
       call add(bookmarks, a:bookmark)
       call s:write(bookmarks)
@@ -108,6 +122,9 @@ function! personal#bookmarks#add(bookmark) abort
   let bookmark = empty(a:bookmark) ? expand('%:p') : a:bookmark
   if empty(bookmark)
     echoerr 'BookmarkAdd: no bookmark path'
+    return
+  endif
+  if s:index_by_path(s:default_bookmarks, bookmark) != -1
     return
   endif
   call s:update('add', bookmark)
