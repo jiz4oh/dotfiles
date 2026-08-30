@@ -3,6 +3,8 @@ _ARCH=$(uname -m)
 {{- if eq .chezmoi.os "darwin" }}
 # https://mise.jdx.dev/configuration/environments.html
 export MISE_ENV=development
+# Neovim, LSP, and large edit sessions can keep many descriptors open.
+ulimit -S -n 65536
 # put this line into .env
 # export MISE_ENV=development,ai
 {{- end }}
