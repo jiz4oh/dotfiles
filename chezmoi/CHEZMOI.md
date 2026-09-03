@@ -52,6 +52,21 @@ chezmoi --source "$PWD" diff
   仍需要提供 RPDB 接口的 `ip rule`。规则在本次开机期间有效，不配置开机恢复。
   这个绕过只用于网络配置明确且固定的设备。
 
+## Agent skills 与 hooks
+
+- 第一方 skill 统一放在 `chezmoi/dot_agents/skills/`，安装到
+  `~/.agents/skills/`；Claude Code 继续通过 `~/.claude/skills` 软链接复用，
+  Codex、Gemini CLI 和 OpenCode 直接识别共享目录。
+- `agents-memory` 的跨客户端命令 hook 安装到
+  `~/.agents/hooks/agents-memory`。`scripts/install_agent_memory_hooks.py` 只合并
+  自己标记的 Codex、Claude Code、Gemini CLI hook，保留已有配置；
+  `run_after_32_install_agent_memory_hooks.sh.tmpl` 在每次 apply 后幂等执行。
+- OpenCode 使用受管的全局本地插件
+  `~/.config/opencode/plugins/agents-memory.js` 注入同一条规则，不修改
+  `opencode.json`。
+- Codex 会要求审查新增或变化后的个人 hook 定义；这是它的信任机制，chezmoi
+  只负责安装和更新文件。
+
 ## Shell 与 PATH 策略
 
 macOS 和 Linux 都保留 Bash 作为账户、自动化和 SSH 命令 Shell，交互式

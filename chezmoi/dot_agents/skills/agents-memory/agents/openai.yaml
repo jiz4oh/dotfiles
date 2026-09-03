@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agents Memory"
+  short_description: "Preserve durable, evidence-backed project knowledge"
+  default_prompt: "Use $agents-memory to review this work and update only qualifying project memory."
