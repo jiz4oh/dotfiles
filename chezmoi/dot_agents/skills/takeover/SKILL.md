@@ -1,6 +1,7 @@
 ---
 name: takeover
 description: read the latest handoff markdown, reconstruct execution state, and resume safely with minimal user re-explanation when user asks to continue prior work.
+disable-model-invocation: true
 ---
 
 # Takeover From Handoff
