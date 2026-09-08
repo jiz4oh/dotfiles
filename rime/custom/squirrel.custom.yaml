@@ -54,6 +54,7 @@ patch:
   app_options/com.googlecode.iterm2/vim_mode: true
   app_options/net.kovidgoyal.kitty/vim_mode: true
   app_options/com.github.wez.wezterm/vim_mode: true
+  app_options/com.stablyai.orca/vim_mode: true
 
   # 修复以下 app 中的输入框
   app_options/ru.keepcoder.Telegram/inline: true  # telegram appstore 版
