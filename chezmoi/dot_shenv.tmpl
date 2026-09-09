@@ -61,7 +61,9 @@ export PDM_USE_UV=true
 
 export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
 
+{{- if eq .chezmoi.os "darwin" }}
 export XDG_RUNTIME_DIR="$HOME/.local/run"
+{{- end }}
 
 if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
 {{- if eq .chezmoi.os "darwin" }}
