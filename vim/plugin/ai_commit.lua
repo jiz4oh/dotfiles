@@ -5,7 +5,7 @@ m.setup()
 vim.api.nvim_create_user_command("GitCommit", function()
   m.generate()
 end, {
-  desc = "Generate commit message with AI CLI",
+  desc = "Generate commit message with AI",
 })
 
 vim.api.nvim_create_user_command("GitCommitPopup", function()

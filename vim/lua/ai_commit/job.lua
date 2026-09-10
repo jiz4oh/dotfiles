@@ -75,11 +75,10 @@ function JOB.run_job_for_current_model()
       if obj.code ~= 0 then
         UI.stop_spinner()
         UI.stop_timeout()
-        local err = obj.stderr and obj.stderr:gsub("%s+$", "") or ""
         UI.set_popup_lines({
-          "AI CLI generation failed.",
+          "AI generation failed.",
           "",
-          err ~= "" and err or ("Exit code: " .. obj.code),
+          cli.read_error(cli_obj, obj),
         })
         vim.bo[state.popup_buf].modifiable = false
         UI.notify("Commit message generation failed", vim.log.levels.ERROR)
@@ -88,8 +87,16 @@ function JOB.run_job_for_current_model()
         return
       end
 
-      local output = cli.read_cli_output(cli_obj, obj)
+      local output, output_err = cli.read_cli_output(cli_obj, obj)
       state.job = nil
+      if not output then
+        UI.stop_spinner()
+        UI.stop_timeout()
+        UI.set_popup_lines({ "AI generation failed.", "", output_err })
+        vim.bo[state.popup_buf].modifiable = false
+        UI.notify("Commit message generation failed", vim.log.levels.ERROR)
+        return
+      end
       UI.render_result(output)
     end)
   end)

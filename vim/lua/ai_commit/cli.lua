@@ -3,6 +3,29 @@ local config = require("ai_commit.config")
 
 local CLI = {}
 
+local function resolve_openai()
+  local base_url = os.getenv("OPENAI_BASE_URL")
+  local api_key = os.getenv("OPENAI_API_KEY")
+  if not base_url or base_url == "" or not api_key or api_key == "" then
+    return nil, "OpenAI backend requires OPENAI_BASE_URL and OPENAI_API_KEY"
+  end
+  if api_key:find("[\r\n]") then
+    return nil, "OPENAI_API_KEY must not contain line breaks"
+  end
+
+  local command = vim.fn.exepath("curl")
+  if command == "" then
+    return nil, "OpenAI backend requires curl in PATH"
+  end
+
+  local resolved = {
+    command = command,
+    backend = "openai",
+    endpoint = base_url:gsub("/+$", "") .. "/chat/completions",
+  }
+  return resolved, nil
+end
+
 local function infer_backend(command)
   local name = vim.fs.basename(command)
   if name == "opencode" then
@@ -15,6 +38,10 @@ local function infer_backend(command)
 end
 
 function CLI.resolve_cli()
+  if config.backend == "openai" then
+    return resolve_openai()
+  end
+
   if config.command then
     if vim.fn.executable(config.command) ~= 1 then
       return nil, string.format("Configured AI CLI '%s' is not available in PATH", config.command)
@@ -28,11 +55,17 @@ function CLI.resolve_cli()
     return { command = config.command, backend = backend }, nil
   end
 
-  for _, command in ipairs(config.preferred_commands) do
-    if vim.fn.executable(command) == 1 then
-      local backend = infer_backend(command)
-      if backend then
-        return { command = command, backend = backend }, nil
+  for _, backend in ipairs(config.preferred_backends) do
+    if backend == "openai" then
+      local resolved = resolve_openai()
+      if resolved then
+        return resolved, nil
+      end
+    else
+      for _, command in ipairs(config.preferred_commands) do
+        if infer_backend(command) == backend and vim.fn.executable(command) == 1 then
+          return { command = command, backend = backend }, nil
+        end
       end
     end
   end
@@ -67,6 +100,13 @@ local function normalize_reasoning_effort(backend)
 end
 
 function CLI.resolve_models(backend)
+  if backend == "openai" then
+    local model = os.getenv("OPENAI_MODEL")
+    if model and model ~= "" then
+      return { model }
+    end
+  end
+
   if type(config.model) == "string" and config.model ~= "" then
     return { config.model }
   end
@@ -102,6 +142,24 @@ function CLI.get_current_model()
 end
 
 function CLI.build_cli_invocation(cli, prompt, model)
+  if cli.backend == "openai" then
+    local payload = vim.json.encode({
+      model = model,
+      messages = { { role = "user", content = prompt } },
+      stream = false,
+    })
+    local script = table.concat({
+      "exec 3<&0",
+      [[printf '%s\n' 'Content-Type: application/json' "Authorization: Bearer $OPENAI_API_KEY" |]],
+      [[exec "$1" --silent --show-error --fail-with-body --header @- --data-binary @/dev/fd/3 "$2"]],
+    }, "\n")
+
+    return { "/bin/sh", "-c", script, "ai-commit-openai", cli.command, cli.endpoint }, {
+      text = true,
+      stdin = payload,
+    }
+  end
+
   if cli.backend == "codex" then
     state.temp_output = vim.fn.tempname()
 
@@ -176,7 +234,41 @@ local function parse_opencode_json_output(raw)
   return table.concat(chunks, "\n")
 end
 
+local function parse_openai_json_output(raw)
+  local ok, decoded = pcall(vim.json.decode, raw or "")
+  if not ok or type(decoded) ~= "table" then
+    return nil, "OpenAI-compatible API returned invalid JSON"
+  end
+
+  local choice = type(decoded.choices) == "table" and decoded.choices[1] or nil
+  local message = type(choice) == "table" and choice.message or nil
+  local content = type(message) == "table" and message.content or nil
+  if type(content) ~= "string" or content == "" then
+    return nil, "OpenAI-compatible API response is missing choices[0].message.content"
+  end
+
+  return content, nil
+end
+
+function CLI.read_error(cli, obj)
+  if cli.backend == "openai" and obj.stdout and obj.stdout ~= "" then
+    local ok, decoded = pcall(vim.json.decode, obj.stdout)
+    local err = ok and type(decoded) == "table" and decoded.error or nil
+    if type(err) == "table" and type(err.message) == "string" then
+      return err.message
+    end
+  end
+
+  local stderr = obj.stderr and obj.stderr:gsub("%s+$", "") or ""
+  return stderr ~= "" and stderr or ("Exit code: " .. obj.code)
+end
+
 function CLI.read_cli_output(cli, obj)
+  if cli.backend == "openai" then
+    state.cleanup_tempfile()
+    return parse_openai_json_output(obj.stdout)
+  end
+
   if cli.backend == "codex" then
     local output = {}
     if state.temp_output and vim.fn.filereadable(state.temp_output) == 1 then
