@@ -1,4 +1,12 @@
 {{- if eq .chezmoi.os "darwin" }}
+[".agents/skill-sources/ponytail"]
+  type = "git-repo"
+  url = "https://github.com/dietrichgebert/ponytail"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["*=skills"]
+
 [".agents/skill-sources/show-me"]
   type = "git-repo"
   url = "https://github.com/humanlayer/skills"
@@ -56,14 +64,6 @@
   clone.args = ["--filter=blob:none"]
   pull.args = ["--ff-only"]
   x.skills = ["find-skills=skills/find-skills"]
-
-[".agents/skill-sources/pua"]
-  type = "git-repo"
-  url = "https://github.com/tanweai/pua"
-  refreshPeriod = "72h"
-  clone.args = ["--filter=blob:none"]
-  pull.args = ["--ff-only"]
-  x.skills = ["pua=skills/pua"]
 
 [".agents/skill-sources/notebooklm-skill"]
   type = "git-repo"
