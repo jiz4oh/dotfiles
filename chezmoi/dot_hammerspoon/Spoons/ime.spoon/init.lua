@@ -9,8 +9,8 @@ obj.author = "Qiangning Hong, jiz4oh"
 obj.license = "MIT"
 
 obj.defaultHotkeys = {
-  cn = { { "cmd", "alt" }, "c" },
-  en = { { "cmd", "alt" }, "e" },
+  cn = { { "cmd", "ctrl", "alt" }, "c" },
+  en = { { "cmd", "ctrl", "alt" }, "e" },
 }
 
 local sources = {
