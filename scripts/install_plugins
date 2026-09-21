@@ -1,0 +1,206 @@
+#!/usr/bin/env python3
+
+import argparse
+import json
+import os
+import shlex
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+
+SUPPORTED_AGENTS = {"codex"}
+
+
+def load_plugins(source_dir, timeout):
+    command = [
+        "chezmoi",
+        "--source",
+        str(source_dir),
+        "execute-template",
+        "{{ .plugins | toJson }}",
+    ]
+    result = subprocess.run(
+        command,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+    )
+    try:
+        entries = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise RuntimeError("chezmoi returned invalid plugin registry JSON") from error
+    if not isinstance(entries, list):
+        raise ValueError("plugin registry must contain a plugins array")
+
+    plugin_ids = set()
+    marketplace_specs = {}
+    for index, entry in enumerate(entries, 1):
+        if not isinstance(entry, dict):
+            raise ValueError(f"plugin entry {index} must be a table")
+        missing = [
+            field
+            for field in ("agent", "marketplace", "plugin", "source")
+            if not isinstance(entry.get(field), str)
+        ]
+        if missing:
+            raise ValueError(f"plugin entry {index} is missing string fields: {', '.join(missing)}")
+
+        plugin_id = f"{entry['plugin']}@{entry['marketplace']}"
+        if plugin_id in plugin_ids:
+            raise ValueError(f"duplicate plugin entry: {plugin_id}")
+        plugin_ids.add(plugin_id)
+
+        for field in ("sparse_paths", "shared_skills"):
+            values = entry.get(field, [])
+            if not isinstance(values, list) or not all(isinstance(item, str) for item in values):
+                raise ValueError(f"plugin entry {plugin_id} has an invalid {field} list")
+
+        ref = entry.get("ref")
+        if ref is not None and not isinstance(ref, str):
+            raise ValueError(f"plugin entry {plugin_id} has a non-string ref")
+
+        marketplace = entry["marketplace"]
+        spec = (entry["source"], ref, tuple(entry.get("sparse_paths", [])))
+        previous = marketplace_specs.setdefault(marketplace, spec)
+        if previous != spec:
+            raise ValueError(f"marketplace {marketplace} has conflicting source settings")
+
+    return entries
+
+
+def marketplace_add_command(binary, entry):
+    command = [binary, "plugin", "marketplace", "add", entry["source"]]
+    if entry.get("ref"):
+        command.extend(["--ref", entry["ref"]])
+    for sparse_path in entry.get("sparse_paths", []):
+        command.extend(["--sparse", sparse_path])
+    return command
+
+
+def marketplace_upgrade_command(binary, marketplace):
+    return [binary, "plugin", "marketplace", "upgrade", marketplace]
+
+
+def plugin_add_command(binary, entry):
+    return [binary, "plugin", "add", f"{entry['plugin']}@{entry['marketplace']}"]
+
+
+def print_command(command, *, dry_run):
+    prefix = "would run" if dry_run else "run"
+    print(f"{prefix}: {shlex.join(command)}")
+
+
+def run(command, *, dry_run, timeout):
+    print_command(command, dry_run=dry_run)
+    if dry_run:
+        return
+    subprocess.run(command, check=True, timeout=timeout)
+
+
+def codex_json(binary, arguments, timeout):
+    command = [binary, "plugin", *arguments, "--json"]
+    result = subprocess.run(
+        command,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+    )
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise RuntimeError(f"Codex returned invalid JSON for {shlex.join(command)}") from error
+
+
+def existing_marketplaces(binary, timeout):
+    document = codex_json(binary, ["marketplace", "list"], timeout)
+    return {
+        item.get("name"): item
+        for item in document.get("marketplaces", [])
+        if item.get("name")
+    }
+
+
+def sync_codex(entries, *, binary, dry_run, timeout):
+    entries = [entry for entry in entries if entry["agent"] == "codex"]
+    if not entries:
+        return
+
+    if dry_run:
+        marketplaces = {}
+    else:
+        marketplaces = existing_marketplaces(binary, timeout)
+
+    upgraded = set()
+    for entry in entries:
+        marketplace = entry["marketplace"]
+        existing = marketplaces.get(marketplace)
+        if existing is None:
+            run(marketplace_add_command(binary, entry), dry_run=dry_run, timeout=timeout)
+            marketplaces[marketplace] = {"name": marketplace, "marketplaceSource": {"source": entry["source"]}}
+        else:
+            actual_source = existing.get("marketplaceSource", {}).get("source")
+            if actual_source != entry["source"]:
+                print(
+                    f"warn: skip {entry['plugin']}@{marketplace}: "
+                    f"configured source is {actual_source!r}, desired {entry['source']!r}",
+                    file=sys.stderr,
+                )
+                continue
+
+        if marketplace not in upgraded:
+            run(marketplace_upgrade_command(binary, marketplace), dry_run=dry_run, timeout=timeout)
+            upgraded.add(marketplace)
+
+        # Codex has no separate plugin upgrade command; re-running `add` is the
+        # native install/update path after the marketplace snapshot is refreshed.
+        run(plugin_add_command(binary, entry), dry_run=dry_run, timeout=timeout)
+
+
+def main():
+    script_dir = Path(__file__).resolve().parent
+    default_source = script_dir.parent
+    parser = argparse.ArgumentParser(description="Install and refresh native agent plugins.")
+    parser.add_argument("--source", type=Path, default=default_source)
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--codex", default="codex", help="Codex executable")
+    parser.add_argument("--timeout", type=float, default=30.0)
+    args = parser.parse_args()
+    dry_run = args.dry_run or os.environ.get("DRY_RUN") == "1"
+
+    try:
+        entries = load_plugins(args.source.resolve(), args.timeout)
+    except (OSError, subprocess.SubprocessError, ValueError, RuntimeError) as error:
+        raise SystemExit(f"invalid plugin registry: {error}") from error
+
+    unsupported = sorted({entry["agent"] for entry in entries if entry["agent"] not in SUPPORTED_AGENTS})
+    for agent in unsupported:
+        print(f"skip unsupported agent: {agent}", file=sys.stderr)
+
+    codex_entries = [entry for entry in entries if entry["agent"] == "codex"]
+    if not codex_entries:
+        print("plugins sync complete: no supported plugin entries")
+        return 0
+
+    if dry_run:
+        binary = args.codex
+    else:
+        binary = shutil.which(args.codex) if not Path(args.codex).is_file() else args.codex
+        if binary is None:
+            print("skip Codex plugins: codex executable is unavailable", file=sys.stderr)
+            return 0
+
+    try:
+        sync_codex(codex_entries, binary=binary, dry_run=dry_run, timeout=args.timeout)
+    except (OSError, subprocess.SubprocessError, RuntimeError) as error:
+        raise SystemExit(f"plugin sync failed: {error}") from error
+
+    print("plugins sync complete")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

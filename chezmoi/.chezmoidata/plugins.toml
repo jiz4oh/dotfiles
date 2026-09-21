@@ -1,0 +1,19 @@
+# Plugin desired state. Keep this separate from skills.toml:
+# plugin-bundled skills remain private to the native agent plugin unless they
+# are explicitly registered in .chezmoiexternals/skills.toml.tmpl as well.
+
+[[plugins]]
+agent = "codex"
+marketplace = "openviking"
+plugin = "openviking-memory"
+source = "https://github.com/volcengine/OpenViking.git"
+ref = "main"
+sparse_paths = ["examples/codex-memory-plugin", ".agents"]
+shared_skills = []
+
+[[plugins]]
+agent = "codex"
+marketplace = "ponytail"
+plugin = "ponytail"
+source = "https://github.com/DietrichGebert/ponytail.git"
+shared_skills = []
