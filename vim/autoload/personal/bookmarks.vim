@@ -2,7 +2,6 @@ let s:lock_timeout = 1.0
 let s:stale_lock_age = 5
 
 let s:default_bookmarks = [
-            \ $MYVIMRC,
             \ "$HOME/.local/share/chezmoi/",
             \ "$HOME/.Trash",
             \ "$HOME/Library/Mobile Documents/com~apple~CloudDocs",
