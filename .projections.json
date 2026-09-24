@@ -1,4 +1,7 @@
 {
+  "chezmoi/dot_*": {
+    "type": "dot"
+  },
   "chezmoi/.chezmoiexternals": {
     "type": "chezmoiexternal"
   },
