@@ -17,3 +17,11 @@ marketplace = "ponytail"
 plugin = "ponytail"
 source = "https://github.com/DietrichGebert/ponytail.git"
 shared_skills = []
+
+[[plugins]]
+agent = "opencode"
+plugin = "@openviking/opencode-plugin"
+
+[[plugins]]
+agent = "opencode"
+plugin = "./scripts/opencode_ponytail"

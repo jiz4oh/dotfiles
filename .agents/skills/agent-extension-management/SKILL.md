@@ -10,7 +10,7 @@ description: 在本 chezmoi 仓库中新增或调整 agent skill、原生 plugin
 - 共享 skill：登记在 `chezmoi/.chezmoiexternals/skills.toml.tmpl`，由
   `scripts/install_skills` 链接到 `~/.agents/skills`。
 - 原生 plugin：登记在 `chezmoi/.chezmoidata/plugins.toml`，由目标 agent 的
-  原生命令安装。当前只实现 Codex adapter。
+  原生机制安装。当前支持 Codex 和 OpenCode（OpenChamber 的运行时）。
 
 ## 先判断类型
 
@@ -21,8 +21,8 @@ description: 在本 chezmoi 仓库中新增或调整 agent skill、原生 plugin
 3. 两者都需要：两个 registry 都显式登记，职责保持独立。
 
 OpenViking 属于第 2 类：它的 Codex plugin 包含 hooks、MCP 和 bundled skills；
-当前只安装 plugin，bundled skills 留在 plugin 私有目录。`ponytail` 同样只按
-plugin 管理。`pua`、`superpowers` 等未登记 source 保持现状。
+bundled skills 留在 plugin 私有目录。`ponytail` 的共享 skills 已在
+`skills.toml.tmpl` 独立登记。`pua`、`superpowers` 等未登记 source 保持现状。
 
 ## 添加共享 skill
 
@@ -42,9 +42,9 @@ x.skills = ["skill-name=path/to/skill"]
 时才使用 `*=relative/directory`。不要把 plugin marketplace 或
 `plugin.json` 自动发现逻辑塞进 `install_skills`。
 
-## 添加 Codex plugin
+## 添加原生 plugin
 
-在 `chezmoi/.chezmoidata/plugins.toml` 增加一条记录：
+在 `chezmoi/.chezmoidata/plugins.toml` 为每个目标 agent 各加一条记录：
 
 ```toml
 [[plugins]]
@@ -55,6 +55,10 @@ source = "https://github.com/vendor/repo.git"
 ref = "main"
 sparse_paths = ["path/to/marketplace", ".agents"]
 shared_skills = []
+
+[[plugins]]
+agent = "opencode"
+plugin = "@vendor/opencode-plugin"
 ```
 
 `ref` 和 `sparse_paths` 按 marketplace 实际布局填写；没有 sparse checkout
@@ -62,13 +66,20 @@ shared_skills = []
 skill 自动暴露到 `~/.agents/skills`；需要共享时，还要在 `skills.toml.tmpl`
 中显式登记 source/path。
 
-当前脚本支持 `agent = "codex"`，执行的原生命令等价于：
+`agent = "codex"` 执行的原生命令等价于：
 
 ```sh
 codex plugin marketplace add <source> [--ref <ref>] [--sparse <path> ...]
 codex plugin marketplace upgrade <marketplace>
 codex plugin add <plugin>@<marketplace>
 ```
+
+OpenCode v2 记录使用 `agent = "opencode"` 和 `plugin` 包名或适配目录；
+`./` 开头的路径相对仓库根目录解析。`scripts/install_plugins` 会把目标追加到
+`~/.config/opencode/opencode.json` 的 `plugins` 数组，并保留其他配置；
+OpenChamber 由 OpenCode 加载该目标。没有 OpenCode 原生实现时不增加 OpenCode
+记录；不要把 Codex plugin 名称原样当作 OpenCode 包。OpenCode 同时从
+`~/.agents/skills` 发现共享 skill。
 
 脚本不会维护 `~/.agents/plugins/marketplace.json`，也不会纳入 OpenAI bundled
 或 runtime plugin。其他 agent 可以先在同一 registry 增加记录；在增加对应
@@ -98,5 +109,9 @@ chezmoi --source "$PWD" diff
 codex plugin marketplace list --json
 codex plugin list --json
 ```
+
+OpenCode / OpenChamber 用 `scripts/install_plugins --opencode-only` 定向同步，
+再核对 `~/.config/opencode/opencode.json` 的 `plugins` 数组。新插件在 OpenCode
+下一次启动时加载；不要为了验证而中断正在运行的会话。
 
 不要为了验证而执行 `codex plugin remove`、清理 cache 或删除未登记扩展。
