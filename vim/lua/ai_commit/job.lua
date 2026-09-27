@@ -5,7 +5,7 @@ local cli = require("ai_commit.cli")
 
 local JOB = {}
 
-local retry_next_model
+local retry_after_timeout
 
 local function start_timeout()
   UI.stop_timeout()
@@ -24,31 +24,24 @@ local function start_timeout()
       if job and job.is_closing ~= nil and not job:is_closing() then
         job:kill(15)
       end
-      state.cleanup_tempfile()
       UI.notify("Commit message generation timed out", vim.log.levels.WARN)
-      retry_next_model()
+      retry_after_timeout()
     end)
   end)
 end
 
-function JOB.run_job_for_current_model()
-  local cli_obj = state.cli
+function JOB.run_job()
+  local api = state.api
   local prompt = state.prompt
   local cwd = state.cwd
 
-  if not cli_obj or not prompt or not cwd then
+  if not api or not prompt or not cwd then
     UI.hide_popup()
     UI.notify("Internal state lost", vim.log.levels.ERROR)
     return
   end
 
-  local model = cli.get_current_model()
-  local command, opts = cli.build_cli_invocation(cli_obj, prompt, model)
-  if not command or not opts then
-    UI.hide_popup()
-    UI.notify("Unsupported AI CLI backend", vim.log.levels.ERROR)
-    return
-  end
+  local command, opts = cli.build_openai_invocation(api, prompt, state.model)
 
   UI.start_spinner()
   start_timeout()
@@ -63,12 +56,10 @@ function JOB.run_job_for_current_model()
       end
       if not UI.buf_is_valid(state.popup_buf) then
         UI.stop_timeout()
-        state.cleanup_tempfile()
         return
       end
       if state.timed_out then
         UI.stop_timeout()
-        state.cleanup_tempfile()
         return
       end
 
@@ -78,16 +69,15 @@ function JOB.run_job_for_current_model()
         UI.set_popup_lines({
           "AI generation failed.",
           "",
-          cli.read_error(cli_obj, obj),
+          cli.read_openai_error(obj),
         })
         vim.bo[state.popup_buf].modifiable = false
         UI.notify("Commit message generation failed", vim.log.levels.ERROR)
-        state.cleanup_tempfile()
         state.job = nil
         return
       end
 
-      local output, output_err = cli.read_cli_output(cli_obj, obj)
+      local output, output_err = cli.read_openai_response(obj)
       state.job = nil
       if not output then
         UI.stop_spinner()
@@ -102,16 +92,10 @@ function JOB.run_job_for_current_model()
   end)
 end
 
-retry_next_model = function()
-  state.retry_count = state.retry_count + 1
+retry_after_timeout = function()
   state.total_retries = state.total_retries + 1
 
-  if state.retry_count > config.max_retries then
-    state.model_index = state.model_index + 1
-    state.retry_count = 0
-  end
-
-  if #state.model_list == 0 or state.model_index >= #state.model_list then
+  if state.total_retries > config.max_retries then
     UI.render_timeout()
     return
   end
@@ -119,8 +103,7 @@ retry_next_model = function()
   state.timed_out = false
   state.generation = state.generation + 1
   UI.stop_spinner()
-  state.cleanup_tempfile()
-  JOB.run_job_for_current_model()
+  JOB.run_job()
 end
 
 return JOB

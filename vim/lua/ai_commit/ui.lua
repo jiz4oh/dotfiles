@@ -1,8 +1,13 @@
 local state = require("ai_commit.state")
 local config = require("ai_commit.config")
-local cli = require("ai_commit.cli")
 
 local UI = {}
+
+local function generation_message(frame)
+  local model_info = state.model and string.format(" [%s]", state.model) or ""
+  local progress = frame and (" " .. frame) or ""
+  return string.format("Generating OpenAI commit message%s...%s", model_info, progress)
+end
 
 function UI.notify(msg, level)
   vim.notify(msg, level or vim.log.levels.INFO, { title = "AICommit" })
@@ -51,11 +56,8 @@ function UI.destroy_popup()
     vim.api.nvim_buf_delete(state.popup_buf, { force = true })
   end
 
-  state.cleanup_tempfile()
-
   state.popup_buf = nil
   state.popup_win = nil
-  state.backend = nil
 end
 
 function UI.hide_popup()
@@ -88,15 +90,9 @@ function UI.update_spinner_line()
   local frame = config.spinner_frames[state.spinner_index]
   state.spinner_index = (state.spinner_index % #config.spinner_frames) + 1
 
-  local backend = state.backend or "ai"
-  local current_model = cli.get_current_model()
-  local model_info = ""
-  if current_model then
-    model_info = string.format(" [%s]", current_model)
-  end
   vim.bo[state.popup_buf].modifiable = true
   vim.api.nvim_buf_set_lines(state.popup_buf, 0, 1, false, {
-    string.format("Generating %s commit message%s... %s", backend, model_info, frame),
+    generation_message(frame),
   })
   vim.bo[state.popup_buf].modifiable = false
 end
@@ -156,12 +152,11 @@ function UI.create_popup_window()
   vim.keymap.set("n", "q", UI.hide_popup, { buffer = state.popup_buf, silent = true })
 end
 
-function UI.open_popup(target_buf, target_win, backend)
+function UI.open_popup(target_buf, target_win)
   UI.destroy_popup()
 
   state.target_buf = target_buf
   state.target_win = target_win
-  state.backend = backend
   state.popup_buf = vim.api.nvim_create_buf(false, true)
   vim.bo[state.popup_buf].buftype = "nofile"
   vim.bo[state.popup_buf].bufhidden = "hide"
@@ -171,7 +166,7 @@ function UI.open_popup(target_buf, target_win, backend)
   UI.create_popup_window()
 
   UI.set_popup_lines({
-    string.format("Generating %s commit message...", state.backend or "ai"),
+    generation_message(),
     "",
     "Keys:",
     "  <C-y> apply to current gitcommit buffer",

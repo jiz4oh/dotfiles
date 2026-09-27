@@ -1,20 +1,7 @@
 return {
-  model = {
-    openai = os.getenv("OPENAI_MODEL") or "gpt-5.6-luna",
-    codex = "gpt-5.6-luna",
-    opencode = {
-      "openai/gpt-5.6-luna",
-      "openrouter/deepseek/deepseek-v4-flash",
-      "deepseek/deepseek-v4-flash",
-    },
-  },
-  backend = nil,
-  command = nil,
-  preferred_backends = { "openai", "opencode", "codex" },
-  preferred_commands = { "opencode", "codex" },
+  model = os.getenv("OPENAI_MODEL") or "gpt-5.6-luna",
   max_title_width = 50,
   body_width = 72,
-  reasoning_effort = "low",
   timeout_ms = 10000,
   max_retries = 2,
   spinner_frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },

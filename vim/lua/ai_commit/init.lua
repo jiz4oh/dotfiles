@@ -33,9 +33,9 @@ function M.generate()
     return
   end
 
-  local resolved_cli, cli_err = cli.resolve_cli()
-  if not resolved_cli then
-    UI.notify(cli_err, vim.log.levels.ERROR)
+  local api, api_err = cli.resolve_openai()
+  if not api then
+    UI.notify(api_err, vim.log.levels.ERROR)
     return
   end
 
@@ -46,18 +46,16 @@ function M.generate()
     return
   end
 
-  state.backend = resolved_cli.backend
-  state.cli = resolved_cli
+  state.api = api
+  state.model = cli.get_model()
   state.prompt = cli.build_prompt(diff)
   state.cwd = cwd
-  state.model_list = cli.resolve_models(resolved_cli.backend)
-  state.model_index = 0
   state.retry_count = 0
   state.total_retries = 0
   state.generation = state.generation + 1
 
-  UI.open_popup(target_buf, target_win, resolved_cli.backend)
-  JOB.run_job_for_current_model()
+  UI.open_popup(target_buf, target_win)
+  JOB.run_job()
 end
 
 function M.setup(opts)
