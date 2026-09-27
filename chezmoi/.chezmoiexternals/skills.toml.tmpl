@@ -73,6 +73,14 @@
   pull.args = ["--ff-only"]
   x.skills = ["notellm=."]
 
+[".agents/skill-sources/reverse-skill"]
+  type = "git-repo"
+  url = "https://github.com/zhaoxuya520/reverse-skill.git"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["reverse-skill-router=skills", "*=skills"]
+
 [".agents/skills/tg-cli"]
   type = "git-repo"
   url = "https://github.com/jackwener/tg-cli"
