@@ -37,7 +37,7 @@
   refreshPeriod = "72h"
   clone.args = ["--filter=blob:none"]
   pull.args = ["--ff-only"]
-  x.skills = ["read=skills/read", "write=skills/write", "think=skills/think", "learn=skills/learn", "hunt=skills/hunt", "health=skills/health", "ui=skills/ui", "check=skills/check"]
+  x.skills = ["Waza=skills"]
 
 [".agents/skill-sources/mattpocock"]
   type = "git-repo"
@@ -48,7 +48,7 @@
   # Keep the stable engineering group discoverable as upstream adds skills.
   # `handoff` stays first-party, so productivity skills are listed explicitly.
   x.skills = [
-    "*=skills/engineering",
+    "mattpocock-engneering=skills/engineering",
     "grill-me=skills/productivity/grill-me",
     "grilling=skills/productivity/grilling",
     "teach=skills/productivity/teach",
@@ -79,7 +79,7 @@
   refreshPeriod = "72h"
   clone.args = ["--filter=blob:none"]
   pull.args = ["--ff-only"]
-  x.skills = ["reverse-skill-router=skills", "*=skills"]
+  x.skills = ["reverse-skill-router=skills"]
 
 [".agents/skills/tg-cli"]
   type = "git-repo"
