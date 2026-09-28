@@ -1,0 +1,22 @@
+opencode:
+  managed:
+    disabled_providers:
+      - openrouter
+
+    agent:
+      plan:
+        disable: true
+      general:
+        disable: true
+
+    mcp:
+      servers:
+        reqable:
+          type: local
+          command:
+            - /Applications/Reqable.app/Contents/Helpers/mcp-server
+
+    providers:
+      openai:
+        settings:
+          baseURL: http://qnap.ts.jiz4oh.com:8317/v1

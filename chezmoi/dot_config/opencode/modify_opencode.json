@@ -1,0 +1,12 @@
+{{- /* chezmoi:modify-template */ -}}
+
+{{- $current := dict -}}
+{{- if ne (trim .chezmoi.stdin) "" -}}
+  {{- $current = fromJson .chezmoi.stdin -}}
+{{- end -}}
+
+{{- $managed := .opencode.managed -}}
+
+{{- $merged := mergeOverwrite $current $managed -}}
+
+{{ $merged | toPrettyJson }}
