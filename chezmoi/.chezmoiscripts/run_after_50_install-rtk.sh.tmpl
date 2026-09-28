@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+
+if ! command -v rtk >/dev/null 2>&1; then
+  exit 0
+fi
+
+rtk init --global --opencode --auto-patch --hook-only
+rtk init --global --codex
