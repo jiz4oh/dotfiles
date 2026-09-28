@@ -1,4 +1,6 @@
 .codex/
+.opencode/
+.openchamber/
 .claude/
 .gemini/
 .omx/
