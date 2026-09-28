@@ -21,7 +21,3 @@ shared_skills = []
 [[plugins]]
 agent = "opencode"
 plugin = "@openviking/opencode-plugin"
-
-[[plugins]]
-agent = "opencode"
-plugin = "./scripts/opencode_ponytail"

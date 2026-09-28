@@ -1,6 +1,0 @@
-{
-  "name": "local-ponytail-opencode-v2",
-  "version": "1.0.0",
-  "type": "module",
-  "exports": "./index.mjs"
-}
