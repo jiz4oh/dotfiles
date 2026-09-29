@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -z "${ROOT_PROJECT_PATH:-}" ]]; then
+  echo "Skip setup-worktree: ROOT_PROJECT_PATH is not set."
+  exit 0
+fi
+
+if [[ ! -d "$ROOT_PROJECT_PATH" ]]; then
+  echo "Skip setup-worktree: ROOT_PROJECT_PATH does not exist: $ROOT_PROJECT_PATH"
+  exit 0
+fi
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/worktree"
+
+default_include="$config_dir/include"
+default_link="$config_dir/link"
+
+project_include="$ROOT_PROJECT_PATH/.worktreeinclude"
+project_link="$ROOT_PROJECT_PATH/.worktreelink"
+
+process_rules() {
+  local mode="$1"
+  local rules_file="$2"
+
+  if [[ ! -f "$rules_file" ]]; then
+    echo "Skip rules: $rules_file not found."
+    return 0
+  fi
+
+  while IFS= read -r entry || [[ -n "$entry" ]]; do
+    # Trim leading/trailing whitespace.
+    entry="${entry#"${entry%%[![:space:]]*}"}"
+    entry="${entry%"${entry##*[![:space:]]}"}"
+
+    # Skip blank lines and comments.
+    [[ -z "$entry" || "$entry" == \#* ]] && continue
+
+    local src="$ROOT_PROJECT_PATH/$entry"
+    local dst="$PWD/$entry"
+
+    # Never overwrite anything already present in the worktree.
+    if [[ -e "$dst" || -L "$dst" ]]; then
+      echo "Skip existing: $entry"
+      continue
+    fi
+
+    # Missing source is expected and should not fail setup.
+    if [[ ! -e "$src" && ! -L "$src" ]]; then
+      echo "Skip missing: $entry"
+      continue
+    fi
+
+    if ! mkdir -p "$(dirname "$dst")"; then
+      echo "Skip $mode: failed to create parent directory: $entry"
+      continue
+    fi
+
+    case "$mode" in
+      copy)
+        if cp -a "$src" "$dst"; then
+          echo "Copied: $entry"
+        else
+          echo "Skip copy: failed: $entry"
+        fi
+        ;;
+
+      link)
+        if ln -s "$src" "$dst"; then
+          echo "Linked: $entry"
+        else
+          echo "Skip link: failed: $entry"
+        fi
+        ;;
+
+      *)
+        echo "Skip unknown mode: $mode"
+        ;;
+    esac
+  done < "$rules_file"
+}
+
+include_file="$default_include"
+link_file="$default_link"
+
+[[ -f "$project_include" ]] && include_file="$project_include"
+[[ -f "$project_link" ]] && link_file="$project_link"
+
+process_rules copy "$include_file"
+process_rules link "$link_file"

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/worktree"
+
+copy_default() {
+  local source="$1"
+  local target="$2"
+
+  if [[ -e "$target" ]]; then
+    echo "Exists, skip: $target"
+    return
+  fi
+
+  if [[ ! -f "$source" ]]; then
+    echo "Default not found: $source"
+    return
+  fi
+
+  cp "$source" "$target"
+  echo "Created: $target"
+}
+
+copy_default "$config_dir/include" ".worktreeinclude"
+copy_default "$config_dir/link" ".worktreelink"
