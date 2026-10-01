@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+#MISE description="Link declared project skills from chezmoi"
+set -euo pipefail
+
+project_root="${MISE_ORIGINAL_CWD}"
+manifest="$project_root/.agents/skills.manifest"
+target_dir="$project_root/.agents/skills"
+
+if [[ ! -f "$manifest" ]]; then
+  echo "No $manifest found; skipping project skills."
+  exit 0
+fi
+
+chezmoi_source="$(chezmoi source-path)"
+skill_source="$chezmoi_source/.chezmoitemplates/skills"
+
+if [[ ! -d "$skill_source" ]]; then
+  echo "Project skill source not found: $skill_source" >&2
+  exit 1
+fi
+
+mkdir -p "$target_dir"
+
+while IFS= read -r skill || [[ -n "$skill" ]]; do
+  # Strip comments and surrounding whitespace.
+  skill="${skill%%#*}"
+  skill="${skill#"${skill%%[![:space:]]*}"}"
+  skill="${skill%"${skill##*[![:space:]]}"}"
+
+  [[ -z "$skill" ]] && continue
+
+  source="$skill_source/$skill"
+  target="$target_dir/$skill"
+
+  if [[ ! -d "$source" ]]; then
+    echo "Skill not found: $skill" >&2
+    exit 1
+  fi
+
+  if [[ -e "$target" || -L "$target" ]]; then
+    echo "Skip existing: $target"
+    continue
+  fi
+
+  ln -s "$source" "$target"
+  echo "Linked: $skill"
+done < "$manifest"

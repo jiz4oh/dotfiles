@@ -88,3 +88,7 @@ link_file="$default_link"
 
 process_rules copy "$include_file"
 process_rules link "$link_file"
+
+if [[ -f "$ROOT_PROJECT_PATH/.agents/skills.manifest" ]]; then
+  mise run setup-skills
+fi
