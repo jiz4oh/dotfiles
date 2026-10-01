@@ -1,5 +1,7 @@
 opencode:
   managed:
+    default_agent: build
+
     disabled_providers:
       - openrouter
 
