@@ -1,9 +1,13 @@
 #!/bin/sh
 set -eu
 
-if ! command -v rtk >/dev/null 2>&1; then
+if ! command -v mise >/dev/null 2>&1; then
   exit 0
 fi
 
-rtk init --global --opencode --auto-patch --hook-only
-rtk init --global --codex
+if ! mise which rtk >/dev/null 2>&1; then
+  exit 0
+fi
+
+mise exec -- rtk init --global --opencode --auto-patch --hook-only
+mise exec -- rtk init --global --codex
