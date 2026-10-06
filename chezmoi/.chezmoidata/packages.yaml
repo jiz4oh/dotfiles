@@ -29,11 +29,8 @@ packages:
       - name: wget
       - name: zsh
     casks:
-      - alt-tab
       - android-platform-tools
       - bitwarden
-      - codexbar
-      - codeisland
       - font-hack-nerd-font
       - hammerspoon
       - imageoptim
@@ -56,7 +53,6 @@ packages:
       - snipaste
       - squirrel-app
       - telegram
-      - thaw
       - ticktick
       - kap
     services:
