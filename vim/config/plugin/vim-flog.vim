@@ -96,7 +96,33 @@ function! s:reset(hashes)
 endfunction
 
 function! s:init() abort
-  nnoremap <silent> <buffer> o   :vertical Flogsplitcommit<cr>
+  let b:start = ':Floggit' . (exists('*setbufline') && !exists('$SSH_CLIENT') ? '!' : '') . ' push'
+  execute "nnoremap <buffer> '<Space> " . b:start . '<Space>'
+  nnoremap <silent> <buffer> cbt :execute 'Floggit branch --set-upstream-to=origin/' . FugitiveHead()<CR>
+  nnoremap <buffer> cmf :Floggit merge -X theirs<Space>
+  nnoremap <buffer> cp  :Floggit cherry-pick<Space>
+  nnoremap <buffer> cbd :Floggit branch -d<Space>
+  nnoremap <buffer> cbD :Floggit branch -D<Space>
+
+  nmap <buffer> cn <Plug>(FlogSquashEdit)
+  nmap <buffer> cA <Plug>(FlogSquashEdit)
+  nnoremap <silent> <buffer> cw  :<C-U>Floggit commit --amend --only<CR>
+  nnoremap <silent> <buffer> cvc :<C-U>tab Floggit commit -v<CR>
+  nnoremap <silent> <buffer> cva :<C-U>tab Floggit commit -v --amend<CR>
+
+  nnoremap <buffer> cz<Space> :Floggit stash<Space>
+  nnoremap <buffer> cz<CR> :Floggit stash<CR>
+  nnoremap <buffer> cza :<C-U>Floggit stash apply --quiet --index stash@{<C-R>=v:count<CR>}<CR>
+  nnoremap <buffer> czA :<C-U>Floggit stash apply --quiet stash@{<C-R>=v:count<CR>}<CR>
+  nnoremap <buffer> czp :<C-U>Floggit stash pop --quiet --index stash@{<C-R>=v:count<CR>}<CR>
+  nnoremap <buffer> czP :<C-U>Floggit stash pop --quiet stash@{<C-R>=v:count<CR>}<CR>
+  nnoremap <buffer> czs :<C-U>Floggit stash push --staged<CR>
+  nnoremap <silent> <buffer> czv :<C-U>call flog#Exec('Gedit ' . fugitive#RevParse('stash@{' . v:count . '}'))<CR>
+  nnoremap <buffer> czw :<C-U>Floggit stash push --keep-index<C-R>=v:count > 1 ? ' --all' : v:count ? ' --include-untracked' : ''<CR><CR>
+  nnoremap <buffer> czz :<C-U>Floggit stash push <C-R>=v:count > 1 ? ' --all' : v:count ? ' --include-untracked' : ''<CR><CR>
+  nnoremap <silent> <buffer> cz? :help fugitive_cz<CR>
+
+  nnoremap <silent> <buffer> o   :execute flog#Format('vertical Floggit -s -t show --remerge-diff %h')<CR>
   nnoremap <silent> <buffer> cr1 :execute flog#Format('Floggit revert -m 1 %h')<cr>
   nnoremap <silent> <buffer> cr2 :execute flog#Format('Floggit revert -m 2 %h')<cr>
   nnoremap <expr>   <buffer> X   <SID>reset(<SID>hashes('.', 1))
