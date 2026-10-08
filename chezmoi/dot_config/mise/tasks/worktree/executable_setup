@@ -2,12 +2,12 @@
 set -euo pipefail
 
 if [[ -z "${ROOT_PROJECT_PATH:-}" ]]; then
-  echo "Skip setup-worktree: ROOT_PROJECT_PATH is not set."
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip setup-worktree: ROOT_PROJECT_PATH is not set."
   exit 0
 fi
 
 if [[ ! -d "$ROOT_PROJECT_PATH" ]]; then
-  echo "Skip setup-worktree: ROOT_PROJECT_PATH does not exist: $ROOT_PROJECT_PATH"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip setup-worktree: ROOT_PROJECT_PATH does not exist: $ROOT_PROJECT_PATH"
   exit 0
 fi
 
@@ -24,7 +24,7 @@ process_rules() {
   local rules_file="$2"
 
   if [[ ! -f "$rules_file" ]]; then
-    echo "Skip rules: $rules_file not found."
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip rules: $rules_file not found."
     return 0
   fi
 
@@ -41,40 +41,40 @@ process_rules() {
 
     # Never overwrite anything already present in the worktree.
     if [[ -e "$dst" || -L "$dst" ]]; then
-      echo "Skip existing: $entry"
+      echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip existing: $entry"
       continue
     fi
 
     # Missing source is expected and should not fail setup.
     if [[ ! -e "$src" && ! -L "$src" ]]; then
-      echo "Skip missing: $entry"
+      echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip missing: $entry"
       continue
     fi
 
     if ! mkdir -p "$(dirname "$dst")"; then
-      echo "Skip $mode: failed to create parent directory: $entry"
+      echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip $mode: failed to create parent directory: $entry"
       continue
     fi
 
     case "$mode" in
       copy)
         if cp -a "$src" "$dst"; then
-          echo "Copied: $entry"
+          echo "[$(date '+%Y-%m-%d %H:%M:%S')] Copied: $entry"
         else
-          echo "Skip copy: failed: $entry"
+          echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip copy: failed: $entry"
         fi
         ;;
 
       link)
         if ln -s "$src" "$dst"; then
-          echo "Linked: $entry"
+          echo "[$(date '+%Y-%m-%d %H:%M:%S')] Linked: $entry"
         else
-          echo "Skip link: failed: $entry"
+          echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip link: failed: $entry"
         fi
         ;;
 
       *)
-        echo "Skip unknown mode: $mode"
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip unknown mode: $mode"
         ;;
     esac
   done < "$rules_file"
