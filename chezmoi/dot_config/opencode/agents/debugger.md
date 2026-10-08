@@ -1,7 +1,7 @@
 ---
 description: Deep read-only investigator for unclear bugs, unexpected behavior,
   and root-cause analysis.
-model: openai/gpt-6-sol#high
+model: magpie/codex/gpt-6.1-sol#high
 mode: subagent
 permissions:
   - action: edit

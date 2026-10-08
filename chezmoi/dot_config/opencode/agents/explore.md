@@ -1,6 +1,6 @@
 ---
 description: Fast read-only investigator for codebase exploration, dependency tracing, and external technical research.
-model: openai/gpt-6-luna#low
+model: magpie/codex/gpt-6-luna#low
 mode: subagent
 permissions:
   - action: edit

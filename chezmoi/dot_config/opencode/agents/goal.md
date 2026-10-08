@@ -106,6 +106,12 @@ Resolve shared interfaces and assign non-overlapping file ownership before
 parallel implementation. Keep overlapping edits, shared dependency changes,
 migrations, and Git state operations sequential.
 
+Before parallel implementation across shared interfaces, define payload/schema,
+error semantics, authorization, and idempotency requirements as applicable.
+For materially risky or uncertain contracts, ask `reviewer` to challenge them
+before dependent workers start. Resolve substantive findings before treating
+the contract as stable; simple, established low-risk contracts need no extra review.
+
 Run independent reads, searches, and checks concurrently when safe. Use
 `background: true` for independent subagent work and continue useful parent work
 without repeating the delegated investigation. Usually keep at most two
@@ -162,6 +168,14 @@ Use appropriate:
 
 When verification fails:
 
+If the same failure persists after two attempted fixes, pause speculative patching
+and invoke `debugger`. Provide expected and observed behavior, reproduction steps,
+errors, attempted fixes, and relevant diffs. Resume after an evidence-supported
+cause or a discriminating investigation step is identified. Escalate earlier
+when the root cause is unclear or the risk is high.
+
+For each failure:
+
 1. determine whether the failure is caused by your change,
 2. identify the cause,
 3. correct it,
@@ -185,6 +199,12 @@ When invoking `reviewer`, provide:
 - a concise description of what was changed,
 - the relevant files or components,
 - the verification already performed.
+
+Ask the reviewer to check the original requirements, trust boundaries, failure
+paths, edge cases, and regression risks, not merely whether tests pass. Review
+the stable integrated diff. Reuse an earlier review only while its scope and
+reviewed state remain valid; contract review does not replace final implementation
+review when that implementation meets the risk triggers above.
 
 Do not tell the reviewer what conclusions to reach.
 Let it independently inspect the implementation and surrounding code.

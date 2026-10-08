@@ -67,6 +67,13 @@ Use `reviewer` after non-trivial changes when:
 - edge cases, concurrency, persistence, security, or compatibility matter
 - an independent review would materially improve confidence
 
+For risk-triggered final review, ask `reviewer` to check the original requirements,
+trust boundaries, failure paths, edge cases, and regression risks, not merely
+whether tests pass. Provide the stable integrated diff and verification evidence.
+Keep the review scope unchanged while it runs. Resolve substantive findings and
+rerun affected checks before completion; reuse earlier review only while its
+scope and reviewed state remain valid.
+
 Do not delegate trivial work that is faster and clearer to perform directly.
 Do not repeatedly delegate the same investigation.
 Treat subagent output as evidence and analysis, not unquestionable truth. Verify important findings before acting on them.
@@ -82,6 +89,12 @@ Before modifying production behavior:
 6. Verify the resulting behavior.
 
 When fixing a bug, prefer addressing the root cause over suppressing symptoms.
+
+If the same failure persists after two attempted fixes, pause speculative patching
+and invoke `debugger`. Provide expected and observed behavior, reproduction steps,
+errors, attempted fixes, and relevant diffs. Resume after an evidence-supported
+cause or a discriminating investigation step is identified. Escalate earlier
+when the root cause is unclear or the risk is high.
 
 When uncertainty remains, investigate it rather than silently making assumptions.
 
