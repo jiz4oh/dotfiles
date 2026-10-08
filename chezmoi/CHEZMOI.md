@@ -61,9 +61,6 @@ chezmoi --source "$PWD" diff
   `~/.agents/hooks/agents-memory`。`scripts/install_agent_memory_hooks.py` 只合并
   自己标记的 Codex、Claude Code、Gemini CLI hook，保留已有配置；
   `run_after_32_install_agent_memory_hooks.sh.tmpl` 在每次 apply 后幂等执行。
-- OpenCode 使用受管的全局本地插件
-  `~/.config/opencode/plugins/agents-memory.js` 注入同一条规则，不修改
-  `opencode.json`。
 - Codex 会要求审查新增或变化后的个人 hook 定义；这是它的信任机制，chezmoi
   只负责安装和更新文件。
 
