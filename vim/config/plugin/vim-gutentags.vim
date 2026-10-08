@@ -1,6 +1,13 @@
 if exists('g:project_markers')
-  let g:gutentags_project_root = g:project_markers
+  let g:gutentags_project_root = filter(copy(g:project_markers),
+        \ 'index(["AGENTS.md", "CLAUDE.md"], v:val) < 0')
 endif
+
+let g:gutentags_file_list_command = {
+      \ 'markers': {
+      \   '.git': 'git ls-files --cached --others --exclude-standard',
+      \ },
+      \ }
 
 " Exclude broad roots, while allowing projects nested under them.
 let g:gutentags_exclude_project_root = get(g:, 'gutentags_exclude_project_root',
