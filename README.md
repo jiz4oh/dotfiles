@@ -83,6 +83,25 @@ chezmoi --source "$PWD" apply --dry-run --force --no-tty
 chezmoi update
 ```
 
+## 常用目录跳转
+
+Zsh 使用 zoxide 记录访问过的目录，通过现有 mise 配置安装。首次启用：
+
+```sh
+chezmoi apply ~/.config/mise/config.toml ~/.zshrc
+mise install zoxide
+```
+
+打开新的 Zsh 终端后，先用 `cd` 访问项目，之后可以按关键词跳转：
+
+```sh
+z everymarket      # 跳转到匹配的常用目录
+z work em          # 用多个关键词缩小范围
+zi em              # 通过 fzf 选择目录；Esc 取消
+```
+
+`cd`、`AUTO_CD` 和现有 `ts` 用法保持不变。目录历史保存在本机，不通过 chezmoi 同步。
+
 ## 说明
 
 - 包清单在 [chezmoi/.chezmoidata/packages.yaml](/Users/jiz4oh/.local/share/chezmoi/chezmoi/.chezmoidata/packages.yaml)。
