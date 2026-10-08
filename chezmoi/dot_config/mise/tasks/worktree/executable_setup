@@ -1,8 +1,35 @@
 #!/usr/bin/env bash
+#MISE dir="{{cwd}}"
 set -euo pipefail
 
 if [[ -z "${ROOT_PROJECT_PATH:-}" ]]; then
-  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip setup-worktree: ROOT_PROJECT_PATH is not set."
+  default_branch="$(git symbolic-ref --quiet refs/remotes/origin/HEAD 2>/dev/null || true)"
+  if [[ -n "$default_branch" ]]; then
+    default_branch="refs/heads/${default_branch#refs/remotes/origin/}"
+  else
+    for branch in main master; do
+      if git show-ref --verify --quiet "refs/heads/$branch" 2>/dev/null; then
+        default_branch="refs/heads/$branch"
+        break
+      fi
+    done
+  fi
+
+  if [[ -n "$default_branch" ]]; then
+    while IFS= read -r -d '' field; do
+      case "$field" in
+        worktree\ *) worktree_path="${field#worktree }" ;;
+        "branch $default_branch")
+          ROOT_PROJECT_PATH="$worktree_path"
+          break
+          ;;
+      esac
+    done < <(git worktree list --porcelain -z 2>/dev/null)
+  fi
+fi
+
+if [[ -z "${ROOT_PROJECT_PATH:-}" ]]; then
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Skip setup-worktree: ROOT_PROJECT_PATH is not set and no default branch worktree was found."
   exit 0
 fi
 
