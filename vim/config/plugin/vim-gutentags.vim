@@ -2,6 +2,15 @@ if exists('g:project_markers')
   let g:gutentags_project_root = g:project_markers
 endif
 
+" Exclude broad roots, while allowing projects nested under them.
+let g:gutentags_exclude_project_root = get(g:, 'gutentags_exclude_project_root',
+      \ ['/usr/local', '/opt/homebrew', '/home/linuxbrew/.linuxbrew']) + [
+      \ '/', '/Users', '/home', '/Volumes', '/mnt', '/media', '/tmp', '/var/tmp',
+      \ expand('~'), expand('~/Desktop'), expand('~/Documents'),
+      \ expand('~/Downloads'), expand('~/Library'), expand('~/Projects'),
+      \ expand('~/Code'), expand('~/Workspace'), expand('~/OrbStack'),
+      \ ]
+
 if executable('ripper-tags')
   let g:gutentags_ctags_executable_ruby = 'ripper-tags'
 endif
