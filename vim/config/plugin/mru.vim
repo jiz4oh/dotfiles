@@ -1,4 +1,4 @@
-nnoremap <leader>sf :FZFMru<cr>
+nnoremap <leader>sr :FZFMru<cr>
 
 if g:is_win
   let MRU_Exclude_Files = '^D:\\temp\\.*'           " For MS-Windows

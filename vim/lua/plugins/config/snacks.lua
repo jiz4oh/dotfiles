@@ -33,6 +33,14 @@ return {
       mode = { "n" },
     },
     {
+      "<leader>sf",
+      function()
+        Snacks.picker.files()
+      end,
+      desc = "Open Files",
+      mode = { "n" },
+    },
+    {
       "<leader>sP",
       function()
         Snacks.picker()

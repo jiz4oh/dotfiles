@@ -3,7 +3,7 @@ let g:fzf_mru_no_sort = 1
 command! -nargs=? FZFMru call fzf_mru#actions#mru(<q-args>, fzf#vim#with_preview({'options': '--no-sort --prompt "MRU>"'}))
 command! -nargs=? FZFFreshMru call fzf_mru#mrufiles#refresh() <bar> call fzf_mru#actions#mru(<q-args>, fzf#vim#with_preview({'options': '--no-sort --prompt "MRU>"'}))
 
-nnoremap <leader>sf :FZFMru<cr>
+nnoremap <leader>sr :FZFMru<cr>
 
 if g:is_win
   let g:fzf_mru_exclude = '^D:\\temp\\.*'           " For MS-Windows
