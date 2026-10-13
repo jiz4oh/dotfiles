@@ -17,6 +17,29 @@ chezmoi --source "$PWD" apply --force --no-tty
 chezmoi --source "$PWD" diff
 ```
 
+## 按机器用途配置
+
+`chezmoi/.chezmoi.toml.tmpl` 在初始化时生成带中文注释的 `[data]` 开关：
+
+| 开关 | 管理范围 | 默认值 |
+| --- | --- | --- |
+| `agentTools` | AI 工具清单、skills、原生 plugins、memory hooks、RTK 集成及 agent 配置 | macOS / Omarchy 开启，其他系统关闭 |
+| `devTools` | 开发依赖、mise 语言环境与格式化工具、asdf/rbenv 扩展及开发配置 | macOS / Omarchy 开启，其他系统关闭 |
+| `desktopApps` | GUI 应用、桌面配置、macOS Rime 词库、终端扩展 | macOS / Omarchy 开启，其他系统关闭 |
+| `localServices` | macOS MySQL、PostgreSQL、Redis 安装，以及登记服务的启动 | 关闭 |
+| `tailscaleLanBypass` | Linux Tailscale LAN bypass 策略的安装与执行 | 关闭 |
+
+编辑 `chezmoi edit-config` 打开的配置，在 `[data]` 下设置对应布尔值。
+旧配置缺少开关时，`.chezmoitemplates/features` 使用同样的系统默认值；显式
+`false` 会覆盖默认值。运行 `chezmoi init --source "$PWD"` 可生成带注释的配置，
+已有开关值会保留。
+
+开关决定是否管理资源，系统条件仍决定具体实现；开启 `desktopApps` 不会在
+Linux 安装 macOS 应用，也没有新增 Linux Rime 安装流程。基础 shell、Git、
+编辑器、zsh/tmux 扩展和显式 VPS bootstrap 保留现有管理方式。
+关闭开关不会删除已安装的软件、文件、hooks 或 plugins，也不会停止已有服务；
+这些已有资源可能继续生效。需要清理时应单独迁移。
+
 ## 当前覆盖范围
 
 这次迁移已经把旧 `install` 脚本里的主要内容收进 `chezmoi`：
@@ -45,7 +68,7 @@ chezmoi --source "$PWD" diff
 - `run_after_*`：每次 `chezmoi apply` 完成后执行
 - `run_before_20_refresh_cached_env.sh.tmpl`：每次 apply 前按 `.chezmoidata/cached-env.yaml` 刷新本机 `~/.local/state/chezmoi/cached-env.env`；单项刷新失败时 warning、保留该项上一版缓存并继续其他项
 - `run_onchange_after_29_install_tmux_tpm.sh.tmpl`：目录准备完成后幂等安装或刷新 TPM，避免 external 刷新早于父目录创建
-- `run_after_42_apply_tailscale_lan_bypass.sh.tmpl`：Linux 上每次 apply 都安装并
+- `run_after_42_apply_tailscale_lan_bypass.sh.tmpl`：开启 `tailscaleLanBypass` 后，Linux 上每次 apply 都安装并
   运行 `tailscale-lan-bypass`。仅当本机开启 Accept Routes，且物理直连网段与
   Tailscale 接收路由重叠时，添加 `priority 2500 lookup main` 规则。
   检测兼容不支持 `ip -j` 的旧环境，会回退到 `ifconfig`；写入 Linux 策略路由

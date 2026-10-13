@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-{{- if ne .chezmoi.os "linux" }}
+{{- $features := includeTemplate "features" . | fromJson }}
+{{- if or (not $features.tailscaleLanBypass) (ne .chezmoi.os "linux") }}
 exit 0
 {{- end }}
 

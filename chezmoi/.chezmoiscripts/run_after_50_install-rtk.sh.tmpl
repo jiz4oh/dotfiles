@@ -1,6 +1,11 @@
 #!/bin/sh
 set -eu
 
+{{- $features := includeTemplate "features" . | fromJson }}
+{{- if not $features.agentTools }}
+exit 0
+{{- end }}
+
 if ! command -v mise >/dev/null 2>&1; then
   exit 0
 fi

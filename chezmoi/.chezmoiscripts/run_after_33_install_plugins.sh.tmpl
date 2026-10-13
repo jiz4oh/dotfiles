@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+{{- $features := includeTemplate "features" . | fromJson }}
+{{- if not $features.agentTools }}
+exit 0
+{{- end }}
+
 SOURCE_DIR="{{ .chezmoi.sourceDir }}"
 ROOT_DIR="$(cd "$SOURCE_DIR/.." && pwd)"
 

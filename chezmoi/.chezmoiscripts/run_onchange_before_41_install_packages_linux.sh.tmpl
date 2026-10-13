@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+{{- $features := includeTemplate "features" . | fromJson }}
 
 {{- if ne .chezmoi.os "linux" }}
 exit 0
@@ -30,13 +31,18 @@ case " $DISTRO_ID $DISTRO_LIKE " in
     $SUDO apt-get update -y
     $SUDO apt-get install -y --no-install-recommends \
 {{- range .packages.linux.apt.common }}
+{{- if or $features.devTools (ne . "pre-commit") }}
       {{ . | quote }} \
 {{- end }}
+{{- end }}
+{{- if $features.devTools }}
 {{- range .packages.linux.apt.debian }}
       {{ . | quote }} \
 {{- end }}
+{{- end }}
       >/dev/null
 
+{{- if $features.devTools }}
     if ! command -v ctags >/dev/null 2>&1; then
       release="2023.08.13%2Bce46d93811faefaa75b87e334d768fbf9a831861"
       case "{{ .chezmoi.arch }}" in
@@ -53,6 +59,7 @@ case " $DISTRO_ID $DISTRO_LIKE " in
       tar -C "$tmp_dir" -xf "$tmp_dir/ctags.tar.xz"
       $SUDO install -m 0755 "$tmp_dir/$file/bin/ctags" /usr/local/bin/ctags
     fi
+{{- end }}
     ;;
   *" arch "*|*" omarchy "*)
     command -v pacman >/dev/null 2>&1 || exit 0
@@ -68,7 +75,9 @@ case " $DISTRO_ID $DISTRO_LIKE " in
 
     $SUDO pacman -S --needed --noconfirm \
 {{- range .packages.linux.arch }}
+{{- if or $features.devTools (not (has . (list "pre-commit" "ctags"))) }}
       {{ . | quote }} \
+{{- end }}
 {{- end }}
     ;;
   *)

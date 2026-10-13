@@ -1,4 +1,5 @@
 # https://mise.jdx.dev/configuration.html
+{{- $features := includeTemplate "features" . | fromJson }}
 {{- $isOmarchy := and (eq .chezmoi.os "linux") (eq (get .chezmoi.osRelease "id") "omarchy") }}
 [tools]
 # https://github.com/jdx/mise/blob/main/registry.toml
@@ -13,15 +14,19 @@ usage = "latest"
 {{- end }}
 
 "github:bootandy/dust" = "latest"
-shellcheck = "latest"
 zoxide = "latest"
+{{- if $features.devTools }}
+shellcheck = "latest"
+{{- end }}
 # tirith = "latest"
+{{- if $features.desktopApps }}
 "github:lemonade-command/lemonade" = "latest"
-{{- if $isOmarchy }}
+{{- end }}
+{{- if and $isOmarchy $features.agentTools }}
 # Omarchy's lazy launcher registers Codex in the global mise config.
 codex = "latest"
 {{- end }}
-{{- if eq .chezmoi.os "darwin" }}
+{{- if and $features.desktopApps (eq .chezmoi.os "darwin") }}
 "github:cormiertyshawn895/PixelPerfect" = { version = "latest", no_app = "false" }
 {{- end }}
 

@@ -1,4 +1,5 @@
-{{- if eq .chezmoi.os "darwin" }}
+{{- $features := includeTemplate "features" . | fromJson -}}
+{{- if and $features.desktopApps (eq .chezmoi.os "darwin") }}
 [".config/kitty/kitty_search"]
   type = "git-repo"
   url = "https://github.com/trygveaa/kitty-kitten-search"

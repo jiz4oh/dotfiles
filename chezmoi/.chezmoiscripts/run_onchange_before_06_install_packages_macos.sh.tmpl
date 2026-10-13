@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+{{- $features := includeTemplate "features" . | fromJson }}
 
 {{- if ne .chezmoi.os "darwin" }}
 exit 0
@@ -13,6 +14,7 @@ fi
 warn_count=0
 
 {{- range $tap := .packages.darwin.taps }}
+{{- if or (and $features.desktopApps (eq $tap "localsend/localsend")) (and $features.devTools (ne $tap "localsend/localsend")) }}
 if ! brew tap | grep -qxF {{ $tap | quote }}; then
   if ! out="$(brew tap {{ $tap | quote }} 2>&1)"; then
     warn_count=$((warn_count + 1))
@@ -21,8 +23,11 @@ if ! brew tap | grep -qxF {{ $tap | quote }}; then
   fi
 fi
 {{- end }}
+{{- end }}
 
 {{- range $pkg := .packages.darwin.brews }}
+{{- $group := get $pkg "group" | default "base" }}
+{{- if or (eq $group "base") (get $features $group) }}
 if ! brew list --formula {{ $pkg.name | quote }} >/dev/null 2>&1; then
   if ! out="$(brew install{{ if (get $pkg "head") }} --HEAD{{ end }} {{ $pkg.name | quote }} 2>&1)"; then
     warn_count=$((warn_count + 1))
@@ -31,7 +36,9 @@ if ! brew list --formula {{ $pkg.name | quote }} >/dev/null 2>&1; then
   fi
 fi
 {{- end }}
+{{- end }}
 
+{{- if $features.desktopApps }}
 {{- range $cask := .packages.darwin.casks }}
 if ! brew list --cask {{ $cask | quote }} >/dev/null 2>&1; then
   if ! out="$(brew install --cask {{ $cask | quote }} 2>&1)"; then
@@ -45,7 +52,9 @@ if ! brew list --cask {{ $cask | quote }} >/dev/null 2>&1; then
   fi
 fi
 {{- end }}
+{{- end }}
 
+{{- if $features.localServices }}
 {{- range $service := .packages.darwin.services }}
 if brew list --formula {{ $service | quote }} >/dev/null 2>&1; then
   if ! out="$(brew services start {{ $service | quote }} 2>&1)"; then
@@ -54,6 +63,7 @@ if brew list --formula {{ $service | quote }} >/dev/null 2>&1; then
     printf '%s\n' "$out" >&2
   fi
 fi
+{{- end }}
 {{- end }}
 
 if [ "$warn_count" -gt 0 ]; then

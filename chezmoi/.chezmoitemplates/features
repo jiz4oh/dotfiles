@@ -1,0 +1,15 @@
+{{- /* 旧配置未登记开关时使用系统默认值；显式 false 必须保留。 */ -}}
+{{- $workstation := or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (eq (get .chezmoi.osRelease "id") "omarchy")) -}}
+{{- $features := dict -}}
+{{- range $name := list "agentTools" "devTools" "desktopApps" -}}
+  {{- $_ := set $features $name $workstation -}}
+{{- end -}}
+{{- range $name := list "localServices" "tailscaleLanBypass" -}}
+  {{- $_ := set $features $name false -}}
+{{- end -}}
+{{- range $name, $default := $features -}}
+  {{- if hasKey $ $name -}}
+    {{- $_ := set $features $name (get $ $name) -}}
+  {{- end -}}
+{{- end -}}
+{{- $features | toJson -}}

@@ -1,3 +1,4 @@
+{{- $features := includeTemplate "features" . | fromJson -}}
 # Keep only ephemeral/system artifacts ignored.
 
 install
@@ -55,16 +56,92 @@ Library/Application Support/**
 .raycast/**
 .snipaste/**
 
+{{- end }}
+
+{{- if not $features.agentTools }}
 bin/add_skill
+.agents/skills
 .agents/skills/**
+.agents/hooks
+.agents/hooks/**
 .aider.conf.yml
-.claude/skills/**
+.claude/skills
+.config/opencode
+.config/opencode/**
+.codex
+.codex/**
+.hermes
+.hermes/**
+.config/mise/config.ai.toml
+.config/mise/tasks/setup-skills
+{{- end }}
+
+{{- if not $features.devTools }}
+.config/mise/config.development.toml
+.config/mise/tasks/worktree
+.config/mise/tasks/worktree/**
+.config/worktree
+.config/worktree/**
+.config/pre-commit
+.config/pre-commit/**
+.config/rubocop
+.config/rubocop/**
+.config/solargraph
+.config/solargraph/**
+.ctags.d
+.ctags.d/**
+.default-go-packages
+.default-gems
+.default-npm-packages
+.default-python-packages
+.rbenv
+.rbenv/**
+.railsrc
+.pryrc
+.prettierrc.json
+.prettierignore
+.stylelintrc.json
+bin/asdf_ruby_ctags
+bin/asdf_python_ctags
+bin/install_default_go_packages
+bin/install_default_npm_packages
+bin/install_default_python_packages
+bin/install_default_gems
+{{- end }}
+
+{{- if not $features.desktopApps }}
+bin/macos-askpass
+bin/new_wechat
+bin/open-kitty
+bin/open-wezterm
+bin/report_verification_code
+bin/extract_verification_code
+bin/copy_ntfy
+bin/lemonade-daemon
+.hammerspoon
+.hammerspoon/**
+.raycast
+.raycast/**
+.snipaste
+.snipaste/**
+Library/LaunchAgents
+Library/LaunchAgents/**
+Library/Application Scripts
+Library/Application Scripts/**
+Library/Application Support
+Library/Application Support/**
+.config/kitty
+.config/kitty/**
+.config/wezterm
+.config/wezterm/**
+.kitty.env
+.ideavimrc
 {{- end }}
 
 {{- if or (ne .chezmoi.os "linux") (ne (get .chezmoi.osRelease "id") "debian") }}
 bin/upgrade_debian.sh
 {{- end }}
 
-{{- if ne .chezmoi.os "linux" }}
+{{- if or (ne .chezmoi.os "linux") (not $features.tailscaleLanBypass) }}
 bin/tailscale-lan-bypass
 {{- end }}

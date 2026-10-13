@@ -1,3 +1,26 @@
 {{- $bitwardenEmail := promptStringOnce . "bitwardenEmail" "rbw email" -}}
+{{- $workstation := or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (eq (get .chezmoi.osRelease "id") "omarchy")) -}}
+{{- $agentTools := promptBoolOnce . "agentTools" "启用 agent 工具、skills、plugins 和 hooks" $workstation -}}
+{{- $devTools := promptBoolOnce . "devTools" "启用开发工具和语言环境" $workstation -}}
+{{- $desktopApps := promptBoolOnce . "desktopApps" "启用桌面应用及配置" $workstation -}}
+{{- $localServices := promptBoolOnce . "localServices" "安装本地数据库并启动已登记服务" false -}}
+{{- $tailscaleLanBypass := promptBoolOnce . "tailscaleLanBypass" "启用 Linux Tailscale LAN bypass 策略" false -}}
 [data]
     bitwardenEmail = {{ $bitwardenEmail | quote }}
+
+    # 管理 agent 配置、工具清单、共享 skills、原生 plugins、memory hooks 和 RTK 集成。
+    # 默认：macOS / Omarchy 开启，其他系统关闭。
+    agentTools = {{ $agentTools }}
+    # 管理开发依赖、mise 语言环境、格式化工具及 asdf/rbenv 扩展；基础 shell 工具保留。
+    # 默认：macOS / Omarchy 开启，其他系统关闭。
+    devTools = {{ $devTools }}
+    # 管理 GUI 应用、桌面配置、Rime 词库及终端扩展；具体实现仍受系统限制。
+    # 默认：macOS / Omarchy 开启，其他系统关闭。
+    desktopApps = {{ $desktopApps }}
+    # 在 macOS 安装 MySQL、PostgreSQL、Redis，并启动清单中登记的数据库服务。
+    # 默认关闭；不负责项目服务或 VPS Docker，也不会停止已有服务。
+    localServices = {{ $localServices }}
+    # 在 Linux 安装并执行 Tailscale LAN bypass 策略，需要相关命令及 root/sudo。
+    # 默认关闭；安装 Tailscale 本身不会自动启用此策略。
+    tailscaleLanBypass = {{ $tailscaleLanBypass }}
+    # 关闭上述开关只停止后续管理和安装，不删除已有文件、软件或运行中的服务。
