@@ -31,9 +31,11 @@ Host *
   # 每 30 秒发一次 keepalive，减少空闲连接被中间网络设备踢掉
   ServerAliveInterval=30
 
+{{- if eq .chezmoi.os "darwin" -}}
   # macOS 用钥匙串保存/读取 SSH 密钥口令
   # 下次连接时可自动从 Keychain 里取，不一定每次都手输
   UseKeychain yes
+{{- end }}
 
   # 首次使用私钥时，把它加入本机 ssh-agent
   # 这样同一会话内后续连接通常不会重复问口令
