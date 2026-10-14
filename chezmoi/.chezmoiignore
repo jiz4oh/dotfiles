@@ -38,6 +38,7 @@ yarn.lock
 temp
 
 *.cache
+**/__pycache__
 
 {{- if ne .chezmoi.os "darwin" }}
 bin/macos-askpass
