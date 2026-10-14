@@ -2,7 +2,7 @@
 ruby = { version = "3.1.2", postinstall = "{{- .chezmoi.homeDir -}}/.local/share/chezmoi/mise-ruby-ctags/bin/mise-ruby-ctags \"$MISE_TOOL_INSTALL_PATH\"" }
 node = "lts"
 go = "latest"
-"go:github.com/lemonade-command/lemonade" = "latest"
+"go:github.com/lemonade-command/lemonade" = "v1.1.2"
 python = ["latest", "prefix:3.11"]
 uv = "latest"
 pdm = "latest"
