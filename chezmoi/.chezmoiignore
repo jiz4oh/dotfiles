@@ -59,6 +59,7 @@ Library/Application Support/**
 {{- end }}
 
 {{- if not $features.agentTools }}
+.config/mise/conf.d/agents.toml
 bin/add_skill
 .agents/skills
 .agents/skills/**
@@ -72,12 +73,11 @@ bin/add_skill
 .codex/**
 .hermes
 .hermes/**
-.config/mise/config.ai.toml
 .config/mise/tasks/setup-skills
 {{- end }}
 
 {{- if not $features.devTools }}
-.config/mise/config.development.toml
+.config/mise/conf.d/development.toml
 .config/mise/tasks/worktree
 .config/mise/tasks/worktree/**
 .config/worktree

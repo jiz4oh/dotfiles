@@ -11,24 +11,18 @@ bat = "latest"
 neovim = "latest"
 rg = "latest"
 usage = "latest"
+zoxide = "latest"
 {{- end }}
 
-"github:bootandy/dust" = "latest"
-zoxide = "latest"
-{{- if $features.devTools }}
-shellcheck = "latest"
-{{- end }}
 # tirith = "latest"
-{{- if $features.desktopApps }}
+{{- if or $features.desktopApps $features.devTools }}
 "github:lemonade-command/lemonade" = "latest"
-{{- end }}
-{{- if and $isOmarchy $features.agentTools }}
-# Omarchy's lazy launcher registers Codex in the global mise config.
-codex = "latest"
 {{- end }}
 {{- if and $features.desktopApps (eq .chezmoi.os "darwin") }}
 "github:cormiertyshawn895/PixelPerfect" = { version = "latest", no_app = "false" }
 {{- end }}
+
+"github:bootandy/dust" = "latest"
 
 [settings]
 go_set_gobin = true

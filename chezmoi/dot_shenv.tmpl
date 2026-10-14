@@ -1,16 +1,9 @@
 _ARCH=$(uname -m)
 {{- $features := includeTemplate "features" . | fromJson }}
 
-{{- if $features.devTools }}
-# https://mise.jdx.dev/configuration/environments.html
-export MISE_ENV=development
-{{- end }}
-
 {{- if eq .chezmoi.os "darwin" }}
 # Neovim, LSP, and large edit sessions can keep many descriptors open.
 ulimit -S -n 65536
-# put this line into .env
-# export MISE_ENV=development,ai
 {{- end }}
 
 # Resolve dotfiles root in a way that works for both symlink-managed and

@@ -135,6 +135,27 @@ chezmoi/.chezmoidata/packages.yaml
 - macOS：`run_onchange_before_06_install_packages_macos.sh.tmpl`
 - Linux：`run_onchange_before_41_install_packages_linux.sh.tmpl`
 
+## mise 工具配置
+
+mise 自动加载 `~/.config/mise/conf.d/*.toml`，无需设置 `MISE_ENV`。
+仓库中的配置按用途维护：
+
+| 源文件（相对于 `chezmoi/dot_config/mise/`） | 内容 | 管理条件 |
+| --- | --- | --- |
+| `config.toml.tmpl` | 通用设置、系统差异及跨用途条件 | 始终管理 |
+| `conf.d/base.toml` | 基础 CLI | 始终管理 |
+| `conf.d/development.toml` | 语言环境、开发工具及开发设置 | `devTools` 开启 |
+| `conf.d/agents.toml` | AI CLI 及相关设置 | `agentTools` 开启 |
+
+添加或调整长期使用的工具，直接编辑对应源文件；每个工具只在一处声明。
+功能开关通过 `.chezmoiignore` 控制分组是否受管；`.chezmoiremove` 在关闭
+开关后清理对应的已落盘分组，避免 mise 继续加载旧声明。关闭开关不会卸载工具。
+`config.toml` 的同名声明会覆盖 `conf.d` 中的声明。
+
+项目专用工具和版本放在项目的 `mise.toml`。
+`mise use --global` 修改的是本机落盘配置，试用后需将声明整理回仓库，
+避免下次 apply 覆盖。用 `mise config` 检查实际加载文件。
+
 ## 手动脚本
 
 不应该在 `chezmoi apply` 期间自动执行的 helper，继续放在

@@ -1,4 +1,13 @@
 # .DS_Store # caused timed out on apply
+.config/mise/config.ai.toml
+.config/mise/config.development.toml
+{{- $features := includeTemplate "features" . | fromJson }}
+{{- if not $features.agentTools }}
+.config/mise/conf.d/agents.toml
+{{- end }}
+{{- if not $features.devTools }}
+.config/mise/conf.d/development.toml
+{{- end }}
 .prompts/**
 .agents/skills/brainstorming
 .agents/skills/writing-skills
