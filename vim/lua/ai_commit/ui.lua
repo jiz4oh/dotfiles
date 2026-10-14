@@ -76,8 +76,13 @@ function UI.set_popup_lines(lines)
     return
   end
 
+  local buffer_lines = {}
+  for _, line in ipairs(lines) do
+    vim.list_extend(buffer_lines, vim.split(line, "\n", { plain = true, trimempty = false }))
+  end
+
   vim.bo[state.popup_buf].modifiable = true
-  vim.api.nvim_buf_set_lines(state.popup_buf, 0, -1, false, lines)
+  vim.api.nvim_buf_set_lines(state.popup_buf, 0, -1, false, buffer_lines)
   vim.bo[state.popup_buf].modifiable = false
 end
 
