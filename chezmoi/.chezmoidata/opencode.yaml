@@ -1,6 +1,7 @@
 opencode:
   managed:
     default_agent: build
+    small_model: opencode/deepseek-v4.1-flash-free
 
     disabled_providers:
       - openrouter
