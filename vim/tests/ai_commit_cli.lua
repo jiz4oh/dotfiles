@@ -6,12 +6,13 @@ assert(api.endpoint == "http://127.0.0.1:28770/v1/chat/completions")
 assert(cli.get_model() == "test-model")
 
 local command, opts = cli.build_openai_invocation(api, "test prompt", cli.get_model())
-assert(command[1] == "/bin/sh")
+assert(command[1] == api.command)
+assert(command[#command - 1] == "--config" and command[#command] == "-")
 assert(not table.concat(command, " "):find("test%-key"))
 
-local request = vim.json.decode(opts.stdin)
-assert(request.model == "test-model")
-assert(request.messages[1].content == "test prompt")
+assert(opts.stdin:find('url = "' .. api.endpoint .. '"', 1, true))
+assert(opts.stdin:find('header = "Authorization: Bearer test-key"', 1, true))
+assert(opts.stdin:find('data-binary = "', 1, true))
 
 local output, output_err = cli.read_openai_response({
   stdout = '{"choices":[{"message":{"content":"feat: fast commit"}}]}',

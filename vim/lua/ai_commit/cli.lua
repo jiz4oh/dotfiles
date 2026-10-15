@@ -32,21 +32,27 @@ function CLI.get_model()
   return config.model
 end
 
+local function curl_quote(value)
+  local escapes = { ['\\'] = '\\\\', ['"'] = '\\"', ['\t'] = '\\t', ['\n'] = '\\n', ['\r'] = '\\r', ['\v'] = '\\v' }
+  return '"' .. value:gsub('[\\"\t\n\r\v]', escapes) .. '"'
+end
+
 function CLI.build_openai_invocation(api, prompt, model)
   local payload = vim.json.encode({
     model = model,
     messages = { { role = "user", content = prompt } },
     stream = false,
   })
-  local script = table.concat({
-    "exec 3<&0",
-    [[printf '%s\n' 'Content-Type: application/json' "Authorization: Bearer $OPENAI_API_KEY" |]],
-    [[exec "$1" --silent --show-error --fail-with-body --header @- --data-binary @/dev/fd/3 "$2"]],
+  local curl_config = table.concat({
+    "url = " .. curl_quote(api.endpoint),
+    'header = "Content-Type: application/json"',
+    "header = " .. curl_quote("Authorization: Bearer " .. (os.getenv("OPENAI_API_KEY") or "")),
+    "data-binary = " .. curl_quote(payload),
   }, "\n")
 
-  return { "/bin/sh", "-c", script, "ai-commit-openai", api.command, api.endpoint }, {
+  return { api.command, "--silent", "--show-error", "--fail-with-body", "--config", "-" }, {
     text = true,
-    stdin = payload,
+    stdin = curl_config,
   }
 end
 
