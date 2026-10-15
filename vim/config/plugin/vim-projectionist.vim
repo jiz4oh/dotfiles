@@ -48,6 +48,26 @@ let g:projectionist_heuristics = {
       \   '.claude/skills/*/references/*': {'type': 'skillref'},
       \   '.claude/skills/*/scripts/*': {'type': 'skillscript'},
       \ },
+      \ 'mise.toml|mise.local.toml|.mise.toml|.mise/|mise/|.config/mise/|mise-tasks/|.mise-tasks/': {
+      \   'mise.toml': {
+      \      'type': 'mise',
+      \      'alternate': 'mise.local.toml',
+      \   },
+      \   'mise.local.toml': {
+      \      'type': 'mise',
+      \      'alternate': 'mise.toml',
+      \   },
+      \   'mise.*.toml':                  {'type': 'mise'},
+      \   'mise/conf.d/*.toml':           {'type': 'mise'},
+      \   '.mise/conf.d/*.toml':          {'type': 'mise'},
+      \   '.config/mise/conf.d/*.toml':   {'type': 'mise'},
+      \
+      \   'mise/tasks/*':                 {'type': 'misetask'},
+      \   '.mise/tasks/*':                {'type': 'misetask'},
+      \   '.config/mise/tasks/*':         {'type': 'misetask'},
+      \
+      \   'mise.lock':                    {'type': 'lock'},
+      \ },
       \ '.git/': {
       \   '.git/hooks/*': {'type': 'githook'},
       \   '.github/workflows/*': {'type': 'githubworkflow'},
