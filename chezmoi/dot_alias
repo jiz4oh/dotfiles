@@ -111,3 +111,5 @@ alias a=aider
 alias oc=opencode
 
 alias cz=chezmoi
+
+alias tg='nvim -c Flog'
