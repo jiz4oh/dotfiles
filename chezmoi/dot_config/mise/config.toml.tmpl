@@ -16,10 +16,10 @@ zoxide = "latest"
 
 # tirith = "latest"
 {{- if or $features.desktopApps $features.devTools }}
-"github:lemonade-command/lemonade" = "latest"
+"go:github.com/lemonade-command/lemonade" = "1.1.2"
 {{- end }}
 {{- if and $features.desktopApps (eq .chezmoi.os "darwin") }}
-"github:cormiertyshawn895/PixelPerfect" = { version = "latest", no_app = "false" }
+"github:cormiertyshawn895/PixelPerfect" = { version = "latest", no_app = false }
 {{- end }}
 
 "github:bootandy/dust" = "latest"
