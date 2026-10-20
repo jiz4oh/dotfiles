@@ -2,6 +2,7 @@
 {{- $start := "<!-- chezmoi:global-agents:start -->" -}}
 {{- $end := "<!-- chezmoi:global-agents:end -->" -}}
 {{- $block := includeTemplate "agents-global.md" . -}}
+{{- $block = regexReplaceAll "[\r\n]+$" $block "" -}}
 {{- $current := .chezmoi.stdin -}}
 
 {{- if and (contains $start $current) (contains $end $current) -}}
@@ -9,14 +10,19 @@
   {{- $before := $parts._0 -}}
   {{- $rest := $parts._1 -}}
   {{- $parts2 := splitn $end 2 $rest -}}
-  {{- $after := $parts2._1 -}}
-{{ $before }}{{ $block }}{{ $after }}
+  {{- $after := regexReplaceAll "^[\r\n]+" $parts2._1 "" -}}
+  {{- if $after -}}
+    {{- printf "%s%s\n\n%s" $before $block $after -}}
+  {{- else -}}
+    {{- printf "%s%s\n" $before $block -}}
+  {{- end -}}
 {{- else if or (contains $start $current) (contains $end $current) -}}
   {{- fail "AGENTS.md contains an incomplete chezmoi managed block" -}}
 {{- else -}}
-{{ $current }}
-{{- if $current }}
-
-{{- end -}}
-{{ $block }}
+  {{- $clean := regexReplaceAll "[\r\n]+$" $current "" -}}
+  {{- if $clean -}}
+    {{- printf "%s\n\n%s\n" $clean $block -}}
+  {{- else -}}
+    {{- printf "%s\n" $block -}}
+  {{- end -}}
 {{- end -}}
