@@ -1,0 +1,19 @@
+{{- $features := includeTemplate "features" . | fromJson }}
+[tools]
+"npm:skills" = "latest"
+opencode = "latest"
+codex = "latest"
+"github:rtk-ai/rtk" = "latest"
+{{- if and $features.desktopApps (eq .chezmoi.os "darwin") }}
+
+[tools."github:getpaseo/paseo"]
+version = "latest"
+asset_pattern = "Paseo-{{ "{{ version }}" }}-{{ if eq .chezmoi.arch "amd64" }}x64{{ else }}{{ .chezmoi.arch }}{{ end }}.zip"
+strip_components = 0
+postinstall = 'mkdir -p "$HOME/Applications" && ln -sfn "$MISE_TOOL_INSTALL_PATH/Paseo.app" "$HOME/Applications/Paseo.app"'
+{{- else }}
+"github:getpaseo/paseo" = "latest"
+{{- end }}
+
+[settings]
+minimum_release_age_excludes = ["codex"]
