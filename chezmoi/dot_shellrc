@@ -8,6 +8,11 @@ if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
   if [ -S "$HOME/.bitwarden-ssh-agent.sock" ]; then
     export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
   elif command -v ssh-agent >/dev/null 2>&1; then
-    eval "$(ssh-agent -s)" >/dev/null
+    export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+    ssh-add -l >/dev/null 2>&1
+    if [ $? -eq 2 ]; then   # 2 = 连不上 agent
+      mkdir -p "$HOME/.ssh" && rm -f "$SSH_AUTH_SOCK"
+      eval "$(ssh-agent -s -a "$SSH_AUTH_SOCK")" >/dev/null
+    fi
   fi
 fi
