@@ -3,6 +3,8 @@
 {{- $end := "<!-- chezmoi:global-agents:end -->" -}}
 {{- $block := includeTemplate "agents-global.md" . -}}
 {{- $block = regexReplaceAll "[\r\n]+$" $block "" -}}
+{{- /* opencode only: the Chinese-output rule lives in the primary agent prompts (build/orchestrator), not in shared AGENTS.md */ -}}
+{{- $block = regexReplaceAll "(?m)^- [^\n]*\\$deliver-in-chinese[^\n]*\n" $block "" -}}
 {{- $current := .chezmoi.stdin -}}
 
 {{- if and (contains $start $current) (contains $end $current) -}}

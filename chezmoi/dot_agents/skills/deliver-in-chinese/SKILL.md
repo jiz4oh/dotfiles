@@ -1,6 +1,7 @@
 ---
 name: deliver-in-chinese
 description: 面向中文用户交流或新建交付文档时使用，包括计划、报告、交接、评审、验收、确认、选项和风险提示；编辑现有文档沿用原文语言。其他 skill 和 subagent 同样遵循；用户明确指定语言时优先。
+disable-model-invocation: true
 ---
 
 # 中文交付

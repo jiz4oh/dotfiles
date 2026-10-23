@@ -14,3 +14,4 @@
 .agents/skills/writing-plans
 .agents/skills/executing-plans
 .agents/skills/dispatching-parallel-agents
+.config/opencode/plugins/ponytail.js
