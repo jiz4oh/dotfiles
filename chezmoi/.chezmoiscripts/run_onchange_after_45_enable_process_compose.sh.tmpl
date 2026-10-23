@@ -1,0 +1,49 @@
+{{- $features := includeTemplate "features" . | fromJson -}}
+{{- if and $features.agentTools (or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux")) -}}
+#!/usr/bin/env bash
+# 注册并（重新）启动 process-compose 常驻服务；以下文件变化时重新执行：
+# daemon: {{ include "bin/executable_process-compose-daemon" | sha256sum }}
+# config: {{ include "dot_config/process-compose/process-compose.yaml.tmpl" | sha256sum }}
+{{- if eq .chezmoi.os "darwin" }}
+# plist: {{ include "Library/LaunchAgents/com.jiz4oh.process-compose.plist.tmpl" | sha256sum }}
+{{- else }}
+# unit: {{ include "dot_config/systemd/user/process-compose.service" | sha256sum }}
+{{- end }}
+set -euo pipefail
+
+{{- if eq .chezmoi.os "darwin" }}
+label=com.jiz4oh.process-compose
+plist="$HOME/Library/LaunchAgents/$label.plist"
+domain="gui/$(id -u)"
+
+if [ ! -f "$plist" ]; then
+  echo "process-compose: 未找到 $plist（desktopApps 关闭？），跳过 launchd 注册" >&2
+  exit 0
+fi
+
+mkdir -p "$HOME/Library/Logs/process-compose"
+if launchctl print "$domain/$label" >/dev/null 2>&1; then
+  launchctl bootout "$domain/$label" || true
+  for _ in $(seq 1 20); do
+    launchctl print "$domain/$label" >/dev/null 2>&1 || break
+    sleep 0.5
+  done
+fi
+launchctl bootstrap "$domain" "$plist"
+{{- else }}
+if ! command -v systemctl >/dev/null 2>&1 || ! systemctl --user show-environment >/dev/null 2>&1; then
+  echo "process-compose: 当前没有 systemd --user 会话，跳过注册" >&2
+  exit 0
+fi
+
+systemctl --user daemon-reload
+systemctl --user enable process-compose.service
+systemctl --user restart process-compose.service
+
+# 允许未登录时也随开机启动（VPS 场景）；无权限时只提示。
+if command -v loginctl >/dev/null 2>&1 && [ "$(loginctl show-user "$USER" -p Linger --value 2>/dev/null)" != "yes" ]; then
+  loginctl enable-linger "$USER" 2>/dev/null \
+    || echo "process-compose: 无法开启 linger，需手动执行 sudo loginctl enable-linger $USER" >&2
+fi
+{{- end }}
+{{- end }}

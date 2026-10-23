@@ -1,0 +1,25 @@
+{{- $features := includeTemplate "features" . | fromJson -}}
+{{- $state := joinPath .chezmoi.homeDir ".local/state/process-compose" -}}
+# 由 chezmoi 管理；process-compose-daemon 经 launchd(macOS) / systemd --user(Linux) 开机拉起。
+# 查看状态：pcctl process list
+version: "0.5"
+
+processes:
+{{- if $features.agentTools }}
+  opencode:
+    description: opencode API/web server，OpenChamber 等客户端连接 127.0.0.1:4096
+    command: opencode serve --service
+    working_dir: {{ .chezmoi.homeDir }}
+{{- $openchamberConfig := joinPath .chezmoi.homeDir ".config/openchamber/opencode.managed.json" }}
+{{- if stat $openchamberConfig }}
+    environment:
+      - "OPENCODE_CONFIG={{ $openchamberConfig }}"
+{{- end }}
+    log_location: {{ $state }}/opencode.log
+    availability:
+      restart: always
+      backoff_seconds: 3
+    shutdown:
+      signal: 15
+      timeout_seconds: 10
+{{- end }}

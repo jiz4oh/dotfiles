@@ -59,7 +59,17 @@ Library/Application Support/**
 
 {{- end }}
 
+{{- if ne .chezmoi.os "linux" }}
+.config/systemd/user/process-compose.service
+{{- end }}
+
 {{- if not $features.agentTools }}
+bin/process-compose-daemon
+bin/pcctl
+.config/process-compose
+.config/process-compose/**
+.config/systemd/user/process-compose.service
+Library/LaunchAgents/com.jiz4oh.process-compose.plist
 .config/mise/conf.d/agents.toml
 bin/add_skill
 .agents/skills

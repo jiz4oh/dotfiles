@@ -1,0 +1,16 @@
+# 由 chezmoi 管理；启用：systemctl --user enable --now process-compose
+[Unit]
+Description=process-compose user services
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash %h/bin/process-compose-daemon
+WorkingDirectory=%h
+Restart=always
+RestartSec=3
+KillMode=mixed
+TimeoutStopSec=20
+
+[Install]
+WantedBy=default.target

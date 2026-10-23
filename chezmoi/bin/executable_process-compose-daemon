@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# launchd / systemd 的统一入口：前台运行 process-compose，由系统服务管理器负责开机自启和保活。
+set -eo pipefail
+
+# 与交互 shell 保持一致的环境（PATH、mise 设置、cached-env 里的 API key 等）。
+[ -r "$HOME/.shenv" ] && . "$HOME/.shenv"
+[ -r "$HOME/.zpath" ] && . "$HOME/.zpath"
+PATH="$HOME/bin:$HOME/.local/share/mise/shims:$PATH"
+export PATH
+
+state="${XDG_STATE_HOME:-$HOME/.local/state}/process-compose"
+sock="${PC_SOCKET_PATH:-$state/pc.sock}"
+mkdir -p "$state"
+# 上次异常退出可能残留 socket，导致新实例无法监听。
+rm -f "$sock"
+
+exec process-compose up \
+  --tui=false \
+  --keep-project \
+  --use-uds --unix-socket "$sock" \
+  --log-file "$state/process-compose.log" \
+  --config "$HOME/.config/process-compose/process-compose.yaml"

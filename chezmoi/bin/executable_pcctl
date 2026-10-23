@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# 连接本机常驻 process-compose 的快捷命令，例如：
+#   pcctl process list
+#   pcctl process restart opencode
+#   pcctl process logs opencode -f
+set -eo pipefail
+
+PATH="$HOME/.local/share/mise/shims:$PATH"
+state="${XDG_STATE_HOME:-$HOME/.local/state}/process-compose"
+sock="${PC_SOCKET_PATH:-$state/pc.sock}"
+
+if [ ! -S "$sock" ]; then
+  echo "pcctl: process-compose 未运行（找不到 $sock）" >&2
+  exit 1
+fi
+
+exec process-compose --use-uds --unix-socket "$sock" "$@"

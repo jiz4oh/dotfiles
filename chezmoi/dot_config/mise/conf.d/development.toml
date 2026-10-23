@@ -1,4 +1,5 @@
 [tools]
+process-compose = "latest"
 shellcheck = "latest"
 ruby = { version = "3.1.2", postinstall = '"$HOME/.local/share/chezmoi/mise-ruby-ctags/bin/mise-ruby-ctags" "$MISE_TOOL_INSTALL_PATH"' }
 node = "lts"

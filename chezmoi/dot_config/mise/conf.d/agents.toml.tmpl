@@ -1,7 +1,6 @@
 {{- $features := includeTemplate "features" . | fromJson }}
 [tools]
 "npm:skills" = "latest"
-opencode = "latest"
 codex = "latest"
 "github:rtk-ai/rtk" = "latest"
 {{- if and $features.desktopApps (eq .chezmoi.os "darwin") }}
@@ -14,6 +13,11 @@ postinstall = 'mkdir -p "$HOME/Applications" && ln -sfn "$MISE_TOOL_INSTALL_PATH
 {{- else }}
 "github:getpaseo/paseo" = "latest"
 {{- end }}
+
+[tools.opencode]
+version = "latest"
+# 升级后让 process-compose 托管的 opencode server 切到新版本；服务未运行时静默跳过。
+postinstall = '"$HOME/bin/pcctl" process restart opencode >/dev/null 2>&1 || true'
 
 [settings]
 minimum_release_age_excludes = ["codex"]
