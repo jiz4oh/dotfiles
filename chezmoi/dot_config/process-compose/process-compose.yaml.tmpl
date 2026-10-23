@@ -8,7 +8,7 @@ processes:
 {{- if $features.agentTools }}
   opencode:
     description: opencode API/web server，OpenChamber 等客户端连接 127.0.0.1:4096
-    command: opencode serve --service
+    command: opencode-server
     working_dir: {{ .chezmoi.homeDir }}
 {{- $openchamberConfig := joinPath .chezmoi.homeDir ".config/openchamber/opencode.managed.json" }}
 {{- if stat $openchamberConfig }}

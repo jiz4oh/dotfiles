@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# process-compose 托管 opencode server 的启动入口。
+# process-compose 被强杀（如 kill -9）时，macOS 不会回收它的子进程，旧 opencode
+# 会继续占用端口，新实例启动后立即退出并反复重启；启动前先清理这类残留进程。
+set -eo pipefail
+
+port="${OPENCODE_PORT:-4096}"
+
+stale_pids() {
+  command -v lsof >/dev/null 2>&1 || return 0
+  lsof -t -a -c opencode -iTCP:"$port" -sTCP:LISTEN 2>/dev/null || true
+}
+
+pids="$(stale_pids)"
+if [ -n "$pids" ]; then
+  echo "opencode-server: 清理占用端口 $port 的残留 opencode 进程: $(echo $pids)" >&2
+  kill $pids 2>/dev/null || true
+  for _ in $(seq 1 20); do
+    [ -z "$(stale_pids)" ] && break
+    sleep 0.5
+  done
+  pids="$(stale_pids)"
+  [ -n "$pids" ] && kill -9 $pids 2>/dev/null || true
+fi
+
+exec opencode serve --service "$@"

@@ -66,6 +66,7 @@ Library/Application Support/**
 {{- if not $features.agentTools }}
 bin/process-compose-daemon
 bin/pcctl
+bin/opencode-server
 .config/process-compose
 .config/process-compose/**
 .config/systemd/user/process-compose.service
