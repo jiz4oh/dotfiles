@@ -11,7 +11,6 @@ Host github.com
   PreferredAuthentications publickey
   # 优先使用 1Password 中的密钥：这里只放公钥，告诉 agent 用哪一把，私钥留在 1Password
   IdentityFile ~/.ssh/id_github.pub
-  IdentityFile ~/.ssh/id_rsa
   IdentitiesOnly yes
 
 Host gist.github.com
@@ -20,7 +19,6 @@ Host gist.github.com
   Port 443
   PreferredAuthentications publickey
   IdentityFile ~/.ssh/id_github.pub
-  IdentityFile ~/.ssh/id_rsa
   IdentitiesOnly yes
 
 # 服务器上没有 1Password app，靠 agent 转发复用本机 1Password 中的密钥。
