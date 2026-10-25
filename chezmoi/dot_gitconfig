@@ -1,7 +1,8 @@
 [user]
 	name = jiz4oh
 	email = git@jiz4oh.com
-	signingkey = 78FB89DFD72A3154
+	# 用 1Password 里的 github (ED25519) 钥匙做 SSH 签名，经 SSH agent 取私钥
+	signingkey = key::ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICg3HbfyXci8Ff6EL1CGfGR2r/tsEdJkK9/zzd2GMNEm
 [credential]
 	helper = osxkeychain
   helper = store
@@ -28,6 +29,11 @@
 	followTags = true
 [rebase]
 	autosquash = true
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	# 本地验证签名（git log --show-signature）用
+	allowedSignersFile = ~/.config/git/allowed_signers
 [include]
 	path = .gitconfig.local
 [github]
@@ -41,6 +47,7 @@
   # Blue on black is hard to read in git branch -vv: use cyan instead
   upstream = cyan
 [tag]
+  gpgSign = true
   # Sort tags as version numbers whenever applicable, so 1.10.2 is AFTER 1.2.0.
   sort = version:refname
 [versionsort]
@@ -54,6 +61,7 @@
 	conflictstyle = merge
 [commit]
 	verbose = true
+	gpgsign = true
 [diff]
 	algorithm = histogram
 	tool = nvim_difftool
