@@ -66,7 +66,7 @@ Linux 安装 macOS 应用，也没有新增 Linux Rime 安装流程。基础 she
 - `run_once_*`：只执行一次的初始化步骤
 - `run_onchange_*`：脚本内容变化时重新执行
 - `run_after_*`：每次 `chezmoi apply` 完成后执行
-- `run_before_20_refresh_cached_env.sh.tmpl`：每次 apply 前按 `.chezmoidata/cached-env.yaml` 刷新本机 `~/.local/state/chezmoi/cached-env.env`；单项刷新失败时 warning、保留该项上一版缓存并继续其他项
+- `run_before_20_refresh_cached_env.sh.tmpl`：每次 apply 前按 `.chezmoidata/cached-env.yaml` 用 1Password `op read` 刷新本机 `~/.local/state/chezmoi/cached-env.env`；`op` 缺失、未登录、超时或单项读取失败时 warning、保留该项上一版缓存并继续其他项。认证二选一：本机 1Password app 开启 CLI 集成（仅交互终端触发，避免无人值守时卡在解锁弹窗），或环境变量里有 `OP_SERVICE_ACCOUNT_TOKEN`（服务器用）
 - `run_onchange_after_29_install_tmux_tpm.sh.tmpl`：目录准备完成后幂等安装或刷新 TPM，避免 external 刷新早于父目录创建
 - `run_after_42_apply_tailscale_lan_bypass.sh.tmpl`：开启 `tailscaleLanBypass` 后，Linux 上每次 apply 都安装并
   运行 `tailscale-lan-bypass`。仅当本机开启 Accept Routes，且物理直连网段与

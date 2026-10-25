@@ -23,6 +23,11 @@ zoxide = "latest"
 {{- end }}
 
 "github:bootandy/dust" = "latest"
+{{- if and (eq .chezmoi.os "linux") (not $features.desktopApps) }}
+# 无桌面的 Linux 服务器：1Password CLI 只配合 OP_SERVICE_ACCOUNT_TOKEN 使用；
+# 有桌面时改由系统包安装，app 的 CLI 集成要求官方包里的 op
+op = "latest"
+{{- end }}
 
 [settings]
 go_set_gobin = true

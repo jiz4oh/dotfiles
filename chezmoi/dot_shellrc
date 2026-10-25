@@ -4,10 +4,9 @@ if [ -t 0 ]; then
   GPG_TTY="$(tty 2>/dev/null)" && export GPG_TTY
 fi
 
+# 既没有转发进来的 agent，也没有 1Password agent（见 .shenv）时，回退到本机 ssh-agent
 if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
-  if [ -S "$HOME/.bitwarden-ssh-agent.sock" ]; then
-    export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
-  elif command -v ssh-agent >/dev/null 2>&1; then
+  if command -v ssh-agent >/dev/null 2>&1; then
     export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
     ssh-add -l >/dev/null 2>&1
     if [ $? -eq 2 ]; then   # 2 = 连不上 agent

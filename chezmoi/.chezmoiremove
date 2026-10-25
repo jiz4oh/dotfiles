@@ -15,3 +15,6 @@
 .agents/skills/executing-plans
 .agents/skills/dispatching-parallel-agents
 .config/opencode/plugins/ponytail.js
+# 已改用 1Password，清理 rbw 遗留文件
+bin/rbw-pinentry
+Library/Application Support/rbw/config.json

@@ -35,10 +35,6 @@ else
   export EDITOR=vim
 fi
 
-if [ -n "${SSH_CONNECTION:-}" ] || [ -n "${SSH_TTY:-}" ]; then
-  export PINENTRY_USER_DATA=rbw-ssh
-fi
-
 export RUBY_BUILD_MIRROR_URL=https://cache.ruby-china.com
 
 export MISE_RUBY_DEFAULT_PACKAGES_FILE=~/.rbenv/default-gems
@@ -62,14 +58,26 @@ export YAMLLINT_CONFIG_FILE=~/.yamllint.yaml
 export XDG_RUNTIME_DIR="$HOME/.local/run"
 {{- end }}
 
-if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
+# SSH agent 优先用 1Password app 自带的 agent（需在 app 里开启 SSH agent）。
+# 已有可用 socket（例如 ssh 登录时转发进来的 agent）时保留不动；
+# macOS 默认的 launchd agent 和 .shellrc 兜底启动的 ssh-agent 视为未配置。
+# 服务器没有 1Password app，不会命中这里，靠 ForwardAgent 转发本机 agent。
 {{- if eq .chezmoi.os "darwin" }}
-SSH_AUTH_SOCK="$(getconf DARWIN_USER_TEMP_DIR)rbw-$(id -u)/ssh-agent-socket"
-export SSH_AUTH_SOCK
-{{- else if eq .chezmoi.os "linux" }}
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/rbw/ssh-agent-socket"
+_op_ssh_sock="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+{{- else }}
+_op_ssh_sock="$HOME/.1password/agent.sock"
 {{- end }}
+if [ -S "$_op_ssh_sock" ]; then
+  case "${SSH_AUTH_SOCK:-}" in
+    "" | "$HOME/.ssh/agent.sock" | */com.apple.launchd.*/Listeners)
+      export SSH_AUTH_SOCK="$_op_ssh_sock"
+      ;;
+    *)
+      [ -S "$SSH_AUTH_SOCK" ] || export SSH_AUTH_SOCK="$_op_ssh_sock"
+      ;;
+  esac
 fi
+unset _op_ssh_sock
 
 export HOMEBREW_NO_AUTO_UPDATE=1
 

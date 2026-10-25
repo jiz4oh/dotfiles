@@ -1,8 +1,0 @@
-#!/bin/sh
-set -eu
-
-if [ "${PINENTRY_USER_DATA:-}" = "rbw-ssh" ]; then
-  exec pinentry "$@"
-fi
-
-exec pinentry-mac "$@"

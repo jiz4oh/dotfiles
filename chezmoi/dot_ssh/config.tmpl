@@ -9,7 +9,7 @@ Host github.com
   User git
   Port 443
   PreferredAuthentications publickey
-  # 优先使用 bitwarden 中密钥
+  # 优先使用 1Password 中的密钥：这里只放公钥，告诉 agent 用哪一把，私钥留在 1Password
   IdentityFile ~/.ssh/id_github.pub
   IdentityFile ~/.ssh/id_rsa
   IdentitiesOnly yes
@@ -22,6 +22,12 @@ Host gist.github.com
   IdentityFile ~/.ssh/id_github.pub
   IdentityFile ~/.ssh/id_rsa
   IdentitiesOnly yes
+
+# 服务器上没有 1Password app，靠 agent 转发复用本机 1Password 中的密钥。
+# 只对信任的主机打开（远端 root 能借用转发的 agent），在 ~/.ssh/config.d/ 里按主机添加，例如：
+# Host my-vps
+#   ForwardAgent yes
+# 下面 Host * 的 ForwardAgent no 只是默认值；ssh 取第一个匹配值，前面的主机配置优先。
 
 Host *
   # 把这些本地环境变量转发到远端

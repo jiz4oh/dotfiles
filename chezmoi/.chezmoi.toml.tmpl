@@ -1,4 +1,3 @@
-{{- $bitwardenEmail := promptStringOnce . "bitwardenEmail" "rbw email" -}}
 {{- $workstation := or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (eq (get .chezmoi.osRelease "id") "omarchy")) -}}
 {{- $agentTools := promptBoolOnce . "agentTools" "启用 agent 工具、skills、plugins 和 hooks" $workstation -}}
 {{- $devTools := promptBoolOnce . "devTools" "启用开发工具和语言环境" $workstation -}}
@@ -6,8 +5,6 @@
 {{- $localServices := promptBoolOnce . "localServices" "安装本地数据库并启动已登记服务" false -}}
 {{- $tailscaleLanBypass := promptBoolOnce . "tailscaleLanBypass" "启用 Linux Tailscale LAN bypass 策略" false -}}
 [data]
-    bitwardenEmail = {{ $bitwardenEmail | quote }}
-
     # 管理 agent 配置、工具清单、共享 skills、原生 plugins、memory hooks 和 RTK 集成。
     # 默认：macOS / Omarchy 开启，其他系统关闭。
     agentTools = {{ $agentTools }}

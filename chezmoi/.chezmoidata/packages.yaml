@@ -12,7 +12,6 @@ packages:
       - name: httpie
         group: devTools
       - name: mise
-      - name: rbw
       - name: pinentry-mac
       - name: mysql
         group: localServices
@@ -38,8 +37,9 @@ packages:
       - name: wget
       - name: zsh
     casks:
+      - 1password
+      - 1password-cli
       - android-platform-tools
-      - bitwarden
       - font-hack-nerd-font
       - hammerspoon
       - imageoptim

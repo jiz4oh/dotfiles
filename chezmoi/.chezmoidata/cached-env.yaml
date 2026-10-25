@@ -1,3 +1,6 @@
 cached_env:
+  # op: 1Password secret reference，格式 op://<vault>/<item>/<field>
+  # 从 Bitwarden 导入后按实际 vault / 条目 / 字段名调整，可在 app 里条目字段的
+  # 「Copy Secret Reference」直接复制；用 `op read 'op://...'` 验证
   - name: DEEPSEEK_API_KEY
-    rbw: DEEPSEEK_API_KEY
+    op: op://Private/DEEPSEEK_API_KEY/credential

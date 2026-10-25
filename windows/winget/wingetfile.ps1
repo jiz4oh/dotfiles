@@ -28,7 +28,8 @@ $apps = @(
   "9PFXXSHC64H3", # raycast
   "RustDesk.RustDesk",
   "Tailscale.Tailscale",
-  "Bitwarden.Bitwarden",
+  "AgileBits.1Password",
+  "AgileBits.1Password.CLI",
   "Microsoft.OneDrive",     
   "9NV4BS3L1H4S", # QuickLook Microsoft Store Version
   "PixPin.PixPin",

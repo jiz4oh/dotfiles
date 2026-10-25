@@ -5,6 +5,8 @@ SOURCE_DIR="{{ .chezmoi.sourceDir }}"
 CONFIG_FILE="$SOURCE_DIR/.chezmoidata/cached-env.yaml"
 CACHE_DIR="$HOME/.local/state/chezmoi"
 CACHE_FILE="$CACHE_DIR/cached-env.env"
+# 单次 op 调用的超时秒数；app 集成首次读取需要等待 Touch ID / 解锁确认
+OP_TIMEOUT="${CACHED_ENV_OP_TIMEOUT:-60}"
 
 log() { echo "[cached-env] $*"; }
 warn() { echo "[cached-env][warn] $*" >&2; }
@@ -19,21 +21,52 @@ trap 'rm -f "$rows_file" "$values_file"' EXIT
 
 : > "$rows_file"
 {{- range .cached_env }}
-printf '%s\t%s\t%s\n' 'rbw' '{{ .name }}' '{{ .rbw }}' >> "$rows_file"
+{{- if get . "op" }}
+printf '%s\t%s\t%s\n' 'op' {{ .name | squote }} {{ get . "op" | squote }} >> "$rows_file"
+{{- end }}
 {{- end }}
 
 if [ ! -s "$rows_file" ]; then
   exit 0
 fi
 
-if ! command -v rbw >/dev/null 2>&1; then
-  warn "rbw not found, keep existing cache: $CACHE_FILE"
+if ! command -v op >/dev/null 2>&1; then
+  warn "op (1Password CLI) not found, keep existing cache: $CACHE_FILE"
   exit 0
 fi
 
-if ! rbw unlocked >/dev/null 2>&1; then
-  warn "rbw locked or pinentry unavailable, keep existing cache: $CACHE_FILE"
-  exit 0
+# 运行 op 并在超时后结束它；stdin 接 /dev/null，避免 op 退回到终端里要主密码
+op_timeout() {
+  local pid watcher rc
+
+  op "$@" </dev/null 2>/dev/null &
+  pid=$!
+  ( sleep "$OP_TIMEOUT"; kill "$pid" 2>/dev/null ) >/dev/null 2>&1 &
+  watcher=$!
+  wait "$pid"
+  rc=$?
+  { kill "$watcher"; wait "$watcher"; } 2>/dev/null
+  return "$rc"
+}
+
+# 两种认证方式：
+# 1. OP_SERVICE_ACCOUNT_TOKEN（服务器，无 1Password app）
+# 2. 本机 1Password app 开启 Settings > Developer > Integrate with 1Password CLI
+if [ -n "${OP_SERVICE_ACCOUNT_TOKEN:-}" ]; then
+  if ! op_timeout whoami >/dev/null; then
+    warn "OP_SERVICE_ACCOUNT_TOKEN rejected or 1Password unreachable, keep existing cache: $CACHE_FILE"
+    exit 0
+  fi
+else
+  if [ -z "$(op_timeout account list --format json 2>/dev/null | tr -d '[:space:][]')" ]; then
+    warn "op not signed in (enable 1Password app CLI integration or set OP_SERVICE_ACCOUNT_TOKEN), keep existing cache: $CACHE_FILE"
+    exit 0
+  fi
+  # app 集成读取时会弹解锁确认；无终端（agent、定时任务）时没人点，直接跳过
+  if [ ! -t 0 ] && [ ! -t 1 ] && [ ! -t 2 ]; then
+    warn "no terminal for 1Password unlock prompt, keep existing cache: $CACHE_FILE"
+    exit 0
+  fi
 fi
 
 cached_value() {
@@ -66,21 +99,21 @@ keep_cached_or_skip() {
 }
 
 while IFS=$'\t' read -r provider name ref; do
-  [ "${provider:-}" = "rbw" ] || continue
+  [ "${provider:-}" = "op" ] || continue
 
-  if ! value="$(rbw get "$ref" 2>/dev/null)"; then
-    keep_cached_or_skip "$name" "$ref" "rbw get failed"
+  if ! value="$(op_timeout read --no-newline "$ref")"; then
+    keep_cached_or_skip "$name" "$ref" "op read failed or timed out"
     continue
   fi
 
   if [ -z "$value" ]; then
-    keep_cached_or_skip "$name" "$ref" "rbw returned empty value"
+    keep_cached_or_skip "$name" "$ref" "op returned empty value"
     continue
   fi
 
   case "$value" in
     *$'\n'* | *$'\t'* )
-      keep_cached_or_skip "$name" "$ref" "rbw value contains a newline or tab"
+      keep_cached_or_skip "$name" "$ref" "op value contains a newline or tab"
       continue
       ;;
   esac
