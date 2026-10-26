@@ -117,12 +117,19 @@ case " $DISTRO_ID $DISTRO_LIKE " in
       exit 1
     fi
 
-    $SUDO pacman -S --needed --noconfirm \
+    # 只安装缺失的包：全部已装时不调用 sudo，避免无密码 sudo 的环境里 apply 中断。
+    arch_pkgs=(
 {{- range .packages.linux.arch }}
 {{- if or $features.devTools (not (has . (list "pre-commit" "ctags"))) }}
-      {{ . | quote }} \
+      {{ . | quote }}
 {{- end }}
 {{- end }}
+    )
+    missing_pkgs="$(pacman -T "${arch_pkgs[@]}" || true)"
+    if [ -n "$missing_pkgs" ]; then
+      # shellcheck disable=SC2086
+      $SUDO pacman -S --needed --noconfirm $missing_pkgs
+    fi
 
 {{- if $features.desktopApps }}
 
