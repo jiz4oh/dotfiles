@@ -7,6 +7,15 @@
 
 {{- $managed := .opencode.managed -}}
 
+{{- /* Expand "~/" in instructions: opencode is not guaranteed to expand it. */ -}}
+{{- if hasKey $managed "instructions" -}}
+  {{- $paths := list -}}
+  {{- range $managed.instructions -}}
+    {{- $paths = append $paths (regexReplaceAll "^~/" . (printf "%s/" $.chezmoi.homeDir)) -}}
+  {{- end -}}
+  {{- $managed = set (deepCopy $managed) "instructions" $paths -}}
+{{- end -}}
+
 {{- $merged := mergeOverwrite $current $managed -}}
 
 {{ $merged | toPrettyJson }}

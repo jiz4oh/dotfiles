@@ -1,18 +1,27 @@
 opencode:
   managed:
     default_agent: build
-    small_model: opencode/deepseek-v4.1-flash-free
+    small_model: magpie/auto/gpt-6-luna
+
+    # Replaces the whole list on merge: keep every instruction file here.
+    instructions:
+      - ~/.config/opencode/memory-routing.md
+      - ~/.config/opencode/context-budget.md
 
     tool_output:
       max_lines: 400
       max_bytes: 12288
 
-    # Native auto-compaction: trigger at (model input/context limit - buffer).
-    # Absolute buffer so it works whether magpie advertises sol as 500k or 272k:
-    # 500k -> 380k, 272k -> 152k, 300k -> 180k, 922k -> 802k.
+    # Native auto-compaction: trigger at (model limit.input || limit.context) - buffer.
+    # Global only in 2.1.2 (no per-agent/per-model key). Use (almost) the full window:
+    # 272k -> 240k, 300k -> 268k, 922k -> 890k. The 32k margin covers one step's
+    # context growth (p99 ~16k measured 10-22..10-25, tool output capped at 12KB)
+    # plus the compaction call's own prompt and summary output. Context overflow
+    # still falls back to opencode's overflow compaction.
+    # Models with window <= buffer would compact every turn.
     compaction:
       auto: true
-      buffer: 120000
+      buffer: 32000
 
     # Send prompt_cache_key = opencode session id on magpie requests (opencode's
     # supported provider option; off by default for openai-compatible providers).
@@ -43,6 +52,17 @@ opencode:
           type: local
           command:
             - /Applications/Reqable.app/Contents/Helpers/mcp-server
+        openviking:
+          type: remote
+          url: http://qnap.ts.jiz4oh.com:1933/mcp
+          oauth: false
+          codemode: false
+          headers:
+            Authorization: "Bearer {file:/Users/jiz4oh/.openviking/mcp_api_key}"
+          timeout:
+            startup: 15000
+            catalog: 15000
+            execution: 15000
 
     providers:
       openai:
