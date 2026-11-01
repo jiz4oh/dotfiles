@@ -8,6 +8,20 @@
   pull.args = ["--ff-only"]
   x.skills = ["*=skills"]
 
+[".agents/skill-sources/pstack"]
+  type = "git-repo"
+  url = "https://github.com/backnotprop/pstack"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = [
+    "how=skills/how",
+    "why=skills/why",
+    "blast-radius=skills/blast-radius",
+    "unslop=skills/unslop",
+    "sharpen=skills/sharpen",
+  ]
+
 [".agents/skill-sources/show-me"]
   type = "git-repo"
   url = "https://github.com/humanlayer/skills"
