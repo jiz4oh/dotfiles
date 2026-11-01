@@ -116,4 +116,12 @@
   refreshPeriod = "72h"
   clone.args = ["--filter=blob:none"]
   pull.args = ["--ff-only"]
+
+[".agents/skill-sources/answer-me-with-html"]
+  type = "git-repo"
+  url = "https://github.com/QingYunA/answer-me-with-html"
+  refreshPeriod = "72h"
+  clone.args = ["--filter=blob:none"]
+  pull.args = ["--ff-only"]
+  x.skills = ["answer-me-with-html=skills/answer-me-with-html"]
 {{- end }}
