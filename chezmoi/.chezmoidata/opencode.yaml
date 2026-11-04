@@ -106,6 +106,43 @@ opencode:
       - { action: shell, resource: "rtk git branch *", effect: allow }
       - { action: shell, resource: "rtk git rev-parse *", effect: allow }
 
+      # Project dependency installs — no approval (mise-wrapped too)
+      - { action: shell, resource: "bundle install", effect: allow }
+      - { action: shell, resource: "bundle install *", effect: allow }
+      - { action: shell, resource: "bundle update", effect: allow }
+      - { action: shell, resource: "bundle update *", effect: allow }
+      - { action: shell, resource: "mise exec -- bundle install", effect: allow }
+      - { action: shell, resource: "mise exec -- bundle install *", effect: allow }
+      - { action: shell, resource: "mise exec -- bundle update", effect: allow }
+      - { action: shell, resource: "mise exec -- bundle update *", effect: allow }
+      - { action: shell, resource: "npm install", effect: allow }
+      - { action: shell, resource: "npm install *", effect: allow }
+      - { action: shell, resource: "npm ci", effect: allow }
+      - { action: shell, resource: "npm ci *", effect: allow }
+      - { action: shell, resource: "pnpm install", effect: allow }
+      - { action: shell, resource: "pnpm install *", effect: allow }
+      - { action: shell, resource: "pnpm i", effect: allow }
+      - { action: shell, resource: "pnpm i *", effect: allow }
+      - { action: shell, resource: "yarn install", effect: allow }
+      - { action: shell, resource: "yarn install *", effect: allow }
+      - { action: shell, resource: "bun install", effect: allow }
+      - { action: shell, resource: "bun install *", effect: allow }
+      - { action: shell, resource: "pip install *", effect: allow }
+      - { action: shell, resource: "pip3 install *", effect: allow }
+      - { action: shell, resource: "uv sync", effect: allow }
+      - { action: shell, resource: "uv sync *", effect: allow }
+      - { action: shell, resource: "uv pip install *", effect: allow }
+      - { action: shell, resource: "cargo build", effect: allow }
+      - { action: shell, resource: "cargo build *", effect: allow }
+      - { action: shell, resource: "cargo fetch", effect: allow }
+      - { action: shell, resource: "cargo fetch *", effect: allow }
+      - { action: shell, resource: "go mod download", effect: allow }
+      - { action: shell, resource: "go mod download *", effect: allow }
+      - { action: shell, resource: "go mod tidy", effect: allow }
+      - { action: shell, resource: "go mod tidy *", effect: allow }
+      - { action: shell, resource: "mise install", effect: allow }
+      - { action: shell, resource: "mise install *", effect: allow }
+
       # Destructive — hard deny (never Jev / never ask)
       - { action: shell, resource: "sudo *", effect: deny }
       - { action: shell, resource: "su *", effect: deny }
