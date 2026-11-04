@@ -40,6 +40,94 @@ opencode:
         resource: ponytail
         effect: deny
 
+      # Common read-only shell — no approval. Keep patterns narrow; last/first
+      # match depends on OpenCode ruleset order, so list specific allows only
+      # (global shell default stays ask via client / remaining rules).
+      - { action: shell, resource: pwd, effect: allow }
+      - { action: shell, resource: "pwd *", effect: allow }
+      - { action: shell, resource: whoami, effect: allow }
+      - { action: shell, resource: hostname, effect: allow }
+      - { action: shell, resource: uname, effect: allow }
+      - { action: shell, resource: "uname *", effect: allow }
+      - { action: shell, resource: date, effect: allow }
+      - { action: shell, resource: "date *", effect: allow }
+      - { action: shell, resource: which, effect: allow }
+      - { action: shell, resource: "which *", effect: allow }
+      - { action: shell, resource: "command -v *", effect: allow }
+      - { action: shell, resource: ls, effect: allow }
+      - { action: shell, resource: "ls *", effect: allow }
+      - { action: shell, resource: "tree *", effect: allow }
+      - { action: shell, resource: "fd *", effect: allow }
+      - { action: shell, resource: "rg *", effect: allow }
+      - { action: shell, resource: "grep *", effect: allow }
+      - { action: shell, resource: "cat *", effect: allow }
+      - { action: shell, resource: "head *", effect: allow }
+      - { action: shell, resource: "tail *", effect: allow }
+      - { action: shell, resource: "wc *", effect: allow }
+      - { action: shell, resource: "file *", effect: allow }
+      - { action: shell, resource: "stat *", effect: allow }
+      - { action: shell, resource: "jq *", effect: allow }
+      - { action: shell, resource: "yq *", effect: allow }
+      - { action: shell, resource: "bat *", effect: allow }
+      - { action: shell, resource: "git status", effect: allow }
+      - { action: shell, resource: "git status *", effect: allow }
+      - { action: shell, resource: "git diff", effect: allow }
+      - { action: shell, resource: "git diff *", effect: allow }
+      - { action: shell, resource: "git log", effect: allow }
+      - { action: shell, resource: "git log *", effect: allow }
+      - { action: shell, resource: "git show", effect: allow }
+      - { action: shell, resource: "git show *", effect: allow }
+      - { action: shell, resource: "git branch", effect: allow }
+      - { action: shell, resource: "git branch *", effect: allow }
+      - { action: shell, resource: "git rev-parse *", effect: allow }
+      - { action: shell, resource: "git describe *", effect: allow }
+      - { action: shell, resource: "git remote -v", effect: allow }
+      - { action: shell, resource: "git remote -v *", effect: allow }
+      - { action: shell, resource: "git blame *", effect: allow }
+      - { action: shell, resource: "git stash list", effect: allow }
+      - { action: shell, resource: "git stash list *", effect: allow }
+      - { action: shell, resource: "git tag", effect: allow }
+      - { action: shell, resource: "git tag -l *", effect: allow }
+      # rtk rewrite (OpenCode evaluates the rewritten command)
+      - { action: shell, resource: "rtk pwd", effect: allow }
+      - { action: shell, resource: "rtk pwd *", effect: allow }
+      - { action: shell, resource: "rtk ls", effect: allow }
+      - { action: shell, resource: "rtk ls *", effect: allow }
+      - { action: shell, resource: "rtk rg *", effect: allow }
+      - { action: shell, resource: "rtk git status", effect: allow }
+      - { action: shell, resource: "rtk git status *", effect: allow }
+      - { action: shell, resource: "rtk git diff", effect: allow }
+      - { action: shell, resource: "rtk git diff *", effect: allow }
+      - { action: shell, resource: "rtk git log", effect: allow }
+      - { action: shell, resource: "rtk git log *", effect: allow }
+      - { action: shell, resource: "rtk git show", effect: allow }
+      - { action: shell, resource: "rtk git show *", effect: allow }
+      - { action: shell, resource: "rtk git branch", effect: allow }
+      - { action: shell, resource: "rtk git branch *", effect: allow }
+      - { action: shell, resource: "rtk git rev-parse *", effect: allow }
+
+      # Destructive — hard deny (never Jev / never ask)
+      - { action: shell, resource: "sudo *", effect: deny }
+      - { action: shell, resource: "su *", effect: deny }
+      - { action: shell, resource: "rm -rf *", effect: deny }
+      - { action: shell, resource: "rm -fr *", effect: deny }
+      - { action: shell, resource: "git push", effect: deny }
+      - { action: shell, resource: "git push *", effect: deny }
+      - { action: shell, resource: "git reset --hard *", effect: deny }
+      - { action: shell, resource: "git clean -fd *", effect: deny }
+      - { action: shell, resource: "mkfs *", effect: deny }
+      - { action: shell, resource: "dd *", effect: deny }
+
+      # Outside-worktree reads (opencode external_directory gate)
+      - { action: external_directory, resource: "~/.local/share/mise/**", effect: allow }
+      - { action: external_directory, resource: "~/.local/share/mise/*", effect: allow }
+      - { action: external_directory, resource: "/Users/jiz4oh/.local/share/mise/**", effect: allow }
+      - { action: external_directory, resource: "/Users/jiz4oh/.local/share/mise/*", effect: allow }
+      - { action: external_directory, resource: "~/.agents/skills/**", effect: allow }
+      - { action: external_directory, resource: "~/.agents/skills/*", effect: allow }
+      - { action: external_directory, resource: "/Users/jiz4oh/.agents/skills/**", effect: allow }
+      - { action: external_directory, resource: "/Users/jiz4oh/.agents/skills/*", effect: allow }
+
     agent:
       plan:
         disable: true
@@ -48,10 +136,6 @@ opencode:
 
     mcp:
       servers:
-        reqable:
-          type: local
-          command:
-            - /Applications/Reqable.app/Contents/Helpers/mcp-server
         openviking:
           type: remote
           url: http://qnap.ts.jiz4oh.com:1933/mcp
