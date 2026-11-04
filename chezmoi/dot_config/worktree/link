@@ -1,5 +1,7 @@
 AGENTS.md
 AGENTS.override.md
 .agents
+docs/agents
 .openchamber/project.json
+t3.json
 .mise
