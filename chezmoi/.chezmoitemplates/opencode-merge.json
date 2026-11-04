@@ -1,0 +1,21 @@
+{{- /* Deep-merge .man (chezmoi-managed) into .cur (local). Objects: managed wins per key, local-only keys kept.
+       Arrays: managed items first (in order), then local items not in managed; identity = canonical JSON, so re-apply is idempotent. */ -}}
+{{- $cur := .cur -}}{{- $man := .man -}}
+{{- if and (kindIs "map" $cur) (kindIs "map" $man) -}}
+  {{- $out := deepCopy $cur -}}
+  {{- range $k, $v := $man -}}
+    {{- if hasKey $cur $k -}}
+      {{- $_ := set $out $k (includeTemplate "opencode-merge.json" (dict "cur" (index $cur $k) "man" $v) | fromJson) -}}
+    {{- else -}}
+      {{- $_ := set $out $k $v -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $out | toJson -}}
+{{- else if and (kindIs "slice" $cur) (kindIs "slice" $man) -}}
+  {{- $seen := dict -}}{{- $out := list -}}
+  {{- range $man -}}{{- $id := toJson . -}}{{- if not (hasKey $seen $id) -}}{{- $_ := set $seen $id true -}}{{- $out = append $out . -}}{{- end -}}{{- end -}}
+  {{- range $cur -}}{{- $id := toJson . -}}{{- if not (hasKey $seen $id) -}}{{- $_ := set $seen $id true -}}{{- $out = append $out . -}}{{- end -}}{{- end -}}
+  {{- $out | toJson -}}
+{{- else -}}
+  {{- $man | toJson -}}
+{{- end -}}

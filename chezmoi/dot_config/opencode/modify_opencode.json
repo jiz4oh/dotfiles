@@ -16,6 +16,7 @@
   {{- $managed = set (deepCopy $managed) "instructions" $paths -}}
 {{- end -}}
 
-{{- $merged := mergeOverwrite $current $managed -}}
+{{- /* Deep merge; arrays = managed ∪ local-only (see .chezmoitemplates/opencode-merge.json). */ -}}
+{{- $merged := includeTemplate "opencode-merge.json" (dict "cur" $current "man" $managed) | fromJson -}}
 
 {{ $merged | toPrettyJson }}
