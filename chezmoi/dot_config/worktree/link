@@ -5,3 +5,4 @@ docs/agents
 .openchamber/project.json
 t3.json
 .mise
+.ignore
