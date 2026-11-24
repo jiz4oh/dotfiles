@@ -18,6 +18,29 @@ disable-model-invocation: true
 4. 提出 Worker 分工方案：谁做什么、复用还是新建、是否需要 worktree、依赖与并行顺序、预计并发数。
 5. 起步阶段不修改代码，等用户确认方案后再执行。
 
+## 角色（Role）
+
+角色契约由 chezmoi 渲染到 `~/.agents/roles/<role>.md`：元数据（`model`、`effort`、T3 role）在 `.chezmoidata/roles.yaml`，正文在 `.chezmoitemplates/roles/<role>.md`，opencode 的 `~/.config/opencode/agents/` 用同一份正文。按角色名委派，不临时改写角色职责。
+
+| role | 用途 | T3 role | 模型 / effort |
+| --- | --- | --- | --- |
+| explore | 只读调查、跨文件检索 | research | `magpie/auto/deepseek-v4.1-flash` / 默认 |
+| debugger | 未知原因的故障定位（只读） | general | `magpie/group/gpt-6.2-sol` / high |
+| reviewer | 独立审查已提交的分支、commit 或 PR（只读） | review | `magpie/group/gpt-6.2-sol` / high |
+| pcm | 项目知识与决策沉淀，只写 `.agents/knowledge/`，经 Git/PR 集成 | general | `magpie/group/gpt-6.2-sol` / medium |
+| implementer | 编码 Worker：独立分支实现、验证、提交、开 PR，不合并 | implementation | 继承 Coordinator |
+
+模型与 effort 以 `role-payload` 输出为准；表格只是速查。
+
+委派步骤：
+
+1. 运行 `role-payload <role>`（`role-payload --list` 看可用角色，跨 provider 加 `--provider codex`）。输出的 `role`、`isolation`、`target` 直接作为 `delegate_task` 参数：`target` 是 JSON，原样使用；`target: omit` 时不传 `target`，子任务继承 Coordinator 的 provider、模型和选项。从 `<role name="…">` 到 `任务：` 整段放进 `task` 开头，`任务：` 后补范围、验收标准、交付物。手写模型或 effort 一律不算。
+2. T3 不执行角色的权限设置：子任务以 OpenCode `build` agent 运行，只读和不委派都只靠契约文字约束。所以所有角色都用 `isolation:"worktree"`。worktree 从父 commit 新建、不含未提交改动，调查和审查的对象必须先提交（分支、commit 或 PR）。
+3. 委派返回后按 `check:` 行核对结果的 `providerInstanceId`、`model`（不带 `#`）和 `options`（opencode 为 `variant`，codex 为 `reasoningEffort`）；不一致就作废该次委派并报告。`executedModel` 只记录：`group/`、`auto/` 是路由模型，实际模型本来就会不同，不作为作废依据。
+4. 只读角色（explore、debugger、reviewer）的交付必须附 worktree 里 `git status --short` 的输出，且为空；不为空就作废结果并报告。
+5. 角色文件缺失时 `role-payload` 会失败，此时按普通 `delegate_task` 委派，并在报告里说明。
+6. 跨 provider 前先用 `orchestrator_capabilities` 确认目标实例可用、模型和选项 id 存在。本机目前只有 `opencode` 和 `codex` 可用（claude、pi 已停用）。`--provider codex` 会去掉 `magpie/` 前缀并把 effort 换成 `reasoningEffort`；其余 provider 没有核实过的映射，不要猜。
+
 ## 编排规则
 
 1. 简单任务直接做；独立短任务用 `delegate_task`；需要长期复用的 Worker 先提方案，经用户确认后才用 `t3_thread_launch`。

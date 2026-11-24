@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+# Resolve an agent role into paste-ready T3 Code delegate_task arguments.
+# Role files live in ~/.agents/roles/<role>.md, rendered by chezmoi from
+# .chezmoidata/roles.yaml (model, effort, t3_role) + .chezmoitemplates/roles/<role>.md.
+set -euo pipefail
+
+ROLES_DIR="${ROLES_DIR:-$HOME/.agents/roles}"
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  role-payload <role> [--provider opencode|codex]          delegate_task arguments + task preamble
+  role-payload <role> --model [--provider opencode|codex]  print the target model slug only
+  role-payload --list                                      list available roles
+
+Provider mapping (checked against T3 Code 0.1.11 provider catalogs):
+  opencode (default)  model as-is,                 effort -> options.variant
+  codex               model without "magpie/",     effort -> options.reasoningEffort
+A role without a model prints "target: omit": the child inherits the caller's
+provider, model and options.
+
+Roles come from $ROLES_DIR/<role>.md (override with ROLES_DIR).
+USAGE
+}
+
+die() {
+  echo "role-payload: $*" >&2
+  exit 1
+}
+
+role="${1:-}"
+[[ -n "$role" ]] || { usage >&2; exit 1; }
+case "$role" in
+  -h | --help) usage; exit 0 ;;
+  --list)
+    for f in "$ROLES_DIR"/*.md; do
+      [[ -e "$f" ]] || continue
+      basename "$f" .md
+    done
+    exit 0
+    ;;
+  -*) usage >&2; exit 1 ;;
+esac
+shift
+
+provider=opencode
+print_model=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --model) print_model=1 ;;
+    --provider)
+      [[ $# -ge 2 ]] || die "--provider needs a value"
+      provider="$2"
+      shift
+      ;;
+    --provider=*) provider="${1#--provider=}" ;;
+    *) usage >&2; exit 1 ;;
+  esac
+  shift
+done
+
+case "$provider" in
+  opencode) option_id=variant ;;
+  codex) option_id=reasoningEffort ;;
+  *) die "no verified mapping for provider: $provider (use opencode or codex)" ;;
+esac
+
+file="$ROLES_DIR/$role.md"
+[[ -f "$file" ]] || die "no role file: $file"
+
+# Frontmatter: lines between the first two '---' lines. Body: everything after.
+frontmatter="$(awk '/^---[[:space:]]*$/{n++; if (n==2) exit; next} n==1' "$file")"
+field() {
+  printf '%s\n' "$frontmatter" | sed -n "s/^$1:[[:space:]]*//p" | head -1
+}
+
+t3_role="$(field t3_role)"
+model="$(field model)"
+effort="$(field effort)"
+readonly_role="$(field readonly)"
+[[ -n "$t3_role" ]] || die "$file has no t3_role: field"
+[[ "$model" != *#* ]] || die "$file: model must not contain #variant; put it in effort:"
+[[ -z "$model" || "$model" == */* ]] || die "$file: model must be provider/model: $model"
+[[ -z "$effort" || -n "$model" ]] || die "$file: effort needs a model"
+
+if [[ -n "$model" && "$provider" == codex ]]; then
+  [[ "$model" == magpie/* ]] || die "no verified codex slug for $model (only magpie/* maps)"
+  model="${model#magpie/}"
+fi
+
+if [[ "$print_model" == 1 ]]; then
+  [[ -n "$model" ]] || die "$role has no model (inherits the caller's)"
+  echo "$model"
+  exit 0
+fi
+
+if [[ -n "$model" ]]; then
+  target="{\"providerInstanceId\":\"$provider\",\"model\":\"$model\""
+  [[ -n "$effort" ]] && target+=",\"options\":{\"$option_id\":\"$effort\"}"
+  target+="}"
+  check="providerInstanceId=$provider model=$model $option_id=${effort:-<none>}"
+else
+  target="omit"
+  check="inherit (same provider, model and options as the caller)"
+fi
+
+cat <<OUT
+role: $t3_role
+isolation: worktree
+target: $target
+check: $check
+
+<role name="$role">
+OUT
+awk 'n>=2{print; next} /^---[[:space:]]*$/{n++; next}' "$file"
+echo '</role>'
+if [[ "$readonly_role" == true ]]; then
+  printf '\n%s\n' '只读角色：不修改任何文件。交付末尾附当前 worktree 里 `git status --short` 的原始输出（应为空）。'
+fi
+printf '\n%s\n' '任务：'

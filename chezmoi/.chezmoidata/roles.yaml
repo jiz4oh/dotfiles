@@ -1,0 +1,58 @@
+# Shared agent roles. One source per role:
+#   metadata here, body in .chezmoitemplates/roles/<role>.md.
+# model:  clean provider/model slug, no "#variant" ("" = inherit the caller's model).
+# effort: reasoning level ("" = provider default). Kept separate from model;
+#         opencode agents reassemble it as model#effort, ~/.agents/roles keeps it split.
+# t3_role: T3 Code delegate_task role enum.
+# opencode: frontmatter for ~/.config/opencode/agents/<role>.md (absent = no opencode agent).
+roles:
+  explore:
+    description: Performs read-only codebase exploration and technical research.
+    model: magpie/auto/deepseek-v4.1-flash
+    effort: ""
+    t3_role: research
+    readonly: true
+    opencode:
+      mode: subagent
+      permissions:
+        - { action: edit, resource: "*", effect: deny }
+        - { action: subagent, resource: "*", effect: deny }
+  debugger:
+    description: Diagnoses unknown-cause bugs and identifies evidence-backed root causes.
+    model: magpie/group/gpt-6.2-sol
+    effort: high
+    t3_role: general
+    readonly: true
+    opencode:
+      mode: subagent
+      permissions:
+        - { action: edit, resource: "*", effect: deny }
+        - { action: subagent, resource: "*", effect: deny }
+  reviewer:
+    description: Independently reviews code changes for correctness, regressions, and risks.
+    model: magpie/group/gpt-6.2-sol
+    effort: high
+    t3_role: review
+    readonly: true
+    opencode:
+      mode: subagent
+      permissions:
+        - { action: edit, resource: "*", effect: deny }
+        - { action: subagent, resource: "*", effect: deny }
+  pcm:
+    description: Maintains durable project knowledge, architectural decisions, and lessons learned.
+    model: magpie/group/gpt-6.2-sol
+    effort: medium
+    t3_role: general
+    readonly: false
+    opencode:
+      mode: subagent
+      permissions:
+        - { action: subagent, resource: "*", effect: deny }
+  # T3-only: opencode's `build` agent already covers implementation.
+  implementer:
+    description: Implements a bounded coding task on its own branch and delivers a commit and PR.
+    model: ""
+    effort: ""
+    t3_role: implementation
+    readonly: false

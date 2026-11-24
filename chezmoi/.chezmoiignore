@@ -75,6 +75,9 @@ Library/LaunchAgents/com.jiz4oh.process-compose.plist
 bin/add_skill
 .agents/skills
 .agents/skills/**
+.agents/roles
+.agents/roles/**
+bin/role-payload
 .agents/hooks
 .agents/hooks/**
 .aider.conf.yml
