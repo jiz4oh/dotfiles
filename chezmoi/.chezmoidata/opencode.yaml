@@ -26,16 +26,14 @@ opencode:
 
     # Send prompt_cache_key = opencode session id on magpie requests (opencode's
     # supported provider option; off by default for openai-compatible providers).
-    provider:
+    providers:
       magpie:
-        options:
-          setCacheKey: true
         compatibility:
           supportsPromptCacheKey: true
-        package: aisdk:@ai-sdk/openai
+        package: "@opencode/ai/providers/openai"
         settings:
-          baseURL: "{env:MAGPIE_BASE_URL}"
-          apiKey: "{env:MAGPIE_API_KEY}"
+          baseURL: "{file:~/.secrets/shared/magpie/base-url}"
+          apiKey: "{file:~/.secrets/shared/magpie/api-key}"
       typesafe-ai:
         env:
           - TYPESAFE_API_KEY

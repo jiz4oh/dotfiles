@@ -64,6 +64,8 @@ Library/Application Support/**
 {{- end }}
 
 {{- if not $features.agentTools }}
+.secrets/magpie
+.secrets/magpie/**
 bin/process-compose-daemon
 bin/pcctl
 bin/opencode-server
