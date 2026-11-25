@@ -1,7 +1,8 @@
 opencode:
   managed:
     default_agent: build
-    small_model: magpie/auto/gpt-6-luna
+    small_model: magpie/auto/deepseek-v4.1-flash
+    model: magpie/auto/deepseek-v4.1-flash
 
     # Merged with local-only entries on apply (managed first).
     instructions:
@@ -29,6 +30,12 @@ opencode:
       magpie:
         options:
           setCacheKey: true
+        compatibility:
+          supportsPromptCacheKey: true
+        package: aisdk:@ai-sdk/openai
+        settings:
+          baseURL: "{env:MAGPIE_BASE_URL}"
+          apiKey: "{env:MAGPIE_API_KEY}"
 
     disabled_providers:
       - openrouter
