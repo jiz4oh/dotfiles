@@ -36,6 +36,13 @@ opencode:
         settings:
           baseURL: "{env:MAGPIE_BASE_URL}"
           apiKey: "{env:MAGPIE_API_KEY}"
+      typesafe-ai:
+        env:
+          - TYPESAFE_API_KEY
+        models:
+          jev-latest:
+            name: Jev Latest
+            type: decision
 
     disabled_providers:
       - openrouter
