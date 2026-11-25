@@ -11,8 +11,21 @@ obj.license = "MIT"
 
 obj.defaultHotkeys = {
   terminal = { { "cmd" }, "F12" },
+  agent = { { "cmd" }, "F11" },
 }
 
+local function toggle_agent()
+  local app_bundle_id = "com.t3tools.t3code"
+  local app = hs.application.get(app_bundle_id)
+
+  if app then
+    if app:isFrontmost() then
+      app:hide()
+    else
+      app:activate()
+    end
+  end
+end
 local function toggle_terminal()
   -- osascript -e 'id of app "kitty"'
   local terminal = os.getenv("TERMINAL")
@@ -46,6 +59,7 @@ end
 
 function obj:bindHotkeys(mapping)
   local def = {
+    agent = toggle_agent,
     terminal = toggle_terminal,
   }
 
