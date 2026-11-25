@@ -66,7 +66,15 @@ else
   cp "$SKILLS_EXTERNALS_FILE" "$skills_config_file"
 fi
 
-if command -v ruby >/dev/null 2>&1 && ruby -e 'exit 0' >/dev/null 2>&1; then
+ruby_usable() {
+  command -v ruby >/dev/null 2>&1 && ruby -e 'exit 0' >/dev/null 2>&1
+}
+
+python_usable() {
+  command -v python3 >/dev/null 2>&1 && python3 -c 'pass' >/dev/null 2>&1
+}
+
+if ruby_usable; then
 ruby - "$skills_config_file" > "$skill_rows_file" <<'RUBY'
 path = ARGV.fetch(0)
 lines = File.readlines(path, chomp: true)
@@ -111,11 +119,7 @@ while i < lines.length
   i += 1
 end
 RUBY
-else
-if ! command -v python3 >/dev/null 2>&1; then
-  echo "install_skills: need a working ruby or python3, found neither" >&2
-  exit 1
-fi
+elif python_usable; then
 python3 - "$skills_config_file" > "$skill_rows_file" <<'PY'
 import re
 import sys
@@ -159,6 +163,9 @@ while i < len(lines):
 
     i += 1
 PY
+else
+  warn "no working ruby or python3; skipping skill sync"
+  exit 0
 fi
 
 is_declared() {
