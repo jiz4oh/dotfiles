@@ -4,3 +4,6 @@ cached_env:
   # 「Copy Secret Reference」直接复制；用 `op read 'op://...'` 验证
   - name: DEEPSEEK_API_KEY
     op: op://servers/DEEPSEEK_API_KEY/credential
+
+  - name: TYPESAFE_API_KEY
+    op: op://Personal/typesafe jev/credential

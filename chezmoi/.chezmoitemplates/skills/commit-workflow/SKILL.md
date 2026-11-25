@@ -15,6 +15,7 @@ description: 在本仓库创建、拆分或重写提交时使用；说明提交�
 ## 提交信息
 
 - 使用一行 Conventional Commit 标题，格式为 `<type>: <祈使式摘要>`，例如 `feat: expose line-item allocations` 或 `test: cover refund allocations`。
+- 提交信息和交付文档中的专业术语使用英文，沿用代码、API 或领域模型的既有名称；其余说明遵循用户要求和项目语言约定。
 - 使用最能表达该提交主要意图的类型；不要为了满足提交顺序而错误分类。
 - 不写 scope、body 或 trailer。
 - 不添加 `Co-Authored-By`、`coauthor` 或其他提交署名信息。

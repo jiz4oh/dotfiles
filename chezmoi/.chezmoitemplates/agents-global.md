@@ -20,7 +20,7 @@
 - 验证必须，新增测试非默认：跑覆盖本次改动的最小现有检查，默认不全量。
 - 新测试须对应具体、现实的回归；禁止事后补 unit tests 凑数。
 - E2E-first：从真实入口验可观察行为；高层已覆盖则不加重复低层测；留可复现 artifact（报告 / 截图 / 日志 / 命令）。隔离测仅当 E2E 不合理时，且先列失败模式。
-- 验收证据用 `git status` / `git diff`，不用哈希「证明未改」。
+- 验收证据用 `git status` / `git diff`，不用哈希「证明未改」；往证据或清单 JSON 里写 sha256（含 Python `hashlib`、`sha256sum` / `shasum`）同样算违反。
 - 委派不得扩大测试范围或绕过上述策略；只声称有证据的结论。
 - 提交信息不加 `Co-Authored-By` 等署名。
 - Docs-as-code 优先：除 `AGENTS.md`、`README.md`、必要 ADR、对外契约原文、`SECURITY`、极薄运维入口外，默认不扩文档；抉择不得只靠叙事文档。
@@ -29,6 +29,15 @@
 ## 进程与资源
 
 - Who starts owns teardown：后台测 / 服务 / 监听记录用途、cwd、PID/pgid；交付前清零本轮孤儿进程（按 PID，不按宽泛名字）；保留须用户明确或任务仍依赖，并写明停止方式。
+
+## Issue tracker
+
+- 默认使用 `https://github.com/jiz4oh/project-tracker` 集中管理各项目的 issues、specs 和任务；项目级 `AGENTS.md`、`CLAUDE.md` 或其引用配置可覆盖 tracker、项目标签和工作流，包括改用本地文件或不使用 tracker。操作前先读取项目约定。
+- 使用共享 tracker 时，以 `repo:<owner>/<repo>` 标签隔离项目；优先使用项目显式声明的身份，否则从 `origin` remote 推导代码仓库，保留大小写。无法确定归属时先确认。
+- 操作共享 tracker 的 issue 时显式指定 `--repo jiz4oh/project-tracker`；创建时添加项目标签，已获授权的创建流程可补建缺失的项目标签。
+- 在共享 tracker 中，列表、搜索、triage 和批量操作限定当前项目标签；更新、评论或关闭前先读取并核实项目标签，归属不明时先确认。修改状态时保留项目标签。
+- 默认 triage 状态为 `needs-triage`、`needs-info`、`ready-for-agent`、`ready-for-human`、`wontfix`；父子任务和阻塞依赖默认限定本项目，跨项目操作须由任务要求明确指定。
+- Issue 引用使用完整 URL，多行正文使用 `--body-file`；PR 仍在各自代码仓库管理。
 
 ## 渐进式发现
 

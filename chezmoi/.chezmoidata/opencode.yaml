@@ -3,7 +3,7 @@ opencode:
     default_agent: build
     small_model: magpie/auto/gpt-6-luna
 
-    # Replaces the whole list on merge: keep every instruction file here.
+    # Merged with local-only entries on apply (managed first).
     instructions:
       - ~/.config/opencode/memory-routing.md
       - ~/.config/opencode/context-budget.md
@@ -148,8 +148,17 @@ opencode:
       - { action: shell, resource: "su *", effect: deny }
       - { action: shell, resource: "rm -rf *", effect: deny }
       - { action: shell, resource: "rm -fr *", effect: deny }
-      - { action: shell, resource: "git push", effect: deny }
-      - { action: shell, resource: "git push *", effect: deny }
+      # Force pushes only. Alex narrowed the blanket "git push" deny on 2026-11-18.
+      # Wildcards match the whole value ("*" = any chars, spaces included) and a
+      # trailing " *" also matches the bare command; last matching rule wins, so
+      # these stay after the allows. Gaps: --mirror, --prune, --delete.
+      - { action: shell, resource: "git push --force*", effect: deny }
+      - { action: shell, resource: "git push * --force*", effect: deny }
+      - { action: shell, resource: "git push -f *", effect: deny }
+      - { action: shell, resource: "git push * -f *", effect: deny }
+      - { action: shell, resource: "git push -*uf*", effect: deny }
+      - { action: shell, resource: "git push -*fu*", effect: deny }
+      - { action: shell, resource: "git push *+*", effect: deny }
       - { action: shell, resource: "git reset --hard *", effect: deny }
       - { action: shell, resource: "git clean -fd *", effect: deny }
       - { action: shell, resource: "mkfs *", effect: deny }

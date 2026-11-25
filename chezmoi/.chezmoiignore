@@ -67,6 +67,8 @@ Library/Application Support/**
 bin/process-compose-daemon
 bin/pcctl
 bin/opencode-server
+bin/opencode-env
+Library/LaunchAgents/dev.jiz4oh.opencode-env.plist
 .config/process-compose
 .config/process-compose/**
 .config/systemd/user/process-compose.service

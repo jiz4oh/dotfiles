@@ -580,7 +580,7 @@ augroup vimrc
   autocmd FileType sql                                 setlocal commentstring=--\ %s
   autocmd FileType xdefaults                           setlocal commentstring=!%s
 
-  autocmd FileType git,gitcommit        setlocal foldmethod=syntax foldlevel=1
+  autocmd FileType git,gitcommit        setlocal foldmethod=syntax foldlevel=5
   autocmd FileType json                 setlocal foldmethod=syntax foldlevel=1
   autocmd FileType lua                  setlocal foldmethod=indent
   " set '-' to be part of a word when dealing with CSS classes and IDs.

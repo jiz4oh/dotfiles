@@ -67,3 +67,4 @@ macOS Mojave	macos	2
  WATCH	applewatch	0
  tv 4K	appletv	0
 π	pd	4
+是	ui	10000
