@@ -181,7 +181,7 @@ opencode:
           oauth: false
           codemode: false
           headers:
-            Authorization: "Bearer {file:/Users/jiz4oh/.openviking/mcp_api_key}"
+            Authorization: "Bearer {file:~/.openviking/mcp_api_key}"
           timeout:
             startup: 15000
             catalog: 15000
