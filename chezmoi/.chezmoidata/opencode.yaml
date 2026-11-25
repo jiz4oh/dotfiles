@@ -199,4 +199,4 @@ opencode:
     providers:
       openai:
         settings:
-          baseURL: http://qnap.ts.jiz4oh.com:8317/v1
+          baseURL: http://server.loc.jiz4oh.com:3425/v1
