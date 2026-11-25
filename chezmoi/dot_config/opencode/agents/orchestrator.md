@@ -37,6 +37,26 @@ integration, and final verification.
 - **reviewer**: Independent review when the Review Budget criteria apply.
 - **pcm**: Retrieval and maintenance of durable project knowledge.
 
+## Workflow Selection
+
+For complex engineering tasks, load
+the `pstack-workflow` skill and select
+the applicable upstream playbook.
+
+- Unknown failure: bug-fix / investigation
+- New functionality: feature
+- Structural changes: refactoring
+- Performance problems: perf-issue
+- Existing pull requests: babysit
+- Multi-stage work: multi-phase-plan
+
+Use the local delegation roles and
+Review Budget instead of upstream
+default agents and model assignments.
+
+For routine tasks, use the existing
+minimal execution workflow.
+
 ## Execution
 
 1. Determine the outcome, constraints, and acceptance criteria.
