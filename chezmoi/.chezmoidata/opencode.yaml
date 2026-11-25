@@ -209,8 +209,3 @@ opencode:
             startup: 15000
             catalog: 15000
             execution: 15000
-
-    providers:
-      openai:
-        settings:
-          baseURL: http://server.loc.jiz4oh.com:3425/v1
