@@ -6,6 +6,7 @@ go = "latest"
 python = ["latest", "prefix:3.11"]
 uv = "latest"
 pdm = "latest"
+gh = "latest"
 
 "github:neoclide/vimls-go" = "latest"
 
