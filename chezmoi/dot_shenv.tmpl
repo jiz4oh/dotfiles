@@ -6,6 +6,9 @@ _ARCH=$(uname -m)
 ulimit -S -n 65536
 {{- end }}
 
+export NO_PROXY="{{ join "," .proxy.noProxy }}"
+export no_proxy="$NO_PROXY"
+
 # Resolve dotfiles root in a way that works for both symlink-managed and
 # chezmoi-managed plain files.
 if [ -d "$HOME/.local/share/chezmoi/" ]; then

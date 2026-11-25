@@ -8,9 +8,7 @@ proxy () {
 }
 
 unproxy () {
-    unset http_proxy
-    unset https_proxy
-    unset all_proxy
+    unset http_proxy https_proxy all_proxy no_proxy NO_PROXY url port
     echo "Proxy off"
 }
 
